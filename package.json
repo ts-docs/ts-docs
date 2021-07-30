@@ -18,8 +18,8 @@
     "url": "git+https://github.com/ts-docs/ts-docs.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "GoogleFeud",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/ts-docs/ts-docs/issues"
   },
