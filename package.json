@@ -1,0 +1,27 @@
+{
+  "name": "ts-docs",
+  "version": "1.0.0",
+  "description": "A documentation generator for typescript. Alternative to typedoc!",
+  "main": "index.js",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.28.5",
+    "@typescript-eslint/parser": "^4.28.5",
+    "eslint": "^7.31.0",
+    "eslint-plugin-react": "^7.24.0",
+    "typescript": "^4.3.5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ts-docs/ts-docs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ts-docs/ts-docs/issues"
+  },
+  "homepage": "https://github.com/ts-docs/ts-docs#readme"
+}
