@@ -25,7 +25,6 @@
   },
   "homepage": "https://github.com/ts-docs/ts-docs#readme",
   "dependencies": {
-    "react-static": "^7.5.3",
-    "react-static-plugin-typescript": "^7.5.3"
+    "handlebars": "^4.7.7"
   }
 }
