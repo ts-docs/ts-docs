@@ -72,7 +72,7 @@ export function setupDocumentStructure(pathToStructure: string) : DocumentStruct
     const index = path.join(pathToStructure, "index.hbs");
     if (!fs.existsSync(index)) throw new Error("Couldn't find index.hbs file.");
     const helpers = path.join(pathToStructure, "helpers.hbs");
-    if (fs.existsSync(helpers)) eval(fs.readFileSync(helpers, "utf8"));
+    if (fs.existsSync(helpers)) require(helpers);
     return {
         path: pathToStructure,
         components,
