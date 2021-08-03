@@ -4,6 +4,8 @@ import parseArgs from "minimist";
 import { findTSConfigDown, findPackageJSON } from "@ts-docs/extractor/dist/util";
 import { extract, ProjectMetadata, TypescriptExtractor, extractMetadata } from "@ts-docs/extractor";
 import { setupDocumentStructure } from "./documentStructure";
+import { Generator } from "./generator";
+import fs from "fs";
 
 export interface TsDocsArgs {
      "--": Array<string>,
@@ -49,7 +51,7 @@ Usage: ts-docs [...entryFiles]
     if (!options.entryPoints) options.entryPoints = args._;
     else options.entryPoints.push(...args._);
 
-    if (!options.structure) options.structure = "./node_modules/@ts-docs/default-docs-structure";
+    if (!options.structure) options.structure = "./node_modules/@ts-docs/default-docs-structure/dist/";
     if (!options.out) options.out = "./docs";
     if (!options.entryPoints.length) throw new Error("Expected at least one entry point.");
 
@@ -67,8 +69,12 @@ Usage: ts-docs [...entryFiles]
 
     if (types.length === 1  && !options.landingPage) options.landingPage = types[0];
 
-    console.log(options, types[0].toJSON());
     const docStructure = setupDocumentStructure(options.structure);
-    
+    const generator = new Generator(docStructure, options);
 
+    if (fs.existsSync(options.out)) fs.rmSync(options.out, { force: true, recursive: true });
+    fs.mkdirSync(options.out);
+
+    const generatedTypes = extract(options.entryPoints);
+    generator.generateModule(options.out, generatedTypes[0][0].module);
 })();

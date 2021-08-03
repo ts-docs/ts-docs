@@ -1,5 +1,5 @@
 {
-  "name": "ts-docs",
+  "name": "@ts-docs/ts-docs",
   "version": "1.0.0",
   "description": "A documentation generator for typescript. Alternative to typedoc!",
   "main": "index.js",
