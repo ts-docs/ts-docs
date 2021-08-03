@@ -20,10 +20,19 @@ import path from "path";
  *  - interface.hbs
  *  - class.hbs
  *  - module.hbs
+ *  - navigationModule.hbs
+ *  - navigationClass.hbs
+ *  - navigationInterface.hbs
+ *  - navigationEnum.hbs
+ *  - typeReference.hbs
+ *  - typeFunction.hbs
+ *  - typeUnion.hbs
+ *  - typeIntersection.hbs
+ *  - typeObject.hbs
+ *  - typeTuple.hbs
+ *  - typeParameter.hbs
+ *  - functionParameter.hbs
  * - partials
- *  - footer.hbs
- *  - header.hbs
- *  - navigation.hbs
  * - index.hbs
  * - helpers.js
  * 
@@ -44,13 +53,13 @@ import path from "path";
  *      - types
  * 
  * URL links look like this:
- * https://base.com/module_name/classes/class_name
- * https://base.com/module_name/m.module_name_2/types/type_name
+ * https://base.com/m.module_name/classes/class_name
+ * https://base.com/m.module_name/m.module_name_2/types/type_name
  */
 
 export interface DocumentStructure {
     path: string,
-    components: Record<string, string>,
+    components: Record<string, HandlebarsTemplateDelegate<unknown>>,
     index: string
 }
 
@@ -65,9 +74,9 @@ export function setupDocumentStructure(pathToStructure: string) : DocumentStruct
     }
     const componentsPath = path.join(pathToStructure, "components");
     if (!fs.existsSync(componentsPath)) throw new Error("Couldn't find components folder.");
-    const components: Record<string, string> = {};
+    const components: Record<string, HandlebarsTemplateDelegate<unknown>> = {};
     for (const componentFile of fs.readdirSync(componentsPath).filter(f => f.endsWith(".hbs"))) {
-        components[componentFile.slice(0, -4)] = fs.readFileSync(path.join(componentsPath, componentFile), "utf8");
+        components[componentFile.slice(0, -4)] = Handlebars.compile(fs.readFileSync(path.join(componentsPath, componentFile), "utf8"));
     }
     const index = path.join(pathToStructure, "index.hbs");
     if (!fs.existsSync(index)) throw new Error("Couldn't find index.hbs file.");

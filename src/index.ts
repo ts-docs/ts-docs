@@ -3,6 +3,7 @@
 import parseArgs from "minimist";
 import { findTSConfigDown, findPackageJSON } from "@ts-docs/extractor/dist/util";
 import { extract, ProjectMetadata, TypescriptExtractor, extractMetadata } from "@ts-docs/extractor";
+import { setupDocumentStructure } from "./documentStructure";
 
 export interface TsDocsArgs {
      "--": Array<string>,
@@ -15,7 +16,7 @@ export interface TsDocsArgs {
 }
 
 export interface TsDocsOptions {
-    landingPage?: string|ProjectMetadata|TypescriptExtractor,
+    landingPage?: ProjectMetadata|TypescriptExtractor,
     structure?: string,
     name?: string,
     out?: string,
@@ -35,6 +36,7 @@ Usage: ts-docs [...entryFiles]
 -name ─ The name of the page
 -out ─ Where to emit the documentation files
 `);
+        return;
     }
 
     const options: TsDocsOptions = {};
@@ -47,14 +49,13 @@ Usage: ts-docs [...entryFiles]
     if (!options.entryPoints) options.entryPoints = args._;
     else options.entryPoints.push(...args._);
 
-    if (!options.structure) options.structure = "@ts-docs/default-docs-structure";
+    if (!options.structure) options.structure = "./node_modules/@ts-docs/default-docs-structure";
     if (!options.out) options.out = "./docs";
     if (!options.entryPoints.length) throw new Error("Expected at least one entry point.");
 
     const types = extract(options.entryPoints)[0];
 
     if (options.landingPage) options.landingPage = types.find(t => t.module.name === options.landingPage);
-    if (types.length === 1  && !options.landingPage) options.landingPage = types[0];
 
     if (!options.name || !options.landingPage) {
         const packageJSON = findPackageJSON(process.cwd());
@@ -64,6 +65,10 @@ Usage: ts-docs [...entryFiles]
         }
     }
 
-    console.log(options, types.toJSON());
+    if (types.length === 1  && !options.landingPage) options.landingPage = types[0];
+
+    console.log(options, types[0].toJSON());
+    const docStructure = setupDocumentStructure(options.structure);
     
+
 })();
