@@ -4,7 +4,8 @@ import { TsDocsOptions } from ".";
 import { DocumentStructure } from "./documentStructure";
 import marked from "marked";
 import { createFile } from "./utils";
-
+import { ExtractorList } from "@ts-docs/extractor";
+//import HTMLMinifier from "html-minifier";
 
 
 export class Generator {
@@ -17,9 +18,23 @@ export class Generator {
         this.depth = 0;
     }
 
-    generateModule(path: string, module: Module) : void {
+    generate(packages: ExtractorList) : void {
+        const out = this.settings.out as string;
+        if (packages.length === 1) {
+            const pkg = packages[0];
+            this.generateModule(out, pkg.module, false);
+            if (pkg.readme) this.generatePage(out, "./", "index", marked.parse(pkg.readme));
+        } else {
+            for (const pkg of packages) {
+                this.generateModule(out, pkg.module);
+            }
+            if (this.settings.landingPage && this.settings.landingPage.readme) this.generatePage(out, "./", "index", marked.parse(this.settings.landingPage.readme));
+        }
+    }
+
+    generateModule(path: string, module: Module, createFolder = true) : void {
         this.depth++;
-        path = this.generatePage(path, `m.${module.name}`, "index", this.structure.components.module(module), { type: "module" });
+        if (createFolder) path = this.generatePage(path, `m.${module.name}`, "index", this.structure.components.module(module), { type: "module" });
         for (const [, classObj] of module.classes) {
             this.generateClass(path, classObj);
         }
@@ -127,10 +142,18 @@ export class Generator {
     }
 
     generatePage(path: string, directory: string, file: string, content: string, other: Record<string, unknown> = {}) : string {
-        return createFile(path, directory, `${file}.html`, this.structure.index({
+        return createFile(path, directory, `${file}.html`, this.generateHTML(this.structure.index({
             ...other,
-            content
-        }));
+            content,
+            name: this.settings.name,
+            repository: this.settings.landingPage?.repository,
+            homepage: this.settings.landingPage?.homepage
+        })));
+    }
+
+    generateHTML(content: string) : string {
+        return content;
+        //return HTMLMinifier.minify(content, {collapseWhitespace: true, minifyCSS: true, minifyURLs: true, minifyJS: true, removeComments: true, useShortDoctype: true});
     }
 
     generateLink(path: string) : string {
