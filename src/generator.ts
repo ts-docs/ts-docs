@@ -1,5 +1,5 @@
 
-import { ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds } from "@ts-docs/extractor/dist/structure";
+import { ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, InterfaceProperty, IndexSignatureDeclaration } from "@ts-docs/extractor/dist/structure";
 import { TsDocsOptions } from ".";
 import { DocumentStructure } from "./documentStructure";
 import marked from "marked";
@@ -23,18 +23,18 @@ export class Generator {
         if (packages.length === 1) {
             const pkg = packages[0];
             this.generateModule(out, pkg.module, false);
-            if (pkg.readme) this.generatePage(out, "./", "index", marked.parse(pkg.readme));
+            if (pkg.readme) this.generatePage(out, "./", "index", marked.parse(pkg.readme), { type: "module", ...pkg.module });
         } else {
             for (const pkg of packages) {
                 this.generateModule(out, pkg.module);
             }
-            if (this.settings.landingPage && this.settings.landingPage.readme) this.generatePage(out, "./", "index", marked.parse(this.settings.landingPage.readme));
+            if (this.settings.landingPage && this.settings.landingPage.readme) this.generatePage(out, "./", "index", marked.parse(this.settings.landingPage.readme), { type: "index", packages });
         }
     }
 
     generateModule(path: string, module: Module, createFolder = true) : void {
         this.depth++;
-        if (createFolder) path = this.generatePage(path, `m.${module.name}`, "index", this.structure.components.module(module), { type: "module" });
+        if (createFolder) path = this.generatePage(path, `m.${module.name}`, "index", this.structure.components.module(module), { type: "module", ...module });
         for (const [, classObj] of module.classes) {
             this.generateClass(path, classObj);
         }
@@ -57,7 +57,7 @@ export class Generator {
                 methods,
                 comment: this.generateComment(classObj.jsDoc),
                 typeParameters: classObj.typeParameters?.map(p => this.generateTypeParameter(p))
-            }), {properties, methods, type: "class"});
+            }), {properties: classObj.properties, methods: classObj.methods, type: "class"});
     }
 
     generatePropertyMember(property: ClassProperty) : string {
@@ -65,6 +65,14 @@ export class Generator {
         return this.structure.components.propertyMember({
             ...property,
             comment: this.generateComment(property.jsDoc),
+            type: property.type && this.generateType(property.type)
+        });
+    }
+
+    generateProperty(property: InterfaceProperty|IndexSignatureDeclaration) : string {
+        if (!this.structure.components.interfaceProperty) return "";
+        return this.structure.components.interfaceProperty({
+            ...property,
             type: property.type && this.generateType(property.type)
         });
     }
@@ -83,6 +91,7 @@ export class Generator {
         switch (type.kind) {
         case TypeKinds.REFERENCE: {
             const ref = type as Reference;
+            if (ref.type.external) console.log(ref.type.path, ref.type.name);
             if (!this.structure.components.typeReference) return "";
             let refType: string;
             switch (ref.type.kind) {
@@ -102,7 +111,7 @@ export class Generator {
             }
             return this.structure.components.typeReference({
                 ...ref,
-                link: ref.type.path && this.generateLink(`${ref.type.external ? `/${ref.type.external}/`:""}${ref.type.path.map(p => `m.${p}/`).join("")}${refType}/${ref.type.name}.html`),
+                link: ref.type.path && this.generateLink(`${ref.type.external ? `../../m.${ref.type.external}/`:""}${ref.type.path.map(p => `m.${p}/`).join("")}${refType}/${ref.type.name}.html`),
                 typeParameters: ref.typeParameters?.map(param => this.generateType(param))
             });
         }
@@ -113,6 +122,44 @@ export class Generator {
                 typeParameters: ref.typeParameters?.map(param => this.generateTypeParameter(param)),
                 parameters: ref.parameters?.map(param => this.generateParameter(param)),
                 returnType: ref.returnType && this.generateType(ref.returnType)
+            });
+        }
+        case TypeKinds.UNION: {
+            const ref = type as UnionOrIntersection;
+            if (!this.structure.components.typeUnion) return "";
+            return this.structure.components.typeUnion({
+                types: ref.types.map(t => this.generateType(t))
+            });
+        }
+        case TypeKinds.INTERSECTION: {
+            const ref = type as UnionOrIntersection;
+            if (!this.structure.components.typeIntersection) return "";
+            return this.structure.components.typeIntersection({
+                types: ref.types.map(t => this.generateType(t))
+            });
+        }
+        case TypeKinds.TUPLE: {
+            const ref = type as Tuple;
+            if (!this.structure.components.typeUnion) return "";
+            return this.structure.components.typeUnion({
+                types: ref.types.map(t => this.generateType(t))
+            });
+        }
+        case TypeKinds.STRING: return "string";
+        case TypeKinds.NUMBER: return "number";
+        case TypeKinds.VOID: return "void";
+        case TypeKinds.TRUE: return "true";
+        case TypeKinds.FALSE: return "false";
+        case TypeKinds.BOOLEAN: return "boolean";
+        case TypeKinds.UNDEFINED: return "undefined";
+        case TypeKinds.NULL: return "null";
+        case TypeKinds.UNKNOWN: return "unknown";
+        case TypeKinds.ANY: return "any";
+        case TypeKinds.OBJECT_LITERAL: {
+            const ref = type as ObjectLiteral;
+            if (!this.structure.components.typeObject) return "";
+            return this.structure.components.typeObject({
+                properties: ref.properties.map(p => this.generateProperty(p))
             });
         }
         default: return "";
@@ -145,9 +192,9 @@ export class Generator {
         return createFile(path, directory, `${file}.html`, this.generateHTML(this.structure.index({
             ...other,
             content,
-            name: this.settings.name,
-            repository: this.settings.landingPage?.repository,
-            homepage: this.settings.landingPage?.homepage
+            headerName: this.settings.name,
+            headerRepository: this.settings.landingPage?.repository,
+            headerHomepage: this.settings.landingPage?.homepage
         })));
     }
 

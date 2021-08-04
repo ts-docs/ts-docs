@@ -20,10 +20,6 @@ import path from "path";
  *  - interface.hbs
  *  - class.hbs
  *  - module.hbs
- *  - navigationModule.hbs
- *  - navigationClass.hbs
- *  - navigationInterface.hbs
- *  - navigationEnum.hbs
  *  - typeReference.hbs
  *  - typeFunction.hbs
  *  - typeUnion.hbs
@@ -32,6 +28,8 @@ import path from "path";
  *  - typeTuple.hbs
  *  - typeParameter.hbs
  *  - functionParameter.hbs
+ *  - interfaceProperty.hbs
+ *  - indexSignature.hbs
  * - partials
  * - index.hbs
  * - helpers.js
@@ -81,7 +79,7 @@ export function setupDocumentStructure(pathToStructure: string) : DocumentStruct
     const index = path.join(pathToStructure, "index.hbs");
     if (!fs.existsSync(index)) throw new Error("Couldn't find index.hbs file.");
     const helpers = path.join(pathToStructure, "helpers.js");
-    if (fs.existsSync(helpers)) eval(fs.readFileSync(helpers, "utf-8"));
+    if (fs.existsSync(helpers)) (new Function("Handlebars", fs.readFileSync(helpers, "utf-8")))(Handlebars);
     return {
         path: pathToStructure,
         components,

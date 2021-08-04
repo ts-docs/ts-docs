@@ -2,11 +2,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import parseArgs from "minimist";
-import { findTSConfigDown, findPackageJSON } from "@ts-docs/extractor/dist/util";
+import { findPackageJSON } from "@ts-docs/extractor/dist/util";
 import { extract, extractMetadata } from "@ts-docs/extractor";
 import { setupDocumentStructure } from "./documentStructure";
 import { Generator } from "./generator";
 import fs from "fs";
+import { findTSConfig } from "./utils";
 
 export interface LandingPage {
     repository?: string,
@@ -60,13 +61,13 @@ Usage: ts-docs [...entryFiles]
     const providedOptions: Record<string, any>  = {};
     const options: TsDocsOptions = { entryPoints: [] };
 
-    const tsconfig = findTSConfigDown(process.cwd()) as Record<string, TsDocsConfigOptions>;
+    const tsconfig = findTSConfig<TsDocsConfigOptions>(process.cwd());
 
     if (tsconfig && tsconfig.tsdocsOptions) Object.assign(providedOptions, tsconfig.tsdocsOptions);
     Object.assign(providedOptions, args);
     
-    if (!providedOptions.entryPoints) options.entryPoints = args._;
-    else options.entryPoints.push(...args._);
+    if (providedOptions.entryPoints.length) options.entryPoints.push(...providedOptions.entryPoints);
+    if (args._.length) options.entryPoints.push(...args._);
 
     if (!providedOptions.structure) options.structure = "./node_modules/@ts-docs/default-docs-structure/dist/";
     else options.structure = providedOptions.structure;

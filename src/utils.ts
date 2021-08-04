@@ -8,3 +8,11 @@ export function createFile(basePath: string, folder: string, file: string, conte
     fs.writeFileSync(path.join(folderPath, file), content, "utf-8");
     return folderPath;
 }
+
+export function findTSConfig<T = string>(basePath: string) : Record<string, T>|undefined {
+    const p = path.join(basePath, "tsconfig.json");
+    if (fs.existsSync(p)) return require(p);
+    const newPath = path.join(basePath, "../");
+    if (basePath === newPath) return undefined;
+    return findTSConfig(newPath);
+}
