@@ -1,5 +1,5 @@
 
-import { ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, InterfaceProperty, IndexSignatureDeclaration } from "@ts-docs/extractor/dist/structure";
+import { ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, InterfaceProperty, IndexSignatureDeclaration, InterfaceDecl } from "@ts-docs/extractor/dist/structure";
 import { TsDocsOptions } from ".";
 import { DocumentStructure } from "./documentStructure";
 import marked from "marked";
@@ -38,6 +38,9 @@ export class Generator {
         for (const [, classObj] of module.classes) {
             this.generateClass(path, classObj);
         }
+        for (const [, interfaceObj] of module.interfaces) {
+            this.generateInterface(path, interfaceObj);
+        }
         for (const [, mod] of module.modules) {
             this.generateModule(path, mod);
         }
@@ -46,18 +49,27 @@ export class Generator {
 
     generateClass(path: string, classObj: ClassDecl) : void {
         if (!this.structure.components.class) return;
-        const properties = [];
-        const methods = [];
-        for (const prop of classObj.properties) properties.push(this.generatePropertyMember(prop));
-        for (const method of classObj.methods) methods.push(this.generateMethodMember(method));
         this.generatePage(path, "class", classObj.name || "default export", 
             this.structure.components.class({
                 ...classObj,
-                properties,
-                methods,
+                properties: classObj.properties.map(p => this.generatePropertyMember(p)),
+                methods: classObj.methods.map(m => this.generateMethodMember(m)),
                 comment: this.generateComment(classObj.jsDoc),
-                typeParameters: classObj.typeParameters?.map(p => this.generateTypeParameter(p))
+                typeParameters: classObj.typeParameters?.map(p => this.generateTypeParameter(p)),
+                extends: classObj.extends && this.generateType(classObj.extends)
             }), {properties: classObj.properties, methods: classObj.methods, type: "class"});
+    }
+
+    generateInterface(path: string, interfaceObj: InterfaceDecl) : void {
+        if (!this.structure.components.interface) return;
+        this.generatePage(path, "interface", interfaceObj.name!, this.structure.components.interface({
+            ...interfaceObj, 
+            properties: interfaceObj.properties.map(p => this.generateProperty(p)),
+            extends: interfaceObj.extends && this.generateType(interfaceObj.extends),
+            implements: interfaceObj.implements && interfaceObj.implements.map(impl => this.generateType(impl)),
+            typeParameters: interfaceObj.typeParameters?.map(p => this.generateTypeParameter(p)),
+            comment: this.generateComment(interfaceObj.jsDoc)
+        }), {properties: interfaceObj.properties, type: "interface"});
     }
 
     generatePropertyMember(property: ClassProperty) : string {
@@ -81,9 +93,11 @@ export class Generator {
         if (!this.structure.components.methodMember) return "";
         return this.structure.components.methodMember({
             ...method,
-            parameters: method.parameters?.map(p => this.generateParameter(p)),
-            typeParameters: method.typeParameters?.map(p => this.generateTypeParameter(p)),
-            returnType: method.returnType && this.generateType(method.returnType)
+            signatures: method.signatures.map(sig => ({
+                parameters: sig.parameters?.map(p => this.generateParameter(p)),
+                typeParameters: sig.typeParameters?.map(p => this.generateTypeParameter(p)),
+                returnType: sig.returnType && this.generateType(sig.returnType)
+            }))
         });
     }
 
@@ -91,7 +105,6 @@ export class Generator {
         switch (type.kind) {
         case TypeKinds.REFERENCE: {
             const ref = type as Reference;
-            if (ref.type.external) console.log(ref.type.path, ref.type.name);
             if (!this.structure.components.typeReference) return "";
             let refType: string;
             switch (ref.type.kind) {
