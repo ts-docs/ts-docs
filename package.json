@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/ts-docs/ts-docs#readme",
   "dependencies": {
-    "@ts-docs/extractor": "^1.0.10",
+    "@ts-docs/extractor": "^1.0.11",
     "handlebars": "^4.7.7",
     "html-minifier": "^4.0.0",
     "marked": "^2.1.3",

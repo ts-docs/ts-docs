@@ -1,5 +1,5 @@
 
-import { ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, InterfaceProperty, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl } from "@ts-docs/extractor/dist/structure";
+import { ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, InterfaceProperty, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl } from "@ts-docs/extractor/dist/structure";
 import { TsDocsOptions } from ".";
 import { DocumentStructure } from "./documentStructure";
 import marked from "marked";
@@ -39,8 +39,8 @@ export class Generator {
     generateModule(path: string, module: Module, createFolder = true) : void {
         this.depth++;
         if (createFolder) {
-            this.generatePage(path, module.name, "index", this.structure.components.module(module), { type: "module", module });
-            path += `/${module.name}`;
+            this.generatePage(path, `m.${module.name}`, "index", this.structure.components.module(module), { type: "module", module });
+            path += `/m.${module.name}`;
         }
         for (const [, classObj] of module.classes) {
             this.generateClass(path, classObj);
@@ -53,6 +53,12 @@ export class Generator {
         }
         for (const [, typeObj] of module.types) {
             this.generateTypeDecl(path, typeObj, module);
+        }
+        for (const [, fnObj] of module.functions) {
+            this.generateFunction(path, fnObj, module);
+        }
+        for (const constantObj of module.constants) {
+            this.generateConstant(path, constantObj, module);
         }
         for (const [, mod] of module.modules) {
             this.generateModule(path, mod);
@@ -75,8 +81,7 @@ export class Generator {
 
     generateInterface(path: string, interfaceObj: InterfaceDecl) : void {
         if (!this.structure.components.interface) return;
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        this.generatePage(path, "interface", interfaceObj.name!, this.structure.components.interface({
+        this.generatePage(path, "interface", interfaceObj.name, this.structure.components.interface({
             ...interfaceObj, 
             properties: interfaceObj.properties.map(p => this.generateProperty(p)),
             extends: interfaceObj.extends && this.generateType(interfaceObj.extends),
@@ -88,8 +93,7 @@ export class Generator {
 
     generateEnum(path: string, enumObj: EnumDecl) : void {
         if (!this.structure.components.enum) return;
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        this.generatePage(path, "enum", enumObj.name!, this.structure.components.enum({
+        this.generatePage(path, "enum", enumObj.name, this.structure.components.enum({
             ...enumObj,
             comment: this.generateComment(enumObj.jsDoc)
         }), { type: "enum", members: enumObj.members });
@@ -106,9 +110,24 @@ export class Generator {
 
     generateFunction(path: string, func: FunctionDecl, module: Module) : void {
         if (!this.structure.components.function) return;
-        this.generatePage(path, "type", func.name||"default export", this.structure.components.function({
-            comment: this.generateComment(func.jsDoc)
+        this.generatePage(path, "function", func.name, this.structure.components.function({
+            ...func,
+            comment: this.generateComment(func.jsDoc),
+            signatures: func.signatures.map(sig => ({
+                parameters: sig.parameters?.map(p => this.generateParameter(p)),
+                typeParameters: sig.typeParameters?.map(p => this.generateTypeParameter(p)),
+                returnType: sig.returnType && this.generateType(sig.returnType)
+            }))
         }), { type: "module", module, isNested: true });
+    }
+
+    generateConstant(path: string, constant: ConstantDecl, module: Module) : void {
+        if (!this.structure.components.constant) return;
+        this.generatePage(path, "constant", constant.name, this.structure.components.constant({
+            ...constant,
+            comment: this.generateComment(constant.jsDoc),
+            type: constant.type && this.generateType(constant.type)
+        }), { type: "module", module, isNested: true});
     }
 
     generatePropertyMember(property: ClassProperty) : string {
@@ -155,6 +174,7 @@ export class Generator {
                 refType = "interface";
                 break;
             case TypeReferenceKinds.ENUM:
+            case TypeReferenceKinds.ENUM_MEMBER:
                 refType = "enum";
                 break;
             case TypeReferenceKinds.TYPE_ALIAS:
@@ -164,7 +184,7 @@ export class Generator {
             }
             return this.structure.components.typeReference({
                 ...ref,
-                link: ref.type.path && this.generateLink(`${ref.type.external ? `../../${ref.type.external}/`:""}${ref.type.path.map(p => `${p}/`).join("")}${refType}/${ref.type.name}.html`),
+                link: ref.type.path && this.generateLink(`${ref.type.external ? `../../m.${ref.type.external}/`:""}${ref.type.path.map(p => `m.${p}/`).join("")}${refType}/${ref.type.name}.html`, ref.type.displayName),
                 typeParameters: ref.typeParameters?.map(param => this.generateType(param))
             });
         }
@@ -260,11 +280,11 @@ export class Generator {
 
     generateHTML(content: string) : string {
         return content;
-        //return HTMLMinifier.minify(content, {collapseWhitespace: true, minifyCSS: true, minifyURLs: true, minifyJS: true, removeComments: true, useShortDoctype: true});
+        //return HTMLMinifier.minify(content, {collapseWhitespace: true, removeComments: true, useShortDoctype: true});
     }
 
-    generateLink(path: string) : string {
-        return `${"../".repeat(this.depth)}/${path}`;
+    generateLink(path: string, hash?: string) : string {
+        return `${"../".repeat(this.depth)}/${path}${hash ? `#${hash}`:""}`;
     }
 
     generatePath(url: string, final: string) : Array<{name: string, path: string}> {
@@ -275,11 +295,11 @@ export class Generator {
         for (let i=0; i < partsLen; i++) {
             const thing = parts[i];
             res.push({
-                name: thing,
+                name: thing.startsWith("m.") ? thing.slice(2):thing,
                 path: `${"../".repeat(partsLen - i)}index.html`
             });
         }
-        res.push({name: final, path: ""});
+        res.push({name: final.startsWith("m.") ? final.slice(2):final , path: ""});
         return res;
     }
 
