@@ -5,8 +5,13 @@ import { DocumentStructure } from "./documentStructure";
 import marked from "marked";
 import { createFile } from "./utils";
 import { ExtractorList } from "@ts-docs/extractor";
+import path from "path";
 //import HTMLMinifier from "html-minifier";
 
+export interface OtherProps {
+    [key: string]: unknown,
+    type?: string
+}
 
 export class Generator {
     structure: DocumentStructure
@@ -19,22 +24,24 @@ export class Generator {
     }
 
     generate(packages: ExtractorList) : void {
-        const out = this.settings.out as string;
         if (packages.length === 1) {
             const pkg = packages[0];
-            this.generateModule(out, pkg.module, false);
-            if (pkg.readme) this.generatePage(out, "./", "index", marked.parse(pkg.readme), { type: "module", ...pkg.module });
+            this.generateModule("", pkg.module, false);
+            if (pkg.readme) this.generatePage("", "./", "index", marked.parse(pkg.readme), { type: "module", ...pkg.module });
         } else {
             for (const pkg of packages) {
-                this.generateModule(out, pkg.module);
+                this.generateModule("", pkg.module);
             }
-            if (this.settings.landingPage && this.settings.landingPage.readme) this.generatePage(out, "./", "index", marked.parse(this.settings.landingPage.readme), { type: "index", packages });
+            if (this.settings.landingPage && this.settings.landingPage.readme) this.generatePage("", "./", "index", marked.parse(this.settings.landingPage.readme), { type: "index", packages });
         }
     }
 
     generateModule(path: string, module: Module, createFolder = true) : void {
         this.depth++;
-        if (createFolder) path = this.generatePage(path, `m.${module.name}`, "index", this.structure.components.module(module), { type: "module", ...module });
+        if (createFolder) {
+            this.generatePage(path, module.name, "index", this.structure.components.module(module), { type: "module", ...module });
+            path += `/${module.name}`;
+        }
         for (const [, classObj] of module.classes) {
             this.generateClass(path, classObj);
         }
@@ -62,6 +69,8 @@ export class Generator {
 
     generateInterface(path: string, interfaceObj: InterfaceDecl) : void {
         if (!this.structure.components.interface) return;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.generatePage(path, "interface", interfaceObj.name!, this.structure.components.interface({
             ...interfaceObj, 
             properties: interfaceObj.properties.map(p => this.generateProperty(p)),
@@ -124,7 +133,7 @@ export class Generator {
             }
             return this.structure.components.typeReference({
                 ...ref,
-                link: ref.type.path && this.generateLink(`${ref.type.external ? `../../m.${ref.type.external}/`:""}${ref.type.path.map(p => `m.${p}/`).join("")}${refType}/${ref.type.name}.html`),
+                link: ref.type.path && this.generateLink(`${ref.type.external ? `../../${ref.type.external}/`:""}${ref.type.path.map(p => `${p}/`).join("")}${refType}/${ref.type.name}.html`),
                 typeParameters: ref.typeParameters?.map(param => this.generateType(param))
             });
         }
@@ -201,13 +210,14 @@ export class Generator {
         return marked.parse(comment.map(c => c.comment || "").join("\n\n"));
     }
 
-    generatePage(path: string, directory: string, file: string, content: string, other: Record<string, unknown> = {}) : string {
-        return createFile(path, directory, `${file}.html`, this.generateHTML(this.structure.index({
+    generatePage(p: string, directory: string, file: string, content: string, other: OtherProps = {}) : string {
+        return createFile(path.join(this.settings.out as string, p), directory, `${file}.html`, this.generateHTML(this.structure.index({
             ...other,
             content,
             headerName: this.settings.name,
             headerRepository: this.settings.landingPage?.repository,
-            headerHomepage: this.settings.landingPage?.homepage
+            headerHomepage: this.settings.landingPage?.homepage,
+            path: this.generatePath(p, file !== "index" ? file:directory)
         })));
     }
 
@@ -220,5 +230,19 @@ export class Generator {
         return `${"../".repeat(this.depth)}/${path}`;
     }
 
+    generatePath(url: string, final: string) : Array<{name: string, path: string}> {
+        const parts = url.split("/").slice(1);
+        const partsLen = parts.length;
+        const res = [{name: "index", path: `${"../".repeat(partsLen + 1)}index.html`}];
+        for (let i=0; i < partsLen; i++) {
+            const thing = parts[i];
+            res.push({
+                name: thing,
+                path: `${"../".repeat(partsLen - i)}index.html`
+            });
+        }
+        res.push({name: final, path: ""});
+        return res;
+    }
 
 }

@@ -81,12 +81,15 @@ Usage: ts-docs [...entryFiles]
 
     if (providedOptions.landingPage) {
         const pkg = types.find(t => t.module.name === providedOptions.landingPage);
-        if (pkg) options.landingPage = { repository: pkg.repository, homepage: pkg.homepage, readme: pkg.readme};
+        if (pkg) {
+            options.landingPage = { repository: pkg.repository, homepage: pkg.homepage, readme: pkg.readme};
+            if (!providedOptions.name) options.name = pkg?.module.name;
+        }
     }
 
     const packageJSON = findPackageJSON(process.cwd());
 
-    if (!providedOptions.name && packageJSON) {
+    if (!options.name && packageJSON) {
         options.name = packageJSON.contents.name;
     }
 
