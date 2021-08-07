@@ -1,5 +1,5 @@
 
-import { ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, InterfaceProperty, IndexSignatureDeclaration, InterfaceDecl } from "@ts-docs/extractor/dist/structure";
+import { ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, InterfaceProperty, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl } from "@ts-docs/extractor/dist/structure";
 import { TsDocsOptions } from ".";
 import { DocumentStructure } from "./documentStructure";
 import marked from "marked";
@@ -39,7 +39,7 @@ export class Generator {
     generateModule(path: string, module: Module, createFolder = true) : void {
         this.depth++;
         if (createFolder) {
-            this.generatePage(path, module.name, "index", this.structure.components.module(module), { type: "module", ...module });
+            this.generatePage(path, module.name, "index", this.structure.components.module(module), { type: "module", module });
             path += `/${module.name}`;
         }
         for (const [, classObj] of module.classes) {
@@ -47,6 +47,12 @@ export class Generator {
         }
         for (const [, interfaceObj] of module.interfaces) {
             this.generateInterface(path, interfaceObj);
+        }
+        for (const [, enumObj] of module.enums) {
+            this.generateEnum(path, enumObj);
+        }
+        for (const [, typeObj] of module.types) {
+            this.generateTypeDecl(path, typeObj, module);
         }
         for (const [, mod] of module.modules) {
             this.generateModule(path, mod);
@@ -70,7 +76,6 @@ export class Generator {
     generateInterface(path: string, interfaceObj: InterfaceDecl) : void {
         if (!this.structure.components.interface) return;
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         this.generatePage(path, "interface", interfaceObj.name!, this.structure.components.interface({
             ...interfaceObj, 
             properties: interfaceObj.properties.map(p => this.generateProperty(p)),
@@ -79,6 +84,31 @@ export class Generator {
             typeParameters: interfaceObj.typeParameters?.map(p => this.generateTypeParameter(p)),
             comment: this.generateComment(interfaceObj.jsDoc)
         }), {properties: interfaceObj.properties, type: "interface"});
+    }
+
+    generateEnum(path: string, enumObj: EnumDecl) : void {
+        if (!this.structure.components.enum) return;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        this.generatePage(path, "enum", enumObj.name!, this.structure.components.enum({
+            ...enumObj,
+            comment: this.generateComment(enumObj.jsDoc)
+        }), { type: "enum", members: enumObj.members });
+    }
+
+    generateTypeDecl(path: string, typeObj: TypeDecl, module: Module) : void {
+        if (!this.structure.components.type) return;
+        this.generatePage(path, "type", typeObj.name, this.structure.components.type({
+            ...typeObj,
+            comment: this.generateComment(typeObj.jsDoc),
+            value: typeObj.value && this.generateType(typeObj.value)
+        }), { type: "module", module, isNested: true});
+    }
+
+    generateFunction(path: string, func: FunctionDecl, module: Module) : void {
+        if (!this.structure.components.function) return;
+        this.generatePage(path, "type", func.name||"default export", this.structure.components.function({
+            comment: this.generateComment(func.jsDoc)
+        }), { type: "module", module, isNested: true });
     }
 
     generatePropertyMember(property: ClassProperty) : string {
@@ -94,7 +124,8 @@ export class Generator {
         if (!this.structure.components.interfaceProperty) return "";
         return this.structure.components.interfaceProperty({
             ...property,
-            type: property.type && this.generateType(property.type)
+            type: property.type && this.generateType(property.type),
+            key: "key" in property && property.key && this.generateType(property.key)
         });
     }
 
@@ -167,6 +198,11 @@ export class Generator {
                 types: ref.types.map(t => this.generateType(t))
             });
         }
+        case TypeKinds.ARRAY_TYPE: {
+            const ref = type as ArrayType;
+            if (!this.structure.components.typeArray) return "";
+            return this.structure.components.typeArray({type: this.generateType(ref.type) });
+        }
         case TypeKinds.STRING: return "string";
         case TypeKinds.NUMBER: return "number";
         case TypeKinds.VOID: return "void";
@@ -184,6 +220,7 @@ export class Generator {
                 properties: ref.properties.map(p => this.generateProperty(p))
             });
         }
+        case TypeKinds.STRINGIFIED_UNKNOWN: return (type as Literal).name;
         default: return "";
         }
     }
@@ -231,6 +268,7 @@ export class Generator {
     }
 
     generatePath(url: string, final: string) : Array<{name: string, path: string}> {
+        if (!url.trim()) return [];
         const parts = url.split("/").slice(1);
         const partsLen = parts.length;
         const res = [{name: "index", path: `${"../".repeat(partsLen + 1)}index.html`}];
