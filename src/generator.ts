@@ -185,6 +185,10 @@ export class Generator {
             if (!this.structure.components.typeReference) return "";
             let refType: string;
             switch (ref.type.kind) {
+            case TypeReferenceKinds.DEFAULT_API: {
+                if (!this.structure.components.typeDefaultAPI) return "";
+                return this.structure.components.typeDefaultAPI({...type, typeParameters: ref.typeParameters?.map(param => this.generateType(param))});
+            }
             case TypeReferenceKinds.CLASS:
                 refType = "class";
                 break;
@@ -241,16 +245,19 @@ export class Generator {
             if (!this.structure.components.typeArray) return "";
             return this.structure.components.typeArray({type: this.generateType(ref.type) });
         }
-        case TypeKinds.STRING: return "string";
-        case TypeKinds.NUMBER: return "number";
-        case TypeKinds.VOID: return "void";
-        case TypeKinds.TRUE: return "true";
-        case TypeKinds.FALSE: return "false";
-        case TypeKinds.BOOLEAN: return "boolean";
-        case TypeKinds.UNDEFINED: return "undefined";
-        case TypeKinds.NULL: return "null";
-        case TypeKinds.UNKNOWN: return "unknown";
-        case TypeKinds.ANY: return "any";
+        case TypeKinds.STRING:
+        case TypeKinds.NUMBER: 
+        case TypeKinds.VOID: 
+        case TypeKinds.TRUE: 
+        case TypeKinds.FALSE: 
+        case TypeKinds.BOOLEAN: 
+        case TypeKinds.UNDEFINED: 
+        case TypeKinds.NULL: 
+        case TypeKinds.UNKNOWN:
+        case TypeKinds.ANY: {
+            if (!this.structure.components.typePrimitive) return "";
+            return this.structure.components.typePrimitive({...type});
+        }
         case TypeKinds.OBJECT_LITERAL: {
             const ref = type as ObjectLiteral;
             if (!this.structure.components.typeObject) return "";
