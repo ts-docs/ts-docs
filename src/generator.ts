@@ -6,10 +6,13 @@ import { createFile } from "./utils";
 import { ExtractorList } from "@ts-docs/extractor";
 import path from "path";
 import { TsDocsOptions } from "./options";
+import fs from "fs";
 //import HTMLMinifier from "html-minifier";
 
 export interface OtherProps {
     [key: string]: unknown,
+    doNotGivePath?: boolean,
+    depth?: number,
     type?: string
 }
 
@@ -24,15 +27,30 @@ export class Generator {
     }
 
     generate(packages: ExtractorList) : void {
+        if (this.settings.customPages) {
+            fs.mkdirSync(path.join(this.settings.out, "./pages"));
+            for (const category of this.settings.customPages) {
+                for (const page of category.pages) {
+                    this.generatePage("./pages", category.name, page.name, marked.parse(page.content), {
+                        type: packages.length === 1 ? "module":"index",
+                        packages,
+                        module: packages[0].module,
+                        pages: this.settings.customPages,
+                        doNotGivePath: true,
+                        depth: 2
+                    });
+                }
+            }
+        }
         if (packages.length === 1) {
             const pkg = packages[0];
             this.generateModule("", pkg.module, false);
-            if (pkg.readme) this.generatePage("", "./", "index", marked.parse(pkg.readme), { type: "module", ...pkg.module });
+            if (pkg.readme) this.generatePage("", "./", "index", marked.parse(pkg.readme), { type: "module", module: pkg.module, pages: this.settings.customPages, doNotGivePath: true });
         } else {
             for (const pkg of packages) {
                 this.generateModule("", pkg.module);
             }
-            if (this.settings.landingPage && this.settings.landingPage.readme) this.generatePage("", "./", "index", marked.parse(this.settings.landingPage.readme), { type: "index", packages });
+            if (this.settings.landingPage && this.settings.landingPage.readme) this.generatePage("", "./", "index", marked.parse(this.settings.landingPage.readme), { type: "index", packages, pages: this.settings.customPages, doNotGivePath: true });
         }
     }
 
@@ -105,7 +123,7 @@ export class Generator {
             ...typeObj,
             comment: this.generateComment(typeObj.jsDoc),
             value: typeObj.value && this.generateType(typeObj.value)
-        }), { type: "module", module, isNested: true});
+        }), { type: "module", module, depth: 1});
     }
 
     generateFunction(path: string, func: FunctionDecl, module: Module) : void {
@@ -118,7 +136,7 @@ export class Generator {
                 typeParameters: sig.typeParameters?.map(p => this.generateTypeParameter(p)),
                 returnType: sig.returnType && this.generateType(sig.returnType)
             }))
-        }), { type: "module", module, isNested: true });
+        }), { type: "module", module, depth: 1 });
     }
 
     generateConstant(path: string, constant: ConstantDecl, module: Module) : void {
@@ -127,7 +145,7 @@ export class Generator {
             ...constant,
             comment: this.generateComment(constant.jsDoc),
             type: constant.type && this.generateType(constant.type)
-        }), { type: "module", module, isNested: true});
+        }), { type: "module", module, depth: 1 });
     }
 
     generatePropertyMember(property: ClassProperty) : string {
@@ -274,7 +292,7 @@ export class Generator {
             headerName: this.settings.name,
             headerRepository: this.settings.landingPage?.repository,
             headerHomepage: this.settings.landingPage?.homepage,
-            path: this.generatePath(p, file !== "index" ? file:directory)
+            path: !other.doNotGivePath && this.generatePath(p, file !== "index" ? file:directory)
         })));
     }
 
@@ -288,7 +306,6 @@ export class Generator {
     }
 
     generatePath(url: string, final: string) : Array<{name: string, path: string}> {
-        if (!url.trim()) return [];
         const parts = url.split("/").slice(1);
         const partsLen = parts.length;
         const res = [{name: "index", path: `${"../".repeat(partsLen + 1)}index.html`}];
