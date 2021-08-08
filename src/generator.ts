@@ -1,11 +1,11 @@
 
 import { ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, InterfaceProperty, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl } from "@ts-docs/extractor/dist/structure";
-import { TsDocsOptions } from ".";
 import { DocumentStructure } from "./documentStructure";
 import marked from "marked";
 import { createFile } from "./utils";
 import { ExtractorList } from "@ts-docs/extractor";
 import path from "path";
+import { TsDocsOptions } from "./options";
 //import HTMLMinifier from "html-minifier";
 
 export interface OtherProps {
