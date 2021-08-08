@@ -9,6 +9,9 @@ import { Generator } from "./generator";
 import fs from "fs";
 import { findTSConfig } from "./utils";
 import { addOptionSource, initOptions, options, showHelp } from "./options";
+import { initMarkdown } from "./markdown";
+
+initMarkdown();
 
 export interface TsDocsArgs {
      "--": Array<string>,
