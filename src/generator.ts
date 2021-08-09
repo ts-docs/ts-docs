@@ -153,7 +153,7 @@ export class Generator {
         return this.structure.components.propertyMember({
             ...property,
             comment: this.generateComment(property.jsDoc),
-            type: property.type && this.generateType(property.type)
+            type: property.type && this.generateType(property.type),
         });
     }
 
@@ -174,7 +174,8 @@ export class Generator {
                 parameters: sig.parameters?.map(p => this.generateParameter(p)),
                 typeParameters: sig.typeParameters?.map(p => this.generateTypeParameter(p)),
                 returnType: sig.returnType && this.generateType(sig.returnType)
-            }))
+            })),
+            comment: this.generateComment(method.jsDoc)
         });
     }
 
