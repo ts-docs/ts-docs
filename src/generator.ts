@@ -65,7 +65,7 @@ export class Generator {
     generateModule(path: string, module: Module, createFolder = true) : void {
         this.depth++;
         if (createFolder) {
-            this.generatePage(path, `m.${module.name}`, "index", this.structure.components.module(module), { type: "module", module });
+            this.generatePage(path, `m.${module.name}`, "index", this.structure.components.module(module), { type: "module", module, name: module.name });
             path += `/m.${module.name}`;
         }
         for (const [, classObj] of module.classes) {
@@ -101,8 +101,9 @@ export class Generator {
                 methods: classObj.methods.map(m => this.generateMethodMember(m)),
                 comment: this.generateComment(classObj.jsDoc),
                 typeParameters: classObj.typeParameters?.map(p => this.generateTypeParameter(p)),
+                implements: classObj.implements?.map(impl => this.generateType(impl)),
                 extends: classObj.extends && this.generateType(classObj.extends)
-            }), {properties: classObj.properties, methods: classObj.methods, type: "class"});
+            }), {properties: classObj.properties, name: classObj.name, methods: classObj.methods, type: "class"});
     }
 
     generateInterface(path: string, interfaceObj: InterfaceDecl) : void {
@@ -114,7 +115,7 @@ export class Generator {
             implements: interfaceObj.implements && interfaceObj.implements.map(impl => this.generateType(impl)),
             typeParameters: interfaceObj.typeParameters?.map(p => this.generateTypeParameter(p)),
             comment: this.generateComment(interfaceObj.jsDoc)
-        }), {properties: interfaceObj.properties, type: "interface"});
+        }), {properties: interfaceObj.properties, name: interfaceObj.name, type: "interface"});
     }
 
     generateEnum(path: string, enumObj: EnumDecl) : void {
@@ -122,7 +123,7 @@ export class Generator {
         this.generatePage(path, "enum", enumObj.name, this.structure.components.enum({
             ...enumObj,
             comment: this.generateComment(enumObj.jsDoc)
-        }), { type: "enum", members: enumObj.members });
+        }), { type: "enum", members: enumObj.members, name: enumObj.name });
     }
 
     generateTypeDecl(path: string, typeObj: TypeDecl, module: Module) : void {
@@ -131,7 +132,7 @@ export class Generator {
             ...typeObj,
             comment: this.generateComment(typeObj.jsDoc),
             value: typeObj.value && this.generateType(typeObj.value)
-        }), { type: "module", module, depth: 1});
+        }), { type: "module", module, depth: 1, name: typeObj.name, realType: "type" });
     }
 
     generateFunction(path: string, func: FunctionDecl, module: Module) : void {
@@ -144,7 +145,7 @@ export class Generator {
                 typeParameters: sig.typeParameters?.map(p => this.generateTypeParameter(p)),
                 returnType: sig.returnType && this.generateType(sig.returnType)
             }))
-        }), { type: "module", module, depth: 1 });
+        }), { type: "module", module, depth: 1, name: func.name, realType: "function" });
     }
 
     generateConstant(path: string, constant: ConstantDecl, module: Module) : void {
@@ -153,7 +154,7 @@ export class Generator {
             ...constant,
             comment: this.generateComment(constant.jsDoc),
             type: constant.type && this.generateType(constant.type)
-        }), { type: "module", module, depth: 1 });
+        }), { type: "module", module, depth: 1, name: constant.name, realType: "constant" });
     }
 
     generatePropertyMember(property: ClassProperty) : string {
@@ -215,7 +216,7 @@ export class Generator {
             }
             return this.structure.components.typeReference({
                 ...ref,
-                link: ref.type.path && this.generateLink(path.join(ref.type.external ? `../../m.${ref.type.external}`:"", ...ref.type.path.map(p => `m.${p}`), refType, `${ref.type.name}.html`), ref.type.displayName),
+                link: ref.type.path && this.generateLink(path.join(ref.type.external ? `../m.${ref.type.external}`:"", ...ref.type.path.map(p => `m.${p}`), refType, `${ref.type.name}.html`), ref.type.displayName),
                 typeParameters: ref.typeParameters?.map(param => this.generateType(param))
             });
         }
@@ -322,7 +323,7 @@ export class Generator {
     }
 
     generateLink(p: string, hash?: string) : string {
-        return `${"../".repeat(this.depth)}/${p}${hash ? `#${hash}`:""}`;
+        return `${path.join("../".repeat(this.depth), p)}${hash ? `#${hash}`:""}`;
     }
 
     generatePath(url: string, final: string) : Array<{name: string, path: string}> {
