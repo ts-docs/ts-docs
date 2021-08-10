@@ -246,6 +246,9 @@ export class Generator {
             if (!this.structure.components.typeArray) return "";
             return this.structure.components.typeArray({type: this.generateType(ref.type) });
         }
+        case TypeKinds.UNIQUE_OPERATOR: 
+        case TypeKinds.KEYOF_OPERATOR:
+        case TypeKinds.READONLY_OPERATOR:
         case TypeKinds.STRING:
         case TypeKinds.NUMBER: 
         case TypeKinds.VOID: 

@@ -37,7 +37,7 @@ import path from "path";
  * This app outputs something like:
  * - index.html
  * - assets
- * - module_name
+ * - m.module_name
  *  - classes
  *  - interfaces
  *  - enums

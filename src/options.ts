@@ -53,8 +53,13 @@ export function addOptionSource(source: OptionSource) : void {
 } 
 
 export function initOptions(extractorList: ExtractorList) : TsDocsOptions {
+    if (typeof options.landingPage === "string") {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const module = extractorList.find(ext => ext.module.name === options.landingPage)!; 
+        options.landingPage = module;
+        if (!options.name) options.name = module.module.name;
+    }
     if (!options.name) options.name = extractorList[0].module.name;
-    if (typeof options.landingPage === "string") options.landingPage = extractorList.find(ext => ext.module.name === options.landingPage); 
     else if (!options.landingPage) options.landingPage = extractorList[0];
     if (options.customPages) {
         const customPages = options.customPages as unknown as string;
