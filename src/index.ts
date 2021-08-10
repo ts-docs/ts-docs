@@ -6,7 +6,6 @@ import { findPackageJSON } from "@ts-docs/extractor/dist/util";
 import { extract, extractMetadata } from "@ts-docs/extractor";
 import { setupDocumentStructure } from "./documentStructure";
 import { Generator } from "./generator";
-import fs from "fs";
 import { findTSConfig } from "./utils";
 import { addOptionSource, initOptions, options, showHelp } from "./options";
 import { initMarkdown } from "./markdown";
@@ -66,9 +65,6 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsArgs;
 
     const docStructure = setupDocumentStructure(finalOptions.structure);
     const generator = new Generator(docStructure, finalOptions);
-
-    if (fs.existsSync(finalOptions.out)) fs.rmSync(finalOptions.out, { force: true, recursive: true });
-    fs.mkdirSync(finalOptions.out);
 
     generator.generate(types);
 })();

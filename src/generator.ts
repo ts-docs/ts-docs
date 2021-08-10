@@ -2,7 +2,7 @@
 import { ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, InterfaceProperty, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl } from "@ts-docs/extractor/dist/structure";
 import { DocumentStructure } from "./documentStructure";
 import marked from "marked";
-import { createFile } from "./utils";
+import { copyFolder, createFile } from "./utils";
 import { ExtractorList } from "@ts-docs/extractor";
 import path from "path";
 import { TsDocsOptions } from "./options";
@@ -27,6 +27,13 @@ export class Generator {
     }
 
     generate(packages: ExtractorList) : void {
+        if (fs.existsSync(this.settings.out)) fs.rmSync(this.settings.out, { force: true, recursive: true });
+        fs.mkdirSync(this.settings.out);
+
+        const assetsFolder = path.join(this.settings.out, "assets");
+        fs.mkdirSync(assetsFolder);
+        copyFolder(path.join(this.structure.path, "assets"), assetsFolder);
+
         if (this.settings.customPages) {
             fs.mkdirSync(path.join(this.settings.out, "./pages"));
             for (const category of this.settings.customPages) {
@@ -37,6 +44,7 @@ export class Generator {
                         module: packages[0].module,
                         pages: this.settings.customPages,
                         doNotGivePath: true,
+                        isPage: true,
                         depth: 2
                     });
                 }
@@ -86,7 +94,7 @@ export class Generator {
 
     generateClass(path: string, classObj: ClassDecl) : void {
         if (!this.structure.components.class) return;
-        this.generatePage(path, "class", classObj.name || "default export", 
+        this.generatePage(path, "class", classObj.name, 
             this.structure.components.class({
                 ...classObj,
                 properties: classObj.properties.map(p => this.generatePropertyMember(p)),
@@ -207,7 +215,7 @@ export class Generator {
             }
             return this.structure.components.typeReference({
                 ...ref,
-                link: ref.type.path && this.generateLink(`${ref.type.external ? `../../m.${ref.type.external}/`:""}${ref.type.path.map(p => `m.${p}/`).join("")}${refType}/${ref.type.name}.html`, ref.type.displayName),
+                link: ref.type.path && this.generateLink(path.join(ref.type.external ? `../../m.${ref.type.external}`:"", ...ref.type.path.map(p => `m.${p}`), refType, `${ref.type.name}.html`), ref.type.displayName),
                 typeParameters: ref.typeParameters?.map(param => this.generateType(param))
             });
         }
@@ -303,7 +311,8 @@ export class Generator {
             headerName: this.settings.name,
             headerRepository: this.settings.landingPage?.repository,
             headerHomepage: this.settings.landingPage?.homepage,
-            path: !other.doNotGivePath && this.generatePath(p, file !== "index" ? file:directory)
+            path: !other.doNotGivePath && this.generatePath(p, file !== "index" ? file:directory),
+            moduleDepth: this.depth
         })));
     }
 
@@ -312,8 +321,8 @@ export class Generator {
         //return HTMLMinifier.minify(content, {collapseWhitespace: true, removeComments: true, useShortDoctype: true});
     }
 
-    generateLink(path: string, hash?: string) : string {
-        return `${"../".repeat(this.depth)}/${path}${hash ? `#${hash}`:""}`;
+    generateLink(p: string, hash?: string) : string {
+        return `${"../".repeat(this.depth)}/${p}${hash ? `#${hash}`:""}`;
     }
 
     generatePath(url: string, final: string) : Array<{name: string, path: string}> {
