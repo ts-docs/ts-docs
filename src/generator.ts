@@ -7,6 +7,7 @@ import { ExtractorList } from "@ts-docs/extractor";
 import path from "path";
 import { TsDocsOptions } from "./options";
 import fs from "fs";
+import Highlight from "highlight.js";
 //import HTMLMinifier from "html-minifier";
 
 export interface OtherProps {
@@ -153,7 +154,8 @@ export class Generator {
         this.generatePage(path, "constant", constant.name, this.structure.components.constant({
             ...constant,
             comment: this.generateComment(constant.jsDoc),
-            type: constant.type && this.generateType(constant.type)
+            type: constant.type && this.generateType(constant.type),
+            content: constant.content && Highlight.highlight(constant.content, { language: "ts" }).value
         }), { type: "module", module, depth: 1, name: constant.name, realType: "constant" });
     }
 
