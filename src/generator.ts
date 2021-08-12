@@ -123,7 +123,8 @@ export class Generator {
         if (!this.structure.components.enum) return;
         this.generatePage(path, "enum", enumObj.name, this.structure.components.enum({
             ...enumObj,
-            comment: this.generateComment(enumObj.jsDoc)
+            comment: this.generateComment(enumObj.jsDoc),
+            members: enumObj.members.map(m => ({...m, initializer: m.initializer && this.generateType(m.initializer)}))
         }), { type: "enum", members: enumObj.members, name: enumObj.name });
     }
 
@@ -269,6 +270,8 @@ export class Generator {
         case TypeKinds.UNDEFINED: 
         case TypeKinds.NULL: 
         case TypeKinds.UNKNOWN:
+        case TypeKinds.STRING_LITERAL:
+        case TypeKinds.NUMBER_LITERAL:
         case TypeKinds.ANY: {
             if (!this.structure.components.typePrimitive) return "";
             return this.structure.components.typePrimitive({...type});
@@ -281,7 +284,7 @@ export class Generator {
             });
         }
         case TypeKinds.STRINGIFIED_UNKNOWN: return (type as Literal).name;
-        default: return "";
+        default: return "unknown";
         }
     }
 
