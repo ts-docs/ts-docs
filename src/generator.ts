@@ -57,16 +57,16 @@ export class Generator {
             if (pkg.readme) this.generatePage("", "./", "index", marked.parse(pkg.readme), { type: "module", module: pkg.module, pages: this.settings.customPages, doNotGivePath: true });
         } else {
             for (const pkg of packages) {
-                this.generateModule("", pkg.module);
+                this.generateModule("", pkg.module, true, pkg.readme);
             }
             if (this.settings.landingPage && this.settings.landingPage.readme) this.generatePage("", "./", "index", marked.parse(this.settings.landingPage.readme), { type: "index", packages, pages: this.settings.customPages, doNotGivePath: true });
         }
     }
 
-    generateModule(path: string, module: Module, createFolder = true) : void {
+    generateModule(path: string, module: Module, createFolder = true, readme?: string) : void {
         this.depth++;
         if (createFolder) {
-            this.generatePage(path, `m.${module.name}`, "index", this.structure.components.module(module), { type: "module", module, name: module.name });
+            this.generatePage(path, `m.${module.name}`, "index", this.structure.components.module(readme ? {...module, readme: marked.parse(readme) }:module), { type: "module", module, name: module.name });
             path += `/m.${module.name}`;
         }
         for (const [, classObj] of module.classes) {
