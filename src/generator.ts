@@ -2,13 +2,12 @@
 import { ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, InterfaceProperty, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl } from "@ts-docs/extractor/dist/structure";
 import { DocumentStructure } from "./documentStructure";
 import marked from "marked";
-import { copyFolder, createFile } from "./utils";
+import { copyFolder, createFile, escapeHTML } from "./utils";
 import { ExtractorList } from "@ts-docs/extractor";
 import path from "path";
 import { TsDocsOptions } from "./options";
 import fs from "fs";
 import Highlight from "highlight.js";
-//import HTMLMinifier from "html-minifier";
 
 export interface OtherProps {
     [key: string]: unknown,
@@ -16,6 +15,7 @@ export interface OtherProps {
     depth?: number,
     type?: string
 }
+
 
 export class Generator {
     structure: DocumentStructure
@@ -34,6 +34,7 @@ export class Generator {
         const assetsFolder = path.join(this.settings.out, "assets");
         fs.mkdirSync(assetsFolder);
         copyFolder(path.join(this.structure.path, "assets"), assetsFolder);
+        this.packData(packages, `${assetsFolder}/search.json`);
 
         if (this.settings.customPages) {
             fs.mkdirSync(path.join(this.settings.out, "./pages"));
@@ -283,7 +284,7 @@ export class Generator {
                 properties: ref.properties.map(p => this.generateProperty(p))
             });
         }
-        case TypeKinds.STRINGIFIED_UNKNOWN: return (type as Literal).name;
+        case TypeKinds.STRINGIFIED_UNKNOWN: return escapeHTML((type as Literal).name);
         default: return "unknown";
         }
     }
@@ -307,11 +308,11 @@ export class Generator {
 
     generateComment(comment?: Array<JSDocData>) : string|undefined {
         if (!comment) return undefined;
-        return marked.parse(comment.map(c => c.comment || "").join("\n\n"));
+        return marked.parse(comment.map(c => c.comment || "").join("\n\n"), {gfm: true});
     }
 
     generatePage(p: string, directory: string, file: string, content: string, other: OtherProps = {}) : string {
-        return createFile(path.join(this.settings.out as string, p), directory, `${file}.html`, this.generateHTML(this.structure.index({
+        return createFile(path.join(this.settings.out as string, p), directory, `${file}.html`, this.structure.index({
             ...other,
             content,
             headerName: this.settings.name,
@@ -319,12 +320,7 @@ export class Generator {
             headerHomepage: this.settings.landingPage?.homepage,
             path: !other.doNotGivePath && this.generatePath(p, file !== "index" ? file:directory),
             moduleDepth: this.depth
-        })));
-    }
-
-    generateHTML(content: string) : string {
-        return content;
-        //return HTMLMinifier.minify(content, {collapseWhitespace: true, removeComments: true, useShortDoctype: true});
+        }));
     }
 
     generateLink(p: string, hash?: string) : string {
@@ -344,6 +340,25 @@ export class Generator {
         }
         res.push({name: final.startsWith("m.") ? final.slice(2):final , path: ""});
         return res;
+    }
+
+    packData(extractors: ExtractorList, path: string) : void {
+        const res = [[], []] as [Array<unknown>, Array<string>];
+        for (const extractor of extractors) {
+            const modObj = [0,[],[],[],[],[],[]] as [number, Array<[string, Array<string>, Array<string>, Array<number>]>, Array<[string, Array<string>, Array<number>]>, Array<[string, Array<string>, Array<number>]>, Array<[string, Array<number>]>, Array<[string, Array<number>]>, Array<[string, Array<number>]>]; 
+            extractor.forEachModule(extractor.module, (mod, path) => {
+                modObj[0] = res[1].push(mod.name) - 1;
+                const p: Array<number> = [res[1].indexOf(extractor.module.name), ...path.map(pathName => res[1].indexOf(pathName))];
+                for (const [, cl] of mod.classes) modObj[1].push([cl.name, cl.properties.map(p => p.name), cl.methods.map(p => p.name), p]);
+                for (const [, intf] of mod.interfaces) modObj[2].push([intf.name, intf.properties.filter(p => !("key" in p)).map(p => (p as InterfaceProperty).name), p]);
+                for (const [, en] of mod.enums) modObj[3].push([en.name, en.members.map(m => m.name), p]);
+                for (const [, typ] of mod.types) modObj[4].push([typ.name, p]);
+                for (const [, fn] of mod.functions) modObj[5].push([fn.name, p]);
+                for (const constant of mod.constants) modObj[6].push([constant.name, p]);
+            });
+            res[0].push(modObj);
+        }
+        fs.writeFileSync(path, JSON.stringify(res));
     }
 
 }

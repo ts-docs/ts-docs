@@ -14,6 +14,7 @@ ${highlight.highlight(code, {language: lang || "js"}).value}
                 </pre>
                 `;
             }
-        }
+        },
     });
+
 }

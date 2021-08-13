@@ -28,3 +28,7 @@ export function copyFolder(origin: string, destination: string) : void {
         else fs.writeFileSync(newDestination, fs.readFileSync(newOrigin, "utf-8"));
     }
 }
+
+export function escapeHTML(html: string) : string {
+    return html.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;") ;
+}
