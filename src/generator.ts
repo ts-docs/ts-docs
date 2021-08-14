@@ -16,11 +16,11 @@ export interface OtherProps {
     type?: string
 }
 
-
 export class Generator {
     structure: DocumentStructure
     settings: TsDocsOptions
     depth: number
+    currentGlobalModuleName?: string
     constructor(structure: DocumentStructure, settings: TsDocsOptions) {
         this.structure = structure;
         this.settings = settings;
@@ -58,6 +58,7 @@ export class Generator {
             if (pkg.readme) this.generatePage("", "./", "index", marked.parse(pkg.readme), { type: "module", module: pkg.module, pages: this.settings.customPages, doNotGivePath: true });
         } else {
             for (const pkg of packages) {
+                this.currentGlobalModuleName = pkg.module.name;
                 this.generateModule("", pkg.module, true, pkg.readme);
             }
             if (this.settings.landingPage && this.settings.landingPage.readme) this.generatePage("", "./", "index", marked.parse(this.settings.landingPage.readme), { type: "index", packages, pages: this.settings.customPages, doNotGivePath: true });
@@ -319,7 +320,8 @@ export class Generator {
             headerRepository: this.settings.landingPage?.repository,
             headerHomepage: this.settings.landingPage?.homepage,
             path: !other.doNotGivePath && this.generatePath(p, file !== "index" ? file:directory),
-            moduleDepth: this.depth
+            moduleDepth: this.depth,
+            currentGlobalModuleName: this.currentGlobalModuleName
         }));
     }
 
@@ -342,6 +344,21 @@ export class Generator {
         return res;
     }
 
+    /**
+     * Packs the data in a convinient, small format. Unlike the default strucutre provided by ts-extractor, this packed structure only registers the "global"
+     * modules and includes all of the sub-module's things (classes, interfaces, etc.).
+     * [globalModules, allModuleNames];
+     * 
+     * module: [nameIndex, classes, interfaces, enums, types, functions, constants]
+     * class: [name, properties, methods, path]
+     * inteface: [name, properties, path]
+     * enum: [name, members, path]
+     * type: [name, path]
+     * function: [name, path]
+     * constant: [name, path]
+     * 
+     * `path` is an array of numbers, which are the indexes of the module names inside the `allModuleNames` array.
+     */
     packData(extractors: ExtractorList, path: string) : void {
         const res = [[], []] as [Array<unknown>, Array<string>];
         for (const extractor of extractors) {
