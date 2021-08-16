@@ -5,7 +5,8 @@ import path from "path";
 export interface LandingPage {
     repository?: string,
     readme?: string,
-    homepage?: string
+    homepage?: string,
+    version?: string
 }
 
 export interface CustomPage {

@@ -320,6 +320,7 @@ export class Generator {
             headerName: this.settings.name,
             headerRepository: this.settings.landingPage?.repository,
             headerHomepage: this.settings.landingPage?.homepage,
+            headerVersion: this.settings.landingPage?.version,
             path: !other.doNotGivePath && this.generatePath(p, file !== "index" ? file:directory),
             moduleDepth: this.depth,
             currentGlobalModuleName: this.currentGlobalModuleName
