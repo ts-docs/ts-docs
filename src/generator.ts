@@ -347,14 +347,14 @@ export class Generator {
     /**
      * Packs the data in a convinient, small format. Unlike the default strucutre provided by ts-extractor, this packed structure only registers the "global"
      * modules and includes all of the sub-module's things (classes, interfaces, etc.).
-     * [globalModules, allModuleNames];
+     * [globalModules, allModuleNames, allParamNames];
      * 
      * module: [nameIndex, classes, interfaces, enums, types, functions, constants]
      * class: [name, properties, methods, path]
      * inteface: [name, properties, path]
      * enum: [name, members, path]
      * type: [name, path]
-     * function: [name, path]
+     * function: [name, params, path]
      * constant: [name, path]
      * 
      * `path` is an array of numbers, which are the indexes of the module names inside the `allModuleNames` array.
