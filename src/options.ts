@@ -24,7 +24,7 @@ export interface TsDocsOptions {
     name: string,
     landingPage?: LandingPage,
     out: string,
-    structure: string
+    structure: string,
 }
 
 export interface OptionSource {

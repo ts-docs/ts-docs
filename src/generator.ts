@@ -303,6 +303,7 @@ export class Generator {
         if (!this.structure.components.functionParameter) return "";
         return this.structure.components.functionParameter({
             ...type,
+            defaultValue: type.defaultValue && this.generateType(type.defaultValue),
             type: type.type && this.generateType(type.type)
         });
     }
@@ -361,11 +362,14 @@ export class Generator {
      */
     packData(extractors: ExtractorList, path: string) : void {
         const res = [[], []] as [Array<unknown>, Array<string>];
+        const notSingleExtractor = extractors.length !== 1;
         for (const extractor of extractors) {
             const modObj = [0,[],[],[],[],[],[]] as [number, Array<[string, Array<string>, Array<string>, Array<number>]>, Array<[string, Array<string>, Array<number>]>, Array<[string, Array<string>, Array<number>]>, Array<[string, Array<number>]>, Array<[string, Array<number>]>, Array<[string, Array<number>]>]; 
             extractor.forEachModule(extractor.module, (mod, path) => {
                 modObj[0] = res[1].push(mod.name) - 1;
-                const p: Array<number> = [res[1].indexOf(extractor.module.name), ...path.map(pathName => res[1].indexOf(pathName))];
+                let p;
+                if (notSingleExtractor) p = [res[1].indexOf(extractor.module.name), ...path.map(pathName => res[1].indexOf(pathName))];
+                else p = path.map(pathName => res[1].indexOf(pathName));
                 for (const [, cl] of mod.classes) modObj[1].push([cl.name, cl.properties.map(p => p.name), cl.methods.map(p => p.name), p]);
                 for (const [, intf] of mod.interfaces) modObj[2].push([intf.name, intf.properties.filter(p => !("key" in p)).map(p => (p as InterfaceProperty).name), p]);
                 for (const [, en] of mod.enums) modObj[3].push([en.name, en.members.map(m => m.name), p]);

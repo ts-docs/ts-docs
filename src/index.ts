@@ -7,38 +7,25 @@ import { extract, extractMetadata } from "@ts-docs/extractor";
 import { setupDocumentStructure } from "./documentStructure";
 import { Generator } from "./generator";
 import { findTSConfig } from "./utils";
-import { addOptionSource, initOptions, options, showHelp } from "./options";
+import { addOptionSource, initOptions, options, OptionSource, showHelp } from "./options";
 import { initMarkdown } from "./markdown";
 
 initMarkdown();
 
-export interface TsDocsArgs {
+export interface TsDocsCLIArgs extends OptionSource {
      "--": Array<string>,
      _: Array<string>,
-     help?: boolean,
-     landingPage?: string,
-     structure?: string,
-     out?: string,
-     name?: string
+     help?: boolean
 }
 
-export interface TsDocsConfigOptions {
-    landingPage?: string,
-    structure?: string,
-    name?: string,
-    out?: string,
-    entryPoints?: Array<string>
-}
-
-
-const args = parseArgs(process.argv.slice(2)) as TsDocsArgs;
+const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
 
 (() => {
     if (args.help) return showHelp();
 
     addOptionSource({...args, entryPoints: args._});
 
-    const tsconfig = findTSConfig<TsDocsConfigOptions>(process.cwd());
+    const tsconfig = findTSConfig<OptionSource>(process.cwd());
 
     if (tsconfig && tsconfig.tsdocsOptions) addOptionSource(tsconfig.tsdocsOptions);
 
