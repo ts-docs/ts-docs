@@ -63,7 +63,7 @@ export function initOptions(extractorList: ExtractorList) : TsDocsOptions {
         if (!options.name) options.name = module.module.name;
     }
     if (!options.name) options.name = extractorList[0].module.name;
-    else if (!options.landingPage) options.landingPage = extractorList[0];
+    if (!options.landingPage) options.landingPage = extractorList[0];
     if (options.customPages) {
         const customPages = options.customPages as unknown as string;
         const res = [];

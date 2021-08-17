@@ -1,5 +1,5 @@
 
-import { ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, InterfaceProperty, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl } from "@ts-docs/extractor/dist/structure";
+import { ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, InterfaceProperty, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl, ConditionalType, MappedType, TypeOperator, IndexAccessedType } from "@ts-docs/extractor/dist/structure";
 import { DocumentStructure } from "./documentStructure";
 import marked from "marked";
 import { copyFolder, createFile, escapeHTML } from "./utils";
@@ -67,11 +67,11 @@ export class Generator {
     }
 
     generateModule(path: string, module: Module, createFolder = true, readme?: string) : void {
-        this.depth++;
         if (createFolder) {
             this.generatePage(path, `m.${module.name}`, "index", this.structure.components.module(readme ? {...module, readme: marked.parse(readme) }:module), { type: "module", module, name: module.name });
             path += `/m.${module.name}`;
         }
+        this.depth++;
         for (const [, classObj] of module.classes) {
             this.generateClass(path, classObj);
         }
@@ -264,9 +264,43 @@ export class Generator {
             if (!this.structure.components.typeArray) return "";
             return this.structure.components.typeArray({type: this.generateType(ref.type) });
         }
-        case TypeKinds.UNIQUE_OPERATOR: 
+        case TypeKinds.MAPPED_TYPE: {
+            const ref = type as MappedType;
+            if (!this.structure.components.typeMapped) return "";
+            return this.structure.components.typeMapped({
+                typeParameter: ref.typeParameter,
+                optional: ref.optional,
+                constraint: ref.constraint && this.generateType(ref.constraint),
+                type: ref.type && this.generateType(ref.type)
+            });
+        }
+        case TypeKinds.CONDITIONAL_TYPE: {
+            const ref = type as ConditionalType;
+            if (!this.structure.components.typeConditional) return "";
+            return this.structure.components.typeConditional({
+                checkType: this.generateType(ref.checkType),
+                extendsType: this.generateType(ref.extendsType),
+                trueType: this.generateType(ref.trueType),
+                falseType: this.generateType(ref.falseType)
+            });
+        }
+        case TypeKinds.INDEX_ACCESS: {
+            const ref = type as IndexAccessedType;
+            if (!this.structure.components.typeIndexAccess) return "";
+            return this.structure.components.typeIndexAccess({index: this.generateType(ref.index), object: this.generateType(ref.object)});
+        }
+        case TypeKinds.UNIQUE_OPERATOR:
+            if (!this.structure.components.typeOperator) return "";
+            return this.structure.components.typeOperator({name: "unique", type: this.generateType((type as TypeOperator).type)});       
         case TypeKinds.KEYOF_OPERATOR:
+            if (!this.structure.components.typeOperator) return "";
+            return this.structure.components.typeOperator({name: "keyof", type: this.generateType((type as TypeOperator).type)}); 
         case TypeKinds.READONLY_OPERATOR:
+            if (!this.structure.components.typeOperator) return "";
+            return this.structure.components.typeOperator({name: "readonly", type: this.generateType((type as TypeOperator).type)}); 
+        case TypeKinds.TYPEOF_OPERATOR:
+            if (!this.structure.components.typeOperator) return "";
+            return this.structure.components.typeOperator({name: "typeof", type: this.generateType((type as TypeOperator).type)}); 
         case TypeKinds.STRING:
         case TypeKinds.NUMBER: 
         case TypeKinds.VOID: 
