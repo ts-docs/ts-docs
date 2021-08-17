@@ -147,6 +147,7 @@ export class Generator {
             signatures: func.signatures.map(sig => ({
                 parameters: sig.parameters?.map(p => this.generateParameter(p)),
                 typeParameters: sig.typeParameters?.map(p => this.generateTypeParameter(p)),
+                paramComments: sig.parameters?.filter(param => param.jsDoc.comment).map(param => ({name: param.name, comment: param.jsDoc.comment})),
                 returnType: sig.returnType && this.generateType(sig.returnType)
             }))
         }), { type: "module", module, depth: 1, name: func.name, realType: "function" });
@@ -187,6 +188,7 @@ export class Generator {
             signatures: method.signatures.map(sig => ({
                 parameters: sig.parameters?.map(p => this.generateParameter(p)),
                 typeParameters: sig.typeParameters?.map(p => this.generateTypeParameter(p)),
+                paramComments: sig.parameters?.filter(param => param.jsDoc.comment).map(param => ({name: param.name, comment: param.jsDoc.comment})),
                 returnType: sig.returnType && this.generateType(sig.returnType)
             })),
             comment: this.generateComment(method.jsDoc)
@@ -304,6 +306,7 @@ export class Generator {
         return this.structure.components.functionParameter({
             ...type,
             defaultValue: type.defaultValue && this.generateType(type.defaultValue),
+            comment: type.jsDoc.comment,
             type: type.type && this.generateType(type.type)
         });
     }
