@@ -22,7 +22,8 @@ export function copyFolder(origin: string, destination: string) : void {
         const newOrigin = path.join(origin, file.name);
         const newDestination = path.join(destination, file.name);
         if (file.isDirectory()) {
-            fs.mkdirSync(path.join(process.cwd(), newDestination));
+            const dest = path.join(process.cwd(), newDestination);
+            if (!fs.existsSync(dest)) fs.mkdirSync(path.join(process.cwd(), newDestination));
             copyFolder(newOrigin, newDestination);
         }
         else fs.writeFileSync(newDestination, fs.readFileSync(newOrigin, "utf-8"));

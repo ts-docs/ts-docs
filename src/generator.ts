@@ -33,6 +33,7 @@ export class Generator {
 
         const assetsFolder = path.join(this.settings.out, "assets");
         fs.mkdirSync(assetsFolder);
+        if (this.settings.assets) copyFolder(this.settings.assets, assetsFolder);
         copyFolder(path.join(this.structure.path, "assets"), assetsFolder);
         this.packData(packages, `${assetsFolder}/search.json`);
 

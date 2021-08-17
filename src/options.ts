@@ -26,6 +26,7 @@ export interface TsDocsOptions {
     landingPage?: LandingPage,
     out: string,
     structure: string,
+    assets?: string
 }
 
 export interface OptionSource {
@@ -34,7 +35,8 @@ export interface OptionSource {
     name?: string,
     landingPage?: LandingPage|string,
     out?: string,
-    structure?: string
+    structure?: string,
+    assets?: string
 }
 
 export const options: TsDocsOptions = {
@@ -93,5 +95,6 @@ Usage: ts-docs [...entryFiles]
 -name ─ The name of the page.
 -out ─ Where to emit the documentation files.
 -customPages ─ A folder which contains folders which contain .md files.
+-assets ─ All files and folders inside the folder will be copied to the /assets output directory. In markdown files in this directory can be linked with "./assets/filename.ext"
 `);
 }
