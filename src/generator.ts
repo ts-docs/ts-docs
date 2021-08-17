@@ -144,12 +144,12 @@ export class Generator {
         if (!this.structure.components.function) return;
         this.generatePage(path, "function", func.name, this.structure.components.function({
             ...func,
-            comment: this.generateComment(func.jsDoc),
             signatures: func.signatures.map(sig => ({
                 parameters: sig.parameters?.map(p => this.generateParameter(p)),
                 typeParameters: sig.typeParameters?.map(p => this.generateTypeParameter(p)),
                 paramComments: sig.parameters?.filter(param => param.jsDoc.comment).map(param => ({name: param.name, comment: param.jsDoc.comment})),
-                returnType: sig.returnType && this.generateType(sig.returnType)
+                returnType: sig.returnType && this.generateType(sig.returnType),
+                comment: this.generateComment(sig.jsDoc)
             }))
         }), { type: "module", module, depth: 1, name: func.name, realType: "function" });
     }
@@ -186,13 +186,14 @@ export class Generator {
         if (!this.structure.components.methodMember) return "";
         return this.structure.components.methodMember({
             ...method,
+            isDeprecated: method.jsDoc?.some(doc => doc.tags?.some(t => t.name === "deprecated")),
             signatures: method.signatures.map(sig => ({
                 parameters: sig.parameters?.map(p => this.generateParameter(p)),
                 typeParameters: sig.typeParameters?.map(p => this.generateTypeParameter(p)),
                 paramComments: sig.parameters?.filter(param => param.jsDoc.comment).map(param => ({name: param.name, comment: param.jsDoc.comment})),
-                returnType: sig.returnType && this.generateType(sig.returnType)
-            })),
-            comment: this.generateComment(method.jsDoc)
+                returnType: sig.returnType && this.generateType(sig.returnType),
+                comment: this.generateComment(method.jsDoc)
+            }))
         });
     }
 
