@@ -1,5 +1,5 @@
 
-import { ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, InterfaceProperty, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl, ConditionalType, MappedType, TypeOperator, IndexAccessedType } from "@ts-docs/extractor/dist/structure";
+import { ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, InterfaceProperty, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl, ConditionalType, MappedType, TypeOperator, IndexAccessedType, Constructor } from "@ts-docs/extractor/dist/structure";
 import { DocumentStructure } from "./documentStructure";
 import marked from "marked";
 import { copyFolder, createFile, escapeHTML } from "./utils";
@@ -8,6 +8,7 @@ import path from "path";
 import { TsDocsOptions } from "./options";
 import fs from "fs";
 import Highlight from "highlight.js";
+import { initMarkdown } from "./markdown";
 
 export interface OtherProps {
     [key: string]: unknown,
@@ -28,6 +29,7 @@ export class Generator {
     }
 
     generate(packages: ExtractorList) : void {
+        initMarkdown(this, packages[0]);
         if (fs.existsSync(this.settings.out)) fs.rmSync(this.settings.out, { force: true, recursive: true });
         fs.mkdirSync(this.settings.out);
 
@@ -67,11 +69,11 @@ export class Generator {
     }
 
     generateModule(path: string, module: Module, createFolder = true, readme?: string) : void {
+        this.depth++;
         if (createFolder) {
             this.generatePage(path, `m.${module.name}`, "index", this.structure.components.module(readme ? {...module, readme: marked.parse(readme) }:module), { type: "module", module, name: module.name });
             path += `/m.${module.name}`;
         }
-        this.depth++;
         for (const [, classObj] of module.classes) {
             this.generateClass(path, classObj);
         }
@@ -106,8 +108,17 @@ export class Generator {
                 comment: this.generateComment(classObj.jsDoc),
                 typeParameters: classObj.typeParameters?.map(p => this.generateTypeParameter(p)),
                 implements: classObj.implements?.map(impl => this.generateType(impl)),
-                extends: classObj.extends && this.generateType(classObj.extends)
+                extends: classObj.extends && this.generateType(classObj.extends),
+                constructor: classObj.constructor && this.generateConstructor(classObj.constructor),
             }), {properties: classObj.properties, name: classObj.name, methods: classObj.methods, type: "class"});
+    }
+
+    generateConstructor(constructor: Constructor) : string {
+        if (!this.structure.components.classConstructor) return "";
+        return this.structure.components.classConstructor({
+            parameters: constructor.parameters?.map(p => this.generateParameter(p)),
+            paramComments: constructor.parameters?.filter(param => param.jsDoc.comment).map(param => ({name: param.name, comment: param.jsDoc.comment})),
+        });
     }
 
     generateInterface(path: string, interfaceObj: InterfaceDecl) : void {

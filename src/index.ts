@@ -8,9 +8,6 @@ import { setupDocumentStructure } from "./documentStructure";
 import { Generator } from "./generator";
 import { findTSConfig } from "./utils";
 import { addOptionSource, initOptions, options, OptionSource, showHelp } from "./options";
-import { initMarkdown } from "./markdown";
-
-initMarkdown();
 
 export interface TsDocsCLIArgs extends OptionSource {
      "--": Array<string>,
