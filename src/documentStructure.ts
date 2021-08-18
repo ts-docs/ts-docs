@@ -51,8 +51,12 @@ import path from "path";
  *      - types
  * 
  * URL links look like this:
- * https://base.com/m.module_name/classes/class_name
- * https://base.com/m.module_name/m.module_name_2/types/type_name
+ * https://base.com/m.module_name/class/class_name
+ * https://base.com/m.module_name/class/class_name#.methodName
+ * https://base.com/m.module_name/class/class_name#.propNameName
+ * https://base.com/m.module_name/enum/enum_name#.memberName
+ * https://base.com/m.module_name/m.module_name_2/type/type_name
+ * 
  */
 
 export type Components = "class" | "constant" | "enum" | "function" | "functionParameter" | "interface" | "interfaceProperty" | "methodMember" | "module" | "propertyMember" | "type" | "typeArray" | "typeFunction" | "typeIntersection" | "typeObject" | "typeParameter" | "typeReference" | "typeTuple" | "typeUnion" | "typePrimitive" | "typeDefaultAPI" | "typeMapped" | "typeConditional" | "typeTemplateLiteral" | "typeIndexAccess" | "typeOperator" | "classConstructor";

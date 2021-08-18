@@ -208,7 +208,7 @@ export class Generator {
         });
     }
 
-    generateType(type: Type) : string {
+    generateType(type: Type, other: Record<string, unknown> = {}) : string {
         switch (type.kind) {
         case TypeKinds.REFERENCE: {
             const ref = type as Reference;
@@ -237,7 +237,8 @@ export class Generator {
             return this.structure.components.typeReference({
                 ...ref,
                 link: ref.type.path && this.generateLink(path.join(ref.type.external ? `../m.${ref.type.external}`:"", ...ref.type.path.map(p => `m.${p}`), refType, `${ref.type.name}.html`), ref.type.displayName),
-                typeParameters: ref.typeParameters?.map(param => this.generateType(param))
+                typeParameters: ref.typeParameters?.map(param => this.generateType(param)),
+                ...other
             });
         }
         case TypeKinds.ARROW_FUNCTION: {
