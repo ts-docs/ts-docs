@@ -11,8 +11,8 @@ declare module "marked" {
             name: string,
             level: string,
             start: (src: string) => number|boolean|undefined,
-            tokenizer: (src: string) => {type: string, raw: string, text: string, before: string}|undefined,
-            renderer: (token: {type: string, raw: string, text: string, before: string}) => string
+            tokenizer: (this: {lexer: marked.Lexer}, src: string, tokens: Array<marked.Token>) => {type: string, raw: string, text: string, before?: string, tokens?: Array<marked.Token>}|undefined,
+            renderer: (this: {parser: marked.Parser}, token: {type: string, raw: string, text: string, before?: string, tokens?: Array<marked.Token>}) => string
         }>
     }
 }
@@ -22,6 +22,9 @@ export function initMarkdown(generator: Generator, firstExtractor: TypescriptExt
         renderer: {
             code: (code, lang) : string => {
                 return `<pre><code class="hljs">${highlight.highlight(code, {language: lang || "js"}).value}</code></pre>`;
+            },
+            heading: (text, level) : string => {
+                return `<h${level} id="${text}" class="section-header">${text}</h${level}>`;
             }
         },
         extensions: [
@@ -74,6 +77,30 @@ export function initMarkdown(generator: Generator, firstExtractor: TypescriptExt
                 renderer: (token) => {
                     const ref = firstExtractor.resolveSymbol(token.text);
                     return `${token.before} ${generator.generateType(ref) || token.text}`;
+                }
+            },
+            {
+                name: "warning",
+                level: "block",
+                start: (src) => src.indexOf("|>"),
+                tokenizer: function(src)  {
+                    const match = src.match(/\|>(.*)/);
+                    if (match) {
+                        const tokens: Array<marked.Token> = [];
+                        //@ts-expect-error Marked has outdated typings.
+                        this.lexer.inline(match[1], tokens);
+                        return {
+                            type: "warning",
+                            raw: src,
+                            text: match[1],
+                            tokens
+                        };
+                    }
+                    return undefined;
+                },
+                renderer: function(token) {
+                    //@ts-expect-error Marked has outdated typings.
+                    return `<p class="text-warning">${this.parser.parseInline(token.tokens)}</p>`;
                 }
             }
         ]
