@@ -8,7 +8,7 @@ import path from "path";
 import { TsDocsOptions } from "./options";
 import fs from "fs";
 import Highlight from "highlight.js";
-import { initMarkdown } from "./markdown";
+import { Heading, initMarkdown } from "./markdown";
 
 export interface OtherProps {
     [key: string]: unknown,
@@ -29,7 +29,7 @@ export class Generator {
     }
 
     generate(packages: ExtractorList) : void {
-        initMarkdown(this, packages[0]);
+        initMarkdown(this, packages);
         if (fs.existsSync(this.settings.out)) fs.rmSync(this.settings.out, { force: true, recursive: true });
         fs.mkdirSync(this.settings.out);
 
@@ -43,15 +43,14 @@ export class Generator {
             fs.mkdirSync(path.join(this.settings.out, "./pages"));
             for (const category of this.settings.customPages) {
                 for (const page of category.pages) {
-                    this.generatePage("./pages", category.name, page.name, marked.parse(page.content), {
-                        type: packages.length === 1 ? "module":"index",
-                        packages,
-                        module: packages[0].module,
+                    this.depth += 2;
+                    const [markdown, headings] = this.generateMarkdownWithHeaders(page.content);
+                    this.generatePage("./pages", category.name, page.name, markdown, {
+                        type: "page",
                         pages: this.settings.customPages,
-                        doNotGivePath: true,
-                        isPage: true,
-                        depth: 2
+                        headings
                     });
+                    this.depth -= 2;
                 }
             }
         }
@@ -69,19 +68,25 @@ export class Generator {
     }
 
     generateModule(path: string, module: Module, createFolder = true, readme?: string) : void {
-        this.depth++;
         if (createFolder) {
             this.generatePage(path, `m.${module.name}`, "index", this.structure.components.module(readme ? {...module, readme: marked.parse(readme) }:module), { type: "module", module, name: module.name });
             path += `/m.${module.name}`;
         }
+        this.depth++;
         for (const [, classObj] of module.classes) {
+            this.depth++;
             this.generateClass(path, classObj);
+            this.depth--;
         }
         for (const [, interfaceObj] of module.interfaces) {
+            this.depth++;
             this.generateInterface(path, interfaceObj);
+            this.depth--;
         }
         for (const [, enumObj] of module.enums) {
+            this.depth++;
             this.generateEnum(path, enumObj);
+            this.depth--;
         }
         for (const [, typeObj] of module.types) {
             this.generateTypeDecl(path, typeObj, module);
@@ -148,7 +153,7 @@ export class Generator {
             ...typeObj,
             comment: this.generateComment(typeObj.jsDoc),
             value: typeObj.value && this.generateType(typeObj.value)
-        }), { type: "module", module, depth: 1, name: typeObj.name, realType: "type" });
+        }), { type: "module", module, depth: 1, name: typeObj.name });
     }
 
     generateFunction(path: string, func: FunctionDecl, module: Module) : void {
@@ -162,7 +167,7 @@ export class Generator {
                 returnType: sig.returnType && this.generateType(sig.returnType),
                 comment: this.generateComment(sig.jsDoc)
             }))
-        }), { type: "module", module, depth: 1, name: func.name, realType: "function" });
+        }), { type: "module", module, depth: 1, name: func.name });
     }
 
     generateConstant(path: string, constant: ConstantDecl, module: Module) : void {
@@ -172,7 +177,7 @@ export class Generator {
             comment: this.generateComment(constant.jsDoc),
             type: constant.type && this.generateType(constant.type),
             content: constant.content && Highlight.highlight(constant.content, { language: "ts" }).value
-        }), { type: "module", module, depth: 1, name: constant.name, realType: "constant" });
+        }), { type: "module", module, depth: 1, name: constant.name });
     }
 
     generatePropertyMember(property: ClassProperty) : string {
@@ -208,39 +213,40 @@ export class Generator {
         });
     }
 
+    generateRef(ref: Reference, other: Record<string, unknown> = {}) : string {
+        if (!this.structure.components.typeReference) return "";
+        let refType: string;
+        switch (ref.type.kind) {
+        case TypeReferenceKinds.DEFAULT_API: {
+            if (!this.structure.components.typeDefaultAPI) return "";
+            return this.structure.components.typeDefaultAPI({...ref, typeParameters: ref.typeParameters?.map(param => this.generateType(param))});
+        }
+        case TypeReferenceKinds.CLASS:
+            refType = "class";
+            break;
+        case TypeReferenceKinds.INTERFACE:
+            refType = "interface";
+            break;
+        case TypeReferenceKinds.ENUM:
+        case TypeReferenceKinds.ENUM_MEMBER:
+            refType = "enum";
+            break;
+        case TypeReferenceKinds.TYPE_ALIAS:
+            refType = "type";
+            break;
+        default: refType = "";
+        }
+        return this.structure.components.typeReference({
+            ...ref,
+            link: ref.type.path && this.generateLink(path.join(ref.type.external ? `../m.${ref.type.external}`:"", ...ref.type.path.map(p => `m.${p}`), refType, `${ref.type.name}.html`), ref.type.displayName),
+            typeParameters: ref.typeParameters?.map(param => this.generateType(param)),
+            ...other
+        });
+    }
+
     generateType(type: Type, other: Record<string, unknown> = {}) : string {
         switch (type.kind) {
-        case TypeKinds.REFERENCE: {
-            const ref = type as Reference;
-            if (!this.structure.components.typeReference) return "";
-            let refType: string;
-            switch (ref.type.kind) {
-            case TypeReferenceKinds.DEFAULT_API: {
-                if (!this.structure.components.typeDefaultAPI) return "";
-                return this.structure.components.typeDefaultAPI({...type, typeParameters: ref.typeParameters?.map(param => this.generateType(param))});
-            }
-            case TypeReferenceKinds.CLASS:
-                refType = "class";
-                break;
-            case TypeReferenceKinds.INTERFACE:
-                refType = "interface";
-                break;
-            case TypeReferenceKinds.ENUM:
-            case TypeReferenceKinds.ENUM_MEMBER:
-                refType = "enum";
-                break;
-            case TypeReferenceKinds.TYPE_ALIAS:
-                refType = "type";
-                break;
-            default: refType = "";
-            }
-            return this.structure.components.typeReference({
-                ...ref,
-                link: ref.type.path && this.generateLink(path.join(ref.type.external ? `../m.${ref.type.external}`:"", ...ref.type.path.map(p => `m.${p}`), refType, `${ref.type.name}.html`), ref.type.displayName),
-                typeParameters: ref.typeParameters?.map(param => this.generateType(param)),
-                ...other
-            });
-        }
+        case TypeKinds.REFERENCE: return this.generateRef(type as Reference, other);
         case TypeKinds.ARROW_FUNCTION: {
             const ref = type as ArrowFunction;
             if (!this.structure.components.typeFunction) return "";
@@ -361,7 +367,13 @@ export class Generator {
 
     generateComment(comment?: Array<JSDocData>) : string|undefined {
         if (!comment) return undefined;
-        return marked.parse(comment.map(c => c.comment || "").join("\n\n"), {gfm: true});
+        return marked.parse(comment.map(c => c.comment || "").join("\n\n"));
+    }
+
+    generateMarkdownWithHeaders(content: string) : [string, Array<Heading>] {
+        const headings: Array<Heading> = [];
+        const markdown = marked.parse(content, {headings});
+        return [markdown, headings];
     }
 
     generatePage(p: string, directory: string, file: string, content: string, other: OtherProps = {}) : string {
@@ -373,7 +385,7 @@ export class Generator {
             headerHomepage: this.settings.landingPage?.homepage,
             headerVersion: this.settings.landingPage?.version,
             path: !other.doNotGivePath && this.generatePath(p, file !== "index" ? file:directory),
-            moduleDepth: this.depth,
+            depth: this.depth,
             currentGlobalModuleName: this.currentGlobalModuleName
         }));
     }

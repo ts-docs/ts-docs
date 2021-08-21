@@ -41,7 +41,7 @@ export interface OptionSource {
 
 export const options: TsDocsOptions = {
     out: "./docs",
-    structure: "./node_modules/@ts-docs/default-docs-structure/dist/",
+    structure: "@ts-docs/default-docs-structure",
     entryPoints: [],
     name: ""
 };
@@ -53,6 +53,7 @@ export function addOptionSource(source: OptionSource) : void {
     if (source.structure && typeof source.structure !== "string") throw new Error("Documentation structure must be a valid string.");
     if (source.name && typeof source.name !== "string") throw new Error("Project name must be a valid string.");
     if (source.customPages && typeof source.customPages !== "string") throw new Error("Custom pages must be path to a directory.");
+    if (source.assets && typeof source.assets !== "string") throw new Error("Path to assets must be a string.");
 } 
 
 export function initOptions(extractorList: ExtractorList) : TsDocsOptions {
@@ -95,6 +96,6 @@ Usage: ts-docs [...entryFiles]
 -name ─ The name of the page.
 -out ─ Where to emit the documentation files.
 -customPages ─ A folder which contains folders which contain .md files.
--assets ─ All files and folders inside the folder will be copied to the /assets output directory. In markdown files in this directory can be linked with "./assets/filename.ext"
+-assets ─ All files and folders inside the folder will be copied to the /assets output directory. In markdown, files in this directory can be linked with "./assets/filename.ext"
 `);
 }

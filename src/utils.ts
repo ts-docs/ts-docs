@@ -26,7 +26,7 @@ export function copyFolder(origin: string, destination: string) : void {
             if (!fs.existsSync(dest)) fs.mkdirSync(path.join(process.cwd(), newDestination));
             copyFolder(newOrigin, newDestination);
         }
-        else fs.writeFileSync(newDestination, fs.readFileSync(newOrigin, "utf-8"));
+        else fs.copyFileSync(newOrigin, newDestination);
     }
 }
 

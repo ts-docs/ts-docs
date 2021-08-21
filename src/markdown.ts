@@ -1,8 +1,15 @@
 
-import { TypescriptExtractor } from "@ts-docs/extractor";
+import { ExtractorList } from "@ts-docs/extractor";
+import { TypeKinds, TypeReferenceKinds } from "@ts-docs/extractor/dist/structure";
 import highlight from "highlight.js";
 import marked from "marked";
 import { Generator } from "./generator";
+
+export interface Heading {
+    name: string,
+    id: string,
+    subHeadings: Array<Heading>
+}
 
 declare module "marked" {
 
@@ -11,20 +18,45 @@ declare module "marked" {
             name: string,
             level: string,
             start: (src: string) => number|boolean|undefined,
-            tokenizer: (this: {lexer: marked.Lexer}, src: string, tokens: Array<marked.Token>) => {type: string, raw: string, text: string, before?: string, tokens?: Array<marked.Token>}|undefined,
-            renderer: (this: {parser: marked.Parser}, token: {type: string, raw: string, text: string, before?: string, tokens?: Array<marked.Token>}) => string
+            tokenizer: (this: {lexer: marked.Lexer}, src: string, tokens: Array<marked.Token>) => {type: string, raw: string, text: string, tokens?: Array<marked.Token>}|undefined,
+            renderer: (this: {parser: marked.Parser}, token: {type: string, raw: string, text: string, tokens?: Array<marked.Token>}) => string
         }>
     }
+
+    export interface MarkedOptions {
+        headings: Array<Heading>
+    }
+
 }
 
-export function initMarkdown(generator: Generator, firstExtractor: TypescriptExtractor) : void {
+export function initMarkdown(generator: Generator, extractors: ExtractorList) : void {
     marked.use({
         renderer: {
             code: (code, lang) : string => {
                 return `<pre><code class="hljs">${highlight.highlight(code, {language: lang || "js"}).value}</code></pre>`;
             },
-            heading: (text, level) : string => {
-                return `<h${level} id="${text}" class="section-header">${text}</h${level}>`;
+            heading: function(text, level, raw, slug) {
+                const renderer = this as marked.Renderer;
+                const id = slug.slug(text);
+                if (renderer.options.headings) {
+                    if (level === 1) renderer.options.headings.push({name: text, subHeadings: [], id});
+                    else if (renderer.options.headings.length) {
+                        let lastLevel = renderer.options.headings[renderer.options.headings.length - 1];
+                        for (let lvl=1; lvl < level; lvl++) {
+                            const newLastLevel = lastLevel.subHeadings[lvl];
+                            if (!newLastLevel) break;
+                            lastLevel = newLastLevel;
+                        }
+                        lastLevel.subHeadings.push({name: text, subHeadings: [], id});
+                    }
+                }
+                return `<h${level} id="${id}" class="section-header">${text}</h${level}>`;
+            },
+            image: (link, title, text) : string => {
+                if (!link) return "";
+                if (link.startsWith("./assets")) link = `${"../".repeat(generator.depth)}${link.slice(2)}`;
+                else if (link.startsWith("assets")) link = `${"../".repeat(generator.depth)}${link}`;
+                return `<img src="${link}" title="${title}" alt="${text}">`;
             }
         },
         extensions: [
@@ -33,14 +65,12 @@ export function initMarkdown(generator: Generator, firstExtractor: TypescriptExt
                 level: "inline",
                 start: (src) => src.indexOf("[["),
                 tokenizer: (src) => {
-                    const match = src.match(/(?<=\[\[).+?(?=\]])/);
-                    if (match && match.index) {
-                        const textBefore = src.slice(0, match.index - 2);
+                    const match = src.match(/^\[\[([^\]]+)\]\]/);
+                    if (match && match.index !== undefined) {
                         return {
                             type: "ref",
-                            raw: src.slice(0, match.index + match[0].length + 2),
-                            text: match[0].trim(),
-                            before: textBefore
+                            raw: match[0],
+                            text: match[1].trim(),
                         };
                     }
                     return undefined;
@@ -48,35 +78,64 @@ export function initMarkdown(generator: Generator, firstExtractor: TypescriptExt
                 renderer: (token) => {
                     const otherData: Record<string, unknown> = {};
                     let name = token.text;
-                    if (name.includes(".")) {
-                        const [thingName, member] = name.split(".");
-                        name = thingName;
-                        otherData.hash = member;
+                    if (name.includes(" as ")) {
+                        const [newName, alias] = name.split(" as ");
+                        otherData.displayName = alias;
+                        name = newName;
                     }
-                    const ref = firstExtractor.resolveSymbol(name);
-                    return `${token.before} ${generator.generateType(ref, otherData) || token.text}`;
+                    if (name.includes("/")) {
+                        const parts = name.split("/");
+                        const firstEl = parts.shift();
+                        const path: Array<string> = [];
+                        let mod = extractors.find(ex => ex.module.name === firstEl)?.module;
+                        if (!mod) return "";
+                        path.push(mod.name);
+                        const lastElement = parts.pop();
+                        for (const part of parts) {
+                            mod = mod.modules.get(part);
+                            if (!mod) return name;
+                            path.push(mod.name);
+                        }
+                        if (mod && lastElement) {
+                            let thingName: string = lastElement;
+                            if (lastElement.includes(".")) {
+                                const [newThingName, hash] = name.split(".");
+                                thingName = newThingName;
+                                otherData.hash = hash;
+                            }
+                            if (mod.classes.has(thingName)) return generator.generateRef({kind: TypeKinds.REFERENCE, type: {kind: TypeReferenceKinds.CLASS, name: thingName, path}}, otherData);
+                            else if (mod.interfaces.has(thingName)) return generator.generateRef({kind: TypeKinds.REFERENCE, type: {kind: TypeReferenceKinds.INTERFACE, name: thingName, path}}, otherData);
+                            else if (mod.enums.has(thingName)) return generator.generateRef({kind: TypeKinds.REFERENCE, type: {kind: TypeReferenceKinds.ENUM, name: thingName, path}}, otherData);
+                            else if (mod.types.has(thingName)) return generator.generateRef({kind: TypeKinds.REFERENCE, type: {kind: TypeReferenceKinds.TYPE_ALIAS, name: thingName, path}}, otherData);
+                            return "";
+                        }
+                    }
+                    if (name.includes(".")) {
+                        const [thingName, hash] = name.split(".");
+                        otherData.hash = hash;
+                        return generator.generateType(extractors[0].resolveSymbol(thingName), otherData);
+                    } 
+                    return generator.generateType(extractors[0].resolveSymbol(name), otherData);
                 } 
             },
             {
                 name: "ref-link",
                 level: "inline",
-                start: (src) => src.match(/(?:\[(.+?)\])?\{@(link|linkcode|linkplain)\s+((?:.|\n)+?)\}/)?.index,
+                start: (src) => src.match(/^(?:\[(.+?)\])?\{@(link|linkcode|linkplain)\s+((?:.|\n)+?)\}/)?.index,
                 tokenizer: (src) => {
-                    const match = src.match(/(?:\[(.+?)\])?\{@(link|linkcode|linkplain)\s+((?:.|\n)+?)\}/);
-                    if (match && match.index) {
-                        const textBefore = src.slice(0, match.index);
+                    const match = src.match(/^(?:\[(.+?)\])?\{@(link|linkcode|linkplain)\s+((?:.|\n)+?)\}/);
+                    if (match && match.index !== undefined) {
                         return {
                             type: "ref-link",
-                            raw: src.slice(0, match.index + match[0].length),
+                            raw: match[0],
                             text: match[3].trim(),
-                            before: textBefore
                         };
                     }
                     return undefined;
                 },
                 renderer: (token) => {
-                    const ref = firstExtractor.resolveSymbol(token.text);
-                    return `${token.before} ${generator.generateType(ref) || token.text}`;
+                    const ref = extractors[0].resolveSymbol(token.text);
+                    return `${generator.generateType(ref) || token.text}`;
                 }
             },
             {
@@ -84,19 +143,19 @@ export function initMarkdown(generator: Generator, firstExtractor: TypescriptExt
                 level: "block",
                 start: (src) => src.indexOf("|>"),
                 tokenizer: function(src)  {
-                    const match = src.match(/\|>(.*)/);
-                    if (match) {
+                    const match = src.match(/^\|>(.*)/);
+                    if (match && match.index !== undefined) {
                         const tokens: Array<marked.Token> = [];
                         //@ts-expect-error Marked has outdated typings.
                         this.lexer.inline(match[1], tokens);
                         return {
                             type: "warning",
-                            raw: src,
+                            raw: match[0],
                             text: match[1],
                             tokens
                         };
                     }
-                    return undefined;
+                    return;
                 },
                 renderer: function(token) {
                     //@ts-expect-error Marked has outdated typings.
