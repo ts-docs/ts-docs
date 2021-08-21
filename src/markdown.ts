@@ -107,6 +107,8 @@ export function initMarkdown(generator: Generator, extractors: ExtractorList) : 
                             else if (mod.interfaces.has(thingName)) return generator.generateRef({kind: TypeKinds.REFERENCE, type: {kind: TypeReferenceKinds.INTERFACE, name: thingName, path}}, otherData);
                             else if (mod.enums.has(thingName)) return generator.generateRef({kind: TypeKinds.REFERENCE, type: {kind: TypeReferenceKinds.ENUM, name: thingName, path}}, otherData);
                             else if (mod.types.has(thingName)) return generator.generateRef({kind: TypeKinds.REFERENCE, type: {kind: TypeReferenceKinds.TYPE_ALIAS, name: thingName, path}}, otherData);
+                            else if (mod.functions.has(thingName)) return generator.generateRef({kind: TypeKinds.REFERENCE, type: {kind: TypeReferenceKinds.FUNCTION, name: thingName, path}}, otherData);
+                            else if (mod.constants.has(thingName)) generator.generateRef({kind: TypeKinds.REFERENCE, type: {kind: TypeReferenceKinds.CONSTANT, name: thingName, path}}, otherData);
                             return "";
                         }
                     }

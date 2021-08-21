@@ -26,7 +26,8 @@ export interface TsDocsOptions {
     landingPage?: LandingPage,
     out: string,
     structure: string,
-    assets?: string
+    assets?: string,
+    logo?: string
 }
 
 export interface OptionSource {
@@ -36,7 +37,8 @@ export interface OptionSource {
     landingPage?: LandingPage|string,
     out?: string,
     structure?: string,
-    assets?: string
+    assets?: string,
+    logo?: string
 }
 
 export const options: TsDocsOptions = {
@@ -54,6 +56,7 @@ export function addOptionSource(source: OptionSource) : void {
     if (source.name && typeof source.name !== "string") throw new Error("Project name must be a valid string.");
     if (source.customPages && typeof source.customPages !== "string") throw new Error("Custom pages must be path to a directory.");
     if (source.assets && typeof source.assets !== "string") throw new Error("Path to assets must be a string.");
+    if (source.logo && typeof source.logo !== "string") throw new Error("Path to logo must be a string.");
 } 
 
 export function initOptions(extractorList: ExtractorList) : TsDocsOptions {
@@ -97,5 +100,6 @@ Usage: ts-docs [...entryFiles]
 -out ─ Where to emit the documentation files.
 -customPages ─ A folder which contains folders which contain .md files.
 -assets ─ All files and folders inside the folder will be copied to the /assets output directory. In markdown, files in this directory can be linked with "./assets/filename.ext"
+-logo ─ Path to the project's logo.
 `);
 }

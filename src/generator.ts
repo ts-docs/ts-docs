@@ -74,19 +74,13 @@ export class Generator {
         }
         this.depth++;
         for (const [, classObj] of module.classes) {
-            this.depth++;
             this.generateClass(path, classObj);
-            this.depth--;
         }
         for (const [, interfaceObj] of module.interfaces) {
-            this.depth++;
             this.generateInterface(path, interfaceObj);
-            this.depth--;
         }
         for (const [, enumObj] of module.enums) {
-            this.depth++;
             this.generateEnum(path, enumObj);
-            this.depth--;
         }
         for (const [, typeObj] of module.types) {
             this.generateTypeDecl(path, typeObj, module);
@@ -94,7 +88,7 @@ export class Generator {
         for (const [, fnObj] of module.functions) {
             this.generateFunction(path, fnObj, module);
         }
-        for (const constantObj of module.constants) {
+        for (const [, constantObj] of module.constants) {
             this.generateConstant(path, constantObj, module);
         }
         for (const [, mod] of module.modules) {
@@ -115,7 +109,7 @@ export class Generator {
                 implements: classObj.implements?.map(impl => this.generateType(impl)),
                 extends: classObj.extends && this.generateType(classObj.extends),
                 constructor: classObj.constructor && this.generateConstructor(classObj.constructor),
-            }), {properties: classObj.properties, name: classObj.name, methods: classObj.methods, type: "class"});
+            }), {properties: classObj.properties, name: classObj.name, methods: classObj.methods, type: "class", depth: this.depth + 1});
     }
 
     generateConstructor(constructor: Constructor) : string {
@@ -135,7 +129,7 @@ export class Generator {
             implements: interfaceObj.implements && interfaceObj.implements.map(impl => this.generateType(impl)),
             typeParameters: interfaceObj.typeParameters?.map(p => this.generateTypeParameter(p)),
             comment: this.generateComment(interfaceObj.jsDoc)
-        }), {properties: interfaceObj.properties, name: interfaceObj.name, type: "interface"});
+        }), {properties: interfaceObj.properties, name: interfaceObj.name, type: "interface", depth: this.depth + 1});
     }
 
     generateEnum(path: string, enumObj: EnumDecl) : void {
@@ -144,7 +138,7 @@ export class Generator {
             ...enumObj,
             comment: this.generateComment(enumObj.jsDoc),
             members: enumObj.members.map(m => ({...m, initializer: m.initializer && this.generateType(m.initializer)}))
-        }), { type: "enum", members: enumObj.members, name: enumObj.name });
+        }), { type: "enum", members: enumObj.members, name: enumObj.name, depth: this.depth + 1 });
     }
 
     generateTypeDecl(path: string, typeObj: TypeDecl, module: Module) : void {
@@ -153,7 +147,7 @@ export class Generator {
             ...typeObj,
             comment: this.generateComment(typeObj.jsDoc),
             value: typeObj.value && this.generateType(typeObj.value)
-        }), { type: "module", module, depth: 1, name: typeObj.name });
+        }), { type: "module", module, name: typeObj.name, realType: "enum",  });
     }
 
     generateFunction(path: string, func: FunctionDecl, module: Module) : void {
@@ -167,7 +161,7 @@ export class Generator {
                 returnType: sig.returnType && this.generateType(sig.returnType),
                 comment: this.generateComment(sig.jsDoc)
             }))
-        }), { type: "module", module, depth: 1, name: func.name });
+        }), { type: "module", module, name: func.name, realType: "function" });
     }
 
     generateConstant(path: string, constant: ConstantDecl, module: Module) : void {
@@ -177,7 +171,7 @@ export class Generator {
             comment: this.generateComment(constant.jsDoc),
             type: constant.type && this.generateType(constant.type),
             content: constant.content && Highlight.highlight(constant.content, { language: "ts" }).value
-        }), { type: "module", module, depth: 1, name: constant.name });
+        }), { type: "module", module, name: constant.name, realType: "constant" });
     }
 
     generatePropertyMember(property: ClassProperty) : string {
@@ -330,6 +324,7 @@ export class Generator {
         case TypeKinds.UNKNOWN:
         case TypeKinds.STRING_LITERAL:
         case TypeKinds.NUMBER_LITERAL:
+        case TypeKinds.SYMBOL:
         case TypeKinds.ANY: {
             if (!this.structure.components.typePrimitive) return "";
             return this.structure.components.typePrimitive({...type});
@@ -378,7 +373,6 @@ export class Generator {
 
     generatePage(p: string, directory: string, file: string, content: string, other: OtherProps = {}) : string {
         return createFile(path.join(this.settings.out as string, p), directory, `${file}.html`, this.structure.index({
-            ...other,
             content,
             headerName: this.settings.name,
             headerRepository: this.settings.landingPage?.repository,
@@ -386,7 +380,9 @@ export class Generator {
             headerVersion: this.settings.landingPage?.version,
             path: !other.doNotGivePath && this.generatePath(p, file !== "index" ? file:directory),
             depth: this.depth,
-            currentGlobalModuleName: this.currentGlobalModuleName
+            currentGlobalModuleName: this.currentGlobalModuleName,
+            logo: this.settings.logo,
+            ...other
         }));
     }
 
@@ -439,7 +435,7 @@ export class Generator {
                 for (const [, en] of mod.enums) modObj[3].push([en.name, en.members.map(m => m.name), p]);
                 for (const [, typ] of mod.types) modObj[4].push([typ.name, p]);
                 for (const [, fn] of mod.functions) modObj[5].push([fn.name, p]);
-                for (const constant of mod.constants) modObj[6].push([constant.name, p]);
+                for (const [, constant] of mod.constants) modObj[6].push([constant.name, p]);
             });
             res[0].push(modObj);
         }
