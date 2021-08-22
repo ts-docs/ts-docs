@@ -146,7 +146,8 @@ export class Generator {
         this.generatePage(path, "type", typeObj.name, this.structure.components.type({
             ...typeObj,
             comment: this.generateComment(typeObj.jsDoc),
-            value: typeObj.value && this.generateType(typeObj.value)
+            value: typeObj.value && this.generateType(typeObj.value),
+            typeParameters: typeObj.typeParameters?.map(typeParam => this.generateTypeParameter(typeParam))
         }), { type: "module", module, name: typeObj.name, realType: "enum",  });
     }
 
