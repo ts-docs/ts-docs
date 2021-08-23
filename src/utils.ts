@@ -1,4 +1,5 @@
 
+import { ArrowFunction, FunctionParameter, ObjectLiteral, Reference, Type, TypeKinds, UnionOrIntersection } from "@ts-docs/extractor/dist/structure";
 import fs from "fs";
 import path from "path";
 
@@ -32,4 +33,33 @@ export function copyFolder(origin: string, destination: string) : void {
 
 export function escapeHTML(html: string) : string {
     return html.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;") ;
+}
+
+export function isLargeType(type: Type) : boolean {
+    switch (type.kind) {
+    case TypeKinds.REFERENCE: return (type as Reference).type.name.length > 24 || ((type as Reference).typeParameters?.some(typeParam => isLargeType(typeParam)) || false);
+    case TypeKinds.OBJECT_LITERAL: return (type as ObjectLiteral).properties.length > 2 || (type as ObjectLiteral).properties.some(prop => prop.type && prop.type.kind === TypeKinds.REFERENCE && (prop.type as Reference).type.name.length > 12);
+    case TypeKinds.ARROW_FUNCTION: {
+        const parameters = (type as ArrowFunction).parameters;
+        if (!parameters) return false;
+        return parameters.length > 3 || parameters.some(p => p.type && isLargeType(p.type));
+    }
+    case TypeKinds.UNION:
+    case TypeKinds.INTERSECTION:
+        return (type as UnionOrIntersection).types.some(t => isLargeType(t));
+    default: return false;
+    }
+}
+
+export function isLargeSignature(sig: { parameters?: Array<FunctionParameter>, returnType?: Type }) : boolean {
+    if (sig.parameters) {
+        if (sig.parameters.length > 2) return true;
+        return sig.parameters.some(p => {
+            if (p.name.length > 20) return true;
+            else if (p.type) return isLargeType(p.type);
+            return false;
+        });
+    }
+    if (sig.returnType) return isLargeType(sig.returnType); 
+    return false;
 }

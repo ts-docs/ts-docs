@@ -1,8 +1,8 @@
 
-import { ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, InterfaceProperty, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl, ConditionalType, MappedType, TypeOperator, IndexAccessedType, Constructor } from "@ts-docs/extractor/dist/structure";
+import { ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, InterfaceProperty, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl, ConditionalType, MappedType, TypeOperator, IndexAccessedType, Constructor, FunctionSignature } from "@ts-docs/extractor/dist/structure";
 import { DocumentStructure } from "./documentStructure";
 import marked from "marked";
-import { copyFolder, createFile, escapeHTML } from "./utils";
+import { copyFolder, createFile, escapeHTML, isLargeSignature } from "./utils";
 import { ExtractorList } from "@ts-docs/extractor";
 import path from "path";
 import { TsDocsOptions } from "./options";
@@ -117,6 +117,7 @@ export class Generator {
         return this.structure.components.classConstructor({
             parameters: constructor.parameters?.map(p => this.generateParameter(p)),
             paramComments: constructor.parameters?.filter(param => param.jsDoc.comment).map(param => ({name: param.name, comment: param.jsDoc.comment})),
+            paramsOnNewLine: isLargeSignature(constructor)
         });
     }
 
@@ -155,13 +156,8 @@ export class Generator {
         if (!this.structure.components.function) return;
         this.generatePage(path, "function", func.name, this.structure.components.function({
             ...func,
-            signatures: func.signatures.map(sig => ({
-                parameters: sig.parameters?.map(p => this.generateParameter(p)),
-                typeParameters: sig.typeParameters?.map(p => this.generateTypeParameter(p)),
-                paramComments: sig.parameters?.filter(param => param.jsDoc.comment).map(param => ({name: param.name, comment: param.jsDoc.comment})),
-                returnType: sig.returnType && this.generateType(sig.returnType),
-                comment: this.generateComment(sig.jsDoc)
-            }))
+            signatures: func.signatures.map(sig => this.generateSignature(sig)),
+            typeParameters: func.signatures[0].typeParameters?.map(p => this.generateTypeParameter(p))
         }), { type: "module", module, name: func.name, realType: "function" });
     }
 
@@ -198,13 +194,7 @@ export class Generator {
         return this.structure.components.methodMember({
             ...method,
             isDeprecated: method.jsDoc?.some(doc => doc.tags?.some(t => t.name === "deprecated")),
-            signatures: method.signatures.map(sig => ({
-                parameters: sig.parameters?.map(p => this.generateParameter(p)),
-                typeParameters: sig.typeParameters?.map(p => this.generateTypeParameter(p)),
-                paramComments: sig.parameters?.filter(param => param.jsDoc.comment).map(param => ({name: param.name, comment: param.jsDoc.comment})),
-                returnType: sig.returnType && this.generateType(sig.returnType),
-                comment: this.generateComment(method.jsDoc)
-            }))
+            signatures: method.signatures.map(sig => this.generateSignature(sig))
         });
     }
 
@@ -342,6 +332,17 @@ export class Generator {
         }
     }
 
+    generateSignature(sig: FunctionSignature) : Record<string, unknown> {
+        return {
+            parameters: sig.parameters?.map(p => this.generateParameter(p)),
+            typeParameters: sig.typeParameters?.map(p => this.generateTypeParameter(p)),
+            paramComments: sig.parameters?.filter(param => param.jsDoc.comment).map(param => ({name: param.name, comment: param.jsDoc.comment})),
+            returnType: sig.returnType && this.generateType(sig.returnType),
+            comment: this.generateComment(sig.jsDoc),
+            paramsOnNewLine: isLargeSignature(sig)
+        };
+    }
+
     generateTypeParameter(type: TypeParameter) : string {
         if (!this.structure.components.typeParameter) return "";
         return this.structure.components.typeParameter({
@@ -355,6 +356,7 @@ export class Generator {
         if (!this.structure.components.functionParameter) return "";
         return this.structure.components.functionParameter({
             ...type,
+            raw: type,
             defaultValue: type.defaultValue && this.generateType(type.defaultValue),
             comment: type.jsDoc.comment,
             type: type.type && this.generateType(type.type)

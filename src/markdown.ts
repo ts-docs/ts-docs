@@ -5,6 +5,8 @@ import highlight from "highlight.js";
 import marked from "marked";
 import { Generator } from "./generator";
 
+// Array of h1, { subHeadings: [] }
+// Array of h2
 export interface Heading {
     name: string,
     id: string,
@@ -36,14 +38,14 @@ export function initMarkdown(generator: Generator, extractors: ExtractorList) : 
                 return `<pre><code class="hljs">${highlight.highlight(code, {language: lang || "js"}).value}</code></pre>`;
             },
             heading: function(text, level, raw, slug) {
-                const renderer = this as marked.Renderer;
+                const headings = (this as marked.Renderer).options.headings;
                 const id = slug.slug(text);
-                if (renderer.options.headings) {
-                    if (level === 1) renderer.options.headings.push({name: text, subHeadings: [], id});
-                    else if (renderer.options.headings.length) {
-                        let lastLevel = renderer.options.headings[renderer.options.headings.length - 1];
-                        for (let lvl=1; lvl < level; lvl++) {
-                            const newLastLevel = lastLevel.subHeadings[lvl];
+                if (headings) {
+                    if (level === 1) headings.push({name: text, subHeadings: [], id});
+                    else if (headings.length) {
+                        let lastLevel = headings[headings.length - 1];
+                        for (let lvl=1; lvl < level - 1; lvl++) {
+                            const newLastLevel = lastLevel.subHeadings[lastLevel.subHeadings.length - 1];
                             if (!newLastLevel) break;
                             lastLevel = newLastLevel;
                         }
@@ -116,7 +118,11 @@ export function initMarkdown(generator: Generator, extractors: ExtractorList) : 
                         const [thingName, hash] = name.split(".");
                         otherData.hash = hash;
                         return generator.generateType(extractors[0].resolveSymbol(thingName), otherData);
-                    } 
+                    } else if (name.includes("#")) {
+                        const [thingName, hash] = name.split("#");
+                        otherData.hash = hash;
+                        return generator.generateType(extractors[0].resolveSymbol(thingName), otherData);
+                    }
                     return generator.generateType(extractors[0].resolveSymbol(name), otherData);
                 } 
             },
