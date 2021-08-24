@@ -35,6 +35,15 @@ export function escapeHTML(html: string) : string {
     return html.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;") ;
 }
 
+
+/*
+export function getTypeLength(type: Type) : number {
+    switch (type.kind) {
+
+    }
+}
+*/
+
 export function isLargeType(type: Type) : boolean {
     switch (type.kind) {
     case TypeKinds.REFERENCE: return (type as Reference).type.name.length > 24 || ((type as Reference).typeParameters?.some(typeParam => isLargeType(typeParam)) || false);
