@@ -1,5 +1,5 @@
 
-import { ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, InterfaceProperty, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl, ConditionalType, MappedType, TypeOperator, IndexAccessedType, Constructor, FunctionSignature } from "@ts-docs/extractor/dist/structure";
+import { ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, InterfaceProperty, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl, ConditionalType, MappedType, TypeOperator, IndexAccessedType, Constructor, FunctionSignature, TypePredicateType, InferType } from "@ts-docs/extractor/dist/structure";
 import { DocumentStructure } from "./documentStructure";
 import marked from "marked";
 import { copyFolder, createFile, escapeHTML, isLargeSignature } from "./utils";
@@ -118,7 +118,7 @@ export class Generator {
         if (!this.structure.components.classConstructor) return "";
         return this.structure.components.classConstructor({
             parameters: constructor.parameters?.map(p => this.generateParameter(p)),
-            paramComments: constructor.parameters?.filter(param => param.jsDoc.comment).map(param => ({name: param.name, comment: param.jsDoc.comment})),
+            paramComments: constructor.parameters?.filter(param => param.jsDoc.comment).map(param => ({name: param.name, comment: param.jsDoc.comment && marked.parseInline(param.jsDoc.comment)})),
             paramsOnNewLine: isLargeSignature(constructor)
         });
     }
@@ -182,11 +182,13 @@ export class Generator {
         });
     }
 
-    generateProperty(property: InterfaceProperty|IndexSignatureDeclaration) : string {
+    generateProperty(property: InterfaceProperty|IndexSignatureDeclaration|ArrowFunction) : string {
         if (!this.structure.components.interfaceProperty) return "";
+        let type;
+        if ("kind" in property) type = this.generateArrowFunction(property);
+        else if (property.type) type = this.generateType(property.type);
         return this.structure.components.interfaceProperty({
-            ...property,
-            type: property.type && this.generateType(property.type),
+            ...property, type,
             key: "key" in property && property.key && this.generateType(property.key)
         });
     }
@@ -231,18 +233,19 @@ export class Generator {
         });
     }
 
+    generateArrowFunction(ref: ArrowFunction) : string {
+        if (!this.structure.components.typeFunction) return "";
+        return this.structure.components.typeFunction({
+            typeParameters: ref.typeParameters?.map(param => this.generateTypeParameter(param)),
+            parameters: ref.parameters?.map(param => this.generateParameter(param)),
+            returnType: ref.returnType && this.generateType(ref.returnType)
+        });
+    }
+
     generateType(type: Type, other: Record<string, unknown> = {}) : string {
         switch (type.kind) {
         case TypeKinds.REFERENCE: return this.generateRef(type as Reference, other);
-        case TypeKinds.ARROW_FUNCTION: {
-            const ref = type as ArrowFunction;
-            if (!this.structure.components.typeFunction) return "";
-            return this.structure.components.typeFunction({
-                typeParameters: ref.typeParameters?.map(param => this.generateTypeParameter(param)),
-                parameters: ref.parameters?.map(param => this.generateParameter(param)),
-                returnType: ref.returnType && this.generateType(ref.returnType)
-            });
-        }
+        case TypeKinds.ARROW_FUNCTION: return this.generateArrowFunction(type as ArrowFunction);
         case TypeKinds.UNION: {
             const ref = type as UnionOrIntersection;
             if (!this.structure.components.typeUnion) return "";
@@ -289,10 +292,22 @@ export class Generator {
                 falseType: this.generateType(ref.falseType)
             });
         }
+        case TypeKinds.TYPE_PREDICATE: {
+            const ref = type as TypePredicateType;
+            if (!this.structure.components.typePredicate) return "";
+            return this.structure.components.typePredicate({
+                parameter: typeof ref.parameter === "string" ? ref.parameter:this.generateType(ref.parameter),
+                type: ref.type && this.generateType(ref.type)
+            });
+        }
         case TypeKinds.INDEX_ACCESS: {
             const ref = type as IndexAccessedType;
             if (!this.structure.components.typeIndexAccess) return "";
             return this.structure.components.typeIndexAccess({index: this.generateType(ref.index), object: this.generateType(ref.object)});
+        }
+        case TypeKinds.INFER_TYPE: {
+            if (!this.structure.components.typeOperator) return "";
+            return this.structure.components.typeOperator({name: "infer", type: this.generateTypeParameter((type as InferType).typeParameter)});       
         }
         case TypeKinds.UNIQUE_OPERATOR:
             if (!this.structure.components.typeOperator) return "";
@@ -318,6 +333,10 @@ export class Generator {
         case TypeKinds.STRING_LITERAL:
         case TypeKinds.NUMBER_LITERAL:
         case TypeKinds.SYMBOL:
+        case TypeKinds.NEVER:
+        case TypeKinds.BIGINT:
+        case TypeKinds.OBJECT:
+        case TypeKinds.THIS:
         case TypeKinds.ANY: {
             if (!this.structure.components.typePrimitive) return "";
             return this.structure.components.typePrimitive({...type});
@@ -338,7 +357,7 @@ export class Generator {
         return {
             parameters: sig.parameters?.map(p => this.generateParameter(p)),
             typeParameters: sig.typeParameters?.map(p => this.generateTypeParameter(p)),
-            paramComments: sig.parameters?.filter(param => param.jsDoc.comment).map(param => ({name: param.name, comment: param.jsDoc.comment})),
+            paramComments: sig.parameters?.filter(param => param.jsDoc.comment).map(param => ({name: param.name, comment:  param.jsDoc.comment && marked.parseInline(param.jsDoc.comment)})),
             returnType: sig.returnType && this.generateType(sig.returnType),
             comment: this.generateComment(sig.jsDoc),
             paramsOnNewLine: isLargeSignature(sig)
@@ -360,7 +379,6 @@ export class Generator {
             ...type,
             raw: type,
             defaultValue: type.defaultValue && this.generateType(type.defaultValue),
-            comment: type.jsDoc.comment,
             type: type.type && this.generateType(type.type)
         });
     }
