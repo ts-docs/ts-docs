@@ -1,5 +1,5 @@
 
-import { ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, InterfaceProperty, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl, ConditionalType, MappedType, TypeOperator, IndexAccessedType, Constructor, FunctionSignature, TypePredicateType, InferType } from "@ts-docs/extractor/dist/structure";
+import { ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, Property, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl, ConditionalType, MappedType, TypeOperator, IndexAccessedType, FunctionSignature, TypePredicateType, InferType } from "@ts-docs/extractor/dist/structure";
 import { DocumentStructure } from "./documentStructure";
 import marked from "marked";
 import { copyFolder, createFile, escapeHTML, isLargeSignature } from "./utils";
@@ -110,16 +110,15 @@ export class Generator {
                 typeParameters: classObj.typeParameters?.map(p => this.generateTypeParameter(p)),
                 implements: classObj.implements?.map(impl => this.generateType(impl)),
                 extends: classObj.extends && this.generateType(classObj.extends),
-                constructor: classObj.constructor && this.generateConstructor(classObj.constructor),
+                constructor: classObj._constructor && this.generateConstructor(classObj._constructor),
             }), {properties: classObj.properties, name: classObj.name, methods: classObj.methods, type: "class", depth: this.depth + 1});
     }
 
-    generateConstructor(constructor: Constructor) : string {
+    generateConstructor(constructor: Omit<FunctionDecl, "name">) : string {
         if (!this.structure.components.classConstructor) return "";
         return this.structure.components.classConstructor({
-            parameters: constructor.parameters?.map(p => this.generateParameter(p)),
-            paramComments: constructor.parameters?.filter(param => param.jsDoc.comment).map(param => ({name: param.name, comment: param.jsDoc.comment && marked.parseInline(param.jsDoc.comment)})),
-            paramsOnNewLine: isLargeSignature(constructor)
+            ...constructor,
+            signatures: constructor.signatures.map(sig => this.generateSignature(sig))
         });
     }
 
@@ -128,7 +127,7 @@ export class Generator {
         this.generatePage(path, "interface", interfaceObj.name, this.structure.components.interface({
             ...interfaceObj, 
             properties: interfaceObj.properties.map(p => this.generateProperty(p)),
-            extends: interfaceObj.extends && this.generateType(interfaceObj.extends),
+            extends: interfaceObj.extends && interfaceObj.extends.map(ext => this.generateType(ext)),
             implements: interfaceObj.implements && interfaceObj.implements.map(impl => this.generateType(impl)),
             typeParameters: interfaceObj.typeParameters?.map(p => this.generateTypeParameter(p)),
             comment: this.generateComment(interfaceObj.jsDoc)
@@ -182,7 +181,7 @@ export class Generator {
         });
     }
 
-    generateProperty(property: InterfaceProperty|IndexSignatureDeclaration|ArrowFunction) : string {
+    generateProperty(property: Property|IndexSignatureDeclaration|ArrowFunction) : string {
         if (!this.structure.components.interfaceProperty) return "";
         let type;
         if ("kind" in property) type = this.generateArrowFunction(property);
@@ -223,13 +222,18 @@ export class Generator {
         case TypeReferenceKinds.TYPE_ALIAS:
             refType = "type";
             break;
+        case TypeReferenceKinds.NAMESPACE_OR_MODULE: {
+            return this.structure.components.typeReference({
+                ...ref, ...other,
+                link: ref.type.path && this.generateLink(path.join(ref.type.external ? `../m.${ref.type.external}`:"", ...ref.type.path.map(p => `m.${p}`), "index.html"))
+            });
+        }
         default: refType = "";
         }
         return this.structure.components.typeReference({
-            ...ref,
+            ...ref, ...other,
             link: ref.type.path && this.generateLink(path.join(ref.type.external ? `../m.${ref.type.external}`:"", ...ref.type.path.map(p => `m.${p}`), refType, `${ref.type.name}.html`), ref.type.displayName),
             typeParameters: ref.typeParameters?.map(param => this.generateType(param)),
-            ...other
         });
     }
 

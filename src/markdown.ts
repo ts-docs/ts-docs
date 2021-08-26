@@ -1,6 +1,6 @@
 
 import { ExtractorList } from "@ts-docs/extractor";
-import { TypeKinds, TypeReferenceKinds } from "@ts-docs/extractor/dist/structure";
+import { TypeKinds } from "@ts-docs/extractor/dist/structure";
 import highlight from "highlight.js";
 import marked from "marked";
 import { Generator } from "./generator";
@@ -88,15 +88,12 @@ export function initMarkdown(generator: Generator, extractors: ExtractorList) : 
                     if (name.includes("/")) {
                         const parts = name.split("/");
                         const firstEl = parts.shift();
-                        const path: Array<string> = [];
                         let mod = extractors.find(ex => ex.module.name === firstEl)?.module;
                         if (!mod) return "";
-                        path.push(mod.name);
                         const lastElement = parts.pop();
                         for (const part of parts) {
                             mod = mod.modules.get(part);
                             if (!mod) return name;
-                            path.push(mod.name);
                         }
                         if (mod && lastElement) {
                             let thingName: string = lastElement;
@@ -105,13 +102,9 @@ export function initMarkdown(generator: Generator, extractors: ExtractorList) : 
                                 thingName = newThingName;
                                 otherData.hash = hash;
                             }
-                            if (mod.classes.has(thingName)) return generator.generateRef({kind: TypeKinds.REFERENCE, type: {kind: TypeReferenceKinds.CLASS, name: thingName, path}}, otherData);
-                            else if (mod.interfaces.has(thingName)) return generator.generateRef({kind: TypeKinds.REFERENCE, type: {kind: TypeReferenceKinds.INTERFACE, name: thingName, path}}, otherData);
-                            else if (mod.enums.has(thingName)) return generator.generateRef({kind: TypeKinds.REFERENCE, type: {kind: TypeReferenceKinds.ENUM, name: thingName, path}}, otherData);
-                            else if (mod.types.has(thingName)) return generator.generateRef({kind: TypeKinds.REFERENCE, type: {kind: TypeReferenceKinds.TYPE_ALIAS, name: thingName, path}}, otherData);
-                            else if (mod.functions.has(thingName)) return generator.generateRef({kind: TypeKinds.REFERENCE, type: {kind: TypeReferenceKinds.FUNCTION, name: thingName, path}}, otherData);
-                            else if (mod.constants.has(thingName)) generator.generateRef({kind: TypeKinds.REFERENCE, type: {kind: TypeReferenceKinds.CONSTANT, name: thingName, path}}, otherData);
-                            return "";
+                            const type = extractors[0].references.resolveExternalString(thingName, extractors);
+                            if (!type) return "";
+                            return generator.generateRef({kind: TypeKinds.REFERENCE, type}, otherData);
                         }
                     }
                     if (name.includes(".")) {
@@ -142,8 +135,9 @@ export function initMarkdown(generator: Generator, extractors: ExtractorList) : 
                     return undefined;
                 },
                 renderer: (token) => {
-                    const ref = extractors[0].resolveSymbol(token.text);
-                    return `${generator.generateType(ref) || token.text}`;
+                    const ref = extractors[0].references.resolveExternalString(token.text, extractors);
+                    if (!ref) return "";
+                    return `${generator.generateType({kind: TypeKinds.REFERENCE, type: ref}) || token.text}`;
                 }
             },
             {
