@@ -45,8 +45,9 @@ export class Generator {
             fs.mkdirSync(path.join(this.settings.out, "./pages"));
             for (const category of this.settings.customPages) {
                 for (const page of category.pages) {
-                    this.depth += 2;
+                    this.depth++;
                     const [markdown, headings] = this.generateMarkdownWithHeaders(page.content);
+                    this.depth++;
                     this.generatePage("./pages", category.name, page.name, markdown, {
                         type: "page",
                         pages: this.settings.customPages,
