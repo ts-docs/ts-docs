@@ -2,6 +2,7 @@
 import { ArrayType, ArrowFunction, FunctionParameter, Literal, ObjectLiteral, Property, Reference, Tuple, Type, TypeKinds, TypeOperator, UnionOrIntersection } from "@ts-docs/extractor/dist/structure";
 import fs from "fs";
 import path from "path";
+import ts from "typescript";
 
 export function createFile(basePath: string, folder: string, file: string, content: string) : string {
     const folderPath = path.join(basePath, folder);
@@ -12,7 +13,7 @@ export function createFile(basePath: string, folder: string, file: string, conte
 
 export function findTSConfig<T = string>(basePath: string) : Record<string, T>|undefined {
     const p = path.join(basePath, "tsconfig.json");
-    if (fs.existsSync(p)) return require(p);
+    if (fs.existsSync(p)) return ts.parseConfigFileTextToJson("tsconfig.json", fs.readFileSync(p, "utf-8")).config;
     const newPath = path.join(basePath, "../");
     if (basePath === newPath) return undefined;
     return findTSConfig(newPath);
