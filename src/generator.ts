@@ -30,6 +30,7 @@ export class Generator {
     }
 
     generate(packages: ExtractorList) : void {
+        fs.writeFileSync("./test.json", JSON.stringify(packages), "utf-8");
         initMarkdown(this, packages);
         if (fs.existsSync(this.settings.out)) fs.rmSync(this.settings.out, { force: true, recursive: true });
         fs.mkdirSync(this.settings.out);

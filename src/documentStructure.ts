@@ -13,23 +13,23 @@ import path from "path";
  *  - src
  *  - media
  * - components
- *  - propertyMember.hbs
- *  - methodMember.hbs
- *  - function.hbs
- *  - enum.hbs
- *  - interface.hbs
- *  - class.hbs
- *  - module.hbs
- *  - typeReference.hbs
- *  - typeFunction.hbs
- *  - typeUnion.hbs
- *  - typeIntersection.hbs
- *  - typeObject.hbs
- *  - typeTuple.hbs
- *  - typeParameter.hbs
- *  - functionParameter.hbs
- *  - interfaceProperty.hbs
- *  - indexSignature.hbs
+ *      - propertyMember.hbs
+ *      - methodMember.hbs
+ *      - function.hbs
+ *      - enum.hbs
+ *      - interface.hbs
+ *      - class.hbs
+ *      - module.hbs
+ *      - typeReference.hbs
+ *      - typeFunction.hbs
+ *      - typeUnion.hbs
+ *      - typeIntersection.hbs
+ *      - typeObject.hbs
+ *      - typeTuple.hbs
+ *      - typeParameter.hbs
+ *      - functionParameter.hbs
+ *      - interfaceProperty.hbs
+ *      - indexSignature.hbs
  * - partials
  * - index.hbs
  * - helpers.js
@@ -51,11 +51,11 @@ import path from "path";
  *      - types
  * 
  * URL links look like this:
- * https://base.com/m.module_name/class/class_name
- * https://base.com/m.module_name/class/class_name#.methodName
- * https://base.com/m.module_name/class/class_name#.propNameName
- * https://base.com/m.module_name/enum/enum_name#.memberName
- * https://base.com/m.module_name/m.module_name_2/type/type_name
+ * https://base.com/m.module_name/class/class_name  
+ * https://base.com/m.module_name/class/class_name#.methodName  
+ * https://base.com/m.module_name/class/class_name#.propNameName    
+ * https://base.com/m.module_name/enum/enum_name#.memberName    
+ * https://base.com/m.module_name/m.module_name_2/type/type_name    
  * 
  */
 
