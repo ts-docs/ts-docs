@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>isLargeSignature |  ts-docs</title>
+  <title>TypeKinds |  ts-docs</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/an-old-hope.min.css"
@@ -13,7 +13,7 @@
   
     <link href="../../assets/css/index.css" type="text/css" rel="stylesheet">
     <script src="../../assets/js/index.js"></script>
-    <script>window.depth="../../";window.lm="ts-docs"</script>
+    <script>window.depth="../../";window.lm="extractor"</script>
     
 </head>
 
@@ -48,76 +48,16 @@
         <h1 class="lib-name text-center">ts-docs</h1>
         
     
-    <p class="current-thing text-center">module <span class="module">ts-docs</span></p>
+    <p class="current-thing text-center">enum <span class="object">TypeKinds</span></p>
     <div class="sidebar-members">
     
         <div class="sidebar-member">
         <div class="collapsible-trigger">
         <span class="collapsible-arrow open"></span>
-        <span class="sidebar-category">Modules</span>
+        <span class="sidebar-category">Members</span>
         </div>
         <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="../m.marked/index.html">marked</a></span>
-        </div>
-        </div>
-    
-        <div class="sidebar-member">
-        <div class="collapsible-trigger">
-        <span class="collapsible-arrow open"></span>
-        <span class="sidebar-category">Classes</span>
-        </div>
-        <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="../class/Generator.html">Generator</a></span>
-        </div>
-        </div>
-    
-        <div class="sidebar-member">
-        <div class="collapsible-trigger">
-        <span class="collapsible-arrow open"></span>
-        <span class="sidebar-category">Interfaces</span>
-        </div>
-        <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="../interface/DocumentStructure.html">DocumentStructure</a></span><span class="sidebar-category-member"><a href="../interface/LandingPage.html">LandingPage</a></span><span class="sidebar-category-member"><a href="../interface/CustomPage.html">CustomPage</a></span><span class="sidebar-category-member"><a href="../interface/PageCategory.html">PageCategory</a></span><span class="sidebar-category-member"><a href="../interface/TsDocsOptions.html">TsDocsOptions</a></span><span class="sidebar-category-member"><a href="../interface/OptionSource.html">OptionSource</a></span><span class="sidebar-category-member"><a href="../interface/Heading.html">Heading</a></span><span class="sidebar-category-member"><a href="../interface/OtherProps.html">OtherProps</a></span><span class="sidebar-category-member"><a href="../interface/TsDocsCLIArgs.html">TsDocsCLIArgs</a></span>
-        </div>
-        </div>
-    
-        <div class="sidebar-member">
-        <div class="collapsible-trigger">
-        <span class="collapsible-arrow open"></span>
-        <span class="sidebar-category">Enums</span>
-        </div>
-        <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="../enum/ClassMemberFlags.html">ClassMemberFlags</a></span>
-        </div>
-        </div>
-    
-        <div class="sidebar-member">
-        <div class="collapsible-trigger">
-        <span class="collapsible-arrow open"></span>
-        <span class="sidebar-category">Functions</span>
-        </div>
-        <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="../function/setupDocumentStructure.html">setupDocumentStructure</a></span><span class="sidebar-category-member"><a href="../function/createFile.html">createFile</a></span><span class="sidebar-category-member"><a href="../function/findTSConfig.html">findTSConfig</a></span><span class="sidebar-category-member"><a href="../function/copyFolder.html">copyFolder</a></span><span class="sidebar-category-member"><a href="../function/escapeHTML.html">escapeHTML</a></span><span class="sidebar-category-member"><a href="../function/getTypeLength.html">getTypeLength</a></span><span class="sidebar-category-member"><a href="../function/isLargeSignature.html">isLargeSignature</a></span><span class="sidebar-category-member"><a href="../function/addOptionSource.html">addOptionSource</a></span><span class="sidebar-category-member"><a href="../function/initOptions.html">initOptions</a></span><span class="sidebar-category-member"><a href="../function/showHelp.html">showHelp</a></span><span class="sidebar-category-member"><a href="../function/initMarkdown.html">initMarkdown</a></span><span class="sidebar-category-member"><a href="../function/buildBitfield.html">buildBitfield</a></span><span class="sidebar-category-member"><a href="../function/packSearchData.html">packSearchData</a></span>
-        </div>
-        </div>
-    
-        <div class="sidebar-member">
-        <div class="collapsible-trigger">
-        <span class="collapsible-arrow open"></span>
-        <span class="sidebar-category">Types</span>
-        </div>
-        <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="../type/Components.html">Components</a></span>
-        </div>
-        </div>
-    
-        <div class="sidebar-member">
-        <div class="collapsible-trigger">
-        <span class="collapsible-arrow open"></span>
-        <span class="sidebar-category">Constants</span>
-        </div>
-        <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="../constant/options.html">options</a></span>
+        <span class="sidebar-category-member"><a href="#.REFERENCE">REFERENCE</a></span><span class="sidebar-category-member"><a href="#.ARROW_FUNCTION">ARROW_FUNCTION</a></span><span class="sidebar-category-member"><a href="#.OBJECT_LITERAL">OBJECT_LITERAL</a></span><span class="sidebar-category-member"><a href="#.TUPLE">TUPLE</a></span><span class="sidebar-category-member"><a href="#.UNION">UNION</a></span><span class="sidebar-category-member"><a href="#.UNIQUE_OPERATOR">UNIQUE_OPERATOR</a></span><span class="sidebar-category-member"><a href="#.READONLY_OPERATOR">READONLY_OPERATOR</a></span><span class="sidebar-category-member"><a href="#.KEYOF_OPERATOR">KEYOF_OPERATOR</a></span><span class="sidebar-category-member"><a href="#.UNKNOWN">UNKNOWN</a></span><span class="sidebar-category-member"><a href="#.STRINGIFIED_UNKNOWN">STRINGIFIED_UNKNOWN</a></span><span class="sidebar-category-member"><a href="#.ARRAY_TYPE">ARRAY_TYPE</a></span><span class="sidebar-category-member"><a href="#.INTERSECTION">INTERSECTION</a></span><span class="sidebar-category-member"><a href="#.NUMBER">NUMBER</a></span><span class="sidebar-category-member"><a href="#.STRING">STRING</a></span><span class="sidebar-category-member"><a href="#.BOOLEAN">BOOLEAN</a></span><span class="sidebar-category-member"><a href="#.VOID">VOID</a></span><span class="sidebar-category-member"><a href="#.TRUE">TRUE</a></span><span class="sidebar-category-member"><a href="#.FALSE">FALSE</a></span><span class="sidebar-category-member"><a href="#.UNDEFINED">UNDEFINED</a></span><span class="sidebar-category-member"><a href="#.NULL">NULL</a></span><span class="sidebar-category-member"><a href="#.ANY">ANY</a></span><span class="sidebar-category-member"><a href="#.NUMBER_LITERAL">NUMBER_LITERAL</a></span><span class="sidebar-category-member"><a href="#.STRING_LITERAL">STRING_LITERAL</a></span><span class="sidebar-category-member"><a href="#.MAPPED_TYPE">MAPPED_TYPE</a></span><span class="sidebar-category-member"><a href="#.CONDITIONAL_TYPE">CONDITIONAL_TYPE</a></span><span class="sidebar-category-member"><a href="#.TEMPLATE_LITERAL">TEMPLATE_LITERAL</a></span><span class="sidebar-category-member"><a href="#.INDEX_ACCESS">INDEX_ACCESS</a></span><span class="sidebar-category-member"><a href="#.TYPEOF_OPERATOR">TYPEOF_OPERATOR</a></span><span class="sidebar-category-member"><a href="#.SYMBOL">SYMBOL</a></span><span class="sidebar-category-member"><a href="#.BIGINT">BIGINT</a></span><span class="sidebar-category-member"><a href="#.TYPE_PREDICATE">TYPE_PREDICATE</a></span><span class="sidebar-category-member"><a href="#.THIS">THIS</a></span><span class="sidebar-category-member"><a href="#.NEVER">NEVER</a></span><span class="sidebar-category-member"><a href="#.OBJECT">OBJECT</a></span><span class="sidebar-category-member"><a href="#.INFER_TYPE">INFER_TYPE</a></span>
         </div>
         </div>
     
@@ -200,11 +140,12 @@
             </div>
         </div>        <div id="content-main" class="d-none">
           <div class="path">
-            <a class="path-member" href="../../index.html">index</a> / <a class="path-member" href="../index.html">ts-docs</a> / <a class="path-member" href="">isLargeSignature</a>
+            <a class="path-member" href="../../index.html">index</a> / <a class="path-member" href="../index.html">extractor</a> / <a class="path-member" href="">TypeKinds</a>
           </div>
           <div>
-    <h1>Function <span class="referenceLink method-name">isLargeSignature</span>
-    <a href=https://github.com/ts-docs/ts-docs/tree/main/src/utils.ts#L81>
+    <h1>Enum <span class="referenceLink object">TypeKinds</span>
+    
+        <a href=https://github.com/GoogleFeud/ts-extractor/tree/main/src/structure.ts#L68>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
@@ -212,15 +153,186 @@
 </span></a>
     </h1>
 
-    <div>
-        (<span class="item-name"><span class="param-name">sig</span><span class="symbol">:</span> 
-<span>{ <span class="item-name" id=".parameters"><a class="property-name" href="#.parameters">parameters</a><span class="symbol">?</span><span class="symbol">:</span> 
-<span><span class="reference-link"><a class='object' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span><span>&lt;<span><span class="c-tooltip"><a class="reference-link object" href="../../m.extractor/interface/FunctionParameter.html">FunctionParameter</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">FunctionParameter</span><span style="display:block" class="monospace fw-bold">extractor/<span class="item-name object">FunctionParameter</span></span></span></span></span>&gt;</span></span></span>, <span class="item-name" id=".returnType"><a class="property-name" href="#.returnType">returnType</a><span class="symbol">?</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../m.extractor/type/Type.html">Type</a><span class="c-tooltip-content"><span class="keyword">type alias</span> <span class="item-name object">Type</span><span style="display:block" class="monospace fw-bold">extractor/<span class="item-name object">Type</span></span></span></span></span></span> }</span></span>)<span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>
-        <div class="docblock">
-            <ul></ul>
-            
-        </div>
+    
+
+    <h2>Members</h2>
+    <div id=".REFERENCE">
+        <a class="item-name" href="#.REFERENCE">REFERENCE</a>
+
+
     </div>
+    <div id=".ARROW_FUNCTION">
+        <a class="item-name" href="#.ARROW_FUNCTION">ARROW_FUNCTION</a>
+
+
+    </div>
+    <div id=".OBJECT_LITERAL">
+        <a class="item-name" href="#.OBJECT_LITERAL">OBJECT_LITERAL</a>
+
+
+    </div>
+    <div id=".TUPLE">
+        <a class="item-name" href="#.TUPLE">TUPLE</a>
+
+
+    </div>
+    <div id=".UNION">
+        <a class="item-name" href="#.UNION">UNION</a>
+
+
+    </div>
+    <div id=".UNIQUE_OPERATOR">
+        <a class="item-name" href="#.UNIQUE_OPERATOR">UNIQUE_OPERATOR</a>
+
+
+    </div>
+    <div id=".READONLY_OPERATOR">
+        <a class="item-name" href="#.READONLY_OPERATOR">READONLY_OPERATOR</a>
+
+
+    </div>
+    <div id=".KEYOF_OPERATOR">
+        <a class="item-name" href="#.KEYOF_OPERATOR">KEYOF_OPERATOR</a>
+
+
+    </div>
+    <div id=".UNKNOWN">
+        <a class="item-name" href="#.UNKNOWN">UNKNOWN</a>
+
+
+    </div>
+    <div id=".STRINGIFIED_UNKNOWN">
+        <a class="item-name" href="#.STRINGIFIED_UNKNOWN">STRINGIFIED_UNKNOWN</a>
+
+
+    </div>
+    <div id=".ARRAY_TYPE">
+        <a class="item-name" href="#.ARRAY_TYPE">ARRAY_TYPE</a>
+
+
+    </div>
+    <div id=".INTERSECTION">
+        <a class="item-name" href="#.INTERSECTION">INTERSECTION</a>
+
+
+    </div>
+    <div id=".NUMBER">
+        <a class="item-name" href="#.NUMBER">NUMBER</a>
+
+
+    </div>
+    <div id=".STRING">
+        <a class="item-name" href="#.STRING">STRING</a>
+
+
+    </div>
+    <div id=".BOOLEAN">
+        <a class="item-name" href="#.BOOLEAN">BOOLEAN</a>
+
+
+    </div>
+    <div id=".VOID">
+        <a class="item-name" href="#.VOID">VOID</a>
+
+
+    </div>
+    <div id=".TRUE">
+        <a class="item-name" href="#.TRUE">TRUE</a>
+
+
+    </div>
+    <div id=".FALSE">
+        <a class="item-name" href="#.FALSE">FALSE</a>
+
+
+    </div>
+    <div id=".UNDEFINED">
+        <a class="item-name" href="#.UNDEFINED">UNDEFINED</a>
+
+
+    </div>
+    <div id=".NULL">
+        <a class="item-name" href="#.NULL">NULL</a>
+
+
+    </div>
+    <div id=".ANY">
+        <a class="item-name" href="#.ANY">ANY</a>
+
+
+    </div>
+    <div id=".NUMBER_LITERAL">
+        <a class="item-name" href="#.NUMBER_LITERAL">NUMBER_LITERAL</a>
+
+
+    </div>
+    <div id=".STRING_LITERAL">
+        <a class="item-name" href="#.STRING_LITERAL">STRING_LITERAL</a>
+
+
+    </div>
+    <div id=".MAPPED_TYPE">
+        <a class="item-name" href="#.MAPPED_TYPE">MAPPED_TYPE</a>
+
+
+    </div>
+    <div id=".CONDITIONAL_TYPE">
+        <a class="item-name" href="#.CONDITIONAL_TYPE">CONDITIONAL_TYPE</a>
+
+
+    </div>
+    <div id=".TEMPLATE_LITERAL">
+        <a class="item-name" href="#.TEMPLATE_LITERAL">TEMPLATE_LITERAL</a>
+
+
+    </div>
+    <div id=".INDEX_ACCESS">
+        <a class="item-name" href="#.INDEX_ACCESS">INDEX_ACCESS</a>
+
+
+    </div>
+    <div id=".TYPEOF_OPERATOR">
+        <a class="item-name" href="#.TYPEOF_OPERATOR">TYPEOF_OPERATOR</a>
+
+
+    </div>
+    <div id=".SYMBOL">
+        <a class="item-name" href="#.SYMBOL">SYMBOL</a>
+
+
+    </div>
+    <div id=".BIGINT">
+        <a class="item-name" href="#.BIGINT">BIGINT</a>
+
+
+    </div>
+    <div id=".TYPE_PREDICATE">
+        <a class="item-name" href="#.TYPE_PREDICATE">TYPE_PREDICATE</a>
+
+
+    </div>
+    <div id=".THIS">
+        <a class="item-name" href="#.THIS">THIS</a>
+
+
+    </div>
+    <div id=".NEVER">
+        <a class="item-name" href="#.NEVER">NEVER</a>
+
+
+    </div>
+    <div id=".OBJECT">
+        <a class="item-name" href="#.OBJECT">OBJECT</a>
+
+
+    </div>
+    <div id=".INFER_TYPE">
+        <a class="item-name" href="#.INFER_TYPE">INFER_TYPE</a>
+
+
+    </div>
+
+
 </div>
         </div>
 
