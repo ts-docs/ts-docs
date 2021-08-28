@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/checkout@v2
         with:
-          repository: ts-docs/extractor
+          repository: ts-docs/ts-extractor
       - uses: actions/setup-node@v2
       - run: npm i
       - run: npm i @ts-docs/default-docs-structure
