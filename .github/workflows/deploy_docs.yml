@@ -8,11 +8,9 @@ jobs:
   deploy-docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/checkout@v2
-        with:
-          repository: ts-docs/ts-extractor
+      - uses: actions/checkout@v2 
       - uses: actions/setup-node@v2
+      - run: git clone https://github.com/ts-docs/ts-extractor.git
       - run: npm i
       - run: npm i @ts-docs/default-docs-structure
       - run: tsc
