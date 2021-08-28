@@ -15,6 +15,7 @@ jobs:
       - uses: actions/setup-node@v2
       - run: npm i
       - run: npm i ts-docs/default-docs-structure
+      - run: tsc
       - run: node dist/index src/index.ts extractor/src/index.ts
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.3
