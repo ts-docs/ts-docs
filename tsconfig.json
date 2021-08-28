@@ -18,5 +18,10 @@
 
     "skipLibCheck": true,                     
     "forceConsistentCasingInFileNames": true  
+  },
+  "tsdocsOptions": {
+    "entryPoints": ["./src/index.ts", "./ts-extractor/src/index.ts"],
+    "name": "ts-docs",
+    "out": "./docs"
   }
 }
