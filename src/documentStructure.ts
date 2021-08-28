@@ -73,7 +73,7 @@ export function setupDocumentStructure(structName: string) : DocumentStructure {
     if (!fs.existsSync(pathToPackageJSON)) throw new Error(`Couldn't find package.json file for "${structName}" document structure.`);
     const packageJSON = JSON.parse(fs.readFileSync(pathToPackageJSON, "utf-8"));
     if (!packageJSON.main) throw new Error(`Couldn't find "main" property in package.json for "${structName}" document structure.`);
-    const pathToStructure = path.join("node_modules", structName, packageJSON.main);
+    const pathToStructure = path.join("./node_modules", structName, packageJSON.main);
     if (!fs.existsSync(pathToStructure)) throw new Error("Couldn't find documentation structure.");
     const partials = path.join(pathToStructure, "partials");
     if (!fs.existsSync(partials)) throw new Error("Couldn't find partials folder.");

@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import parseArgs from "minimist";
 import { findPackageJSON } from "@ts-docs/extractor/dist/util";
@@ -45,7 +44,6 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
         }
         if (!finalOptions.name) finalOptions.name = packageJSON.contents.name;
     } 
-
 
     const docStructure = setupDocumentStructure(finalOptions.structure);
     const generator = new Generator(docStructure, finalOptions);
