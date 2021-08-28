@@ -10,10 +10,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2 
       - uses: actions/setup-node@v2
-      - run: git clone https://github.com/ts-docs/ts-extractor.git
       - run: npm i
       - run: npm i @ts-docs/default-docs-structure
       - run: tsc
+      - run: git clone https://github.com/ts-docs/ts-extractor.git
       - run: node dist/index
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.3
