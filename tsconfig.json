@@ -21,6 +21,7 @@
   },
   "tsdocsOptions": {
     "entryPoints": ["./src/index.ts", "./ts-extractor/src/index.ts"],
-    "name": "ts-docs"
+    "name": "ts-docs",
+    "customPages": "./docs"
   }
 }
