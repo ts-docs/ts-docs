@@ -118,7 +118,7 @@ export class Generator {
                 implements: classObj.implements?.map(impl => this.generateType(impl)),
                 extends: classObj.extends && this.generateType(classObj.extends),
                 constructor: classObj._constructor && this.generateConstructor(classObj._constructor),
-            }), {properties: classObj.properties, name: classObj.name, methods: classObj.methods, type: "class" });
+            }), {properties: classObj.properties, name: classObj.name, methods: classObj.methods, type: "class", depth: this.currentGlobalModuleName ? this.depth+1:this.depth });
     }
 
     generateConstructor(constructor: Omit<FunctionDecl, "name">) : string {
@@ -138,7 +138,7 @@ export class Generator {
             implements: interfaceObj.implements && interfaceObj.implements.map(impl => this.generateType(impl)),
             typeParameters: interfaceObj.typeParameters?.map(p => this.generateTypeParameter(p)),
             comment: this.generateComment(interfaceObj.jsDoc)
-        }), {properties: interfaceObj.properties, name: interfaceObj.name, type: "interface" });
+        }), {properties: interfaceObj.properties, name: interfaceObj.name, type: "interface", depth: this.currentGlobalModuleName ? this.depth+1:this.depth });
     }
 
     generateEnum(path: string, enumObj: EnumDecl) : void {
@@ -147,7 +147,7 @@ export class Generator {
             ...enumObj,
             comment: this.generateComment(enumObj.jsDoc),
             members: enumObj.members.map(m => ({...m, initializer: m.initializer && this.generateType(m.initializer)}))
-        }), { type: "enum", members: enumObj.members, name: enumObj.name });
+        }), { type: "enum", members: enumObj.members, name: enumObj.name, depth: this.currentGlobalModuleName ? this.depth+1:this.depth });
     }
 
     generateTypeDecl(path: string, typeObj: TypeDecl, module: Module) : void {
