@@ -724,6 +724,17 @@ window.addEventListener("load", function () {
 
 "use strict";
 
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -795,7 +806,6 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.initSearch = void 0;
 var fuzzysort_1 = __webpack_require__(360);
-;
 function hasBit(bits, bit) {
     return (bits & bit) === bit;
 }
@@ -880,11 +890,19 @@ exports.initSearch = initSearch;
 function search(term, filteredResults) {
     if (!searchData)
         return [];
-    var res = fuzzysort_1.go(term, filteredResults, { key: "name", allowTypo: true, limit: 150, threshold: -5000 });
-    return res.map(function (r) {
-        r.obj.highlighted = fuzzysort_1.highlight(r, '<span style="border-bottom: dotted 2px var(--primaryLight)">', "</span>");
-        return r.obj;
-    });
+    if (term.includes(".")) {
+        return fuzzysort_1.go(term, filteredResults.map(function (r) { return (__assign(__assign({}, r), { oldName: r.name, name: (r.obj || "") + "." + r.name })); }), { key: "name", allowTypo: true, limit: 150, threshold: -5000 }).map(function (item) {
+            item.obj.highlighted = item.obj.oldName;
+            item.obj.name = item.obj.oldName;
+            return item.obj;
+        });
+    }
+    else {
+        return fuzzysort_1.go(term, filteredResults, { key: "name", allowTypo: true, limit: 150, threshold: -5000 }).map(function (item) {
+            item.obj.highlighted = fuzzysort_1.highlight(item, '<span style="border-bottom: dotted 2px var(--primaryLight)">', "</span>");
+            return item.obj;
+        });
+    }
 }
 function evaluateSearch(term, options) {
     return __awaiter(this, void 0, void 0, function () {
@@ -1008,7 +1026,7 @@ function formatResult(res) {
             break;
         }
         case 8: {
-            content = "<div>\n            <a href=\"" + window.depth + path.map(function (m) { return "m." + m; }).join("/") + "/class/" + res.obj + ".html#." + res.name + "\">" + (res.isGetter ? '<span class="keyword">get</span> ' : "") + (res.isSetter ? '<span class="keyword">set</span> ' : "") + "<span class=\"item-name object\">" + res.obj + "</span><span class=\"symbol\">.</span><span class=\"item-name method-name\">" + res.highlighted + "</span></a>\n            " + (path.length ? "<p class=\"docblock secondary\">In " + path.join("/") + "</p>" : "") + "\n            </div>";
+            content = "<div>\n            <a href=\"" + window.depth + path.map(function (m) { return "m." + m; }).join("/") + "/class/" + res.obj + ".html#." + res.name + "\">" + (res.isGetter ? '<span class="keyword">getter</span> ' : "") + (res.isSetter ? '<span class="keyword">setter</span> ' : "") + "<span class=\"item-name object\">" + res.obj + "</span><span class=\"symbol\">.</span><span class=\"item-name method-name\">" + res.highlighted + "</span></a>\n            " + (path.length ? "<p class=\"docblock secondary\">In " + path.join("/") + "</p>" : "") + "\n            </div>";
             break;
         }
         case 7: {
