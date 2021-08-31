@@ -11,9 +11,9 @@
     integrity="sha512-t47CjkEB5hx4FojnE73dBLwgrgvLBpgsHvB40ycK3cYPkLwEp7qNHyRpRDA3/zVVAAOUPJwbMVJq3uJrBqpHVQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   
-    <link href="assets/css/index.css" type="text/css" rel="stylesheet">
-    <script src="assets/js/index.js"></script>
-    <script>window.depth="";window.lm="extractor"</script>
+    <link href="../../assets/css/index.css" type="text/css" rel="stylesheet">
+    <script src="../../assets/js/index.js"></script>
+    <script>window.depth="../../";</script>
     
 </head>
 
@@ -54,20 +54,27 @@
         <div class="sidebar-member">
         <div class="collapsible-trigger">
         <span class="collapsible-arrow open"></span>
-        <span class="sidebar-category">Guides</span>
+        <span class="sidebar-category"><a id="#options">Options</a></span>
         </div>
         <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="./pages/Guides/CustomMarkdown.html">CustomMarkdown</a></span><span class="sidebar-category-member"><a href="./pages/Guides/Options.html">Options</a></span>
+        <span class="sidebar-category-member"><a href="#cli-usage" class="sidebar-category-member">CLI usage</a></span><span class="sidebar-category-member"><a href="#tsconfig-usage" class="sidebar-category-member">Tsconfig usage</a></span><span class="sidebar-category-member">
+    <div>
+    <a class="fw-bold" href="#list-of-options">List of options</a>
+    <div style="padding-left:15px"> 
+    <a href="#structure" class="sidebar-category-member">structure</a><a href="#landingpage" class="sidebar-category-member">landingPage</a><a href="#name" class="sidebar-category-member">name</a><a href="#out" class="sidebar-category-member">out</a><a href="#custompages" class="sidebar-category-member">customPages</a><a href="#assets" class="sidebar-category-member">assets</a><a href="#logo" class="sidebar-category-member">logo</a>
+    </div>
+    </div>
+    </span>
         </div>
         </div>
     
         <div class="sidebar-member">
         <div class="collapsible-trigger">
         <span class="collapsible-arrow open"></span>
-        <span class="sidebar-category">Modules</span>
+        <span class="sidebar-category">Guides</span>
         </div>
         <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="./m.ts-docs/index.html">ts-docs</a></span><span class="sidebar-category-member"><a href="./m.extractor/index.html">extractor</a></span>
+        <span class="sidebar-category-member"><a href="../Guides/CustomMarkdown.html">CustomMarkdown</a></span><span class="sidebar-category-member"><a href="../Guides/Options.html">Options</a></span>
         </div>
         </div>
     
@@ -149,7 +156,26 @@
         
             </div>
         </div>        <div id="content-main" class="d-none">
-          <h1 id="ts-docs" class="section-header">ts-docs</h1><p>A documentation generator for typescript. Alternative to typedoc!</p>
+          <div class="path">
+            <a class="path-member" href="../../index.html">index</a> / <span class="path-member">pages</span> / <a class="path-member" href="">Options</a>
+          </div>
+          <hr>
+<h2 id="order-1" class="section-header">order: 1</h2><h1 id="options" class="section-header">Options</h1><p>You can provide options for ts-docs in two ways:</p>
+<ul>
+<li>The CLI</li>
+<li><code>tsdocsOptions</code> property in your typescript configuration file.</li>
+</ul>
+<h2 id="cli-usage" class="section-header">CLI usage</h2><p><code>ts-docs --options &lt;entry points&gt;</code></p>
+<h2 id="tsconfig-usage" class="section-header">Tsconfig usage</h2><pre><code class="hljs">  <span class="hljs-attr">&quot;tsdocsOptions&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;entryPoints&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;/entry/point.js&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+    ...other options
+  <span class="hljs-punctuation">}</span></code></pre><h2 id="list-of-options" class="section-header">List of options</h2><h3 id="structure" class="section-header">structure</h3><p>Which documentation structure to use. You should only provide the <strong>name</strong> of the documentation structure, ts-docs expects it to be located inside your <code>node_modules</code> folder. ts-docs doesn&#39;t come with any documentation structures, but the default of this option is <code>default-docs-structure</code>. To install the default structure use the following command:</p>
+<pre><code class="hljs">npm i @ts-docs/<span class="hljs-keyword">default</span>-docs-structure</code></pre><h3 id="landingpage" class="section-header">landingPage</h3><p>If your project is a monorepo, you can use this option to tell ts-docs which repository to use the README, version and name of for the landing page. The first provided entry point is used by default.</p>
+<h3 id="name" class="section-header">name</h3><p>The name of the project. Name of irst provided entry point is by default.</p>
+<h3 id="out" class="section-header">out</h3><p>Where to generate the files. This option is set to <code>./docs</code> by default.</p>
+<h3 id="custompages" class="section-header">customPages</h3><p>A path to a directory of custom pages. Inside that folder, each inner-folder is a category and each file inside that folder is a custom page.</p>
+<h3 id="assets" class="section-header">assets</h3><p>A path to a folder with assets with additional assets for the docs. It will copy all files and folders inside that folder.</p>
+<h3 id="logo" class="section-header">logo</h3><p>A logo to use. It MUST be inside the folder provided to the <code>assets</code> option.</p>
 
         </div>
 
