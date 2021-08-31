@@ -4,16 +4,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title> ts-docs</title>
+  <title>ClassMemberFlags |  ts-docs</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/an-old-hope.min.css"
     integrity="sha512-t47CjkEB5hx4FojnE73dBLwgrgvLBpgsHvB40ycK3cYPkLwEp7qNHyRpRDA3/zVVAAOUPJwbMVJq3uJrBqpHVQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
   
-    <link href="../../assets/css/index.css" type="text/css" rel="stylesheet">
-    <script src="../../assets/js/index.js"></script>
-    <script>window.depth="../../";</script>
+    <link href="../assets/css/index.css" type="text/css" rel="stylesheet">
+    <script src="../assets/js/index.js"></script>
+    <script>window.depth="../";window.lm="ts-docs"</script>
     
 </head>
 
@@ -48,33 +48,16 @@
         <h1 class="lib-name text-center">ts-docs</h1>
         
     
-    
+    <p class="current-thing text-center">enum <span class="object">ClassMemberFlags</span></p>
     <div class="sidebar-members">
     
         <div class="sidebar-member">
         <div class="collapsible-trigger">
         <span class="collapsible-arrow open"></span>
-        <span class="sidebar-category"><a id="#custom-markdown">Custom Markdown</a></span>
+        <span class="sidebar-category">Members</span>
         </div>
         <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="#linking-assets" class="sidebar-category-member">Linking assets</a></span><span class="sidebar-category-member"><a href="#warning-blocks" class="sidebar-category-member">Warning blocks</a></span><span class="sidebar-category-member">
-    <div>
-    <a class="fw-bold" href="#references">References</a>
-    <div style="padding-left:15px"> 
-    <a href="#methods-and-properties" class="sidebar-category-member">Methods and properties</a><a href="#by-path" class="sidebar-category-member">By path</a><a href="#name-aliases" class="sidebar-category-member">Name aliases</a>
-    </div>
-    </div>
-    </span><span class="sidebar-category-member"><a href="#jsdoc-link" class="sidebar-category-member">JSDoc @link</a></span>
-        </div>
-        </div>
-    
-        <div class="sidebar-member">
-        <div class="collapsible-trigger">
-        <span class="collapsible-arrow open"></span>
-        <span class="sidebar-category">Guides</span>
-        </div>
-        <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="../Guides/Options.html">Options</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Markdown.html">Custom Markdown</a></span>
+        <span class="sidebar-category-member"><a href="#.IS_GETTER">IS_GETTER</a></span><span class="sidebar-category-member"><a href="#.IS_SETTER">IS_SETTER</a></span><span class="sidebar-category-member"><a href="#.IS_PRIVATE">IS_PRIVATE</a></span>
         </div>
         </div>
     
@@ -157,25 +140,44 @@
             </div>
         </div>        <div id="content-main" class="d-none">
           <div class="path">
-            <a class="path-member" href="../../index.html">index</a> / <span class="path-member">pages</span> / <a class="path-member" href="">Custom Markdown</a>
+            <a class="path-member" href="../../index.html">index</a> / <a class="path-member" href="../index.html">ts-docs</a> / <a class="path-member" href="">ClassMemberFlags</a>
           </div>
-          <h1 id="custom-markdown" class="section-header">Custom Markdown</h1><p>You can use custom ts-docs markdown syntax in order to make your documentation more informative and prettier. You can use this syntax in custom pages and in jsdoc comments!</p>
-<h2 id="linking-assets" class="section-header">Linking assets</h2><p>If you want to have an image which comes from the <code>assets</code> folder, simply start the link of the image with <code>./assets</code> or <code>assets</code>. </p>
-<p>Example:</p>
-<pre><code class="hljs">[<span class="hljs-string">cute_kitty</span>](<span class="hljs-link">./assets/images/cute_kitty.png</span>)</code></pre><h2 id="warning-blocks" class="section-header">Warning blocks</h2><p>Warning blocks can be used to outline an important piece of information.</p>
-<p class="text-warning"> This is a warning!</p><p>Example:</p>
-<pre><code class="hljs">|&gt; This is a warning!</code></pre><h2 id="references" class="section-header">References</h2><p>You can references types like classes, interfaces, enums, type aliases, methods, properties, functions, constants and namespaces by putting their name inside double square brackets, for example:</p>
-<p><code>[[Generator]]</code> becomes <span><span class="c-tooltip"><a class="reference-link object" href="../../class/Generator.html">Generator</a><span class="c-tooltip-content"><span class="keyword">class</span> <span class="item-name object">Generator</span><span style="display:block" class="monospace fw-bold"><span class="item-name object">Generator</span></span></span></span></span></p>
-<h3 id="methods-and-properties" class="section-header">Methods and properties</h3><p>You can reference a property by adding a dot (<code>.</code>) and then the name of the property. </p>
-<p><code>[[Generator.structure]]</code> becomes <span><a class="reference-link" href="../../class/Generator.html#.structure"><span class="object">Generator</span><span class="symbol">.</span><span class="property-name">structure</span></a></span></p>
-<p>You can reference a method by adding a dot (<code>.</code>), the method&#39;s name, and then <code>()</code> at the end.</p>
-<p><code>[[Generator.generate()]]</code> becomes <span><a class="reference-link" href="../../class/Generator.html#.generate"><span class="object">Generator</span><span class="symbol">.</span><span class="method-name">generate</span></a></span></p>
-<h3 id="by-path" class="section-header">By path</h3><p>ts-docs searches each module in order to find the name of the references, this could lead to inaccurate links, so you always can just provide the entire path to the thing.</p>
-<p><code>[[extractor/extractor/ExtractorList]]</code> becomes <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/class/ExtractorList.html">ExtractorList</a><span class="c-tooltip-content"><span class="keyword">class</span> <span class="item-name object">ExtractorList</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">ExtractorList</span></span></span></span></span></p>
-<h3 id="name-aliases" class="section-header">Name aliases</h3><p>You can also prefix a normal reference or a reference by path with <code>as ...</code> to change the text that gets displayed.</p>
-<p><code>[[Generator as TsDocsGenerator]]</code> becomes <span><span class="c-tooltip"><a class="reference-link object" href="../../class/Generator.html">TsDocsGenerator</a><span class="c-tooltip-content"><span class="keyword">class</span> <span class="item-name object">Generator</span><span style="display:block" class="monospace fw-bold"><span class="item-name object">Generator</span></span></span></span></span></p>
-<h2 id="jsdoc-link" class="section-header">JSDoc @link</h2><p>ts-docs also supports the <code>@link</code> / <code>@linkplain</code> JSDoc tag, except it doesn&#39;t support properties / methods, name aliases and paths.</p>
+          <div>
+    <h1>Enum <span class="referenceLink object">ClassMemberFlags</span>
+    
+        <a href=https://github.com/ts-docs/ts-docs/tree/main/src/searchData.ts#L8>
+<span class="float-end sourceCode">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
+  <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
+</svg>
+</span></a>
+    </h1>
 
+    <p>Used for the <span><span class="c-tooltip"><a class="reference-link object" href="../packSearchData.html">packSearchData</a><span class="c-tooltip-content"><span class="keyword">function</span> <span class="item-name object">packSearchData</span><span style="display:block" class="monospace fw-bold"><span class="item-name object">packSearchData</span></span></span></span></span> function.</p>
+
+
+    <h2>Members</h2>
+    <div id=".IS_GETTER">
+        <a class="item-name" href="#.IS_GETTER">IS_GETTER</a>
+
+        <span>= 1 &lt;&lt; 0</span>
+
+    </div>
+    <div id=".IS_SETTER">
+        <a class="item-name" href="#.IS_SETTER">IS_SETTER</a>
+
+        <span>= 1 &lt;&lt; 1</span>
+
+    </div>
+    <div id=".IS_PRIVATE">
+        <a class="item-name" href="#.IS_PRIVATE">IS_PRIVATE</a>
+
+        <span>= 1 &lt;&lt; 2</span>
+
+    </div>
+
+
+</div>
         </div>
 
       </div>
