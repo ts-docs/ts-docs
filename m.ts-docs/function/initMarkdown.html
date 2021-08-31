@@ -204,7 +204,7 @@
           </div>
           <div>
     <h1>Function <span class="referenceLink method-name">initMarkdown</span>
-    <a href=https://github.com/ts-docs/ts-docs/tree/main/src/markdown.ts#L34>
+    <a href=https://github.com/ts-docs/ts-docs/tree/main/src/markdown.ts#L42>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
@@ -216,7 +216,14 @@
         (<span class="item-name"><span class="param-name">generator</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../class/Generator.html">Generator</a><span class="c-tooltip-content"><span class="keyword">class</span> <span class="item-name object">Generator</span><span style="display:block" class="monospace fw-bold"><span class="item-name object">Generator</span></span></span></span></span></span>, <span class="item-name"><span class="param-name">extractors</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../m.extractor/m.extractor/class/ExtractorList.html">ExtractorList</a><span class="c-tooltip-content"><span class="keyword">class</span> <span class="item-name object">ExtractorList</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">ExtractorList</span></span></span></span></span></span>)<span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://www.typescriptlang.org/docs/handbook/2/functions.html#void">void</a></span>
         <div class="docblock">
             <ul></ul>
-            
+            <p>Adds the following custom marked extensions:</p>
+<ul>
+<li>References like <span><span class="c-tooltip"><a class="reference-link object" href="../initMarkdown.html">this</a><span class="c-tooltip-content"><span class="keyword">function</span> <span class="item-name object">initMarkdown</span><span style="display:block" class="monospace fw-bold"><span class="item-name object">initMarkdown</span></span></span></span></span></li>
+<li>Warning blocks (<code>|&gt; This</code>)</li>
+<li>Adds the custom &quot;section-header&quot; class to all headings</li>
+<li>Wraps are codeblocks in the <code>hljs</code> class</li>
+</ul>
+
         </div>
     </div>
 </div>

@@ -204,7 +204,7 @@
           </div>
           <div>
     <h1>Type alias <span class="referenceLink object">Components</span>
-    <a href=https://github.com/ts-docs/ts-docs/tree/main/src/documentStructure.ts#L62>
+    <a href=https://github.com/ts-docs/ts-docs/tree/main/src/documentStructure.ts#L6>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
@@ -212,60 +212,7 @@
 </span></a>
     </h1>
     
-    <p><p>This repository is responsible for the <strong>generation</strong> of the documentation. It takes a directory of
-.hbs files (called a &quot;documentation structure&quot;), and a list of paths to the projects to generate the documentation for. </p>
-<p>A documentation structure should look like this:</p>
-<ul>
-<li>assets</li>
-<li>css</li>
-<li>src</li>
-<li>media</li>
-<li>components<ul>
-<li>propertyMember.hbs</li>
-<li>methodMember.hbs</li>
-<li>function.hbs</li>
-<li>enum.hbs</li>
-<li>interface.hbs</li>
-<li>class.hbs</li>
-<li>module.hbs</li>
-<li>typeReference.hbs</li>
-<li>typeFunction.hbs</li>
-<li>typeUnion.hbs</li>
-<li>typeIntersection.hbs</li>
-<li>typeObject.hbs</li>
-<li>typeTuple.hbs</li>
-<li>typeParameter.hbs</li>
-<li>functionParameter.hbs</li>
-<li>interfaceProperty.hbs</li>
-<li>indexSignature.hbs</li>
-</ul>
-</li>
-<li>partials</li>
-<li>index.hbs</li>
-<li>helpers.js</li>
-</ul>
-<p>This app outputs something like:</p>
-<ul>
-<li>index.html</li>
-<li>assets</li>
-<li>m.module_name</li>
-<li>classes</li>
-<li>interfaces</li>
-<li>enums</li>
-<li>functions</li>
-<li>types</li>
-<li>m.module_name_2<ul>
-<li>classes</li>
-<li>interfaces</li>
-<li>enums</li>
-<li>functions</li>
-<li>types</li>
-</ul>
-</li>
-</ul>
-<p>URL links look like this:
-<a href="https://base.com/m.module_name/class/class_name">https://base.com/m.module_name/class/class_name</a><br><a href="https://base.com/m.module_name/class/class_name#.methodName">https://base.com/m.module_name/class/class_name#.methodName</a><br><a href="https://base.com/m.module_name/class/class_name#.propNameName">https://base.com/m.module_name/class/class_name#.propNameName</a><br><a href="https://base.com/m.module_name/enum/enum_name#.memberName">https://base.com/m.module_name/enum/enum_name#.memberName</a><br><a href="https://base.com/m.module_name/m.module_name_2/type/type_name">https://base.com/m.module_name/m.module_name_2/type/type_name</a></p>
-</p>
+    <p></p>
     
     
 <span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"class"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"constant"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"enum"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"function"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"functionParameter"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"interface"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"interfaceProperty"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"methodMember"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"module"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"propertyMember"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"type"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"typeArray"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"typeFunction"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"typeIntersection"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"typeObject"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"typeParameter"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"typeReference"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"typeTuple"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"typeUnion"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"typePrimitive"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"typeDefaultAPI"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"typeMapped"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"typeConditional"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"typeTemplateLiteral"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"typeIndexAccess"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"typeOperator"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"classConstructor"</a></span><span class='symbol'> | </span><span class="reference-link"><a class="primitive string-literal" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">"typePredicate"</a></span></span>

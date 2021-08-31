@@ -204,7 +204,7 @@
           </div>
           <div>
     <h1>Function <span class="referenceLink method-name">packSearchData</span>
-    <a href=https://github.com/ts-docs/ts-docs/tree/main/src/searchData.ts#L37>
+    <a href=https://github.com/ts-docs/ts-docs/tree/main/src/searchData.ts#L46>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
@@ -217,24 +217,15 @@
         <div class="docblock">
             <ul></ul>
             <p>Packs the data in a convinient, small format. Unlike the default strucutre provided by ts-extractor, this packed structure only registers the &quot;global&quot;
-modules and includes all of the sub-module&#39;s things (classes, interfaces, etc.).
-[globalModules, allModuleNames, allParamNames];</p>
-<p>module: [nameIndex, classes, interfaces, enums, types, functions, constants]
-class: [name, properties, methods, path]
-methods: [name, flags]
-properties: [name, flags]
-flags: </p>
-<ul>
-<li>1 &lt;&lt; 0 - is getter</li>
-<li>1 &lt;&lt; 1 - is setter</li>
-<li>1 &lt;&lt; 2 - is private
-inteface: [name, properties, path]
-enum: [name, members, path]
-type: [name, path]
-function: [name, params, path]
-constant: [name, path]</li>
-</ul>
-<p><code>path</code> is an array of numbers, which are the indexes of the module names inside the <code>allModuleNames</code> array.</p>
+modules and includes all of the sub-module&#39;s things (classes, interfaces, etc.).</p>
+<p>Returns an 
+<span><span class="reference-link"><a class='object' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span></span> which looks something like this:<br>[globalModules, allModuleNames];</p>
+<p>globalModules is an 
+<span><span class="reference-link"><a class='object' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span></span> of module objects, which look like this:<br>[nameIndex, classes, interfaces, enums, types, functions, constants]</p>
+<p>a <strong>class</strong>: [name, properties, methods, path]
+a <strong>method</strong>: [name, flags]<br>a <strong>property</strong>: [name, flags]<br>an <strong>inteface</strong>: [name, properties, path]<br>an <strong>enum</strong>: [name, members, path]<br>a <strong>type alias</strong>: [name, path]<br>a <strong>function</strong>: [name, params, path] 
+a <strong>constant</strong>: [name, path] </p>
+<p><code>flags</code> is a bitfield containing <span><span class="c-tooltip"><a class="reference-link object" href="../enum/ClassMemberFlags.html">ClassMemberFlags</a><span class="c-tooltip-content"><span class="keyword">enum</span> <span class="item-name object">ClassMemberFlags</span><span style="display:block" class="monospace fw-bold"><span class="item-name object">ClassMemberFlags</span></span></span></span></span><br><code>path</code> is an array of numbers, which are the indexes of the module names inside the <code>allModuleNames</code> array. Since module names repeat very often, they&#39;re all placed in one array (<code>allModuleNames</code>) to save space.</p>
 
         </div>
     </div>
