@@ -51,7 +51,7 @@ export class Generator {
         if (this.settings.customPages) {
             fs.mkdirSync(path.join(this.settings.out, "./pages"));
             for (const category of this.settings.customPages) {
-                category.pages.sort((a, b) => (a.attributes.order || Infinity) - (b.attributes.order || Infinity));
+                category.pages.sort((a, b) => (b.attributes.order || Infinity) - (a.attributes.order || Infinity));
                 for (const page of category.pages) {
                     this.depth++;
                     const [markdown, headings] = this.generateMarkdownWithHeaders(page.content);
