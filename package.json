@@ -31,6 +31,7 @@
   "dependencies": {
     "@ts-docs/default-docs-structure": "^0.1.0",
     "@ts-docs/extractor": "^1.1.2",
+    "front-matter": "^4.0.2",
     "handlebars": "^4.7.7",
     "highlight.js": "^11.2.0",
     "marked": "^3.0.0",

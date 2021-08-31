@@ -23,20 +23,20 @@ export function buildBitfield(...bits: Array<number|undefined|false>) : number {
      * modules and includes all of the sub-module's things (classes, interfaces, etc.).
      * 
      * Returns an [[Array]] which looks something like this:    
-     * [globalModules, allModuleNames];
+     * `[globalModules, allModuleNames];`
      * 
      * globalModules is an [[Array]] of module objects, which look like this:   
-     * [nameIndex, classes, interfaces, enums, types, functions, constants]
+     * `[nameIndex, classes, interfaces, enums, types, functions, constants]`
      * 
-     * a **class**: [name, properties, methods, path]
-     * a **method**: [name, flags]  
-     * a **property**: [name, flags]    
-     * an **inteface**: [name, properties, path]    
-     * an **enum**: [name, members, path]   
-     * a **type alias**: [name, path]   
-     * a **function**: [name, params, path] 
-     * a **constant**: [name, path] 
-     * 
+     * a **class**: `[name, properties, methods, path]`  
+     * a **method**: `[name, flags]`      
+     * a **property**: `[name, flags]`       
+     * an **inteface**: `[name, properties, path]`        
+     * an **enum**: `[name, members, path]`       
+     * a **type alias**: `[name, path]`       
+     * a **function**: `[name, params, path]`     
+     * a **constant**: `[name, path]`     
+     *  
      * 
      * `flags` is a bitfield containing [[ClassMemberFlags]]    
      * `path` is an array of numbers, which are the indexes of the module names inside the `allModuleNames` array. Since module names repeat very often, they're all placed in one array (`allModuleNames`) to save space.

@@ -1,4 +1,5 @@
 import { ExtractorList } from "@ts-docs/extractor";
+import FrontMatter from "front-matter";
 import fs from "fs";
 import path from "path";
 
@@ -9,9 +10,15 @@ export interface LandingPage {
     version?: string
 }
 
+export interface CustomPageAttributes {
+    order?: number,
+    name?: string
+}
+
 export interface CustomPage {
     name: string,
-    content: string
+    content: string,
+    attributes: CustomPageAttributes
 }
 
 export interface PageCategory {
@@ -77,9 +84,11 @@ export function initOptions(extractorList: ExtractorList) : TsDocsOptions {
             const categoryPath = path.join(process.cwd(), customPages, category.name);
             for (const file of fs.readdirSync(categoryPath)) {
                 if (!file.endsWith(".md")) continue;
+                const content = FrontMatter<CustomPageAttributes>(fs.readFileSync(path.join(categoryPath, file), "utf-8"));
                 pages.push({
-                    name: file.slice(0, -3),
-                    content: fs.readFileSync(path.join(categoryPath, file), "utf-8")
+                    name: content.attributes.name || file.slice(0, -3),
+                    content: content.body,
+                    attributes: content.attributes
                 });
             }
             res.push({name: category.name, pages});

@@ -38,6 +38,7 @@ declare module "marked" {
  * - Warning blocks (`|> This`)
  * - Adds the custom "section-header" class to all headings
  * - Wraps are codeblocks in the `hljs` class
+ * - Resolves relative image links
  */
 export function initMarkdown(generator: Generator, extractors: ExtractorList) : void {
     marked.use({
