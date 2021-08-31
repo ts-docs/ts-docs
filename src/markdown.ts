@@ -31,6 +31,14 @@ declare module "marked" {
 
 }
 
+/**
+ * Adds the following custom marked extensions:
+ * 
+ * - References like [[initMarkdown as this]]
+ * - Warning blocks (`|> This`)
+ * - Adds the custom "section-header" class to all headings
+ * - Wraps are codeblocks in the `hljs` class
+ */
 export function initMarkdown(generator: Generator, extractors: ExtractorList) : void {
     marked.use({
         renderer: {

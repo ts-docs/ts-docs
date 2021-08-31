@@ -2,12 +2,18 @@ import { ExtractorList } from "@ts-docs/extractor";
 import { Property } from "@ts-docs/extractor/dist/structure";
 import fs from "fs";
 
+/**
+ * Used for the [[packSearchData]] function.
+ */
 export const enum ClassMemberFlags {
     IS_GETTER = 1 << 0,
     IS_SETTER = 1 << 1,
     IS_PRIVATE = 1 << 2
 }
 
+/**
+ * Adds the provided bits.
+ */
 export function buildBitfield(...bits: Array<number|undefined|false>) : number {
     return (bits.filter(bit => bit) as Array<number>).reduce((acc, bit) => acc | bit, 0);
 }
@@ -15,23 +21,26 @@ export function buildBitfield(...bits: Array<number|undefined|false>) : number {
 /**
      * Packs the data in a convinient, small format. Unlike the default strucutre provided by ts-extractor, this packed structure only registers the "global"
      * modules and includes all of the sub-module's things (classes, interfaces, etc.).
-     * [globalModules, allModuleNames, allParamNames];
      * 
-     * module: [nameIndex, classes, interfaces, enums, types, functions, constants]
-     * class: [name, properties, methods, path]
-     * methods: [name, flags]
-     * properties: [name, flags]
-     * flags: 
-     *  - 1 << 0 - is getter
-     *  - 1 << 1 - is setter
-     *  - 1 << 2 - is private
-     * inteface: [name, properties, path]
-     * enum: [name, members, path]
-     * type: [name, path]
-     * function: [name, params, path]
-     * constant: [name, path]
+     * Returns an [[Array]] which looks something like this:    
+     * [globalModules, allModuleNames];
      * 
-     * `path` is an array of numbers, which are the indexes of the module names inside the `allModuleNames` array.
+     * globalModules is an [[Array]] of module objects, which look like this:   
+     * [nameIndex, classes, interfaces, enums, types, functions, constants]
+     * 
+     * a **class**: [name, properties, methods, path]
+     * a **method**: [name, flags]  
+     * a **property**: [name, flags]    
+     * an **inteface**: [name, properties, path]    
+     * an **enum**: [name, members, path]   
+     * a **type alias**: [name, path]   
+     * a **function**: [name, params, path] 
+     * a **constant**: [name, path] 
+     * 
+     * 
+     * `flags` is a bitfield containing [[ClassMemberFlags]]    
+     * `path` is an array of numbers, which are the indexes of the module names inside the `allModuleNames` array. Since module names repeat very often, they're all placed in one array (`allModuleNames`) to save space.
+     * 
 */
     
 export function packSearchData(extractors: ExtractorList, path: string) : void {

@@ -18,9 +18,16 @@ export interface OtherProps {
     type?: string
 }
 
+/**
+ * The class responsible for documentation generator. Takes in a documentation structure and settings.
+ *
+ */
 export class Generator {
     structure: DocumentStructure
     settings: TsDocsOptions
+    /**
+     * How "deep" the current thing is from the index. 
+     */
     depth: number
     currentGlobalModuleName?: string
     constructor(structure: DocumentStructure, settings: TsDocsOptions) {
