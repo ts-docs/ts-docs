@@ -1,6 +1,6 @@
 ---
 name: Custom Markdown
-order: 1
+order: 2
 ---
 
 # Custom Markdown

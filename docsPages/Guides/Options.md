@@ -1,5 +1,5 @@
 ---
-order: 0
+order: 1
 ---
 
 # Options
@@ -55,6 +55,5 @@ A path to a folder with assets with additional assets for the docs. It will copy
 ### logo
 
 A logo to use. It MUST be inside the folder provided to the `assets` option.
-
 
 

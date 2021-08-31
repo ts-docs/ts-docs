@@ -20,13 +20,12 @@ export interface OtherProps {
 
 /**
  * The class responsible for documentation generator. Takes in a documentation structure and settings.
- *
  */
 export class Generator {
     structure: DocumentStructure
     settings: TsDocsOptions
     /**
-     * How "deep" the current thing is from the index. 
+     * How "deep" the current thing is from the root.
      */
     depth: number
     currentGlobalModuleName?: string
@@ -51,17 +50,16 @@ export class Generator {
         if (this.settings.customPages) {
             fs.mkdirSync(path.join(this.settings.out, "./pages"));
             for (const category of this.settings.customPages) {
-                category.pages.sort((a, b) => (a.attributes.order || Infinity) - (b.attributes.order || Infinity));
+                category.pages.sort((a, b) => +(a.attributes.order || Infinity) - +(b.attributes.order || Infinity));
                 for (const page of category.pages) {
-                    this.depth++;
+                    this.depth+=2;
                     const [markdown, headings] = this.generateMarkdownWithHeaders(page.content);
-                    this.depth++;
                     this.generatePage("./pages", category.name, page.name, markdown, {
                         type: "page",
                         pages: this.settings.customPages,
                         headings
                     });
-                    this.depth -= 2;
+                    this.depth-=2;
                 }
             }
         }
@@ -120,7 +118,7 @@ export class Generator {
                 implements: classObj.implements?.map(impl => this.generateType(impl)),
                 extends: classObj.extends && this.generateType(classObj.extends),
                 constructor: classObj._constructor && this.generateConstructor(classObj._constructor),
-            }), {properties: classObj.properties, name: classObj.name, methods: classObj.methods, type: "class", depth: this.depth + 1});
+            }), {properties: classObj.properties, name: classObj.name, methods: classObj.methods, type: "class" });
     }
 
     generateConstructor(constructor: Omit<FunctionDecl, "name">) : string {
@@ -140,7 +138,7 @@ export class Generator {
             implements: interfaceObj.implements && interfaceObj.implements.map(impl => this.generateType(impl)),
             typeParameters: interfaceObj.typeParameters?.map(p => this.generateTypeParameter(p)),
             comment: this.generateComment(interfaceObj.jsDoc)
-        }), {properties: interfaceObj.properties, name: interfaceObj.name, type: "interface", depth: this.depth + 1});
+        }), {properties: interfaceObj.properties, name: interfaceObj.name, type: "interface" });
     }
 
     generateEnum(path: string, enumObj: EnumDecl) : void {
@@ -149,7 +147,7 @@ export class Generator {
             ...enumObj,
             comment: this.generateComment(enumObj.jsDoc),
             members: enumObj.members.map(m => ({...m, initializer: m.initializer && this.generateType(m.initializer)}))
-        }), { type: "enum", members: enumObj.members, name: enumObj.name, depth: this.depth + 1 });
+        }), { type: "enum", members: enumObj.members, name: enumObj.name });
     }
 
     generateTypeDecl(path: string, typeObj: TypeDecl, module: Module) : void {
@@ -159,7 +157,7 @@ export class Generator {
             comment: this.generateComment(typeObj.jsDoc),
             value: typeObj.value && this.generateType(typeObj.value),
             typeParameters: typeObj.typeParameters?.map(typeParam => this.generateTypeParameter(typeParam))
-        }), { type: "module", module, name: typeObj.name, realType: "enum",  });
+        }), { type: "module", module, name: typeObj.name, realType: "type" });
     }
 
     generateFunction(path: string, func: FunctionDecl, module: Module) : void {
