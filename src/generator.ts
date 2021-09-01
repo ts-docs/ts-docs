@@ -28,7 +28,15 @@ export class Generator {
      * How "deep" the current thing is from the root.
      */
     depth: number
+    /**
+     * The name of the current **global** [[Module]] being rendered.
+     * It's going to be undefined if there is only one entry point.
+     */
     currentGlobalModuleName?: string
+    /**
+     * Only true when the custom pages are being rendered
+     */
+    renderingPages?: boolean
     constructor(structure: DocumentStructure, settings: TsDocsOptions) {
         this.structure = structure;
         this.settings = settings;
@@ -49,6 +57,7 @@ export class Generator {
 
         if (this.settings.customPages) {
             fs.mkdirSync(path.join(this.settings.out, "./pages"));
+            this.renderingPages = true;
             for (const category of this.settings.customPages) {
                 category.pages.sort((a, b) => +(a.attributes.order || Infinity) - +(b.attributes.order || Infinity));
                 for (const page of category.pages) {
@@ -63,6 +72,7 @@ export class Generator {
                     this.depth-=2;
                 }
             }
+            delete this.renderingPages;
         }
         if (packages.length === 1) {
             const pkg = packages[0];
