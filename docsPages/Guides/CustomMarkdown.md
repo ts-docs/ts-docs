@@ -5,7 +5,7 @@ order: 2
 
 # Custom Markdown
 
-You can use custom ts-docs markdown syntax in order to make your documentation more informative and prettier. You can use this syntax in custom pages and in jsdoc comments!
+You can use custom ts-docs markdown syntax in order to make your documentation more informative and prettier. You can use this syntax in custom pages and in jsdoc comments.
 
 ## Linking assets
 
@@ -29,7 +29,7 @@ Example:
 
 ## References
 
-You can references types like classes, interfaces, enums, type aliases, methods, properties, functions, constants and namespaces by putting their name inside double square brackets, for example:
+You can reference classes, interfaces, enums, type aliases, methods, properties, functions, constants and namespaces by putting their name inside double square brackets, for example:
 
 `[[Generator]]` becomes [[Generator]]
 
@@ -51,10 +51,27 @@ ts-docs searches each module in order to find the name of the references, this c
 
 ### Name aliases
 
-You can also prefix a normal reference or a reference by path with `as ...` to change the text that gets displayed.
+You can also follow up a normal reference or a reference by path with `as ...` to change the text that gets displayed.
 
 `[[Generator as TsDocsGenerator]]` becomes [[Generator as TsDocsGenerator]]
 
-## JSDoc @link
+## Supported JSDoc tags
 
-ts-docs also supports the `@link` / `@linkplain` JSDoc tag, except it doesn't support properties / methods, name aliases and paths.
+### `@link`
+
+ts-docs supports the `@link` / `@linkplain` JSDoc tag, except it doesn't support properties / methods, name aliases and paths. It's not recommended to use `{@link}` in custom pages and documentation comments, in this case it exists only for compatibility reasons.
+
+### `@param`
+
+Documents a method / function parameter, the parameter type WILL NOT be used by ts-docs. 
+
+```ts
+/**
+ * @param a Parameter description... 
+ *
+*/
+function doSomething(a: string) : void {
+    // Code...
+}
+```
+

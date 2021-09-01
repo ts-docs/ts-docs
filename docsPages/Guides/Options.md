@@ -24,12 +24,14 @@ You can provide options for ts-docs in two ways:
 
 ## List of options
 
+To check out all the default options in one place, see the [[ts-docs/options]] constant.
+
 ### structure
 
 Which documentation structure to use. You should only provide the **name** of the documentation structure, ts-docs expects it to be located inside your `node_modules` folder. ts-docs doesn't come with any documentation structures, but the default of this option is `default-docs-structure`. To install the default structure use the following command:
 
 ```
-npm i @ts-docs/default-docs-structure
+npm i --save-dev @ts-docs/default-docs-structure
 ```
 
 ### landingPage
@@ -38,7 +40,7 @@ If your project is a monorepo, you can use this option to tell ts-docs which rep
 
 ### name
 
-The name of the project. Name of irst provided entry point is by default.
+The name of the project that appears in the sidebar. Name of irst provided entry point is by default.
 
 ### out
 
@@ -50,10 +52,10 @@ A path to a directory of custom pages. Inside that folder, each inner-folder is 
 
 ### assets
 
-A path to a folder with assets with additional assets for the docs. It will copy all files and folders inside that folder.
+A path to a folder with assets with additional assets for the docs. It will copy all files and folders inside that folder and paste them inside the generated `./assets` folder.
 
 ### logo
 
-A logo to use. It MUST be inside the folder provided to the `assets` option.
+A logo to use. It MUST be inside the folder provided to the `assets` option. The logo will be placed in the sidebar, below the name. 
 
 
