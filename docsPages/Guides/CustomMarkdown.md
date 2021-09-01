@@ -75,3 +75,25 @@ function doSomething(a: string) : void {
 }
 ```
 
+### `@example`
+
+Documents an example.
+
+```ts
+/**
+ * @example
+ * 
+ * ```ts
+ * const myApple = new Apple("Ambrosia");
+ * myApple.eat();
+ * ```
+ * 
+*/
+
+class Apple {
+    kind: string
+    constructor(kind: string) {
+        this.kind = kind;
+    }
+}
+```

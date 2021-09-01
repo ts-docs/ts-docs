@@ -419,9 +419,15 @@ export class Generator {
         });
     }
 
-    generateComment(comment?: Array<JSDocData>) : string|undefined {
+    generateComment(comment?: Array<JSDocData>, generateExample = true) : string|undefined {
         if (!comment) return undefined;
-        return marked.parse(comment.map(c => c.comment || "").join("\n\n"));
+        let text = marked.parse(comment.map(c => c.comment || "").join("\n\n"));
+        if (generateExample) {
+            const example = comment.find(cmt => cmt.tags?.some(t => t.name === "example"))?.tags?.find(tag => tag.name === "example");
+            if (!example || !example.comment) return text;
+            text += marked.parse(`# Example\n\n${example.comment}`);
+        }
+        return text;
     }
 
     generateMarkdownWithHeaders(content: string) : [string, Array<Heading>] {
