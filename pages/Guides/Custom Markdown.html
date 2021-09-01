@@ -68,7 +68,7 @@
     <div>
     <a class="fw-bold" href="#supported-jsdoc-tags">Supported JSDoc tags</a>
     <div style="padding-left:15px"> 
-    <a href="#link" class="sidebar-category-member"><code>@link</code></a><a href="#param" class="sidebar-category-member"><code>@param</code></a>
+    <a href="#link" class="sidebar-category-member"><code>@link</code></a><a href="#param" class="sidebar-category-member"><code>@param</code></a><a href="#example" class="sidebar-category-member"><code>@example</code></a>
     </div>
     </div>
     </span>
@@ -189,6 +189,22 @@
 */</span>
 <span class="hljs-keyword">function</span> <span class="hljs-title function_">doSomething</span>(<span class="hljs-params">a: <span class="hljs-built_in">string</span></span>) : <span class="hljs-built_in">void</span> {
     <span class="hljs-comment">// Code...</span>
+}</code></pre><h3 id="example" class="section-header"><code>@example</code></h3><p>Documents an example.</p>
+<pre><code class="hljs"><span class="hljs-comment">/**
+ * <span class="hljs-doctag">@example</span>
+ * 
+ * ```ts
+ * const myApple = new Apple(&quot;Ambrosia&quot;);
+ * myApple.eat();
+ * ```
+ * 
+*/</span>
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">Apple</span> {
+    <span class="hljs-attr">kind</span>: <span class="hljs-built_in">string</span>
+    <span class="hljs-title function_">constructor</span>(<span class="hljs-params">kind: <span class="hljs-built_in">string</span></span>) {
+        <span class="hljs-variable language_">this</span>.<span class="hljs-property">kind</span> = kind;
+    }
 }</code></pre>
         </div>
 
