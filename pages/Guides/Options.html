@@ -74,7 +74,7 @@
         <span class="sidebar-category">Guides</span>
         </div>
         <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="../Guides/Options.html">Options</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Markdown.html">Custom Markdown</a></span>
+        <span class="sidebar-category-member"><a href="../Guides/Options.html">Options</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Markdown.html">Custom Markdown</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Pages.html">Custom Pages</a></span>
         </div>
         </div>
     
@@ -168,13 +168,14 @@
 <h2 id="tsconfig-usage" class="section-header">Tsconfig usage</h2><pre><code class="hljs">  <span class="hljs-attr">&quot;tsdocsOptions&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">&quot;entryPoints&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;/entry/point.js&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
     ...other options
-  <span class="hljs-punctuation">}</span></code></pre><h2 id="list-of-options" class="section-header">List of options</h2><h3 id="structure" class="section-header">structure</h3><p>Which documentation structure to use. You should only provide the <strong>name</strong> of the documentation structure, ts-docs expects it to be located inside your <code>node_modules</code> folder. ts-docs doesn&#39;t come with any documentation structures, but the default of this option is <code>default-docs-structure</code>. To install the default structure use the following command:</p>
-<pre><code class="hljs">npm i @ts-docs/<span class="hljs-keyword">default</span>-docs-structure</code></pre><h3 id="landingpage" class="section-header">landingPage</h3><p>If your project is a monorepo, you can use this option to tell ts-docs which repository to use the README, version and name of for the landing page. The first provided entry point is used by default.</p>
-<h3 id="name" class="section-header">name</h3><p>The name of the project. Name of irst provided entry point is by default.</p>
+  <span class="hljs-punctuation">}</span></code></pre><h2 id="list-of-options" class="section-header">List of options</h2><p>To check out all the default options in one place, see the <span><span class="reference-link item-name">options</span></span> constant.</p>
+<h3 id="structure" class="section-header">structure</h3><p>Which documentation structure to use. You should only provide the <strong>name</strong> of the documentation structure, ts-docs expects it to be located inside your <code>node_modules</code> folder. ts-docs doesn&#39;t come with any documentation structures, but the default of this option is <code>default-docs-structure</code>. To install the default structure use the following command:</p>
+<pre><code class="hljs">npm i --save-dev @ts-docs/<span class="hljs-keyword">default</span>-docs-structure</code></pre><h3 id="landingpage" class="section-header">landingPage</h3><p>If your project is a monorepo, you can use this option to tell ts-docs which repository to use the README, version and name of for the landing page. The first provided entry point is used by default.</p>
+<h3 id="name" class="section-header">name</h3><p>The name of the project that appears in the sidebar. Name of irst provided entry point is by default.</p>
 <h3 id="out" class="section-header">out</h3><p>Where to generate the files. This option is set to <code>./docs</code> by default.</p>
 <h3 id="custompages" class="section-header">customPages</h3><p>A path to a directory of custom pages. Inside that folder, each inner-folder is a category and each file inside that folder is a custom page.</p>
-<h3 id="assets" class="section-header">assets</h3><p>A path to a folder with assets with additional assets for the docs. It will copy all files and folders inside that folder.</p>
-<h3 id="logo" class="section-header">logo</h3><p>A logo to use. It MUST be inside the folder provided to the <code>assets</code> option.</p>
+<h3 id="assets" class="section-header">assets</h3><p>A path to a folder with assets with additional assets for the docs. It will copy all files and folders inside that folder and paste them inside the generated <code>./assets</code> folder.</p>
+<h3 id="logo" class="section-header">logo</h3><p>A logo to use. It MUST be inside the folder provided to the <code>assets</code> option. The logo will be placed in the sidebar, below the name. </p>
 
         </div>
 

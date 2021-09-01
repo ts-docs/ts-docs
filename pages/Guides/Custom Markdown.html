@@ -64,7 +64,14 @@
     <a href="#methods-and-properties" class="sidebar-category-member">Methods and properties</a><a href="#by-path" class="sidebar-category-member">By path</a><a href="#name-aliases" class="sidebar-category-member">Name aliases</a>
     </div>
     </div>
-    </span><span class="sidebar-category-member"><a href="#jsdoc-link" class="sidebar-category-member">JSDoc @link</a></span>
+    </span><span class="sidebar-category-member">
+    <div>
+    <a class="fw-bold" href="#supported-jsdoc-tags">Supported JSDoc tags</a>
+    <div style="padding-left:15px"> 
+    <a href="#link" class="sidebar-category-member"><code>@link</code></a><a href="#param" class="sidebar-category-member"><code>@param</code></a>
+    </div>
+    </div>
+    </span>
         </div>
         </div>
     
@@ -74,7 +81,7 @@
         <span class="sidebar-category">Guides</span>
         </div>
         <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="../Guides/Options.html">Options</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Markdown.html">Custom Markdown</a></span>
+        <span class="sidebar-category-member"><a href="../Guides/Options.html">Options</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Markdown.html">Custom Markdown</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Pages.html">Custom Pages</a></span>
         </div>
         </div>
     
@@ -159,12 +166,12 @@
           <div class="path">
             <a class="path-member" href="../../index.html">index</a> / <span class="path-member">pages</span> / <a class="path-member" href="">Custom Markdown</a>
           </div>
-          <h1 id="custom-markdown" class="section-header">Custom Markdown</h1><p>You can use custom ts-docs markdown syntax in order to make your documentation more informative and prettier. You can use this syntax in custom pages and in jsdoc comments!</p>
+          <h1 id="custom-markdown" class="section-header">Custom Markdown</h1><p>You can use custom ts-docs markdown syntax in order to make your documentation more informative and prettier. You can use this syntax in custom pages and in jsdoc comments.</p>
 <h2 id="linking-assets" class="section-header">Linking assets</h2><p>If you want to have an image which comes from the <code>assets</code> folder, simply start the link of the image with <code>./assets</code> or <code>assets</code>. </p>
 <p>Example:</p>
 <pre><code class="hljs">[<span class="hljs-string">cute_kitty</span>](<span class="hljs-link">./assets/images/cute_kitty.png</span>)</code></pre><h2 id="warning-blocks" class="section-header">Warning blocks</h2><p>Warning blocks can be used to outline an important piece of information.</p>
 <p class="text-warning"> This is a warning!</p><p>Example:</p>
-<pre><code class="hljs">|&gt; This is a warning!</code></pre><h2 id="references" class="section-header">References</h2><p>You can references types like classes, interfaces, enums, type aliases, methods, properties, functions, constants and namespaces by putting their name inside double square brackets, for example:</p>
+<pre><code class="hljs">|&gt; This is a warning!</code></pre><h2 id="references" class="section-header">References</h2><p>You can reference classes, interfaces, enums, type aliases, methods, properties, functions, constants and namespaces by putting their name inside double square brackets, for example:</p>
 <p><code>[[Generator]]</code> becomes <span><span class="c-tooltip"><a class="reference-link object" href="../../m.ts-docs/class/Generator.html">Generator</a><span class="c-tooltip-content"><span class="keyword">class</span> <span class="item-name object">Generator</span><span style="display:block" class="monospace fw-bold">ts-docs/<span class="item-name object">Generator</span></span></span></span></span></p>
 <h3 id="methods-and-properties" class="section-header">Methods and properties</h3><p>You can reference a property by adding a dot (<code>.</code>) and then the name of the property. </p>
 <p><code>[[Generator.structure]]</code> becomes <span><a class="reference-link" href="../../m.ts-docs/class/Generator.html#.structure"><span class="object">Generator</span><span class="symbol">.</span><span class="property-name">structure</span></a></span></p>
@@ -172,10 +179,17 @@
 <p><code>[[Generator.generate()]]</code> becomes <span><a class="reference-link" href="../../m.ts-docs/class/Generator.html#.generate"><span class="object">Generator</span><span class="symbol">.</span><span class="method-name">generate</span></a></span></p>
 <h3 id="by-path" class="section-header">By path</h3><p>ts-docs searches each module in order to find the name of the references, this could lead to inaccurate links, so you always can just provide the entire path to the thing.</p>
 <p><code>[[extractor/extractor/ExtractorList]]</code> becomes <span><span class="c-tooltip"><a class="reference-link object" href="../../m.extractor/m.extractor/class/ExtractorList.html">ExtractorList</a><span class="c-tooltip-content"><span class="keyword">class</span> <span class="item-name object">ExtractorList</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">ExtractorList</span></span></span></span></span></p>
-<h3 id="name-aliases" class="section-header">Name aliases</h3><p>You can also prefix a normal reference or a reference by path with <code>as ...</code> to change the text that gets displayed.</p>
+<h3 id="name-aliases" class="section-header">Name aliases</h3><p>You can also follow up a normal reference or a reference by path with <code>as ...</code> to change the text that gets displayed.</p>
 <p><code>[[Generator as TsDocsGenerator]]</code> becomes <span><span class="c-tooltip"><a class="reference-link object" href="../../m.ts-docs/class/Generator.html">TsDocsGenerator</a><span class="c-tooltip-content"><span class="keyword">class</span> <span class="item-name object">Generator</span><span style="display:block" class="monospace fw-bold">ts-docs/<span class="item-name object">Generator</span></span></span></span></span></p>
-<h2 id="jsdoc-link" class="section-header">JSDoc @link</h2><p>ts-docs also supports the <code>@link</code> / <code>@linkplain</code> JSDoc tag, except it doesn&#39;t support properties / methods, name aliases and paths.</p>
-
+<h2 id="supported-jsdoc-tags" class="section-header">Supported JSDoc tags</h2><h3 id="link" class="section-header"><code>@link</code></h3><p>ts-docs supports the <code>@link</code> / <code>@linkplain</code> JSDoc tag, except it doesn&#39;t support properties / methods, name aliases and paths. It&#39;s not recommended to use <code>{@link}</code> in custom pages and documentation comments, in this case it exists only for compatibility reasons.</p>
+<h3 id="param" class="section-header"><code>@param</code></h3><p>Documents a method / function parameter, the parameter type WILL NOT be used by ts-docs. </p>
+<pre><code class="hljs"><span class="hljs-comment">/**
+ * <span class="hljs-doctag">@param</span> a Parameter description... 
+ *
+*/</span>
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">doSomething</span>(<span class="hljs-params">a: <span class="hljs-built_in">string</span></span>) : <span class="hljs-built_in">void</span> {
+    <span class="hljs-comment">// Code...</span>
+}</code></pre>
         </div>
 
       </div>
