@@ -20,7 +20,7 @@
     "forceConsistentCasingInFileNames": true  
   },
   "tsdocsOptions": {
-    "entryPoints": ["./src/index.ts", "./ts-extractor/src/index.ts"],
+    "entryPoints": ["./src/index.ts", "./src/index.ts"],
     "name": "ts-docs",
     "customPages": "./docsPages"
   }
