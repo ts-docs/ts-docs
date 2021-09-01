@@ -3,7 +3,7 @@ import fs from "fs";
 import Handlebars from "handlebars";
 import path from "path";
 
-export type Components = "class" | "constant" | "enum" | "function" | "functionParameter" | "interface" | "interfaceProperty" | "methodMember" | "module" | "propertyMember" | "type" | "typeArray" | "typeFunction" | "typeIntersection" | "typeObject" | "typeParameter" | "typeReference" | "typeTuple" | "typeUnion" | "typePrimitive" | "typeDefaultAPI" | "typeMapped" | "typeConditional" | "typeTemplateLiteral" | "typeIndexAccess" | "typeOperator" | "classConstructor" | "typePredicate";
+export type Components = "class" | "constant" | "enum" | "function" | "functionParameter" | "interface" | "interfaceProperty" | "methodMember" | "module" | "propertyMember" | "type" | "typeArray" | "typeFunction" | "typeIntersection" | "typeObject" | "typeParameter" | "typeReference" | "typeTuple" | "typeUnion" | "typePrimitive" | "typeDefaultAPI" | "typeMapped" | "typeConditional" | "typeTemplateLiteral" | "typeIndexAccess" | "typeOperator" | "classConstructor" | "typePredicate" | "objectProperty";
 
 /**
  * ## What is a documentation structure?
@@ -61,7 +61,6 @@ export interface DocumentStructure {
     components: Record<Components, HandlebarsTemplateDelegate<unknown>>,
     index: HandlebarsTemplateDelegate<unknown>
 }
-
 
 export function setupDocumentStructure(structName: string) : DocumentStructure {
     const pathToPackageJSON = path.join(`./node_modules/${structName}/package.json`);

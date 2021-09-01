@@ -105,3 +105,8 @@ export function isLargeSignature(sig: { parameters?: Array<FunctionParameter>, r
     }
     return false;
 }
+
+export function isLargeObject(obj: ObjectLiteral) : boolean {
+    if (obj.properties.length > 3) return true;
+    return getTypeLength(obj) > 48;
+}

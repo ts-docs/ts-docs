@@ -2,7 +2,7 @@
 import { ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, Property, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl, ConditionalType, MappedType, TypeOperator, IndexAccessedType, FunctionSignature, TypePredicateType, InferType } from "@ts-docs/extractor/dist/structure";
 import { DocumentStructure } from "./documentStructure";
 import marked from "marked";
-import { copyFolder, createFile, escapeHTML, isLargeSignature } from "./utils";
+import { copyFolder, createFile, escapeHTML, isLargeObject, isLargeSignature } from "./utils";
 import { ExtractorList } from "@ts-docs/extractor";
 import path from "path";
 import { TsDocsOptions } from "./options";
@@ -137,7 +137,7 @@ export class Generator {
         if (!this.structure.components.interface) return;
         this.generatePage(path, "interface", interfaceObj.name, this.structure.components.interface({
             ...interfaceObj, 
-            properties: interfaceObj.properties.map(p => this.generateProperty(p)),
+            properties: interfaceObj.properties.map(p => this.generateProperty(p, true)),
             extends: interfaceObj.extends && interfaceObj.extends.map(ext => this.generateType(ext)),
             implements: interfaceObj.implements && interfaceObj.implements.map(impl => this.generateType(impl)),
             typeParameters: interfaceObj.typeParameters?.map(p => this.generateTypeParameter(p)),
@@ -192,12 +192,16 @@ export class Generator {
         });
     }
 
-    generateProperty(property: Property|IndexSignatureDeclaration|ArrowFunction) : string {
+    generateProperty(property: Property|IndexSignatureDeclaration|ArrowFunction, isInterface?: boolean) : string {
         if (!this.structure.components.interfaceProperty) return "";
         let type;
         if ("kind" in property) type = this.generateArrowFunction(property);
         else if (property.type) type = this.generateType(property.type);
-        return this.structure.components.interfaceProperty({
+        if (isInterface) return this.structure.components.interfaceProperty({
+            ...property, type,
+            key: "key" in property && property.key && this.generateType(property.key)
+        });
+        else return this.structure.components.objectProperty({
             ...property, type,
             key: "key" in property && property.key && this.generateType(property.key)
         });
@@ -237,7 +241,7 @@ export class Generator {
             refType = "function";
             break;
         case TypeReferenceKinds.CONSTANT:
-            refType = "const";
+            refType = "constant";
             break;
         case TypeReferenceKinds.NAMESPACE_OR_MODULE: {
             return this.structure.components.typeReference({
@@ -366,7 +370,8 @@ export class Generator {
             const ref = type as ObjectLiteral;
             if (!this.structure.components.typeObject) return "";
             return this.structure.components.typeObject({
-                properties: ref.properties.map(p => this.generateProperty(p))
+                properties: ref.properties.map(p => this.generateProperty(p)),
+                isLarge: isLargeObject(ref)
             });
         }
         case TypeKinds.STRINGIFIED_UNKNOWN: return escapeHTML((type as Literal).name);
@@ -381,7 +386,7 @@ export class Generator {
             paramComments: sig.parameters?.filter(param => param.jsDoc.comment).map(param => ({name: param.name, comment:  param.jsDoc.comment && marked.parseInline(param.jsDoc.comment)})),
             returnType: sig.returnType && this.generateType(sig.returnType),
             comment: this.generateComment(sig.jsDoc),
-            paramsOnNewLine: isLargeSignature(sig)
+            isLarge: isLargeSignature(sig)
         };
     }
 

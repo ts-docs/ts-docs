@@ -5,8 +5,6 @@ import highlight from "highlight.js";
 import marked from "marked";
 import { Generator } from "./generator";
 
-// Array of h1, { subHeadings: [] }
-// Array of h2
 export interface Heading {
     name: string,
     id: string,
@@ -34,13 +32,15 @@ declare module "marked" {
 function genReference(str: string, otherData: Record<string, unknown>, generator: Generator, extractors: ExtractorList) : string {
     const type = extractors[0].references.resolveExternalString(str, extractors);
     if (!type) return str;
+    if (!generator.currentGlobalModuleName) delete type.external;
     return generator.generateRef({kind: TypeKinds.REFERENCE, type}, otherData);
 }
 
 /**
  * Adds the following custom marked extensions:
  * 
- * - References like [[initMarkdown as this]]
+ * - References like [[initMarkdown as this]] (`[[initMarkdown as this]]`)
+ * - JSDoc `@link` tags
  * - Warning blocks (`|> This`)
  * - Adds the custom "section-header" class to all headings
  * - Wraps are codeblocks in the `hljs` class
