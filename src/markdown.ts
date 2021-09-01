@@ -31,6 +31,14 @@ declare module "marked" {
 
 }
 
+function genReference(str: string, otherData: Record<string, unknown>, generator: Generator, extractors: ExtractorList) : string {
+    let type;
+    if (generator.currentGlobalModuleName) type = extractors[0].references.resolveExternalString(str, extractors);
+    else type = extractors[0].references.resolveString(str, extractors[0]);
+    if (!type) return str;
+    return generator.generateRef({kind: TypeKinds.REFERENCE, type}, otherData);
+}
+
 /**
  * Adds the following custom marked extensions:
  * 
@@ -111,21 +119,19 @@ export function initMarkdown(generator: Generator, extractors: ExtractorList) : 
                                 thingName = newThingName;
                                 otherData.hash = hash;
                             }
-                            const type = extractors[0].references.resolveExternalString(thingName, extractors);
-                            if (!type) return "";
-                            return generator.generateRef({kind: TypeKinds.REFERENCE, type}, otherData);
+                            return genReference(thingName, otherData, generator, extractors);
                         }
                     }
                     if (name.includes(".")) {
                         const [thingName, hash] = name.split(".");
                         otherData.hash = hash;
-                        return generator.generateType(extractors[0].resolveSymbol(thingName), otherData);
+                        return genReference(thingName, otherData, generator, extractors);
                     } else if (name.includes("#")) {
                         const [thingName, hash] = name.split("#");
                         otherData.hash = hash;
-                        return generator.generateType(extractors[0].resolveSymbol(thingName), otherData);
+                        return genReference(thingName, otherData, generator, extractors);
                     }
-                    return generator.generateType(extractors[0].resolveSymbol(name), otherData);
+                    return genReference(name, otherData, generator, extractors);
                 } 
             },
             {
@@ -144,9 +150,7 @@ export function initMarkdown(generator: Generator, extractors: ExtractorList) : 
                     return undefined;
                 },
                 renderer: (token) => {
-                    const ref = extractors[0].references.resolveExternalString(token.text, extractors);
-                    if (!ref) return "";
-                    return `${generator.generateType({kind: TypeKinds.REFERENCE, type: ref}) || token.text}`;
+                    return genReference(token.text, {}, generator, extractors);
                 }
             },
             {

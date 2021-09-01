@@ -52,6 +52,7 @@ export class Generator {
             for (const category of this.settings.customPages) {
                 category.pages.sort((a, b) => +(a.attributes.order || Infinity) - +(b.attributes.order || Infinity));
                 for (const page of category.pages) {
+                    // +2 because pages/category
                     this.depth+=2;
                     const [markdown, headings] = this.generateMarkdownWithHeaders(page.content);
                     this.generatePage("./pages", category.name, page.name, markdown, {
@@ -70,7 +71,9 @@ export class Generator {
         } else {
             for (const pkg of packages) {
                 this.currentGlobalModuleName = pkg.module.name;
+                this.depth++;
                 this.generateModule("", pkg.module, true, pkg.readme);
+                this.depth--;
             }
             if (this.settings.landingPage && this.settings.landingPage.readme) this.generatePage("", "./", "index", marked.parse(this.settings.landingPage.readme), { type: "index", packages, pages: this.settings.customPages, doNotGivePath: true });
         }
@@ -81,6 +84,7 @@ export class Generator {
             this.generatePage(path, `m.${module.name}`, "index", this.structure.components.module(readme ? {...module, readme: marked.parse(readme) }:module), { type: "module", module, name: module.name });
             path += `/m.${module.name}`;
         }
+        // +1 because class/interface/enum/function/type/constant
         this.depth++;
         for (const [, classObj] of module.classes) {
             this.generateClass(path, classObj);
@@ -118,7 +122,7 @@ export class Generator {
                 implements: classObj.implements?.map(impl => this.generateType(impl)),
                 extends: classObj.extends && this.generateType(classObj.extends),
                 constructor: classObj._constructor && this.generateConstructor(classObj._constructor),
-            }), {properties: classObj.properties, name: classObj.name, methods: classObj.methods, type: "class", depth: this.currentGlobalModuleName ? this.depth+1:this.depth });
+            }), {properties: classObj.properties, name: classObj.name, methods: classObj.methods, type: "class" });
     }
 
     generateConstructor(constructor: Omit<FunctionDecl, "name">) : string {
@@ -138,7 +142,7 @@ export class Generator {
             implements: interfaceObj.implements && interfaceObj.implements.map(impl => this.generateType(impl)),
             typeParameters: interfaceObj.typeParameters?.map(p => this.generateTypeParameter(p)),
             comment: this.generateComment(interfaceObj.jsDoc)
-        }), {properties: interfaceObj.properties, name: interfaceObj.name, type: "interface", depth: this.currentGlobalModuleName ? this.depth+1:this.depth });
+        }), {properties: interfaceObj.properties, name: interfaceObj.name, type: "interface" });
     }
 
     generateEnum(path: string, enumObj: EnumDecl) : void {
@@ -147,7 +151,7 @@ export class Generator {
             ...enumObj,
             comment: this.generateComment(enumObj.jsDoc),
             members: enumObj.members.map(m => ({...m, initializer: m.initializer && this.generateType(m.initializer)}))
-        }), { type: "enum", members: enumObj.members, name: enumObj.name, depth: this.currentGlobalModuleName ? this.depth+1:this.depth });
+        }), { type: "enum", members: enumObj.members, name: enumObj.name });
     }
 
     generateTypeDecl(path: string, typeObj: TypeDecl, module: Module) : void {
@@ -229,17 +233,23 @@ export class Generator {
         case TypeReferenceKinds.TYPE_ALIAS:
             refType = "type";
             break;
+        case TypeReferenceKinds.FUNCTION:
+            refType = "function";
+            break;
+        case TypeReferenceKinds.CONSTANT:
+            refType = "const";
+            break;
         case TypeReferenceKinds.NAMESPACE_OR_MODULE: {
             return this.structure.components.typeReference({
                 ...ref, ...other,
-                link: ref.type.path && this.generateLink(path.join(ref.type.external ? `../m.${ref.type.external}`:"", ...ref.type.path.map(p => `m.${p}`), "index.html"))
+                link: ref.type.path && this.generateLink(path.join(ref.type.external ? `m.${ref.type.external}`:"", ...ref.type.path.map(p => `m.${p}`), "index.html"))
             });
         }
         default: refType = "";
         }
         return this.structure.components.typeReference({
             ...ref, ...other,
-            link: ref.type.path && this.generateLink(path.join(ref.type.external ? `../m.${ref.type.external}`:"", ...ref.type.path.map(p => `m.${p}`), refType, `${ref.type.name}.html`), ref.type.displayName),
+            link: ref.type.path && this.generateLink(path.join((ref.type.external || this.currentGlobalModuleName) ? `m.${ref.type.external || this.currentGlobalModuleName}`:"", ...ref.type.path.map(p => `m.${p}`), refType, `${ref.type.name}.html`), ref.type.displayName),
             typeParameters: ref.typeParameters?.map(param => this.generateType(param)),
         });
     }
