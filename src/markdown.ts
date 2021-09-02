@@ -30,7 +30,7 @@ declare module "marked" {
 }
 
 function genReference(str: string, otherData: Record<string, unknown>, generator: Generator, extractors: ExtractorList) : string {
-    const type = extractors[0].references.resolveExternalString(str, extractors);
+    const type = extractors[0].references.resolveExternalString(str);
     if (!type) return str;
     if ((generator.renderingPages && extractors.length === 1) || (!generator.renderingPages && !generator.currentGlobalModuleName)) delete type.external;
     return generator.generateRef({kind: TypeKinds.REFERENCE, type}, otherData);

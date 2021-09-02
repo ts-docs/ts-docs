@@ -97,3 +97,7 @@ class Apple {
     }
 }
 ```
+
+### `@deprecated`
+
+Any property or method with that tag will have a red "deprecated" tag, letting readers know that the method shouldn't be used.

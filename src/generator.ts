@@ -199,6 +199,7 @@ export class Generator {
             ...property,
             comment: this.generateComment(property.jsDoc),
             type: property.type && this.generateType(property.type),
+            initializer: property.initializer && this.generateType(property.initializer)
         });
     }
 
@@ -213,7 +214,7 @@ export class Generator {
         });
         else return this.structure.components.objectProperty({
             ...property, type,
-            key: "key" in property && property.key && this.generateType(property.key)
+            key: "key" in property && property.key && this.generateType(property.key),
         });
     }
 
@@ -452,7 +453,7 @@ export class Generator {
     }
 
     generateLink(p: string, hash?: string) : string {
-        return `${path.join("../".repeat(this.depth), p)}${hash ? `#${hash}`:""}`;
+        return `${path.join("../".repeat(this.depth), p)}${hash ? `#.${hash}`:""}`;
     }
 
     generatePath(url: string, final: string) : Array<{name: string, path: string}> {

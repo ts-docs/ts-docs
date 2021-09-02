@@ -55,7 +55,7 @@ export function escapeHTML(html: string) : string {
 export function getTypeLength(type?: Type) : number {
     if (!type) return 0;
     switch (type.kind) {
-    case TypeKinds.REFERENCE: return (type as Reference).type.name.length + ((type as Reference).typeParameters?.reduce((acc, t) => acc + getTypeLength(t), 0) || 0);
+    case TypeKinds.REFERENCE: return (type as Reference).type.name.length + ((type as Reference).typeParameters?.reduce((acc, t) => acc + getTypeLength(t), 0) || 0) + ((type as Reference).type.displayName?.length || 0);
     case TypeKinds.OBJECT_LITERAL: return (type as ObjectLiteral).properties.reduce((acc, prop) => acc + (("key" in prop) ? getTypeLength(prop.type) : ((prop as Property).name.length + getTypeLength((prop as Property).type))), 0);
     case TypeKinds.ARROW_FUNCTION: {
         const fn = (type as ArrowFunction);
