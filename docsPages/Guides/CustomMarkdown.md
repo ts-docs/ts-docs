@@ -101,3 +101,7 @@ class Apple {
 ### `@deprecated`
 
 Any property or method with that tag will have a red "deprecated" tag, letting readers know that the method shouldn't be used.
+
+### `@returns`
+
+Documents information about the return value of a method. You can provide a type here, in case ts-docs isn't able to find it. 

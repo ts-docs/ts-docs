@@ -1,5 +1,5 @@
 
-import { ArrayType, ArrowFunction, FunctionParameter, Literal, ObjectLiteral, Property, Reference, Tuple, Type, TypeKinds, TypeOperator, UnionOrIntersection } from "@ts-docs/extractor/dist/structure";
+import { ArrayType, ArrowFunction, FunctionParameter, JSDocData, Literal, ObjectLiteral, Property, Reference, Tuple, Type, TypeKinds, TypeOperator, UnionOrIntersection, JSDocTag } from "@ts-docs/extractor/dist/structure";
 import fs from "fs";
 import path from "path";
 import ts from "typescript";
@@ -109,4 +109,20 @@ export function isLargeSignature(sig: { parameters?: Array<FunctionParameter>, r
 export function isLargeObject(obj: ObjectLiteral) : boolean {
     if (obj.properties.length > 3) return true;
     return getTypeLength(obj) > 48;
+}
+
+export function getTagFromJSDoc(searchFor: string, doc: Array<JSDocData>) : JSDocTag|undefined {
+    for (const jsdoc of doc) {
+        if (!jsdoc.tags) continue;
+        const tag = jsdoc.tags.find(t => t.name === searchFor);
+        if (tag) return tag;
+    }
+    return;
+}
+
+export function hasTagFromJSDoc(searchFor: string, doc: Array<JSDocData>) : boolean {
+    for (const jsdoc of doc) {
+        if (jsdoc.tags && jsdoc.tags.some(t => t.name === searchFor)) return true;
+    }
+    return false;
 }
