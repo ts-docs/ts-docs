@@ -2,7 +2,7 @@
 import { ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, Property, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl, ConditionalType, MappedType, TypeOperator, IndexAccessedType, FunctionSignature, TypePredicateType, InferType } from "@ts-docs/extractor/dist/structure";
 import { DocumentStructure } from "./documentStructure";
 import marked from "marked";
-import { copyFolder, createFile, escapeHTML, getTagFromJSDoc, hasTagFromJSDoc, isLargeObject, isLargeSignature } from "./utils";
+import { copyFolder, createFile, escapeHTML, getPathFileName, getTagFromJSDoc, hasTagFromJSDoc, isLargeObject, isLargeSignature } from "./utils";
 import { ExtractorList } from "@ts-docs/extractor";
 import path from "path";
 import { TsDocsOptions } from "./options";
@@ -91,7 +91,7 @@ export class Generator {
 
     generateModule(path: string, module: Module, createFolder = true, readme?: string) : void {
         if (createFolder) {
-            this.generatePage(path, `m.${module.name}`, "index", this.structure.components.module(readme ? {...module, readme: marked.parse(readme) }:module), { type: "module", module, name: module.name });
+            this.generatePage(path, `m.${module.name}`, "index", this.structure.components.module(readme ? {...module, readme: marked.parse(readme) }:{...module, definedIn: module.isNamespace && getPathFileName(module.repository)}), { type: "module", module, name: module.name });
             path += `/m.${module.name}`;
         }
         // +1 because class/interface/enum/function/type/constant
@@ -132,6 +132,7 @@ export class Generator {
                 implements: classObj.implements?.map(impl => this.generateType(impl)),
                 extends: classObj.extends && this.generateType(classObj.extends),
                 constructor: classObj._constructor && this.generateConstructor(classObj._constructor),
+                definedIn: getPathFileName(classObj.loc.sourceFile)
             }), {properties: classObj.properties, name: classObj.name, methods: classObj.methods, type: "class" });
     }
 
@@ -152,6 +153,7 @@ export class Generator {
             implements: interfaceObj.implements && interfaceObj.implements.map(impl => this.generateType(impl)),
             typeParameters: interfaceObj.typeParameters?.map(p => this.generateTypeParameter(p)),
             comment: this.generateComment(interfaceObj.jsDoc),
+            definedIn: interfaceObj.loc.map(loc => getPathFileName(loc.sourceFile))
         }), {properties: interfaceObj.properties, name: interfaceObj.name, type: "interface" });
     }
 
@@ -161,6 +163,7 @@ export class Generator {
             ...enumObj,
             comment: this.generateComment(enumObj.jsDoc),
             members: enumObj.members.map(m => ({...m, initializer: m.initializer && this.generateType(m.initializer)})),
+            definedIn: enumObj.loc.map(loc => getPathFileName(loc.sourceFile))
         }), { type: "enum", members: enumObj.members, name: enumObj.name });
     }
 
@@ -171,6 +174,7 @@ export class Generator {
             comment: this.generateComment(typeObj.jsDoc),
             value: typeObj.value && this.generateType(typeObj.value),
             typeParameters: typeObj.typeParameters?.map(typeParam => this.generateTypeParameter(typeParam)),
+            definedIn: getPathFileName(typeObj.loc.sourceFile)
         }), { type: "module", module, name: typeObj.name, realType: "type" });
     }
 
@@ -180,6 +184,7 @@ export class Generator {
             ...func,
             signatures: func.signatures.map(sig => this.generateSignature(sig)),
             typeParameters: func.signatures[0].typeParameters?.map(p => this.generateTypeParameter(p)),
+            definedIn: getPathFileName(func.loc.sourceFile)
         }), { type: "module", module, name: func.name, realType: "function" });
     }
 
@@ -190,6 +195,7 @@ export class Generator {
             comment: this.generateComment(constant.jsDoc),
             type: constant.type && this.generateType(constant.type),
             content: constant.content && Highlight.highlight(constant.content, { language: "ts" }).value,
+            definedIn: getPathFileName(constant.loc.sourceFile)
         }), { type: "module", module, name: constant.name, realType: "constant" });
     }
 
