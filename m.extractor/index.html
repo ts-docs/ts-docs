@@ -55,7 +55,7 @@
         <span class="sidebar-category">Modules</span>
         </div>
         <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="m.extractor/index.html">extractor</a></span>
+        <span class="sidebar-category-member"><a href="m.external/index.html">external</a></span><span class="sidebar-category-member"><a href="m.extractor/index.html">extractor</a></span>
         </div>
         </div>
     
@@ -206,10 +206,24 @@
 </li>
 <li><p><strong>JSDoc support</strong> - Extracts all JSDoc tags, along with their comments and type.</p>
 </li>
+<li><p><strong>External references</strong> - Easily add external references which can link to other documentation sites.</p>
+</li>
 </ul>
 <h2 id="install" class="section-header">Install</h2><p><code>npm i @ts-docs/extractor</code></p>
-<h2 id="examples" class="section-header">Examples</h2><p>Check out the examples <a href="https://github.com/ts-docs/ts-extractor/tree/main/examples">here</a></p>
-
+<h2 id="examples" class="section-header">Examples</h2><p>Check out some examples <a href="https://github.com/ts-docs/ts-extractor/tree/main/examples">here</a></p>
+<h3 id="external-references" class="section-header">External References</h3><p>Let&#39;s assume you have some module which uses <code>node-fetch</code> and some of it&#39;s types.</p>
+<pre><code class="hljs"><span class="hljs-title function_">extract</span>([<span class="hljs-string">&quot;./entry-point&quot;</span>], [
+    {
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;node-fetch&quot;</span>,
+        <span class="hljs-attr">resolver</span>: <span class="hljs-function">(<span class="hljs-params">name</span>) =&gt;</span> {
+            <span class="hljs-comment">// &quot;name&quot; is the name of the reference</span>
+            <span class="hljs-keyword">switch</span>(name) {
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;Response&quot;</span>: <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;https://github.com/node-fetch/node-fetch#class-response&quot;</span>;
+                <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;Request&quot;</span>: <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;https://github.com/node-fetch/node-fetch#class-request&quot;</span>;
+            }
+        }
+    }
+]);</code></pre>
     
 </div>
         </div>

@@ -59,7 +59,7 @@
     <div>
     <a class="fw-bold" href="#list-of-options">List of options</a>
     <div style="padding-left:15px"> 
-    <a href="#structure" class="sidebar-category-member">structure</a><a href="#landingpage" class="sidebar-category-member">landingPage</a><a href="#name" class="sidebar-category-member">name</a><a href="#out" class="sidebar-category-member">out</a><a href="#custompages" class="sidebar-category-member">customPages</a><a href="#assets" class="sidebar-category-member">assets</a><a href="#logo" class="sidebar-category-member">logo</a>
+    <a href="#structure" class="sidebar-category-member">structure</a><a href="#landingpage" class="sidebar-category-member">landingPage</a><a href="#name" class="sidebar-category-member">name</a><a href="#out" class="sidebar-category-member">out</a><a href="#custompages" class="sidebar-category-member">customPages</a><a href="#assets" class="sidebar-category-member">assets</a><a href="#logo" class="sidebar-category-member">logo</a><a href="#externallibs" class="sidebar-category-member">externalLibs</a>
     </div>
     </div>
     </span>
@@ -72,7 +72,7 @@
         <span class="sidebar-category">Guides</span>
         </div>
         <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="../Guides/Options.html">Options</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Markdown.html">Custom Markdown</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Pages.html">Custom Pages</a></span>
+        <span class="sidebar-category-member"><a href="../Guides/Options.html">Options</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Markdown.html">Custom Markdown</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Pages.html">Custom Pages</a></span><span class="sidebar-category-member"><a href="../Guides/External Libs.html">External Libs</a></span>
         </div>
         </div>
     
@@ -157,11 +157,13 @@
           <div class="path">
             <a class="path-member" href="../../index.html">index</a> / <span class="path-member">pages</span> / <a class="path-member" href="">Options</a>
           </div>
-          <h1 id="options" class="section-header">Options</h1><p>You can provide options for ts-docs in two ways:</p>
+          <h1 id="options" class="section-header">Options</h1><p>You can provide options for ts-docs in three ways:</p>
 <ul>
 <li>The CLI</li>
 <li><code>tsdocsOptions</code> property in your typescript configuration file.</li>
+<li><code>tsDocs.config.js</code> file, which must export an object with the options.</li>
 </ul>
+<p>ts-docs first gets all CLI arguments, then joins them with the options from the typescript configuration, and finally with the <code>tsDocs.config.js</code> file. </p>
 <h2 id="cli-usage" class="section-header">CLI usage</h2><p><code>ts-docs --options &lt;entry points&gt;</code></p>
 <h2 id="tsconfig-usage" class="section-header">Tsconfig usage</h2><pre><code class="hljs">  <span class="hljs-attr">&quot;tsdocsOptions&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">&quot;entryPoints&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;/entry/point.js&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
@@ -174,6 +176,7 @@
 <h3 id="custompages" class="section-header">customPages</h3><p>A path to a directory of custom pages. Inside that folder, each inner-folder is a category and each file inside that folder is a custom page.</p>
 <h3 id="assets" class="section-header">assets</h3><p>A path to a folder with assets with additional assets for the docs. It will copy all files and folders inside that folder and paste them inside the generated <code>./assets</code> folder.</p>
 <h3 id="logo" class="section-header">logo</h3><p>A logo to use. It MUST be inside the folder provided to the <code>assets</code> option. The logo will be placed in the sidebar, below the name. </p>
+<h3 id="externallibs" class="section-header">externalLibs</h3><p>An array of extenal libs. This option can only be supplied with the <code>tsDocs.config.js</code> file. To read more about external libraries and how to set them up, go <a href="https://ts-docs.github.io/ts-docs/pages/Guides/External%20Libs.html">here</a> </p>
 
         </div>
 

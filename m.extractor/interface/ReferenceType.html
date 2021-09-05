@@ -55,7 +55,7 @@
         <span class="sidebar-category">Properties</span>
         </div>
         <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="#.name">name</a></span><span class="sidebar-category-member"><a href="#.displayName">displayName</a></span><span class="sidebar-category-member"><a href="#.path">path</a></span><span class="sidebar-category-member"><a href="#.external">external</a></span><span class="sidebar-category-member"><a href="#.kind">kind</a></span>
+        <span class="sidebar-category-member"><a href="#.name">name</a></span><span class="sidebar-category-member"><a href="#.displayName">displayName</a></span><span class="sidebar-category-member"><a href="#.path">path</a></span><span class="sidebar-category-member"><a href="#.external">external</a></span><span class="sidebar-category-member"><a href="#.link">link</a></span><span class="sidebar-category-member"><a href="#.kind">kind</a></span>
         </div>
         </div>
     
@@ -148,7 +148,11 @@
 
 
 
-    <p></p>
+    <p><p>If the object&#39;s <span><a class="reference-link" href="../../m.extractor/interface/ReferenceType.html#.link"><span class="object">ReferenceType</span><span class="symbol">.</span><span class="property-name">link</span></a></span> property is not undefined, then that means it&#39;s an <strong>external</strong>
+object. The <span><a class="reference-link" href="../../m.extractor/interface/ReferenceType.html#.external"><span class="object">ReferenceType</span><span class="symbol">.</span><span class="property-name">external</span></a></span> property will be set to the external library&#39;s name.</p>
+<p><span><a class="reference-link" href="../../m.extractor/interface/ReferenceType.html#.displayName"><span class="object">ReferenceType</span><span class="symbol">.</span><span class="property-name">displayName</span></a></span> is only present when the referenced item is an <strong>enum member</strong>. The
+property will be set to the member&#39;s name, while the <strong>name</strong> property will be set to the enum name.</p>
+</p>
 
     <h2>Properties</h2>
 
@@ -165,6 +169,9 @@
 </div>
         <div class="item">
 <div class="item-name item" id=".external"><a class="property-name" href="#.external">external</a><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
+</div>
+        <div class="item">
+<div class="item-name item" id=".link"><a class="property-name" href="#.link">link</a><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
 </div>
         <div class="item">
 <div class="item-name item" id=".kind"><a class="property-name" href="#.kind">kind</a><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../m.extractor/enum/TypeReferenceKinds.html">TypeReferenceKinds</a><span class="c-tooltip-content"><span class="keyword">enum</span> <span class="item-name object">TypeReferenceKinds</span><span style="display:block" class="monospace fw-bold"><span class="item-name object">TypeReferenceKinds</span></span></span></span></span></span>
