@@ -235,6 +235,7 @@ export class Generator {
 
     generateRef(ref: Reference, other: Record<string, unknown> = {}) : string {
         if (!this.structure.components.typeReference) return "";
+        if (ref.type.link) return this.structure.components.typeReference({...ref, typeParameters: ref.typeParameters?.map(param => this.generateType(param))});
         let refType: string;
         switch (ref.type.kind) {
         case TypeReferenceKinds.DEFAULT_API: {

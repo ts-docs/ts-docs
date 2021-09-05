@@ -1,4 +1,5 @@
 import { ExtractorList } from "@ts-docs/extractor";
+import { ExternalLib } from "@ts-docs/extractor/dist/external/ExternalManager";
 import FrontMatter from "front-matter";
 import fs from "fs";
 import path from "path";
@@ -34,7 +35,8 @@ export interface TsDocsOptions {
     out: string,
     structure: string,
     assets?: string,
-    logo?: string
+    logo?: string,
+    externalLibs?: Array<ExternalLib>
 }
 
 export interface OptionSource {
@@ -45,7 +47,8 @@ export interface OptionSource {
     out?: string,
     structure?: string,
     assets?: string,
-    logo?: string
+    logo?: string,
+    externalLibs?: Array<ExternalLib>
 }
 
 export const options: TsDocsOptions = {
@@ -64,6 +67,7 @@ export function addOptionSource(source: OptionSource) : void {
     if (source.customPages && typeof source.customPages !== "string") throw new Error("Custom pages must be path to a directory.");
     if (source.assets && typeof source.assets !== "string") throw new Error("Path to assets must be a string.");
     if (source.logo && typeof source.logo !== "string") throw new Error("Path to logo must be a string.");
+    if (source.externalLibs && !Array.isArray(source.externalLibs)) throw new Error("External Libraries must be an array.");
 } 
 
 export function initOptions(extractorList: ExtractorList) : TsDocsOptions {

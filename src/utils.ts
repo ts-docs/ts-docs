@@ -26,6 +26,12 @@ export function findTSConfig<T = string>(basePath: string) : Record<string, T>|u
     return findTSConfig(newPath);
 }
 
+export function findTsDocsJs<T = string>(basePath: string) : Record<string, T>|undefined {
+    const p = path.join(basePath, "tsDocs.config.js");
+    if (!fs.existsSync(p)) return undefined;
+    return require(p);
+} 
+
 /**
  * Copies an entire folder and everything inside it.
  */

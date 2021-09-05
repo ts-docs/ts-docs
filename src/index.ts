@@ -5,7 +5,7 @@ import { findPackageJSON } from "@ts-docs/extractor/dist/util";
 import { extract, extractMetadata } from "@ts-docs/extractor";
 import { setupDocumentStructure } from "./documentStructure";
 import { Generator } from "./generator";
-import { findTSConfig } from "./utils";
+import { findTSConfig, findTsDocsJs } from "./utils";
 import { addOptionSource, initOptions, options, OptionSource, showHelp } from "./options";
 
 export interface TsDocsCLIArgs extends OptionSource {
@@ -25,9 +25,12 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
 
     if (tsconfig && tsconfig.tsdocsOptions) addOptionSource(tsconfig.tsdocsOptions);
 
+    const tsDocsJs = findTsDocsJs(process.cwd());
+    if (tsDocsJs) addOptionSource(tsDocsJs);
+
     if (!options.entryPoints.length) throw new Error("Expected at least one entry point.");
 
-    const types = extract(options.entryPoints)[0];
+    const types = extract(options.entryPoints, options.externalLibs || [])[0];
 
     const packageJSON = findPackageJSON(process.cwd());
 

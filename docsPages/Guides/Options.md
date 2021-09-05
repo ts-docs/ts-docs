@@ -4,10 +4,13 @@ order: 1
 
 # Options
 
-You can provide options for ts-docs in two ways:
+You can provide options for ts-docs in three ways:
 
 - The CLI
 - `tsdocsOptions` property in your typescript configuration file.
+- `tsDocs.config.js` file, which must export an object with the options.
+
+ts-docs first gets all CLI arguments, then joins them with the options from the typescript configuration, and finally with the `tsDocs.config.js` file. 
 
 ## CLI usage
 
@@ -58,4 +61,7 @@ A path to a folder with assets with additional assets for the docs. It will copy
 
 A logo to use. It MUST be inside the folder provided to the `assets` option. The logo will be placed in the sidebar, below the name. 
 
+### externalLibs
+
+An array of extenal libs. This option can only be supplied with the `tsDocs.config.js` file. To read more about external libraries and how to set them up, go [here](https://ts-docs.github.io/ts-docs/pages/Guides/External%20Libs.html) 
 
