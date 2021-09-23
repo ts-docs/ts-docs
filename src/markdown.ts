@@ -1,6 +1,5 @@
 
-import { ExtractorList } from "@ts-docs/extractor";
-import { TypeKinds } from "@ts-docs/extractor/dist/structure";
+import { Project, TypeKinds, TypescriptExtractor } from "@ts-docs/extractor";
 import highlight from "highlight.js";
 import marked from "marked";
 import { Generator } from "./generator";
@@ -29,10 +28,13 @@ declare module "marked" {
 
 }
 
-function genReference(str: string, otherData: Record<string, unknown>, generator: Generator, extractors: ExtractorList) : string {
-    const type = extractors[0].references.resolveExternalString(str);
+function genReference(str: string, otherData: Record<string, unknown>, generator: Generator, extractor: TypescriptExtractor, modules: Array<Project>) : string {
+    let type;
+    for (const mod of modules) {
+        type = extractor.refs.findByNameWithModule(str, mod);
+        if (type) break;
+    }
     if (!type) return str;
-    if ((generator.renderingPages && extractors.length === 1) || (!generator.renderingPages && !generator.currentGlobalModuleName)) delete type.external;
     return generator.generateRef({kind: TypeKinds.REFERENCE, type}, otherData);
 }
 
@@ -46,7 +48,7 @@ function genReference(str: string, otherData: Record<string, unknown>, generator
  * - Wraps are codeblocks in the `hljs` class
  * - Resolves relative image links
  */
-export function initMarkdown(generator: Generator, extractors: ExtractorList) : void {
+export function initMarkdown(generator: Generator, extractor: TypescriptExtractor, modules: Array<Project>) : void {
     marked.use({
         renderer: {
             code: (code, lang) : string => {
@@ -103,7 +105,7 @@ export function initMarkdown(generator: Generator, extractors: ExtractorList) : 
                     if (name.includes("/")) {
                         const parts = name.split("/");
                         const firstEl = parts.shift();
-                        let mod = extractors.find(ex => ex.module.name === firstEl)?.module;
+                        let mod = modules.find(ex => ex.module.name === firstEl)?.module;
                         if (!mod) return "";
                         const lastElement = parts.pop();
                         for (const part of parts) {
@@ -117,19 +119,19 @@ export function initMarkdown(generator: Generator, extractors: ExtractorList) : 
                                 thingName = newThingName;
                                 otherData.hash = hash;
                             }
-                            return genReference(thingName, otherData, generator, extractors);
+                            return genReference(thingName, otherData, generator, extractor, modules);
                         }
                     }
                     if (name.includes(".")) {
                         const [thingName, hash] = name.split(".");
                         otherData.hash = hash;
-                        return genReference(thingName, otherData, generator, extractors);
+                        return genReference(thingName, otherData, generator, extractor, modules);
                     } else if (name.includes("#")) {
                         const [thingName, hash] = name.split("#");
                         otherData.hash = hash;
-                        return genReference(thingName, otherData, generator, extractors);
+                        return genReference(thingName, otherData, generator, extractor, modules);
                     }
-                    return genReference(name, otherData, generator, extractors);
+                    return genReference(name, otherData, generator, extractor, modules);
                 } 
             },
             {
@@ -148,7 +150,7 @@ export function initMarkdown(generator: Generator, extractors: ExtractorList) : 
                     return undefined;
                 },
                 renderer: (token) => {
-                    return genReference(token.text, {}, generator, extractors);
+                    return genReference(token.text, {}, generator, extractor, modules);
                 }
             },
             {

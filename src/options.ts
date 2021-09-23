@@ -1,5 +1,4 @@
-import { ExtractorList } from "@ts-docs/extractor";
-import { ExternalLib } from "@ts-docs/extractor/dist/external/ExternalManager";
+import { Project, ExternalReference } from "@ts-docs/extractor";
 import FrontMatter from "front-matter";
 import fs from "fs";
 import path from "path";
@@ -36,7 +35,7 @@ export interface TsDocsOptions {
     structure: string,
     assets?: string,
     logo?: string,
-    externalLibs?: Array<ExternalLib>
+    externalLibs?: Array<ExternalReference>
 }
 
 export interface OptionSource {
@@ -48,7 +47,7 @@ export interface OptionSource {
     structure?: string,
     assets?: string,
     logo?: string,
-    externalLibs?: Array<ExternalLib>
+    externalLibs?: Array<ExternalReference>
 }
 
 export const options: TsDocsOptions = {
@@ -70,7 +69,7 @@ export function addOptionSource(source: OptionSource) : void {
     if (source.externalLibs && !Array.isArray(source.externalLibs)) throw new Error("External Libraries must be an array.");
 } 
 
-export function initOptions(extractorList: ExtractorList) : TsDocsOptions {
+export function initOptions(extractorList: Array<Project>) : TsDocsOptions {
     if (typeof options.landingPage === "string") {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const module = extractorList.find(ext => ext.module.name === options.landingPage)!; 

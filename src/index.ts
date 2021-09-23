@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
 import parseArgs from "minimist";
-import { findPackageJSON } from "@ts-docs/extractor/dist/util";
-import { extract, extractMetadata } from "@ts-docs/extractor";
+import { TypescriptExtractor, Utils } from "@ts-docs/extractor";
 import { setupDocumentStructure } from "./documentStructure";
 import { Generator } from "./generator";
 import { findTSConfig, findTsDocsJs } from "./utils";
@@ -30,15 +29,22 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
 
     if (!options.entryPoints.length) throw new Error("Expected at least one entry point.");
 
-    const types = extract(options.entryPoints, options.externalLibs || [])[0];
+    const types = new TypescriptExtractor({
+        entryPoints: options.entryPoints,
+        externals: options.externalLibs,
+        maxConstantTextLength: 1024,
+        ignoreFolderNames: ["lib"]
+    });
 
-    const packageJSON = findPackageJSON(process.cwd());
+    const projects = types.run();
 
-    const finalOptions = initOptions(types);
+    const packageJSON = Utils.findPackageJSON(process.cwd());
+
+    const finalOptions = initOptions(projects);
 
     if (packageJSON) {
         if (!finalOptions.landingPage) {
-            const metadata = extractMetadata(packageJSON.path);
+            const metadata = Utils.extractMetadata(packageJSON.path);
             finalOptions.landingPage = {
                 readme: metadata.readme,
                 repository: metadata.repository,
@@ -51,5 +57,5 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
     const docStructure = setupDocumentStructure(finalOptions.structure);
     const generator = new Generator(docStructure, finalOptions);
 
-    generator.generate(types);
+    generator.generate(types, projects);
 })();
