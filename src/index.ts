@@ -33,7 +33,8 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
         entryPoints: options.entryPoints,
         externals: options.externalLibs,
         maxConstantTextLength: 1024,
-        ignoreFolderNames: ["lib"]
+        ignoreFolderNames: ["lib"],
+        passthroughModules: options.passthroughModules
     });
 
     const projects = types.run();

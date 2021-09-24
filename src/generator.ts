@@ -76,7 +76,16 @@ export class Generator {
         if (projects.length === 1) {
             const pkg = projects[0];
             this.generateModule("", pkg.module, false);
-            if (pkg.readme) this.generatePage("", "./", "index", marked.parse(pkg.readme), { type: "module", module: pkg.module, pages: this.settings.customPages, doNotGivePath: true });
+            if (pkg.readme) this.generatePage("", "./", "index", this.structure.components.module({
+                ...pkg.module,
+                readme: marked.parse(pkg.readme),
+                exports: pkg.module.exports.map(ex => ({alias: ex.alias, ref: this.generateRef({kind: TypeKinds.REFERENCE, type: ex})})),
+                reExports: pkg.module.reExports.map(ex => ({module: this.generateRef({kind: TypeKinds.REFERENCE, type: ex.module}), references: ex.references.map(r => ({ref: this.generateRef({kind: TypeKinds.REFERENCE, type: r}), alias: r.alias})), alias: ex.alias})),
+            }), { 
+                type: "module", 
+                module: pkg.module, 
+                pages: this.settings.customPages, 
+                doNotGivePath: true });
         } else {
             for (const pkg of projects) {
                 this.currentGlobalModuleName = pkg.module.name;
@@ -90,7 +99,12 @@ export class Generator {
 
     generateModule(path: string, module: Module, createFolder = true, readme?: string) : void {
         if (createFolder) {
-            this.generatePage(path, `m.${module.name}`, "index", this.structure.components.module(readme ? {...module, readme: marked.parse(readme) }:{...module, definedIn: module.isNamespace && getPathFileName(module.repository)}), { type: "module", module, name: module.name });
+            this.generatePage(path, `m.${module.name}`, "index", this.structure.components.module({
+                ...module, 
+                readme: readme && marked.parse(readme), 
+                exports: module.exports.map(ex => ({alias: ex.alias, ref: this.generateRef({kind: TypeKinds.REFERENCE, type: ex})})),
+                reExports: module.reExports.map(ex => ({module: this.generateRef({kind: TypeKinds.REFERENCE, type: ex.module}), references: ex.references.map(r => ({ref: this.generateRef({kind: TypeKinds.REFERENCE, type: r}), alias: r.alias})), alias: ex.alias}))
+            }), { type: "module", module, name: module.name });
             path += `/m.${module.name}`;
         }
         // +1 because class/interface/enum/function/type/constant
@@ -152,7 +166,7 @@ export class Generator {
             implements: interfaceObj.implements && interfaceObj.implements.map(impl => this.generateType(impl)),
             typeParameters: interfaceObj.typeParameters?.map(p => this.generateTypeParameter(p)),
             comment: this.generateComment(interfaceObj.jsDoc),
-            definedIn: interfaceObj.loc.map(loc => getPathFileName(loc.sourceFile))
+            definedIn: interfaceObj.loc.map(loc => ({filename: getPathFileName(loc.sourceFile), link: loc.sourceFile}))
         }), {properties: interfaceObj.properties, name: interfaceObj.name, type: "interface" });
     }
 
@@ -162,7 +176,7 @@ export class Generator {
             ...enumObj,
             comment: this.generateComment(enumObj.jsDoc),
             members: enumObj.members.map(m => ({...m, initializer: m.initializer && this.generateType(m.initializer), comment: this.generateComment(m.jsDoc)})),
-            definedIn: enumObj.loc.map(loc => getPathFileName(loc.sourceFile))
+            definedIn: enumObj.loc.map(loc => ({filename: getPathFileName(loc.sourceFile), link: loc.sourceFile}))
         }), { type: "enum", members: enumObj.members, name: enumObj.name });
     }
 
@@ -258,16 +272,17 @@ export class Generator {
             refType = "constant";
             break;
         case TypeReferenceKinds.NAMESPACE_OR_MODULE: {
+            if (!ref.type.path) return ref.type.name;
             return this.structure.components.typeReference({
                 ...ref, ...other,
-                link: ref.type.path && this.generateLink(path.join(`m.${ref.type.moduleName!}`, ...ref.type.path.map(p => `m.${p}`), `m.${ref.type.name}`, "index.html"))
+                link: ref.type.path && this.generateLink(path.join(...ref.type.path.map(p => `m.${p}`), ref.type.path[ref.type.path.length - 1] !== ref.type.name ? `m.${ref.type.name}`:"", "index.html"))
             });
         }
         default: refType = "";
         }
         return this.structure.components.typeReference({
             ...ref, ...other,
-            link: ref.type.path && this.generateLink(path.join(`m.${ref.type.moduleName!}`, ...ref.type.path.map(p => `m.${p}`), refType, `${ref.type.name}.html`), ref.type.displayName),
+            link: ref.type.path && this.generateLink(path.join(...ref.type.path.map(p => `m.${p}`), refType, `${ref.type.name}.html`), ref.type.displayName),
             typeParameters: ref.typeArguments?.map(param => this.generateType(param)),
         });
     }
