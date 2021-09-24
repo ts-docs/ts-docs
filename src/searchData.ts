@@ -28,8 +28,8 @@ export function buildBitfield(...bits: Array<number|undefined|false>) : number {
      * `[nameIndex, classes, interfaces, enums, types, functions, constants]`
      * 
      * a **class**: `[name, properties, methods, path]`  
-     * a **method**: `[name, flags]`      
-     * a **property**: `[name, flags]`       
+     * a **method**: `[name, flags, comment?]`      
+     * a **property**: `[name, flags, comment?]`       
      * an **inteface**: `[name, properties, path]`        
      * an **enum**: `[name, members, path]`       
      * a **type alias**: `[name, path]`       
@@ -46,13 +46,13 @@ export function packSearchData(extractors: Array<Project>, path: string) : void 
     const res = [[], []] as [Array<unknown>, Array<string>];
     const notSingleExtractor = extractors.length !== 1;
     for (const extractor of extractors) {
-        const modObj = [0,[],[],[],[],[],[]] as [number, Array<[string, Array<[string, number]>, Array<[string, number]>, Array<number>]>, Array<[string, Array<string>, Array<number>]>, Array<[string, Array<string>, Array<number>]>, Array<[string, Array<number>]>, Array<[string, Array<number>]>, Array<[string, Array<number>]>]; 
+        const modObj = [0,[],[],[],[],[],[]] as [number, Array<[string, Array<[string, number, string|undefined]>, Array<[string, number, string|undefined]>, Array<number>]>, Array<[string, Array<string>, Array<number>]>, Array<[string, Array<string>, Array<number>]>, Array<[string, Array<number>]>, Array<[string, Array<number>]>, Array<[string, Array<number>]>]; 
         extractor.forEachModule(extractor.module, (mod, path) => {
             modObj[0] = res[1].push(mod.name) - 1;
             let p;
             if (notSingleExtractor) p = [res[1].indexOf(extractor.module.name), ...path.map(pathName => res[1].indexOf(pathName))];
             else p = path.map(pathName => res[1].indexOf(pathName));
-            for (const cl of mod.classes) modObj[1].push([cl.name, cl.properties.map(p => [p.name, buildBitfield(p.isPrivate && ClassMemberFlags.IS_PRIVATE)]), cl.methods.map(p => [p.name, buildBitfield(p.isGetter && ClassMemberFlags.IS_GETTER, p.isSetter && ClassMemberFlags.IS_SETTER, p.isPrivate && ClassMemberFlags.IS_PRIVATE)]), p]);
+            for (const cl of mod.classes) modObj[1].push([cl.name, cl.properties.map(p => [p.name, buildBitfield(p.isPrivate && ClassMemberFlags.IS_PRIVATE), p.jsDoc?.[0].comment?.slice(0, 128)]), cl.methods.map(p => [p.name, buildBitfield(p.isGetter && ClassMemberFlags.IS_GETTER, p.isSetter && ClassMemberFlags.IS_SETTER, p.isPrivate && ClassMemberFlags.IS_PRIVATE), p.jsDoc?.[0].comment?.slice(0, 128)]), p]);
             for (const intf of mod.interfaces) modObj[2].push([intf.name, intf.properties.filter(p => !("key" in p.value)).map(p => (p.value as Property).name), p]);
             for (const en of mod.enums) modObj[3].push([en.name, en.members.map(m => m.name), p]);
             for (const typ of mod.types) modObj[4].push([typ.name, p]);

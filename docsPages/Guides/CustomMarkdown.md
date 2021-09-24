@@ -31,7 +31,7 @@ Example:
 
 You can reference classes, interfaces, enums, type aliases, methods, properties, functions, constants and namespaces by putting their name inside double square brackets, for example:
 
-`[[Generator]]` becomes [[Generator]]
+`[[ShardClient]]` becomes [[Generator]]
 
 ### Methods and properties
 
@@ -105,9 +105,3 @@ Any property or method with that tag will have a red "deprecated" tag, letting r
 ### `@returns`
 
 Documents information about the return value of a method. You can provide a type here, in case ts-docs isn't able to find it. 
-
-```ts
-import fs from "fs"
-
-
-```

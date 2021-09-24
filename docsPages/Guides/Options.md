@@ -43,7 +43,7 @@ If your project is a monorepo, you can use this option to tell ts-docs which rep
 
 ### name
 
-The name of the project that appears in the sidebar. Name of irst provided entry point is by default.
+The name of the project that appears in the sidebar. Name of first provided entry point is by default.
 
 ### out
 
@@ -61,7 +61,11 @@ A path to a folder with assets with additional assets for the docs. It will copy
 
 A logo to use. It MUST be inside the folder provided to the `assets` option. The logo will be placed in the sidebar, below the name. 
 
-### externalLibs
+### externals
 
-An array of extenal libs. This option can only be supplied with the `tsDocs.config.js` file. To read more about external libraries and how to set them up, go [here](https://ts-docs.github.io/ts-docs/pages/Guides/External%20Libs.html) 
+An array of extenal libs. This option can only be supplied with the `tsDocs.config.js` file. To read more about external libraries and how to set them up, go [here](https://ts-docs.github.io/ts-docs/pages/Guides/Externals.html) 
+
+### passthroughModules
+
+If for some reason you don't want a specific folder to become a module, include the name of the folder it in the `passthroughModules` array. All the things inside that folder will be in the **parent** module. 
 
