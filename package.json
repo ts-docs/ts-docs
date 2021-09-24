@@ -2,8 +2,8 @@
   "name": "@ts-docs/ts-docs",
   "version": "1.0.0",
   "description": "A documentation generator for typescript. Alternative to typedoc!",
-  "main": "index.js",
-  "bin": "./dist/index.js",
+  "main": "dist/index.js",
+  "bin": "./dist/cli.js",
   "devDependencies": {
     "@types/marked": "^2.0.4",
     "@types/minimist": "^1.2.2",
