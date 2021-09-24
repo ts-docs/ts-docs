@@ -79,7 +79,7 @@
         <span class="sidebar-category">Guides</span>
         </div>
         <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="../Guides/Options.html">Options</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Markdown.html">Custom Markdown</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Pages.html">Custom Pages</a></span><span class="sidebar-category-member"><a href="../Guides/External Libs.html">External Libs</a></span>
+        <span class="sidebar-category-member"><a href="../Guides/Options.html">Options</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Markdown.html">Custom Markdown</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Pages.html">Custom Pages</a></span><span class="sidebar-category-member"><a href="../Guides/Externals.html">Externals</a></span>
         </div>
         </div>
     
@@ -170,15 +170,15 @@
 <pre><code class="hljs">[<span class="hljs-string">cute_kitty</span>](<span class="hljs-link">./assets/images/cute_kitty.png</span>)</code></pre><h2 id="warning-blocks" class="section-header">Warning blocks</h2><p>Warning blocks can be used to outline an important piece of information.</p>
 <p class="text-warning"> This is a warning!</p><p>Example:</p>
 <pre><code class="hljs">|&gt; This is a warning!</code></pre><h2 id="references" class="section-header">References</h2><p>You can reference classes, interfaces, enums, type aliases, methods, properties, functions, constants and namespaces by putting their name inside double square brackets, for example:</p>
-<p><code>[[Generator]]</code> becomes <span><span class="c-tooltip"><a class="reference-link object" href="../../m.ts-docs/class/Generator.html">Generator</a><span class="c-tooltip-content"><span class="keyword">class</span> <span class="item-name object">Generator</span><span style="display:block" class="monospace fw-bold">ts-docs/<span class="item-name object">Generator</span></span></span></span></span></p>
+<p><code>[[ShardClient]]</code> becomes Generator</p>
 <h3 id="methods-and-properties" class="section-header">Methods and properties</h3><p>You can reference a property by adding a dot (<code>.</code>) and then the name of the property. </p>
-<p><code>[[Generator.structure]]</code> becomes <span><a class="reference-link" href="../../m.ts-docs/class/Generator.html#.structure"><span class="object">Generator</span><span class="symbol">.</span><span class="property-name">structure</span></a></span></p>
+<p><code>[[Generator.structure]]</code> becomes Generator</p>
 <p>You can reference a method by adding a dot (<code>.</code>), the method&#39;s name, and then <code>()</code> at the end.</p>
-<p><code>[[Generator.generate()]]</code> becomes <span><a class="reference-link" href="../../m.ts-docs/class/Generator.html#.generate"><span class="object">Generator</span><span class="symbol">.</span><span class="method-name">generate</span></a></span></p>
+<p><code>[[Generator.generate()]]</code> becomes Generator</p>
 <h3 id="by-path" class="section-header">By path</h3><p>ts-docs searches each module in order to find the name of the references, this could lead to inaccurate links, so you always can just provide the entire path to the thing.</p>
-<p><code>[[extractor/extractor/ExtractorList]]</code> becomes <span><span class="c-tooltip"><a class="reference-link object" href="../../m.extractor/m.extractor/class/ExtractorList.html">ExtractorList</a><span class="c-tooltip-content"><span class="keyword">class</span> <span class="item-name object">ExtractorList</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">ExtractorList</span></span></span></span></span></p>
+<p><code>[[extractor/extractor/ExtractorList]]</code> becomes ExtractorList</p>
 <h3 id="name-aliases" class="section-header">Name aliases</h3><p>You can also follow up a normal reference or a reference by path with <code>as ...</code> to change the text that gets displayed.</p>
-<p><code>[[Generator as TsDocsGenerator]]</code> becomes <span><span class="c-tooltip"><a class="reference-link object" href="../../m.ts-docs/class/Generator.html">TsDocsGenerator</a><span class="c-tooltip-content"><span class="keyword">class</span> <span class="item-name object">Generator</span><span style="display:block" class="monospace fw-bold">ts-docs/<span class="item-name object">Generator</span></span></span></span></span></p>
+<p><code>[[Generator as TsDocsGenerator]]</code> becomes Generator</p>
 <h2 id="supported-jsdoc-tags" class="section-header">Supported JSDoc tags</h2><h3 id="link" class="section-header"><code>@link</code></h3><p>ts-docs supports the <code>@link</code> / <code>@linkplain</code> JSDoc tag, except it doesn&#39;t support properties / methods, name aliases and paths. It&#39;s not recommended to use <code>{@link}</code> in custom pages and documentation comments, in this case it exists only for compatibility reasons.</p>
 <h3 id="param" class="section-header"><code>@param</code></h3><p>Documents a method / function parameter, the parameter type WILL NOT be used by ts-docs. </p>
 <pre><code class="hljs"><span class="hljs-comment">/**
@@ -205,9 +205,7 @@
     }
 }</code></pre><h3 id="deprecated" class="section-header"><code>@deprecated</code></h3><p>Any property or method with that tag will have a red &quot;deprecated&quot; tag, letting readers know that the method shouldn&#39;t be used.</p>
 <h3 id="returns" class="section-header"><code>@returns</code></h3><p>Documents information about the return value of a method. You can provide a type here, in case ts-docs isn&#39;t able to find it. </p>
-<pre><code class="hljs"><span class="hljs-keyword">import</span> fs <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;fs&quot;</span>
 
-</code></pre>
         </div>
 
       </div>
