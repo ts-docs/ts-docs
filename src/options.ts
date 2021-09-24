@@ -35,7 +35,7 @@ export interface TsDocsOptions {
     structure: string,
     assets?: string,
     logo?: string,
-    externalLibs?: Array<ExternalReference>,
+    externals?: Array<ExternalReference>,
     passthroughModules?: Array<string>
 }
 
@@ -48,7 +48,7 @@ export interface OptionSource {
     structure?: string,
     assets?: string,
     logo?: string,
-    externalLibs?: Array<ExternalReference>,
+    externals?: Array<ExternalReference>,
     passthroughModules?: Array<string>
 }
 
@@ -68,7 +68,7 @@ export function addOptionSource(source: OptionSource) : void {
     if (source.customPages && typeof source.customPages !== "string") throw new Error("Custom pages must be path to a directory.");
     if (source.assets && typeof source.assets !== "string") throw new Error("Path to assets must be a string.");
     if (source.logo && typeof source.logo !== "string") throw new Error("Path to logo must be a string.");
-    if (source.externalLibs && !Array.isArray(source.externalLibs)) throw new Error("External Libraries must be an array.");
+    if (source.externals && !Array.isArray(source.externals)) throw new Error("External Libraries must be an array.");
     if (source.passthroughModules && !Array.isArray(source.passthroughModules)) throw new Error("Passthrough Modules must be an array.");
 } 
 

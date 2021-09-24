@@ -1,5 +1,5 @@
 
-import { ArrayType, ArrowFunction, FunctionParameter, JSDocData, Literal, ObjectLiteral, Property, Reference, Tuple, Type, TypeKinds, TypeOperator, UnionOrIntersection, JSDocTag } from "@ts-docs/extractor";
+import { ArrayType, ArrowFunction, FunctionParameter, JSDocData, Literal, ObjectLiteral, Property, Reference, Tuple, Type, TypeKinds, TypeOperator, UnionOrIntersection, JSDocTag, ExternalReference } from "@ts-docs/extractor";
 import fs from "fs";
 import path from "path";
 import ts from "typescript";
@@ -136,4 +136,36 @@ export function hasTagFromJSDoc(searchFor: string, doc: Array<JSDocData>) : bool
 export function getPathFileName(p?: string) : string|undefined {
     if (!p) return;
     return path.parse(p).name;
+}
+
+export function handleDefaultAPI() : ExternalReference {
+    return {
+        run: (sym) => {
+            const name = typeof sym === "string" ? sym : sym.name;
+            switch (name) {
+            case "Date": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date"};
+            case "Bigint": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt" };
+            case "Promise": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" }; 
+            case "Set": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set" };
+            case "Map": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map" };
+            case "URL": return { link: "https://developer.mozilla.org/en-US/docs/Web/API/URL/URL" };
+            case "Buffer": return { link: "https://nodejs.org/api/buffer.html" };
+            case "RegExp": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp" };
+            case "Array": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" }; 
+            case "Function": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function" };
+            case "Record": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeystype" };
+            case "Omit": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#omittype-keys" };
+            case "Symbol": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol" };
+            case "Error": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error" };
+            case "URLSearchParams": return { link: "https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams" };
+            case "ReadonlyArray": return { link: "https://www.typescriptlang.org/docs/handbook/2/objects.html#the-readonlyarray-type" };
+            case "Pick": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#picktype-keys" };
+            case "Iterable": return { link: "https://www.typescriptlang.org/docs/handbook/iterators-and-generators.html#iterable-interface" };
+            case "ArrayBuffer": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer" };
+            case "IterableIterator": return { link: "https://www.typescriptlang.org/docs/handbook/iterators-and-generators.html" };
+            case "Infinity": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Infinity" };
+            default: return;         
+            }
+        }
+    };
 }
