@@ -135,7 +135,7 @@ export class Generator {
 
     generateClass(path: string, classObj: ClassDecl) : void {
         if (!this.structure.components.class) return;
-        this.generatePage(path, "class", classObj.name, 
+        this.generatePage(path, "class", classObj.id ? `${classObj.name}_${classObj.id}` : classObj.name, 
             this.structure.components.class({
                 ...classObj,
                 properties: classObj.properties.map(p => this.generatePropertyMember(p)),
@@ -159,7 +159,7 @@ export class Generator {
 
     generateInterface(path: string, interfaceObj: InterfaceDecl) : void {
         if (!this.structure.components.interface) return;
-        this.generatePage(path, "interface", interfaceObj.name, this.structure.components.interface({
+        this.generatePage(path, "interface", interfaceObj.id ? `${interfaceObj.name}_${interfaceObj.id}` : interfaceObj.name, this.structure.components.interface({
             ...interfaceObj, 
             properties: interfaceObj.properties.map(p => ({comment: this.generateComment(p.jsDoc, { example: true} ), value: this.generateProperty(p.value) })),
             extends: interfaceObj.extends && interfaceObj.extends.map(ext => this.generateType(ext)),
@@ -172,7 +172,7 @@ export class Generator {
 
     generateEnum(path: string, enumObj: EnumDecl) : void {
         if (!this.structure.components.enum) return;
-        this.generatePage(path, "enum", enumObj.name, this.structure.components.enum({
+        this.generatePage(path, "enum", enumObj.id ? `${enumObj.name}_${enumObj.id}` : enumObj.name, this.structure.components.enum({
             ...enumObj,
             comment: this.generateComment(enumObj.jsDoc),
             members: enumObj.members.map(m => ({...m, initializer: m.initializer && this.generateType(m.initializer), comment: this.generateComment(m.jsDoc)})),
@@ -182,7 +182,7 @@ export class Generator {
 
     generateTypeDecl(path: string, typeObj: TypeDecl, module: Module) : void {
         if (!this.structure.components.type) return;
-        this.generatePage(path, "type", typeObj.name, this.structure.components.type({
+        this.generatePage(path, "type", typeObj.id ? `${typeObj.name}_${typeObj.id}` : typeObj.name, this.structure.components.type({
             ...typeObj,
             comment: this.generateComment(typeObj.jsDoc),
             value: typeObj.value && this.generateType(typeObj.value),
@@ -193,7 +193,7 @@ export class Generator {
 
     generateFunction(path: string, func: FunctionDecl, module: Module) : void {
         if (!this.structure.components.function) return;
-        this.generatePage(path, "function", func.name, this.structure.components.function({
+        this.generatePage(path, "function", func.id ? `${func.name}_${func.id}` : func.name, this.structure.components.function({
             ...func,
             signatures: func.signatures.map(sig => this.generateSignature(sig)),
             typeParameters: func.signatures[0].typeParameters?.map(p => this.generateTypeParameter(p)),
@@ -203,7 +203,7 @@ export class Generator {
 
     generateConstant(path: string, constant: ConstantDecl, module: Module) : void {
         if (!this.structure.components.constant) return;
-        this.generatePage(path, "constant", constant.name, this.structure.components.constant({
+        this.generatePage(path, "constant", constant.id ? `${constant.name}_${constant.id}` : constant.name, this.structure.components.constant({
             ...constant,
             comment: this.generateComment(constant.jsDoc),
             type: constant.type && this.generateType(constant.type),
@@ -282,7 +282,7 @@ export class Generator {
         }
         return this.structure.components.typeReference({
             ...ref, ...other,
-            link: ref.type.path && this.generateLink(path.join(...ref.type.path.map(p => `m.${p}`), refType, `${ref.type.name}.html`), ref.type.displayName),
+            link: ref.type.path && this.generateLink(path.join(...ref.type.path.map(p => `m.${p}`), refType, `${ref.type.name}${ref.type.id ? `_${ref.type.id}`:""}.html`), ref.type.displayName),
             typeParameters: ref.typeArguments?.map(param => this.generateType(param)),
         });
     }
