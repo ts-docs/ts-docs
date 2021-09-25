@@ -209,7 +209,8 @@
 <pre><code class="hljs">{
     <span class="hljs-attr">value</span>: <span class="hljs-title class_">Property</span>|<span class="hljs-title class_">IndexSignature</span>|<span class="hljs-title class_">ArrowFunction</span>,
     <span class="hljs-attr">jsDoc</span>: JSDocData
-}</code></pre><h2 id="examples" class="section-header">Examples</h2><h3 id="external-references" class="section-header">External References</h3><p>Let&#39;s assume you have some module which uses <code>node-fetch</code> and some of it&#39;s types. Supply the <code>externals</code> option in the extractor settings:</p>
+}</code></pre><h3 id="referencetypeid-and-nodeid" class="section-header"><code>ReferenceType#id</code> and <code>Node#id</code></h3><p>If, for example there are 2 or more classes with the same name, inside the same module, then their nodes and all their references will have a matching <code>id</code> property.</p>
+<h2 id="examples" class="section-header">Examples</h2><h3 id="external-references" class="section-header">External References</h3><p>Let&#39;s assume you have some module which uses <code>node-fetch</code> and some of it&#39;s types. Supply the <code>externals</code> option in the extractor settings:</p>
 <pre><code class="hljs"><span class="hljs-keyword">const</span> extractor = <span class="hljs-keyword">new</span> <span class="hljs-title class_">TypescriptExtractor</span>({ 
     <span class="hljs-attr">entryPoints</span>: [<span class="hljs-string">&quot;./entry-point.ts&quot;</span>],
     <span class="hljs-attr">externals</span>: [
