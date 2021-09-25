@@ -26,7 +26,7 @@
           <div class="row float-end" style="margin-top:5px">
             <div class="col clickable-icon" id="theme-icon"></div>
             <div class="col">
-              <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite class="clickable-icon">
+              <a href=https://github.com/ts-docs/ts-docs/tree/main class="clickable-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-github"
                   viewBox="0 0 16 16">
                   <path
@@ -35,7 +35,7 @@
               </a>
              </div>
             <div class="col">
-              <span style="font-size: 1.2em">v2.0.11</span>
+              <span style="font-size: 1.2em">v1.0.0</span>
             </div>
           </div>
         </div>
@@ -147,55 +147,14 @@
         
             </div>
         </div>        <div id="content-main" class="d-none">
-          <h1 id="ts-extractor" class="section-header">ts-extractor</h1><p>Extracts modules, classes, interfaces, enums, type aliases and constants from typescript projects. </p>
-<p>Check out the documentation <a href="https://ts-docs.github.io/ts-docs/m.extractor/index.html">here</a>.</p>
-<h2 id="features" class="section-header">Features</h2><ul>
-<li><p><strong>Clear project structure</strong> - A project is made up of modules, and a &quot;module&quot; is either a folder or a namespace. Modules can contain other modules (sub-folders, other namespaces), or exported classes, interfaces, enums, functions, constants and types from each file inside the folder. This allows for very easy navigation.</p>
-</li>
-<li><p><strong>References</strong> - Every type reference provides a <strong>path</strong> which leads to the module it&#39;s declared in, which allows for super easy and painless linking. </p>
-</li>
-<li><p><strong>Monorepo support</strong> - Bundle types from all projects in the monorepo.</p>
-</li>
-<li><p><strong>JSDoc support</strong> - Extracts all JSDoc tags, along with their comments and type.</p>
-</li>
-<li><p><strong>External references</strong> - Easily add external references which can link to other documentation sites.</p>
-</li>
-</ul>
-<h2 id="install" class="section-header">Install</h2><p><code>npm i @ts-docs/extractor</code></p>
-<h2 id="20-changes" class="section-header">2.0 changes</h2><p>This version is faster and gathers way more accurate information.</p>
-<h3 id="completely-different-api" class="section-header">Completely different API</h3><pre><code class="hljs"><span class="hljs-comment">// Before</span>
-<span class="hljs-keyword">import</span> { extract } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;...&quot;</span>;
-<span class="hljs-keyword">const</span> [modules, tsConfig] = <span class="hljs-title function_">extract</span>([<span class="hljs-string">&quot;./entry-point.ts&quot;</span>]);
-
-<span class="hljs-comment">// Now</span>
-<span class="hljs-keyword">import</span> { <span class="hljs-title class_">TypescriptExtractor</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;...&quot;</span>;
-<span class="hljs-keyword">const</span> extractor = <span class="hljs-keyword">new</span> <span class="hljs-title class_">TypescriptExtractor</span>({
-    <span class="hljs-attr">entryPoints</span>: [<span class="hljs-string">&quot;./entry-point.ts&quot;</span>],
-    <span class="hljs-attr">externals</span>: [],
-    <span class="hljs-attr">maxConstantTextLength</span>: <span class="hljs-number">1024</span>,
-    <span class="hljs-attr">ignoreFolderNames</span>: []
-});
-<span class="hljs-keyword">const</span> projects = extractor.<span class="hljs-title function_">run</span>();</code></pre><h3 id="no-more-referencetypeexternal" class="section-header">No more <code>ReferenceType#external</code></h3><p>If there are multiple entry points, the global module will be at the first index in the <code>path</code> property of the reference. If there is only one entry point, the entire global module is omitted.</p>
-<h3 id="moduleexports-and-modulereexports" class="section-header"><code>Module#exports</code> and <code>Module#reExports</code></h3><p>Extracts all exports and re-exports from every modules&#39; entry point. If a module doesn&#39;t have an entry point (<code>index.ts</code>) then the arrays will be empty.</p>
-<h3 id="interfacedeclproperties" class="section-header"><code>InterfaceDecl#properties</code></h3><p>Is now an array of objects like this:</p>
-<pre><code class="hljs">{
-    <span class="hljs-attr">value</span>: <span class="hljs-title class_">Property</span>|<span class="hljs-title class_">IndexSignature</span>|<span class="hljs-title class_">ArrowFunction</span>,
-    <span class="hljs-attr">jsDoc</span>: JSDocData
-}</code></pre><h2 id="examples" class="section-header">Examples</h2><h3 id="external-references" class="section-header">External References</h3><p>Let&#39;s assume you have some module which uses <code>node-fetch</code> and some of it&#39;s types. Supply the <code>externals</code> option in the extractor settings:</p>
-<pre><code class="hljs"><span class="hljs-keyword">const</span> extractor = <span class="hljs-keyword">new</span> <span class="hljs-title class_">TypescriptExtractor</span>({ 
-    <span class="hljs-attr">entryPoints</span>: [<span class="hljs-string">&quot;./entry-point.ts&quot;</span>],
-    <span class="hljs-attr">externals</span>: [
-        {
-            <span class="hljs-attr">run</span>: <span class="hljs-function">(<span class="hljs-params">name</span>) =&gt;</span> {
-                name = name.<span class="hljs-property">name</span> || name; <span class="hljs-comment">// name can either be a symbol or a string</span>
-                <span class="hljs-keyword">switch</span> (name) {
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;Response&quot;</span>: <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;https://github.com/node-fetch/node-fetch#class-response&quot;</span>;
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;Request&quot;</span>: <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;https://github.com/node-fetch/node-fetch#class-request&quot;</span>;
-                }
-            }
-        }
-    ]
-})</code></pre>
+          <h1 id="ts-docs" class="section-header">ts-docs</h1><p>An opinionated documentation generator for typescript - generate beautiful and simplistic documentation. </p>
+<p>If you want to check out how a typical ts-docs documentation looks like, head over to the official docs, found <a href="https://ts-docs.github.io/ts-docs/index.html">here</a></p>
+<h2 id="installation" class="section-header">Installation</h2><p><strong>This project is not yet released. Currently you cannot use npm to install it</strong></p>
+<pre><code class="hljs">npm i @ts-docs/ts-docs @ts-docs/<span class="hljs-keyword">default</span>-docs-structure</code></pre><h2 id="usage" class="section-header">Usage</h2><p>In order for ts-docs to generate proper documentation, you need to give it one or multiple entry points to your project.</p>
+<p>If your project is not a monorepo, you should ideally have only one entry point. If you have multiple repositories in your project, you should have one entry point for each repository. </p>
+<p>You can find out about the options ts-docs has <a href="https://ts-docs.github.io/ts-docs/pages/Guides/Options.html">here</a></p>
+<p>Simple usage which uses the default options:</p>
+<pre><code class="hljs">ts-docs src/index.<span class="hljs-property">ts</span></code></pre>
         </div>
 
       </div>
