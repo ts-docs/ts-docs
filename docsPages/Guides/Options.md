@@ -29,6 +29,10 @@ ts-docs first gets all CLI arguments, then joins them with the options from the 
 
 To check out all the default options in one place, see the [[ts-docs/options]] constant.
 
+### entryPoints
+
+The entry points of all projects you want to be included in the documentation. Every project should have exactly one entry point, and the **order** matters. If package A relies on package B, but package A is specified first, then you'll see some of package B's modules being inside of package A. This will be fixed in the future, but for now, **the order matters**.
+
 ### structure
 
 Which documentation structure to use. You should only provide the **name** of the documentation structure, ts-docs expects it to be located inside your `node_modules` folder. ts-docs doesn't come with any documentation structures, but the default of this option is `default-docs-structure`. To install the default structure use the following command:

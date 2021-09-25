@@ -34,6 +34,6 @@ order: 5
 # Markdown content here...
 ```
 
-`name` - The name of the page. If not provided, the file name will be used.     
-`order` - Where the page will be placed.
+- `name` - The name of the page. If not provided, the file name will be used.     
+- `order` - Where the page will be placed.
 
