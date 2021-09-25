@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/ts-docs/ts-docs#readme",
   "dependencies": {
-    "@ts-docs/extractor": "^2.0.11",
+    "@ts-docs/extractor": "^2.0.12",
     "front-matter": "^4.0.2",
     "handlebars": "^4.7.7",
     "highlight.js": "^11.2.0",
