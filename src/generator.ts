@@ -80,7 +80,7 @@ export class Generator {
                 ...pkg.module,
                 readme: marked.parse(pkg.readme),
                 exports: pkg.module.exports.map(ex => ({alias: ex.alias, ref: this.generateRef({kind: TypeKinds.REFERENCE, type: ex})})),
-                reExports: pkg.module.reExports.map(ex => ({module: this.generateRef({kind: TypeKinds.REFERENCE, type: ex.module}), references: ex.references.map(r => ({ref: this.generateRef({kind: TypeKinds.REFERENCE, type: r}), alias: r.alias})), alias: ex.alias})),
+                reExports: pkg.module.reExports.map(ex => ({module: this.generateRef({kind: TypeKinds.REFERENCE, type: ex.module}), references: ex.references.map(r => ({ref: this.generateRef({kind: TypeKinds.REFERENCE, type: r}), alias: r.alias})), alias: ex.alias, reExportsReExport: ex.reExportsReExport})),
             }), { 
                 type: "module", 
                 module: pkg.module, 
@@ -103,7 +103,7 @@ export class Generator {
                 ...module, 
                 readme: readme && marked.parse(readme), 
                 exports: module.exports.map(ex => ({alias: ex.alias, ref: this.generateRef({kind: TypeKinds.REFERENCE, type: ex})})),
-                reExports: module.reExports.map(ex => ({module: this.generateRef({kind: TypeKinds.REFERENCE, type: ex.module}), references: ex.references.map(r => ({ref: this.generateRef({kind: TypeKinds.REFERENCE, type: r}), alias: r.alias})), alias: ex.alias}))
+                reExports: module.reExports.map(ex => ({module: this.generateRef({kind: TypeKinds.REFERENCE, type: ex.module}), references: ex.references.map(r => ({ref: this.generateRef({kind: TypeKinds.REFERENCE, type: r}), alias: r.alias})), alias: ex.alias, reExportsReExport: ex.reExportsReExport}))
             }), { type: "module", module, name: module.name });
             path += `/m.${module.name}`;
         }
