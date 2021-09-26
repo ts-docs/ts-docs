@@ -52,7 +52,7 @@ export function packSearchData(extractors: Array<Project>, path: string) : void 
             let p;
             if (notSingleExtractor) p = [res[1].indexOf(extractor.module.name), ...path.map(pathName => res[1].indexOf(pathName))];
             else p = path.map(pathName => res[1].indexOf(pathName));
-            for (const cl of mod.classes) modObj[1].push([`${cl.name}${cl.id ? `_${cl.id}`:""}`, cl.properties.map(p => [p.name, buildBitfield(p.isPrivate && ClassMemberFlags.IS_PRIVATE), p.jsDoc?.[0].comment?.slice(0, 128)]), cl.methods.map(p => [p.name, buildBitfield(p.isGetter && ClassMemberFlags.IS_GETTER, p.isSetter && ClassMemberFlags.IS_SETTER, p.isPrivate && ClassMemberFlags.IS_PRIVATE), p.jsDoc?.[0].comment?.slice(0, 128)]), p]);
+            for (const cl of mod.classes) modObj[1].push([`${cl.name}${cl.id ? `_${cl.id}`:""}`, cl.properties.map(p => [p.name, buildBitfield(p.isPrivate && ClassMemberFlags.IS_PRIVATE), p.jsDoc?.[0].comment?.slice(0, 128)]), cl.methods.map(p => [p.realName || (p.name as string), buildBitfield(p.isGetter && ClassMemberFlags.IS_GETTER, p.isSetter && ClassMemberFlags.IS_SETTER, p.isPrivate && ClassMemberFlags.IS_PRIVATE), p.jsDoc?.[0].comment?.slice(0, 128)]), p]);
             for (const intf of mod.interfaces) modObj[2].push([`${intf.name}${intf.id ? `_${intf.id}`:""}`, intf.properties.filter(p => !("key" in p.value)).map(p => (p.value as Property).name), p]);
             for (const en of mod.enums) modObj[3].push([`${en.name}${en.id ? `_${en.id}`:""}`, en.members.map(m => m.name), p]);
             for (const typ of mod.types) modObj[4].push([`${typ.name}${typ.id ? `_${typ.id}`:""}`, p]);

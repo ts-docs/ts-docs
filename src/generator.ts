@@ -241,6 +241,8 @@ export class Generator {
         if (!this.structure.components.methodMember) return "";
         return this.structure.components.methodMember({
             ...method,
+            name: typeof method.name === "string" ? method.name : this.generateType(method.name),
+            rawName: method.realName || method.name,
             isDeprecated: method.jsDoc && hasTagFromJSDoc("deprecated", method.jsDoc),
             signatures: method.signatures.map(sig => this.generateSignature(sig))
         });
