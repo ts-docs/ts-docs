@@ -39,10 +39,10 @@ Example:
 
 Example:
 ```markdown
-|>[note] This is a note!
+|>[success] This is a success block!
 ```
 
-The style specifier (`[note|warning|success]`) must be RIGHT after the `|>`!
+The style specifier (`[note|warning|success]`) must be RIGHT after the text block start.
 
 ## References
 
@@ -72,7 +72,7 @@ You can also follow up a normal reference or a reference by path with `as ...` t
 
 `[[Generator as TsDocsGenerator]]` becomes [[Generator as TsDocsGenerator]]
 
-`[[ts-docs as the ts-docs module]]` becomes [[ts-docs as the ts-docs module]]
+`[[extractor/extractor as the extractor]]` becomes [[extractor/extractor as the extractor]]
 
 ## Supported JSDoc tags
 
