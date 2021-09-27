@@ -30,17 +30,12 @@ declare module "marked" {
 
 function genReference(str: string, otherData: Record<string, unknown>, generator: Generator, extractor: TypescriptExtractor, modules: Array<Project>) : string {
     let type;
-    const path = [];
     for (const mod of modules) {
-        type = extractor.refs.findByNameWithModule(str, mod);
-        if (type) {
-            if (modules.length > 1) path.push(mod.module.name);
-            break;
-        }
+        type = extractor.refs.findByNameWithModule(str, mod, modules.length > 1 ? [mod.module.name] : undefined);
+        if (type) break;
     }
     if (!type) return str;
-    if (type.path) path.push(...type.path);
-    return generator.generateRef({kind: TypeKinds.REFERENCE, type: {...type, path }}, otherData);
+    return generator.generateRef({kind: TypeKinds.REFERENCE, type }, otherData);
 }
 
 /**

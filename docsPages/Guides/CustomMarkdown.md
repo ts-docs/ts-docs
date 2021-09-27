@@ -72,7 +72,7 @@ You can also follow up a normal reference or a reference by path with `as ...` t
 
 `[[Generator as TsDocsGenerator]]` becomes [[Generator as TsDocsGenerator]]
 
-`[[extractor/extractor as the extractor]]` becomes [[extractor/extractor as the extractor]]
+`[[ts-docs as the documentation generator]]` becomes [[ts-docs as the documentation generator]]
 
 ## Supported JSDoc tags
 
