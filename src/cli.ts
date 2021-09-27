@@ -4,7 +4,7 @@ import parseArgs from "minimist";
 import { TypescriptExtractor, Utils } from "@ts-docs/extractor";
 import { setupDocumentStructure } from "./documentStructure";
 import { Generator } from "./generator";
-import { findTSConfig, findTsDocsJs, handleDefaultAPI } from "./utils";
+import { findTSConfig, findTsDocsJs, handleDefaultAPI, handleNodeAPI } from "./utils";
 import { addOptionSource, initOptions, options, OptionSource, showHelp } from "./options";
 
 export interface TsDocsCLIArgs extends OptionSource {
@@ -31,7 +31,7 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
 
     const types = new TypescriptExtractor({
         entryPoints: options.entryPoints,
-        externals: [handleDefaultAPI(), ...(options.externals||[])],
+        externals: [handleDefaultAPI(), ...(options.externals||[]), ...handleNodeAPI()],
         maxConstantTextLength: 1024,
         ignoreFolderNames: ["lib"],
         passthroughModules: options.passthroughModules

@@ -165,13 +165,23 @@ export function initMarkdown(generator: Generator, extractor: TypescriptExtracto
                 tokenizer: function(src)  {
                     const match = src.match(/^\|>(.*)/);
                     if (match && match.index !== undefined) {
+                        let text = match[1];
+                        let style = "warning";
+                        if (text.startsWith("[")) {
+                            const indOfEnd = text.indexOf("]");
+                            if (indOfEnd !== -1) {
+                                style = text.slice(1, indOfEnd);
+                                text = text.slice(indOfEnd + 1);
+                            }
+                        }
                         const tokens: Array<marked.Token> = [];
                         //@ts-expect-error Marked has outdated typings.
-                        this.lexer.inline(match[1], tokens);
+                        this.lexer.inline(text, tokens);
                         return {
                             type: "warning",
                             raw: match[0],
-                            text: match[1],
+                            text,
+                            style,
                             tokens
                         };
                     }
@@ -179,7 +189,7 @@ export function initMarkdown(generator: Generator, extractor: TypescriptExtracto
                 },
                 renderer: function(token) {
                     //@ts-expect-error Marked has outdated typings.
-                    return `<p class="text-warning">${this.parser.parseInline(token.tokens)}</p>`;
+                    return `<p class="text-block text-block-${token.style}">${this.parser.parseInline(token.tokens)}</p>`;
                 }
             }
         ]

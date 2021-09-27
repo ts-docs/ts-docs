@@ -169,3 +169,34 @@ export function handleDefaultAPI() : ExternalReference {
         }
     };
 }
+
+export function handleNodeAPI() : Array<ExternalReference> {
+    return [
+        {
+            run: (sym) => {
+                const name = typeof sym === "string" ? sym : sym.name;
+                if (name.startsWith("NodeJS")) {
+                    const [, obj] = name.split(".");
+                    switch(obj) {
+                    case "Timeout": return { link: "https://nodejs.org/api/timers.html#timers_class_timeout", name: "NodeJS", displayName: "Timeout" };
+                    case "Process": return { link: "https://nodejs.org/api/process.html", name: "NodeJS", displayName: "Process" };
+                    case "WriteStream": return { link: "https://nodejs.org/api/stream.html#stream_class_stream_writable", name: "NodeJS", displayName: "WriteStream"};
+                    case "EventEmitter": return { link: "https://nodejs.org/api/events.html#events_class_eventemitter", name: "NodeJS", displayName: "EventEmitter" };
+                    default: return;
+                    }
+                }
+                return;
+            }
+        },
+        {
+            baseName: "events",
+            run: (sym) => {
+                const name = typeof sym === "string" ? sym : sym.name;
+                switch (name) {
+                case "EventEmitter": return { link: "https://nodejs.org/api/events.html#events_class_eventemitter", name: "NodeJS", displayName: "EventEmitter" };
+                default: return;
+                }
+            }
+        }
+    ];
+}

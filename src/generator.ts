@@ -99,6 +99,7 @@ export class Generator {
 
     generateModule(path: string, module: Module, createFolder = true, readme?: string) : void {
         if (createFolder) {
+            if (!module.name) return;
             this.generatePage(path, `m.${module.name}`, "index", this.structure.components.module({
                 ...module, 
                 readme: readme && marked.parse(readme), 
