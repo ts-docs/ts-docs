@@ -59,7 +59,7 @@
     <div>
     <a class="fw-bold" href="#list-of-options">List of options</a>
     <div style="padding-left:15px"> 
-    <a href="#entrypoints" class="sidebar-category-member">entryPoints</a><a href="#structure" class="sidebar-category-member">structure</a><a href="#landingpage" class="sidebar-category-member">landingPage</a><a href="#name" class="sidebar-category-member">name</a><a href="#out" class="sidebar-category-member">out</a><a href="#custompages" class="sidebar-category-member">customPages</a><a href="#assets" class="sidebar-category-member">assets</a><a href="#logo" class="sidebar-category-member">logo</a><a href="#externals" class="sidebar-category-member">externals</a><a href="#passthroughmodules" class="sidebar-category-member">passthroughModules</a>
+    <a href="#entrypoints" class="sidebar-category-member">entryPoints</a><a href="#structure" class="sidebar-category-member">structure</a><a href="#landingpage" class="sidebar-category-member">landingPage</a><a href="#name" class="sidebar-category-member">name</a><a href="#out" class="sidebar-category-member">out</a><a href="#custompages" class="sidebar-category-member">customPages</a><a href="#assets" class="sidebar-category-member">assets</a><a href="#logo" class="sidebar-category-member">logo</a><a href="#externals" class="sidebar-category-member">externals</a><a href="#passthroughmodules" class="sidebar-category-member">passthroughModules</a><a href="#branches" class="sidebar-category-member">branches</a>
     </div>
     </div>
     </span>
@@ -179,7 +179,27 @@
 <h3 id="logo" class="section-header">logo</h3><p>A logo to use. It MUST be inside the folder provided to the <code>assets</code> option. The logo will be placed in the sidebar, below the name. </p>
 <h3 id="externals" class="section-header">externals</h3><p>An array of extenal libs. This option can only be supplied with the <code>tsDocs.config.js</code> file. To read more about external libraries and how to set them up, go <a href="https://ts-docs.github.io/ts-docs/pages/Guides/Externals.html">here</a> </p>
 <h3 id="passthroughmodules" class="section-header">passthroughModules</h3><p>If for some reason you don&#39;t want a specific folder to become a module, include the name of the folder it in the <code>passthroughModules</code> array. All the things inside that folder will be in the <strong>parent</strong> module. </p>
-
+<h3 id="branches" class="section-header">branches</h3><p>You can also document future (or previous) stable versions of your module using the <code>branches</code> option. When the option is provided, a &quot;Branches&quot; section is added to the left of the index page, where you can switch between other branches of your project.</p>
+<p>The generator is going to use your already provided options for generating the different branches, except for the <code>landingPage</code> option. The branches in the <code>branches</code> array need to be a part of a <code>project</code>, so you cannot include branches from completely different repositories, which are from projects that are not in your <code>entryPoints</code> option.</p>
+<p>Here&#39;s how the option looks:</p>
+<pre><code class="hljs"><span class="hljs-attr">branches</span>: [
+        {
+            <span class="hljs-attr">displayName</span>: <span class="hljs-string">&quot;next&quot;</span>, <span class="hljs-comment">// The name of the branch that will be displayed, can be anything you want</span>
+            <span class="hljs-attr">landingPage</span>: <span class="hljs-string">&quot;detritus-client&quot;</span>, <span class="hljs-comment">// The landing page of that branch</span>
+            <span class="hljs-attr">branches</span>: [ <span class="hljs-comment">// The ACTUAL branches that will be included</span>
+                {
+                    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;master&quot;</span>, <span class="hljs-comment">// The name of the branch</span>
+                    <span class="hljs-attr">entryPoint</span>: <span class="hljs-string">&quot;./src/index&quot;</span>, <span class="hljs-comment">// The entry point of the project, relative to the root directory of the project</span>
+                    <span class="hljs-attr">project</span>: <span class="hljs-string">&quot;detritus-utils&quot;</span> <span class="hljs-comment">// The name of the project (the name in package.json)</span>
+                },
+                {
+                    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;0.16.4&quot;</span>,
+                    <span class="hljs-attr">entryPoint</span>: <span class="hljs-string">&quot;./src/index&quot;</span>,
+                    <span class="hljs-attr">project</span>: <span class="hljs-string">&quot;detritus-client&quot;</span>
+                }
+            ]
+        }
+    ],</code></pre>
         </div>
 
       </div>
