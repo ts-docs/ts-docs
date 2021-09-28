@@ -6,6 +6,7 @@ import { setupDocumentStructure } from "./documentStructure";
 import { Generator } from "./generator";
 import { findTSConfig, findTsDocsJs, handleDefaultAPI, handleNodeAPI } from "./utils";
 import { addOptionSource, initOptions, options, OptionSource, showHelp } from "./options";
+import { renderBranches } from "./branches";
 
 export interface TsDocsCLIArgs extends OptionSource {
      "--": Array<string>,
@@ -59,4 +60,6 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
     const generator = new Generator(docStructure, finalOptions);
 
     generator.generate(types, projects);
+
+    if (options.branches) renderBranches(projects, finalOptions, docStructure);
 })();

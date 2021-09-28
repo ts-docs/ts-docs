@@ -26,6 +26,16 @@ export interface PageCategory {
     pages: Array<CustomPage>
 }
 
+export interface BranchSetting {
+    displayName: string,
+    landingPage?: string,
+    branches: Array<{
+        name: string,
+        entryPoint: string,
+        project?: string
+    }>
+}
+
 export interface TsDocsOptions {
     entryPoints: Array<string>,
     customPages?: Array<PageCategory>
@@ -36,7 +46,8 @@ export interface TsDocsOptions {
     assets?: string,
     logo?: string,
     externals?: Array<ExternalReference>,
-    passthroughModules?: Array<string>
+    passthroughModules?: Array<string>,
+    branches?: Array<BranchSetting>
 }
 
 export interface OptionSource {
@@ -49,7 +60,8 @@ export interface OptionSource {
     assets?: string,
     logo?: string,
     externals?: Array<ExternalReference>,
-    passthroughModules?: Array<string>
+    passthroughModules?: Array<string>,
+    branches?: Array<BranchSetting>
 }
 
 export const options: TsDocsOptions = {
@@ -70,6 +82,7 @@ export function addOptionSource(source: OptionSource) : void {
     if (source.logo && typeof source.logo !== "string") throw new Error("Path to logo must be a string.");
     if (source.externals && !Array.isArray(source.externals)) throw new Error("External Libraries must be an array.");
     if (source.passthroughModules && !Array.isArray(source.passthroughModules)) throw new Error("Passthrough Modules must be an array.");
+    if (source.branches && !Array.isArray(source.branches)) throw new Error("Branches must be an array.");
 } 
 
 export function initOptions(extractorList: Array<Project>) : TsDocsOptions {

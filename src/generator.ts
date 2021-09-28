@@ -36,6 +36,7 @@ export class Generator {
      * Only true when the custom pages are being rendered
      */
     renderingPages?: boolean
+    activeBranch = "main"
     constructor(structure: DocumentStructure, settings: TsDocsOptions) {
         this.structure = structure;
         this.settings = settings;
@@ -85,6 +86,8 @@ export class Generator {
                 type: "module", 
                 module: pkg.module, 
                 pages: this.settings.customPages, 
+                branches: this.settings.branches,
+                activeBranch: this.activeBranch,
                 doNotGivePath: true });
         } else {
             for (const pkg of projects) {
@@ -93,7 +96,7 @@ export class Generator {
                 this.generateModule("", pkg.module, true, pkg.readme);
                 this.depth--;
             }
-            if (this.settings.landingPage && this.settings.landingPage.readme) this.generatePage("", "./", "index", marked.parse(this.settings.landingPage.readme), { type: "index", projects, pages: this.settings.customPages, doNotGivePath: true });
+            if (this.settings.landingPage && this.settings.landingPage.readme) this.generatePage("", "./", "index", marked.parse(this.settings.landingPage.readme), { type: "index", projects, pages: this.settings.customPages, branches: this.settings.branches, activeBranch: this.activeBranch, doNotGivePath: true });
         }
     }
 
