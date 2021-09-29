@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es6",                               
+    "target": "ESNEXT",                               
     "rootDir": "./src",
     "outDir": "./dist",
     "module": "commonjs",
@@ -17,7 +17,8 @@
     "esModuleInterop": true,                    
 
     "skipLibCheck": true,                     
-    "forceConsistentCasingInFileNames": true  
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["DOM"]
   },
   "tsdocsOptions": {
     "entryPoints": ["./ts-extractor/src/index.ts", "./src/index.ts"],

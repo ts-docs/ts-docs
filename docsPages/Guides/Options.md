@@ -43,7 +43,7 @@ npm i --save-dev @ts-docs/default-docs-structure
 
 ### landingPage
 
-If your project is a monorepo, you can use this option to tell ts-docs which repository to use the README, version and name of for the landing page. The first provided entry point is used by default.
+If your project is a monorepo, you can use this option to tell ts-docs which repository to use the README, version and name of for the landing page. The first provided entry point is used by default. 
 
 ### name
 
@@ -101,3 +101,7 @@ branches: [
         }
     ],
 ```
+
+### changelog
+
+If this option is enabled, a changelog will be generated. ts-docs will attempt to get the latest release in the **repository of the landing page**.

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { DocumentStructure } from "./documentStructure";
 import marked from "marked";
-import { copyFolder, createFile, escapeHTML, getPathFileName, getTagFromJSDoc, hasTagFromJSDoc, isLargeObject, isLargeSignature } from "./utils";
+import { copyFolder, createFile, escapeHTML, fetchChangelog, getPathFileName, getTagFromJSDoc, hasTagFromJSDoc, isLargeObject, isLargeSignature } from "./utils";
 import { Project, TypescriptExtractor, ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, Property, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl, ConditionalType, MappedType, TypeOperator, IndexAccessedType, FunctionSignature, TypePredicateType, InferType } from "@ts-docs/extractor";
 import path from "path";
 import { TsDocsOptions } from "./options";
@@ -14,7 +14,8 @@ export interface OtherProps {
     [key: string]: unknown,
     doNotGivePath?: boolean,
     depth?: number,
-    type?: string
+    type?: string,
+    hasChangelog?: boolean
 }
 
 /**
@@ -43,7 +44,7 @@ export class Generator {
         this.depth = 0;
     }
 
-    generate(extractor: TypescriptExtractor, projects: Array<Project>) : void {
+    async generate(extractor: TypescriptExtractor, projects: Array<Project>) : Promise<void> {
         initMarkdown(this, extractor, projects);
         if (fs.existsSync(this.settings.out)) fs.rmSync(this.settings.out, { force: true, recursive: true });
         fs.mkdirSync(this.settings.out);
@@ -77,18 +78,20 @@ export class Generator {
         if (projects.length === 1) {
             const pkg = projects[0];
             this.generateModule("", pkg.module, false);
-            if (pkg.readme) this.generatePage("", "./", "index", this.structure.components.module({
-                ...pkg.module,
-                readme: marked.parse(pkg.readme),
-                exports: pkg.module.exports.map(ex => ({alias: ex.alias, ref: this.generateRef({kind: TypeKinds.REFERENCE, type: ex})})),
-                reExports: pkg.module.reExports.map(ex => ({module: this.generateRef({kind: TypeKinds.REFERENCE, type: ex.module}), references: ex.references.map(r => ({ref: this.generateRef({kind: TypeKinds.REFERENCE, type: r}), alias: r.alias})), alias: ex.alias, reExportsReExport: ex.reExportsReExport})),
-            }), { 
-                type: "module", 
-                module: pkg.module, 
-                pages: this.settings.customPages, 
-                branches: this.settings.branches,
-                activeBranch: this.activeBranch,
-                doNotGivePath: true });
+            if (pkg.readme) {
+                if (this.settings.changelog && pkg.repository) this.generateChangelog(pkg.repository, undefined, pkg.module);
+                this.generatePage("", "./", "index", this.structure.components.module({
+                    ...pkg.module,
+                    readme: marked.parse(pkg.readme),
+                    exports: pkg.module.exports.map(ex => ({alias: ex.alias, ref: this.generateRef({kind: TypeKinds.REFERENCE, type: ex})})),
+                    reExports: pkg.module.reExports.map(ex => ({module: this.generateRef({kind: TypeKinds.REFERENCE, type: ex.module}), references: ex.references.map(r => ({ref: this.generateRef({kind: TypeKinds.REFERENCE, type: r}), alias: r.alias})), alias: ex.alias, reExportsReExport: ex.reExportsReExport})),
+                }), { 
+                    type: "module", 
+                    module: pkg.module, 
+                    pages: this.settings.customPages, 
+                    branches: this.settings.branches,
+                    doNotGivePath: true });
+            }
         } else {
             for (const pkg of projects) {
                 this.currentGlobalModuleName = pkg.module.name;
@@ -96,8 +99,26 @@ export class Generator {
                 this.generateModule("", pkg.module, true, pkg.readme);
                 this.depth--;
             }
-            if (this.settings.landingPage && this.settings.landingPage.readme) this.generatePage("", "./", "index", marked.parse(this.settings.landingPage.readme), { type: "index", projects, pages: this.settings.customPages, branches: this.settings.branches, activeBranch: this.activeBranch, doNotGivePath: true });
+            if (this.settings.landingPage && this.settings.landingPage.readme) {
+                if (this.settings.changelog && this.settings.landingPage.repository) this.generateChangelog(this.settings.landingPage.repository, projects);
+                this.generatePage("", "./", "index", marked.parse(this.settings.landingPage.readme), { type: "index", projects, pages: this.settings.customPages, branches: this.settings.branches, activeBranch: this.activeBranch, doNotGivePath: true });
+            }
         }
+    }
+
+    async generateChangelog(repo: string, projects?: Array<Project>, module?: Module) : Promise<void> {
+        if (!this.structure.components.changelog) return;
+        const changelog = await fetchChangelog(repo);
+        if (!changelog) return;
+        changelog.content = marked.parse(changelog.content);
+        this.generatePage("", "./", "changelog", this.structure.components.changelog(changelog), { 
+            type: projects ? "index":"module", 
+            module, 
+            pages: this.settings.customPages, 
+            branches: this.settings.branches, 
+            activeBranch: this.activeBranch,
+            projects
+        });
     }
 
     generateModule(path: string, module: Module, createFolder = true, readme?: string) : void {
@@ -481,6 +502,8 @@ export class Generator {
             depth: this.depth,
             currentGlobalModuleName: this.currentGlobalModuleName,
             logo: this.settings.logo,
+            hasChangelog: this.settings.changelog,
+            activeBranch: this.activeBranch,
             ...other
         }));
     }

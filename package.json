@@ -31,9 +31,11 @@
   "dependencies": {
     "@ts-docs/extractor": "^2.0.20",
     "front-matter": "^4.0.2",
+    "got": "^11.8.2",
     "handlebars": "^4.7.7",
     "highlight.js": "^11.2.0",
     "marked": "^3.0.0",
-    "minimist": "^1.2.5"
+    "minimist": "^1.2.5",
+    "whatwg-fetch": "^3.6.2"
   }
 }

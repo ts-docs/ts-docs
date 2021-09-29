@@ -47,7 +47,8 @@ export interface TsDocsOptions {
     logo?: string,
     externals?: Array<ExternalReference>,
     passthroughModules?: Array<string>,
-    branches?: Array<BranchSetting>
+    branches?: Array<BranchSetting>,
+    changelog?: boolean
 }
 
 export interface OptionSource {
@@ -61,7 +62,8 @@ export interface OptionSource {
     logo?: string,
     externals?: Array<ExternalReference>,
     passthroughModules?: Array<string>,
-    branches?: Array<BranchSetting>
+    branches?: Array<BranchSetting>,
+    changelog?: boolean
 }
 
 export const options: TsDocsOptions = {
@@ -129,5 +131,6 @@ Usage: ts-docs [...entryFiles]
 -customPages ─ A folder which contains folders which contain .md files.
 -assets ─ All files and folders inside the folder will be copied to the /assets output directory. In markdown, files in this directory can be linked with "./assets/filename.ext"
 -logo ─ Path to the project's logo.
+-changelog - If to add a changelog to the generated output
 `);
 }

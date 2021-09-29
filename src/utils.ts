@@ -3,6 +3,7 @@ import { ArrayType, ArrowFunction, FunctionParameter, JSDocData, Literal, Object
 import fs from "fs";
 import path from "path";
 import ts from "typescript";
+import fetch from "got";
 
 /**
  * Creates a file with the name `file`, which is located inside `folder`, which gets created if it doesn't
@@ -199,4 +200,35 @@ export function handleNodeAPI() : Array<ExternalReference> {
             }
         }
     ];
+}
+
+export async function fetchChangelog(githubLink: string) : Promise<{
+    url: string,
+    authorName: string,
+    authorUrl: string,
+    content: string,
+    publishedAt: string,
+    downloadZip: string,
+    downloadTar: string,
+    tagName: string
+}|undefined> {
+    const sliced = githubLink.slice(githubLink.indexOf("github.com/") + 11, githubLink.includes("/tree/") ? githubLink.indexOf("/tree/") : undefined);
+    if (!sliced) return;
+    try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const data = await fetch(`https://api.github.com/repos/${sliced}/releases/latest`).json() as any;
+        if (data.message) return;
+        return {
+            authorName: data.author.login,
+            authorUrl: data.author.html_url,
+            url: data.url,
+            content: data.body,
+            publishedAt: new Date(data.published_at).toLocaleString("en-GB"),
+            downloadZip: data.tarball_url,
+            downloadTar: data.zipball_url,
+            tagName: data.name || data.tag_name
+        };
+    } catch {
+        return;
+    }
 }

@@ -45,8 +45,9 @@ export function renderBranches(
 
         const gen = new Generator(documentStructure, {
             ...options,
-            landingPage: branchSetting.landingPage ? newProjects.find(pr => pr.module.name === branchSetting.landingPage) : undefined,
-            out: path.join(options.out, `b.${branchSetting.displayName}`)
+            landingPage: branchSetting.landingPage ? newProjects.find(pr => pr.module.name === branchSetting.landingPage) : newProjects[0],
+            out: path.join(options.out, `b.${branchSetting.displayName}`),
+            changelog: false // Different branches don't have a changelog
         });
 
         gen.activeBranch = branchSetting.displayName;
@@ -56,52 +57,3 @@ export function renderBranches(
 
     fs.rmSync(tempFolder, { recursive: true });
 }
-
-/*
-export function renderBranch(
-    options: TsDocsOptions, 
-    documentStruct: DocumentStructure, 
-    project: Project,
-    branchSettings: BranchSetting
-    ) : void {
-    if (!project.repository) return;
-    const baseLink = project.repository.includes("/tree") ? project.repository.slice(0, project.repository.indexOf("/tree")) : project.repository;
-    console.log(baseLink);
-
-    const tempFolder = fs.mkdtempSync(path.join(os.tmpdir(), "ts-docs_"));
-
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const branchPath = path.join(tempFolder, baseLink.split("/").pop()!);
-    
-    console.log(branchPath);
-    /*
-    for (const branch of options.branches) {
-        execSync(`git clone -b ${branch} ${baseLink}`, { cwd: tempFolder });
-        const firstEntryPoint = options.entryPoints[0];
-        let newEntryPoints = path.join(branchPath, f));
-        if (!fs.existsSync(newEntryPoints[0])) {
-            newEntryPoints = options.entryPoints.map(f => path.join(tempFolder, f));
-            if (!fs.existsSync(newEntryPoints[0])) throw new Error(`Couldn't find entry point in branch `)
-        }
-        console.log(options.entryPoints.map(f => path.join(branchPath, f)));
-        const extractor = new TypescriptExtractor({
-            entryPoints: options.entryPoints.map(f => path.join(branchPath, f)),
-            externals: [handleDefaultAPI(), ...(options.externals||[]), ...handleNodeAPI()],
-            maxConstantTextLength: 1024,
-            ignoreFolderNames: ["lib"],
-            passthroughModules: options.passthroughModules
-        });
-
-        const projects = extractor.run();
-        
-        const gen = new Generator(documentStruct, {
-            ...options,
-            out: path.join(options.out, `b.${branch}`)
-        });
-
-        gen.generate(extractor, projects);
-    }
-
-    //fs.rmSync(tempFolder, { recursive: true });
-}
-*/
