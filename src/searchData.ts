@@ -10,18 +10,29 @@ export const enum ClassMemberFlags {
     IS_PRIVATE = 1 << 2
 }
 
-/**
- * Adds the provided bits.
- */
-export function buildBitfield(...bits: Array<number|undefined|false>) : number {
+
+function buildBitfield(...bits: Array<number|undefined|false>) : number {
     return (bits.filter(bit => bit) as Array<number>).reduce((acc, bit) => acc | bit, 0);
 }
+
+export type PackedSearchData = [
+    Array<[
+        number, // Module ID,
+        Array<[string, Array<[string, number, string|undefined]>, Array<[string, number, string|undefined]>, Array<number>]>, // Classes
+        Array<[string, Array<string>, Array<number>]>, // Interfaces,
+        Array<[string, Array<string>, Array<number>]>, // Enums,
+        Array<[string, Array<number>]>, // Types
+        Array<[string, Array<number>]>, // Functions
+        Array<[string, Array<number>]> // Constants
+    ]>,
+    Array<string> // Module names
+];
 
 /**
      * Packs the data in a convinient, small format. Unlike the default strucutre provided by ts-extractor, this packed structure only registers the "global"
      * modules and includes all of the sub-module's things (classes, interfaces, etc.).
      * 
-     * Returns an [[Array]] which looks something like this:    
+     * Returns an array which looks something like this:    
      * `[globalModules, allModuleNames];`
      * 
      * globalModules is an [[Array]] of module objects, which look like this:   
@@ -33,20 +44,22 @@ export function buildBitfield(...bits: Array<number|undefined|false>) : number {
      * an **inteface**: `[name, properties, path]`        
      * an **enum**: `[name, members, path]`       
      * a **type alias**: `[name, path]`       
-     * a **function**: `[name, params, path]`     
+     * a **function**: `[name, path]`     
      * a **constant**: `[name, path]`     
      *  
      * 
      * `flags` is a bitfield containing [[ClassMemberFlags]]    
      * `path` is an array of numbers, which are the indexes of the module names inside the `allModuleNames` array. Since module names repeat very often, they're all placed in one array (`allModuleNames`) to save space.
      * 
+     * Also check out [[PackedSearchData]]
+     * 
 */
     
 export function packSearchData(extractors: Array<Project>, path: string) : void {
-    const res = [[], []] as [Array<unknown>, Array<string>];
+    const res = [[], []] as PackedSearchData;
     const notSingleExtractor = extractors.length !== 1;
     for (const extractor of extractors) {
-        const modObj = [0,[],[],[],[],[],[]] as [number, Array<[string, Array<[string, number, string|undefined]>, Array<[string, number, string|undefined]>, Array<number>]>, Array<[string, Array<string>, Array<number>]>, Array<[string, Array<string>, Array<number>]>, Array<[string, Array<number>]>, Array<[string, Array<number>]>, Array<[string, Array<number>]>]; 
+        const modObj = [0,[],[],[],[],[],[]] as PackedSearchData[0][0]; 
         extractor.forEachModule(extractor.module, (mod, path) => {
             modObj[0] = res[1].push(mod.name) - 1;
             let p;

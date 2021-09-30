@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { DocumentStructure } from "./documentStructure";
 import marked from "marked";
-import { copyFolder, createFile, escapeHTML, fetchChangelog, getPathFileName, getTagFromJSDoc, hasTagFromJSDoc, isLargeObject, isLargeSignature } from "./utils";
+import { copyFolder, createFile, escapeHTML, fetchChangelog, getPathFileName, getTagFromJSDoc, hasTagFromJSDoc, isLargeArr, isLargeObject, isLargeSignature } from "./utils";
 import { Project, TypescriptExtractor, ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, Property, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl, ConditionalType, MappedType, TypeOperator, IndexAccessedType, FunctionSignature, TypePredicateType, InferType } from "@ts-docs/extractor";
 import path from "path";
 import { TsDocsOptions } from "./options";
@@ -12,7 +12,6 @@ import { packSearchData } from "./searchData";
 
 export interface OtherProps {
     [key: string]: unknown,
-    doNotGivePath?: boolean,
     depth?: number,
     type?: string,
     hasChangelog?: boolean
@@ -65,9 +64,10 @@ export class Generator {
                     // +2 because pages/category
                     this.depth+=2;
                     const [markdown, headings] = this.generateMarkdownWithHeaders(page.content);
-                    this.generatePage("./pages", category.name, page.name, markdown, {
+                    this.generatePage("pages", category.name, page.name, markdown, {
                         type: "page",
                         pages: this.settings.customPages,
+                        unclickablePath: 0,
                         headings
                     });
                     this.depth-=2;
@@ -107,7 +107,6 @@ export class Generator {
     }
 
     async generateChangelog(repo: string, projects?: Array<Project>, module?: Module) : Promise<void> {
-        if (!this.structure.components.changelog) return;
         const changelog = await fetchChangelog(repo);
         if (!changelog) return;
         changelog.content = marked.parse(changelog.content);
@@ -159,7 +158,6 @@ export class Generator {
     }
 
     generateClass(path: string, classObj: ClassDecl) : void {
-        if (!this.structure.components.class) return;
         this.generatePage(path, "class", classObj.id ? `${classObj.name}_${classObj.id}` : classObj.name, 
             this.structure.components.class({
                 ...classObj,
@@ -175,7 +173,6 @@ export class Generator {
     }
 
     generateConstructor(constructor: Omit<FunctionDecl, "name">) : string {
-        if (!this.structure.components.classConstructor) return "";
         return this.structure.components.classConstructor({
             ...constructor,
             signatures: constructor.signatures.map(sig => this.generateSignature(sig))
@@ -183,7 +180,6 @@ export class Generator {
     }
 
     generateInterface(path: string, interfaceObj: InterfaceDecl) : void {
-        if (!this.structure.components.interface) return;
         this.generatePage(path, "interface", interfaceObj.id ? `${interfaceObj.name}_${interfaceObj.id}` : interfaceObj.name, this.structure.components.interface({
             ...interfaceObj, 
             properties: interfaceObj.properties.map(p => ({comment: this.generateComment(p.jsDoc, { example: true} ), value: this.generateProperty(p.value) })),
@@ -196,7 +192,6 @@ export class Generator {
     }
 
     generateEnum(path: string, enumObj: EnumDecl) : void {
-        if (!this.structure.components.enum) return;
         this.generatePage(path, "enum", enumObj.id ? `${enumObj.name}_${enumObj.id}` : enumObj.name, this.structure.components.enum({
             ...enumObj,
             comment: this.generateComment(enumObj.jsDoc),
@@ -206,7 +201,6 @@ export class Generator {
     }
 
     generateTypeDecl(path: string, typeObj: TypeDecl, module: Module) : void {
-        if (!this.structure.components.type) return;
         this.generatePage(path, "type", typeObj.id ? `${typeObj.name}_${typeObj.id}` : typeObj.name, this.structure.components.type({
             ...typeObj,
             comment: this.generateComment(typeObj.jsDoc),
@@ -217,7 +211,6 @@ export class Generator {
     }
 
     generateFunction(path: string, func: FunctionDecl, module: Module) : void {
-        if (!this.structure.components.function) return;
         this.generatePage(path, "function", func.id ? `${func.name}_${func.id}` : func.name, this.structure.components.function({
             ...func,
             signatures: func.signatures.map(sig => this.generateSignature(sig)),
@@ -227,7 +220,6 @@ export class Generator {
     }
 
     generateConstant(path: string, constant: ConstantDecl, module: Module) : void {
-        if (!this.structure.components.constant) return;
         this.generatePage(path, "constant", constant.id ? `${constant.name}_${constant.id}` : constant.name, this.structure.components.constant({
             ...constant,
             comment: this.generateComment(constant.jsDoc),
@@ -238,7 +230,6 @@ export class Generator {
     }
 
     generatePropertyMember(property: ClassProperty) : string {
-        if (!this.structure.components.propertyMember) return "";
         return this.structure.components.propertyMember({
             ...property,
             comment: this.generateComment(property.jsDoc, {example: true}),
@@ -248,7 +239,6 @@ export class Generator {
     }
 
     generateProperty(property: Property|IndexSignatureDeclaration|ArrowFunction, isInterface?: boolean) : string {
-        if (!this.structure.components.interfaceProperty) return "";
         let type;
         if ("kind" in property) type = this.generateArrowFunction(property);
         else if (property.type) type = this.generateType(property.type);
@@ -263,7 +253,6 @@ export class Generator {
     }
 
     generateMethodMember(method: ClassMethod) : string {
-        if (!this.structure.components.methodMember) return "";
         return this.structure.components.methodMember({
             ...method,
             name: typeof method.name === "string" ? method.name : this.generateType(method.name),
@@ -274,7 +263,6 @@ export class Generator {
     }
 
     generateRef(ref: Reference, other: Record<string, unknown> = {}) : string {
-        if (!this.structure.components.typeReference) return "";
         if (ref.type.link) return this.structure.components.typeReference({...ref, typeParameters: ref.typeArguments?.map(param => this.generateType(param))});
         let refType: string;
         switch (ref.type.kind) {
@@ -315,7 +303,6 @@ export class Generator {
     }
 
     generateArrowFunction(ref: ArrowFunction) : string {
-        if (!this.structure.components.typeFunction) return "";
         return this.structure.components.typeFunction({
             typeParameters: ref.typeParameters?.map(param => this.generateTypeParameter(param)),
             parameters: ref.parameters?.map(param => this.generateParameter(param)),
@@ -329,33 +316,29 @@ export class Generator {
         case TypeKinds.ARROW_FUNCTION: return this.generateArrowFunction(type as ArrowFunction);
         case TypeKinds.UNION: {
             const ref = type as UnionOrIntersection;
-            if (!this.structure.components.typeUnion) return "";
             return this.structure.components.typeUnion({
-                types: ref.types.map(t => this.generateType(t))
+                types: ref.types.map(t => this.generateType(t)),
             });
         }
         case TypeKinds.INTERSECTION: {
             const ref = type as UnionOrIntersection;
-            if (!this.structure.components.typeIntersection) return "";
             return this.structure.components.typeIntersection({
                 types: ref.types.map(t => this.generateType(t))
             });
         }
         case TypeKinds.TUPLE: {
             const ref = type as Tuple;
-            if (!this.structure.components.typeUnion) return "";
-            return this.structure.components.typeUnion({
-                types: ref.types.map(t => this.generateType(t))
+            return this.structure.components.typeTuple({
+                types: ref.types.map(t => this.generateType(t)),
+                isLarge: isLargeArr(ref.types)
             });
         }
         case TypeKinds.ARRAY_TYPE: {
             const ref = type as ArrayType;
-            if (!this.structure.components.typeArray) return "";
             return this.structure.components.typeArray({type: this.generateType(ref.type) });
         }
         case TypeKinds.MAPPED_TYPE: {
             const ref = type as MappedType;
-            if (!this.structure.components.typeMapped) return "";
             return this.structure.components.typeMapped({
                 typeParameter: ref.typeParameter,
                 optional: ref.optional,
@@ -365,7 +348,6 @@ export class Generator {
         }
         case TypeKinds.CONDITIONAL_TYPE: {
             const ref = type as ConditionalType;
-            if (!this.structure.components.typeConditional) return "";
             return this.structure.components.typeConditional({
                 checkType: this.generateType(ref.checkType),
                 extendsType: this.generateType(ref.extendsType),
@@ -375,7 +357,6 @@ export class Generator {
         }
         case TypeKinds.TYPE_PREDICATE: {
             const ref = type as TypePredicateType;
-            if (!this.structure.components.typePredicate) return "";
             return this.structure.components.typePredicate({
                 parameter: typeof ref.parameter === "string" ? ref.parameter:this.generateType(ref.parameter),
                 type: ref.type && this.generateType(ref.type)
@@ -383,24 +364,18 @@ export class Generator {
         }
         case TypeKinds.INDEX_ACCESS: {
             const ref = type as IndexAccessedType;
-            if (!this.structure.components.typeIndexAccess) return "";
             return this.structure.components.typeIndexAccess({index: this.generateType(ref.index), object: this.generateType(ref.object)});
         }
         case TypeKinds.INFER_TYPE: {
-            if (!this.structure.components.typeOperator) return "";
             return this.structure.components.typeOperator({name: "infer", type: this.generateTypeParameter((type as InferType).typeParameter)});       
         }
         case TypeKinds.UNIQUE_OPERATOR:
-            if (!this.structure.components.typeOperator) return "";
             return this.structure.components.typeOperator({name: "unique", type: this.generateType((type as TypeOperator).type)});       
         case TypeKinds.KEYOF_OPERATOR:
-            if (!this.structure.components.typeOperator) return "";
             return this.structure.components.typeOperator({name: "keyof", type: this.generateType((type as TypeOperator).type)}); 
         case TypeKinds.READONLY_OPERATOR:
-            if (!this.structure.components.typeOperator) return "";
             return this.structure.components.typeOperator({name: "readonly", type: this.generateType((type as TypeOperator).type)}); 
         case TypeKinds.TYPEOF_OPERATOR:
-            if (!this.structure.components.typeOperator) return "";
             return this.structure.components.typeOperator({name: "typeof", type: this.generateType((type as TypeOperator).type)}); 
         case TypeKinds.STRING:
         case TypeKinds.NUMBER: 
@@ -419,12 +394,10 @@ export class Generator {
         case TypeKinds.OBJECT:
         case TypeKinds.THIS:
         case TypeKinds.ANY: {
-            if (!this.structure.components.typePrimitive) return "";
             return this.structure.components.typePrimitive({...type});
         }
         case TypeKinds.OBJECT_LITERAL: {
             const ref = type as ObjectLiteral;
-            if (!this.structure.components.typeObject) return "";
             return this.structure.components.typeObject({
                 properties: ref.properties.map(p => this.generateProperty(p)),
                 isLarge: isLargeObject(ref)
@@ -448,7 +421,6 @@ export class Generator {
     }
 
     generateTypeParameter(type: TypeParameter) : string {
-        if (!this.structure.components.typeParameter) return "";
         return this.structure.components.typeParameter({
             default: type.default && this.generateType(type.default),
             constraint: type.constraint && this.generateType(type.constraint),
@@ -457,7 +429,6 @@ export class Generator {
     }
 
     generateParameter(type: FunctionParameter) : string {
-        if (!this.structure.components.functionParameter) return "";
         return this.structure.components.functionParameter({
             ...type,
             raw: type,
@@ -498,7 +469,7 @@ export class Generator {
             headerRepository: this.settings.landingPage?.repository,
             headerHomepage: this.settings.landingPage?.homepage,
             headerVersion: this.settings.landingPage?.version,
-            path: !other.doNotGivePath && this.generatePath(p, file !== "index" ? file:directory),
+            path: !other.doNotGivePath && [p, file !== "index" ? file:directory],
             depth: this.depth,
             currentGlobalModuleName: this.currentGlobalModuleName,
             logo: this.settings.logo,
@@ -510,21 +481,6 @@ export class Generator {
 
     generateLink(p: string, hash?: string) : string {
         return `${path.join("../".repeat(this.depth), p)}${hash ? `#.${hash}`:""}`;
-    }
-
-    generatePath(url: string, final: string) : Array<{name: string, path: string}> {
-        const parts = url.split("/").slice(1);
-        const partsLen = parts.length;
-        const res = [{name: "index", path: `${"../".repeat(partsLen + 1)}index.html`}];
-        for (let i=0; i < partsLen; i++) {
-            const thing = parts[i];
-            res.push({
-                name: thing.startsWith("m.") ? thing.slice(2):thing,
-                path: `${"../".repeat(partsLen - i)}index.html`
-            });
-        }
-        res.push({name: final.startsWith("m.") ? final.slice(2):final , path: ""});
-        return res;
     }
 
 }

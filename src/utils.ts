@@ -118,6 +118,11 @@ export function isLargeObject(obj: ObjectLiteral) : boolean {
     return getTypeLength(obj) > 48;
 }
 
+export function isLargeArr(arr: Array<Type>) : boolean {
+    if (arr.length > 4) return true;
+    return arr.reduce((acc, t) => acc + getTypeLength(t), 0) > 48;
+}
+
 export function getTagFromJSDoc(searchFor: string, doc: Array<JSDocData>) : JSDocTag|undefined {
     for (const jsdoc of doc) {
         if (!jsdoc.tags) continue;

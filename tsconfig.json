@@ -17,8 +17,7 @@
     "esModuleInterop": true,                    
 
     "skipLibCheck": true,                     
-    "forceConsistentCasingInFileNames": true,
-    "lib": ["DOM"]
+    "forceConsistentCasingInFileNames": true
   },
   "tsdocsOptions": {
     "entryPoints": ["./ts-extractor/src/index.ts", "./src/index.ts"],
