@@ -5,19 +5,22 @@ import { TypescriptExtractor, Utils } from "@ts-docs/extractor";
 import { setupDocumentStructure } from "./documentStructure";
 import { Generator } from "./generator";
 import { findTSConfig, findTsDocsJs, handleDefaultAPI, handleNodeAPI } from "./utils";
-import { addOptionSource, initOptions, options, OptionSource, showHelp } from "./options";
+import { addOptionSource, initOptions, options, OptionSource, showHelp, initConfig } from "./options";
 import { renderBranches } from "./branches";
+import fs from "fs";
 
 export interface TsDocsCLIArgs extends OptionSource {
      "--": Array<string>,
      _: Array<string>,
-     help?: boolean
+     help?: boolean,
+     init?: boolean
 }
 
 const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
 
 (() => {
     if (args.help) return showHelp();
+    if (args.init) return initConfig();
 
     addOptionSource({...args, entryPoints: args._});
 
@@ -39,11 +42,11 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
     });
 
     const projects = types.run();
-
-    const packageJSON = Utils.findPackageJSON(process.cwd());
-
     const finalOptions = initOptions(projects);
 
+    if (finalOptions.json) return fs.writeFileSync(finalOptions.json, JSON.stringify(projects));
+
+    const packageJSON = Utils.findPackageJSON(process.cwd());
     if (packageJSON) {
         if (!finalOptions.landingPage) {
             const metadata = Utils.extractMetadata(packageJSON.path);

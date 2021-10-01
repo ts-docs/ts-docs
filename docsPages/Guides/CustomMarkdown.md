@@ -78,7 +78,7 @@ You can also follow up a normal reference or a reference by path with `as ...` t
 
 ### `@link`
 
-ts-docs supports the `@link` / `@linkplain` JSDoc tag, except it doesn't support properties / methods, name aliases and paths. It's not recommended to use `{@link}` in custom pages and documentation comments, in this case it exists only for compatibility reasons.
+ts-docs supports the `@link` / `@linkplain` JSDoc tag, except it doesn't support properties / methods, name aliases and paths. It's not recommended to use `{@link}` in custom pages and documentation comments, it exists only for compatibility reasons.
 
 ### `@param`
 

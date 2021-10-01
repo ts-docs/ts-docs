@@ -48,7 +48,8 @@ export interface TsDocsOptions {
     externals?: Array<ExternalReference>,
     passthroughModules?: Array<string>,
     branches?: Array<BranchSetting>,
-    changelog?: boolean
+    changelog?: boolean,
+    json?: string
 }
 
 export interface OptionSource {
@@ -63,7 +64,8 @@ export interface OptionSource {
     externals?: Array<ExternalReference>,
     passthroughModules?: Array<string>,
     branches?: Array<BranchSetting>,
-    changelog?: boolean
+    changelog?: boolean,
+    json?: string
 }
 
 export const options: TsDocsOptions = {
@@ -85,6 +87,7 @@ export function addOptionSource(source: OptionSource) : void {
     if (source.externals && !Array.isArray(source.externals)) throw new Error("External Libraries must be an array.");
     if (source.passthroughModules && !Array.isArray(source.passthroughModules)) throw new Error("Passthrough Modules must be an array.");
     if (source.branches && !Array.isArray(source.branches)) throw new Error("Branches must be an array.");
+    if (source.json && typeof source.json !== "string") throw new Error("JSON output path must be a string.");
 } 
 
 export function initOptions(extractorList: Array<Project>) : TsDocsOptions {
@@ -124,13 +127,30 @@ export function showHelp() : void {
         `──── ts-docs help ────
 Usage: ts-docs [...entryFiles]
 
--structure ─ The documentation structure to use. The default one is used by default.
--landingPage ─ Which module to act as the landing page. 
--name ─ The name of the page.
--out ─ Where to emit the documentation files.
--customPages ─ A folder which contains folders which contain .md files.
--assets ─ All files and folders inside the folder will be copied to the /assets output directory. In markdown, files in this directory can be linked with "./assets/filename.ext"
--logo ─ Path to the project's logo.
--changelog - If to add a changelog to the generated output
+--structure         The documentation structure to use. 
+--landingPage       Which module to act as the landing page. 
+--name              The name of the page.
+--out               Where to emit the documentation files.
+--customPages       A folder which contains folders which contain .md files.
+--assets            All files and folders inside the folder will be copied to the /assets output directory. In markdown, files in this directory can be linked with "./assets/filename.ext"
+--logo              Path to the project's logo.
+--changelog         If to add a changelog to the generated output
+--json              Instead of generating documentation, ts-docs will spit all the json data in the path you provide.
+--init              Creates a tsdocs.config.js file
+--help
 `);
+}
+
+export function initConfig() : void {
+    if (fs.existsSync("./tsdocs.config.js")) return console.log("A ts-docs configuration file already exists here.");
+    fs.writeFileSync("./tsdocs.config.js", `
+module.exports = {
+    // See more options at https://ts-docs.github.io/ts-docs/pages/Guides/Options
+
+    entryPoints: [], // Entry points, every project you want to include in the documentation should have exactly one entry point
+    name: "", // The name of your project
+    out: "./docs", // Where to put the generated documentation
+}
+    `);
+    console.log("Successfully created a ts-docs configuration file.");
 }

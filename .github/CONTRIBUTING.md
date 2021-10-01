@@ -1,20 +1,32 @@
 # Contributing
 
-When contributing to this repository, please first discuss the change you wish to make via issue,
-email, or any other method with the owners of this repository before making a change. 
+## How you can contribute
 
-Please note we have a code of conduct, please follow it in all your interactions with the project.
+### Bug reports
 
-## Pull Request Process
+When you think you might've experienced a bug, first search through the [issues](https://github.com/ts-docs/ts-docs/issues) to see if it has already been reported, if it hasn't, feel free to create an [issue](https://github.com/ts-docs/ts-docs/issues) which describes the bug in detail. Do not be afraid to give as much information as possible, and make sure to provide an example which replicates the bug in question.
 
- 1. Ensure any install or build dependencies are removed before the end of the layer when doing a 
-   build.
+- Make sure the name of your issue is clear and descriptive, avoid one-word issue names.
+- Add the options you ran ts-docs with.
 
- 2. Update the README.md and any other documentation with details of changes to the interface, this includes new environment 
-   variables, exposed ports, useful file locations and container parameters.
 
- 3. Increase the version numbers in any examples files and the README.md to the new version that this
-   Pull Request would represent. The versioning scheme we use is [SemVer](http://semver.org/).
+### Suggestions
 
- 4. You may merge the Pull Request in once you have the sign-off of two other developers, or if you 
-   do not have permission to do that, you may request the second reviewer to merge it for you.
+If you have a suggestion, feel free to create an [issue](https://github.com/ts-docs/ts-docs/issues) describing the suggestion and the problems / issues it'll 
+resolve. 
+
+Suggestions which change the structure of the generated docs will be declined. If you would like a different structure, consider using [ts-extractor](https://github.com/ts-docs/ts-extractor) and generate the documentation yourself, or use an alternative to ts-docs, such as [typedoc](https://typedoc.org/).
+
+### Pull requests
+
+If you'd like to help out and contribute on fixing an issue or adding a new feature, create a pull request!
+
+1. Fork this repository.
+2. Make your changes.
+3. Make sure to lint the code using eslint!
+4. Submit a pull request!
+
+If the branch you're working on has changed since you created the pull request, you will need to update your fork by running `git pull`.
+
+
+

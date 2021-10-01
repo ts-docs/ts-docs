@@ -13,8 +13,7 @@ import { packSearchData } from "./searchData";
 export interface OtherProps {
     [key: string]: unknown,
     depth?: number,
-    type?: string,
-    hasChangelog?: boolean
+    type?: string
 }
 
 /**
@@ -101,7 +100,7 @@ export class Generator {
             }
             if (this.settings.landingPage && this.settings.landingPage.readme) {
                 if (this.settings.changelog && this.settings.landingPage.repository) this.generateChangelog(this.settings.landingPage.repository, projects);
-                this.generatePage("", "./", "index", marked.parse(this.settings.landingPage.readme), { type: "index", projects, pages: this.settings.customPages, branches: this.settings.branches, activeBranch: this.activeBranch, doNotGivePath: true });
+                this.generatePage("", "./", "index", marked.parse(this.settings.landingPage.readme), { type: "index", projects, pages: this.settings.customPages, branches: this.settings.branches, doNotGivePath: true });
             }
         }
     }

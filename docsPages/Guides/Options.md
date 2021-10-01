@@ -8,9 +8,9 @@ You can provide options for ts-docs in three ways:
 
 - The CLI
 - `tsdocsOptions` property in your typescript configuration file.
-- `tsDocs.config.js` file, which must export an object with the options.
+- `tsdocs.config.js` file, which must export an object with the options. You can generate this file with the `--init` flag.
 
-ts-docs first gets all CLI arguments, then joins them with the options from the typescript configuration, and finally with the `tsDocs.config.js` file. 
+ts-docs first gets all CLI arguments, then joins them with the options from the typescript configuration, and finally with the `tsdocs.config.js` file. 
 
 ## CLI usage
 
@@ -53,6 +53,10 @@ The name of the project that appears in the sidebar. Name of first provided entr
 
 Where to generate the files. This option is set to `./docs` by default.
 
+### json
+
+ts-docs will create a json file at the given path with all the project data which it uses to create the documentation, instead of actually creating the documentation.
+
 ### customPages
 
 A path to a directory of custom pages. Inside that folder, each inner-folder is a category and each file inside that folder is a custom page.
@@ -67,7 +71,7 @@ A logo to use. It MUST be inside the folder provided to the `assets` option. The
 
 ### externals
 
-An array of extenal libs. This option can only be supplied with the `tsDocs.config.js` file. To read more about external libraries and how to set them up, go [here](https://ts-docs.github.io/ts-docs/pages/Guides/Externals.html) 
+An array of extenal libs. This option can only be supplied with the `tsdocs.config.js` file. To read more about external libraries and how to set them up, go [here](https://ts-docs.github.io/ts-docs/pages/Guides/Externals.html) 
 
 ### passthroughModules
 

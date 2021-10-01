@@ -1,7 +1,9 @@
 
 import fs from "fs";
 import Handlebars from "handlebars";
+import {Module, Project} from "@ts-docs/extractor";
 import path from "path";
+import { BranchSetting, PageCategory } from ".";
 
 export type Components = "class" | "constant" | "enum" | "function" | "functionParameter" | "interface" | "interfaceProperty" | "methodMember" | "module" | "propertyMember" | "type" | "typeArray" | "typeFunction" | "typeIntersection" | "typeObject" | "typeParameter" | "typeReference" | "typeTuple" | "typeUnion" | "typePrimitive" | "typeMapped" | "typeConditional" | "typeTemplateLiteral" | "typeIndexAccess" | "typeOperator" | "classConstructor" | "typePredicate" | "objectProperty" | "changelog";
 
@@ -90,4 +92,61 @@ export function setupDocumentStructure(structName: string) : DocumentStructure {
         components,
         index: Handlebars.compile(fs.readFileSync(index, "utf8"))
     };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-namespace
+export namespace DocumentStructureData {
+
+    export type HTMLString = string;
+
+    /**
+     * Provided to the "index.hbs" file
+     */
+    export interface IndexFileData {
+        content: HTMLString,
+        headerName: string,
+        headerRepository: string,
+        headerHomepage: string,
+        headerVersion: string,
+        /**
+         * The path which sits at top of classes / interfaces / etc. It's the structure's job to resolve it to links.
+         */
+        path: [Array<string>, string]|undefined,
+        depth: number,
+        currentGlobalModuleName: string,
+        logo: string,
+        hasChangelog: boolean,
+        activeBranch: string,
+        /**
+         * Only present when the generator is generating an index / module page.
+         */
+        module?: Module,
+        /**
+         * The type of thing currently being generated. Can be: "index", "page", "module", "class", "interface", "enum".
+         * Functions and constants will have this set to "module".
+         * This setting is mostly used for generating the sidebar.
+         */
+        type?: string,
+        /**
+         * The name of the thing being currently generated. Not present when generating things of type "index".
+         */
+        name?: string,
+        /**
+         * If the path should be rendered.
+         */
+        doNotGivePath?: boolean,
+        /**
+         * The list of all projects, only provided when rendering "index"
+         */
+        projects?: Array<Project>,
+        /**
+         * A list of all page categories, only provided when rendering "index" or "page"
+         */
+        pages?: Array<PageCategory>,
+        /**
+         * A list of all branches, only provided when rendering "index"
+         */
+        branches: Array<BranchSetting>,
+    }
+
 }

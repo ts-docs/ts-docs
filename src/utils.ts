@@ -28,7 +28,7 @@ export function findTSConfig<T = string>(basePath: string) : Record<string, T>|u
 }
 
 export function findTsDocsJs<T = string>(basePath: string) : Record<string, T>|undefined {
-    const p = path.join(basePath, "tsDocs.config.js");
+    const p = path.join(basePath, "tsdocs.config.js");
     if (!fs.existsSync(p)) return undefined;
     return require(p);
 } 
