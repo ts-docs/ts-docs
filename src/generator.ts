@@ -181,7 +181,7 @@ export class Generator {
     generateInterface(path: string, interfaceObj: InterfaceDecl) : void {
         this.generatePage(path, "interface", interfaceObj.id ? `${interfaceObj.name}_${interfaceObj.id}` : interfaceObj.name, this.structure.components.interface({
             ...interfaceObj, 
-            properties: interfaceObj.properties.map(p => ({comment: this.generateComment(p.jsDoc, { example: true} ), value: this.generateProperty(p.value) })),
+            properties: interfaceObj.properties.map(p => ({comment: this.generateComment(p.jsDoc, { example: true} ), value: this.generateProperty(p.value, true) })),
             extends: interfaceObj.extends && interfaceObj.extends.map(ext => this.generateType(ext)),
             implements: interfaceObj.implements && interfaceObj.implements.map(impl => this.generateType(impl)),
             typeParameters: interfaceObj.typeParameters?.map(p => this.generateTypeParameter(p)),
