@@ -35,7 +35,7 @@
               </a>
              </div>
             <div class="col">
-              <span style="font-size: 1.2em">v1.0.0</span>
+              <span style="font-size: 1.2em">v0.1.0</span>
             </div>
           </div>
         </div>
@@ -59,7 +59,7 @@
     <div>
     <a class="fw-bold" href="#list-of-options">List of options</a>
     <div style="padding-left:15px"> 
-    <a href="#entrypoints" class="sidebar-category-member">entryPoints</a><a href="#structure" class="sidebar-category-member">structure</a><a href="#landingpage" class="sidebar-category-member">landingPage</a><a href="#name" class="sidebar-category-member">name</a><a href="#out" class="sidebar-category-member">out</a><a href="#custompages" class="sidebar-category-member">customPages</a><a href="#assets" class="sidebar-category-member">assets</a><a href="#logo" class="sidebar-category-member">logo</a><a href="#externals" class="sidebar-category-member">externals</a><a href="#passthroughmodules" class="sidebar-category-member">passthroughModules</a><a href="#branches" class="sidebar-category-member">branches</a><a href="#changelog" class="sidebar-category-member">changelog</a>
+    <a href="#entrypoints" class="sidebar-category-member">entryPoints</a><a href="#structure" class="sidebar-category-member">structure</a><a href="#landingpage" class="sidebar-category-member">landingPage</a><a href="#name" class="sidebar-category-member">name</a><a href="#out" class="sidebar-category-member">out</a><a href="#json" class="sidebar-category-member">json</a><a href="#custompages" class="sidebar-category-member">customPages</a><a href="#assets" class="sidebar-category-member">assets</a><a href="#logo" class="sidebar-category-member">logo</a><a href="#externals" class="sidebar-category-member">externals</a><a href="#passthroughmodules" class="sidebar-category-member">passthroughModules</a><a href="#branches" class="sidebar-category-member">branches</a><a href="#changelog" class="sidebar-category-member">changelog</a>
     </div>
     </div>
     </span>
@@ -72,7 +72,7 @@
         <span class="sidebar-category">Guides</span>
         </div>
         <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="../Guides/Options.html">Options</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Markdown.html">Custom Markdown</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Pages.html">Custom Pages</a></span><span class="sidebar-category-member"><a href="../Guides/Externals.html">Externals</a></span>
+        <span class="sidebar-category-member"><a href="../Guides/Options.html">Options</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Markdown.html">Custom Markdown</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Pages.html">Custom Pages</a></span><span class="sidebar-category-member"><a href="../Guides/Documentation Structure.html">Documentation Structure</a></span><span class="sidebar-category-member"><a href="../Guides/Externals.html">Externals</a></span>
         </div>
         </div>
     
@@ -161,9 +161,9 @@
 <ul>
 <li>The CLI</li>
 <li><code>tsdocsOptions</code> property in your typescript configuration file.</li>
-<li><code>tsDocs.config.js</code> file, which must export an object with the options.</li>
+<li><code>tsdocs.config.js</code> file, which must export an object with the options. You can generate this file with the <code>--init</code> flag.</li>
 </ul>
-<p>ts-docs first gets all CLI arguments, then joins them with the options from the typescript configuration, and finally with the <code>tsDocs.config.js</code> file. </p>
+<p>ts-docs first gets all CLI arguments, then joins them with the options from the typescript configuration, and finally with the <code>tsdocs.config.js</code> file. </p>
 <h2 id="cli-usage" class="section-header">CLI usage</h2><p><code>ts-docs --options &lt;entry points&gt;</code></p>
 <h2 id="tsconfig-usage" class="section-header">Tsconfig usage</h2><pre><code class="hljs">  <span class="hljs-attr">&quot;tsdocsOptions&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">&quot;entryPoints&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;/entry/point.js&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
@@ -174,10 +174,11 @@
 <pre><code class="hljs">npm i --save-dev @ts-docs/<span class="hljs-keyword">default</span>-docs-structure</code></pre><h3 id="landingpage" class="section-header">landingPage</h3><p>If your project is a monorepo, you can use this option to tell ts-docs which repository to use the README, version and name of for the landing page. The first provided entry point is used by default. </p>
 <h3 id="name" class="section-header">name</h3><p>The name of the project that appears in the sidebar. Name of first provided entry point is by default.</p>
 <h3 id="out" class="section-header">out</h3><p>Where to generate the files. This option is set to <code>./docs</code> by default.</p>
+<h3 id="json" class="section-header">json</h3><p>ts-docs will create a json file at the given path with all the project data which it uses to create the documentation, instead of actually creating the documentation.</p>
 <h3 id="custompages" class="section-header">customPages</h3><p>A path to a directory of custom pages. Inside that folder, each inner-folder is a category and each file inside that folder is a custom page.</p>
 <h3 id="assets" class="section-header">assets</h3><p>A path to a folder with assets with additional assets for the docs. It will copy all files and folders inside that folder and paste them inside the generated <code>./assets</code> folder.</p>
 <h3 id="logo" class="section-header">logo</h3><p>A logo to use. It MUST be inside the folder provided to the <code>assets</code> option. The logo will be placed in the sidebar, below the name. </p>
-<h3 id="externals" class="section-header">externals</h3><p>An array of extenal libs. This option can only be supplied with the <code>tsDocs.config.js</code> file. To read more about external libraries and how to set them up, go <a href="https://ts-docs.github.io/ts-docs/pages/Guides/Externals.html">here</a> </p>
+<h3 id="externals" class="section-header">externals</h3><p>An array of extenal libs. This option can only be supplied with the <code>tsdocs.config.js</code> file. To read more about external libraries and how to set them up, go <a href="https://ts-docs.github.io/ts-docs/pages/Guides/Externals.html">here</a> </p>
 <h3 id="passthroughmodules" class="section-header">passthroughModules</h3><p>If for some reason you don&#39;t want a specific folder to become a module, include the name of the folder it in the <code>passthroughModules</code> array. All the things inside that folder will be in the <strong>parent</strong> module. </p>
 <h3 id="branches" class="section-header">branches</h3><p>You can also document future (or previous) stable versions of your module using the <code>branches</code> option. When the option is provided, a &quot;Branches&quot; section is added to the left of the index page, where you can switch between other branches of your project.</p>
 <p>The generator is going to use your already provided options for generating the different branches, except for the <code>landingPage</code> option. The branches in the <code>branches</code> array need to be a part of a <code>project</code>, so you cannot include branches from completely different repositories, which are from projects that are not in your <code>entryPoints</code> option.</p>

@@ -35,7 +35,7 @@
               </a>
              </div>
             <div class="col">
-              <span style="font-size: 1.2em">v1.0.0</span>
+              <span style="font-size: 1.2em">v0.1.0</span>
             </div>
           </div>
         </div>
@@ -79,7 +79,7 @@
         <span class="sidebar-category">Guides</span>
         </div>
         <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="../Guides/Options.html">Options</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Markdown.html">Custom Markdown</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Pages.html">Custom Pages</a></span><span class="sidebar-category-member"><a href="../Guides/Externals.html">Externals</a></span>
+        <span class="sidebar-category-member"><a href="../Guides/Options.html">Options</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Markdown.html">Custom Markdown</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Pages.html">Custom Pages</a></span><span class="sidebar-category-member"><a href="../Guides/Documentation Structure.html">Documentation Structure</a></span><span class="sidebar-category-member"><a href="../Guides/Externals.html">Externals</a></span>
         </div>
         </div>
     
@@ -184,7 +184,7 @@
 <h3 id="name-aliases" class="section-header">Name aliases</h3><p>You can also follow up a normal reference or a reference by path with <code>as ...</code> to change the text that gets displayed.</p>
 <p><code>[[Generator as TsDocsGenerator]]</code> becomes <span><span class="c-tooltip"><a class="reference-link object" href="../../m.ts-docs/class/Generator.html">TsDocsGenerator</a><span class="c-tooltip-content"><span class="keyword">class</span> <span class="item-name object">Generator</span><span style="display:block" class="monospace fw-bold">ts-docs/<span class="item-name object">Generator</span></span></span></span></span></p>
 <p><code>[[ts-docs as the documentation generator]]</code> becomes <span><span class="c-tooltip"><a class="reference-link module" href="../../m.ts-docs/index.html">the documentation generator</a><span class="c-tooltip-content"><span class="keyword">module</span> <span class="item-name module">ts-docs</span><span style="display:block" class="monospace fw-bold">ts-docs</span></span></span></span></p>
-<h2 id="supported-jsdoc-tags" class="section-header">Supported JSDoc tags</h2><h3 id="link" class="section-header"><code>@link</code></h3><p>ts-docs supports the <code>@link</code> / <code>@linkplain</code> JSDoc tag, except it doesn&#39;t support properties / methods, name aliases and paths. It&#39;s not recommended to use <code>{@link}</code> in custom pages and documentation comments, in this case it exists only for compatibility reasons.</p>
+<h2 id="supported-jsdoc-tags" class="section-header">Supported JSDoc tags</h2><h3 id="link" class="section-header"><code>@link</code></h3><p>ts-docs supports the <code>@link</code> / <code>@linkplain</code> JSDoc tag, except it doesn&#39;t support properties / methods, name aliases and paths. It&#39;s not recommended to use <code>{@link}</code> in custom pages and documentation comments, it exists only for compatibility reasons.</p>
 <h3 id="param" class="section-header"><code>@param</code></h3><p>Documents a method / function parameter, the parameter type WILL NOT be used by ts-docs. </p>
 <pre><code class="hljs"><span class="hljs-comment">/**
  * <span class="hljs-doctag">@param</span> a Parameter description... 
