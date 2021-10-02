@@ -65,7 +65,7 @@
         <span class="sidebar-category">Guides</span>
         </div>
         <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="../Guides/Options.html">Options</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Markdown.html">Custom Markdown</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Pages.html">Custom Pages</a></span><span class="sidebar-category-member"><a href="../Guides/Documentation Structure.html">Documentation Structure</a></span><span class="sidebar-category-member"><a href="../Guides/Externals.html">Externals</a></span>
+        <span class="sidebar-category-member"><a href="../Guides/Options.html">Options</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Markdown.html">Custom Markdown</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Pages.html">Custom Pages</a></span><span class="sidebar-category-member"><a href="../Guides/Externals.html">Externals</a></span><span class="sidebar-category-member"><a href="../Guides/Documentation Structure.html">Documentation Structure</a></span>
         </div>
         </div>
     
@@ -161,7 +161,7 @@
                 <span class="hljs-comment">// path is the path the reference was imported from</span>
                 <span class="hljs-keyword">const</span> name = sym.<span class="hljs-property">name</span> || sym;
                 <span class="hljs-keyword">switch</span>(name) {
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;...&quot;</span>: <span class="hljs-keyword">return</span> { <span class="hljs-attr">link</span>: <span class="hljs-string">`https://other-docs.com/type/<span class="hljs-subst">${referenceName}</span>.html`</span> };
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;...&quot;</span>: <span class="hljs-keyword">return</span> { <span class="hljs-attr">link</span>: <span class="hljs-string">`https://other-docs.com/type/<span class="hljs-subst">${name}</span>.html`</span> };
                 }
             }
         }

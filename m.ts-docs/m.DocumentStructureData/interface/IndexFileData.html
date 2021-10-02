@@ -55,7 +55,7 @@
         <span class="sidebar-category">Properties</span>
         </div>
         <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="#.content">content</a></span><span class="sidebar-category-member"><a href="#.headerName">headerName</a></span><span class="sidebar-category-member"><a href="#.headerRepository">headerRepository</a></span><span class="sidebar-category-member"><a href="#.headerHomepage">headerHomepage</a></span><span class="sidebar-category-member"><a href="#.headerVersion">headerVersion</a></span><span class="sidebar-category-member"><a href="#.path">path</a></span><span class="sidebar-category-member"><a href="#.depth">depth</a></span><span class="sidebar-category-member"><a href="#.currentGlobalModuleName">currentGlobalModuleName</a></span><span class="sidebar-category-member"><a href="#.logo">logo</a></span><span class="sidebar-category-member"><a href="#.hasChangelog">hasChangelog</a></span><span class="sidebar-category-member"><a href="#.activeBranch">activeBranch</a></span><span class="sidebar-category-member"><a href="#.module">module</a></span><span class="sidebar-category-member"><a href="#.type">type</a></span><span class="sidebar-category-member"><a href="#.name">name</a></span><span class="sidebar-category-member"><a href="#.doNotGivePath">doNotGivePath</a></span><span class="sidebar-category-member"><a href="#.projects">projects</a></span><span class="sidebar-category-member"><a href="#.pages">pages</a></span><span class="sidebar-category-member"><a href="#.branches">branches</a></span>
+        <span class="sidebar-category-member"><a href="#.content">content</a></span><span class="sidebar-category-member"><a href="#.headerName">headerName</a></span><span class="sidebar-category-member"><a href="#.headerRepository">headerRepository</a></span><span class="sidebar-category-member"><a href="#.headerHomepage">headerHomepage</a></span><span class="sidebar-category-member"><a href="#.headerVersion">headerVersion</a></span><span class="sidebar-category-member"><a href="#.path">path</a></span><span class="sidebar-category-member"><a href="#.depth">depth</a></span><span class="sidebar-category-member"><a href="#.currentGlobalModuleName">currentGlobalModuleName</a></span><span class="sidebar-category-member"><a href="#.logo">logo</a></span><span class="sidebar-category-member"><a href="#.hasChangelog">hasChangelog</a></span><span class="sidebar-category-member"><a href="#.activeBranch">activeBranch</a></span><span class="sidebar-category-member"><a href="#.module">module</a></span><span class="sidebar-category-member"><a href="#.type">type</a></span><span class="sidebar-category-member"><a href="#.realType">realType</a></span><span class="sidebar-category-member"><a href="#.name">name</a></span><span class="sidebar-category-member"><a href="#.doNotGivePath">doNotGivePath</a></span><span class="sidebar-category-member"><a href="#.projects">projects</a></span><span class="sidebar-category-member"><a href="#.pages">pages</a></span><span class="sidebar-category-member"><a href="#.branches">branches</a></span>
         </div>
         </div>
     
@@ -144,6 +144,7 @@
     <h1>Interface <span class="referenceLink object">IndexFileData</span></h1>
 
 
+        <p><a class="secondary-text" href=https://github.com/ts-docs/ts-docs/tree/main/src/documentStructure.ts#L98#L98#L105>Defined in documentStructure.ts</a></p>
 
 
 
@@ -181,8 +182,8 @@
 
             
 <div class="item" id=".path">
-<div class="item-name"><a class="property-name" href="#.path">path</a><span class="symbol">:</span> 
-<span><span>[<span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Array</span></span></span><span>&lt;<span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>&gt;</span></span>, <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>]</span><span class='symbol'> | </span><span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></span></div>
+<div class="item-name"><a class="property-name" href="#.path">path</a><span class="symbol">?</span><span class="symbol">:</span> 
+<span>[<span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Array</span></span></span><span>&lt;<span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>&gt;</span></span>, <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>]</span></div>
 </div>
 
             <div class="docblock">
@@ -199,11 +200,19 @@
 <div class="item-name"><a class="property-name" href="#.currentGlobalModuleName">currentGlobalModuleName</a><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></div>
 </div>
 
+            <div class="docblock">
+                <p>The name of the current global module. Used in search</p>
+
+            </div>
             
 <div class="item" id=".logo">
 <div class="item-name"><a class="property-name" href="#.logo">logo</a><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></div>
 </div>
 
+            <div class="docblock">
+                <p>Relative path to the logo</p>
+
+            </div>
             
 <div class="item" id=".hasChangelog">
 <div class="item-name"><a class="property-name" href="#.hasChangelog">hasChangelog</a><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></div>
@@ -214,6 +223,10 @@
 <div class="item-name"><a class="property-name" href="#.activeBranch">activeBranch</a><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></div>
 </div>
 
+            <div class="docblock">
+                <p>The name of the active branch.</p>
+
+            </div>
             
 <div class="item" id=".module">
 <div class="item-name"><a class="property-name" href="#.module">module</a><span class="symbol">?</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></div>
@@ -229,9 +242,19 @@
 </div>
 
             <div class="docblock">
-                <p>The type of thing currently being generated. Can be: &quot;index&quot;, &quot;page&quot;, &quot;module&quot;, &quot;class&quot;, &quot;interface&quot;, &quot;enum&quot;.
-Functions and constants will have this set to &quot;module&quot;.
+                <p>The type of thing currently being generated. Can be: <code>index</code>, <code>page</code>, <code>module</code>, <code>class</code>, <code>interface</code>, <code>enum</code>.
+Functions, constants and types will have this set to <code>module</code>.
 This setting is mostly used for generating the sidebar.</p>
+
+            </div>
+            
+<div class="item" id=".realType">
+<div class="item-name"><a class="property-name" href="#.realType">realType</a><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></div>
+</div>
+
+            <div class="docblock">
+                <p>The real type of the thing currently being generated.
+This can only be <code>function</code>, <code>constant</code> or <code>type</code>.</p>
 
             </div>
             
@@ -240,7 +263,7 @@ This setting is mostly used for generating the sidebar.</p>
 </div>
 
             <div class="docblock">
-                <p>The name of the thing being currently generated. Not present when generating things of type &quot;index&quot;.</p>
+                <p>The name of the thing being currently generated. Not present when generating things of type <code>index</code>.</p>
 
             </div>
             
@@ -258,7 +281,7 @@ This setting is mostly used for generating the sidebar.</p>
 </div>
 
             <div class="docblock">
-                <p>The list of all projects, only provided when rendering &quot;index&quot;</p>
+                <p>The list of all projects, only provided when rendering <code>index</code></p>
 
             </div>
             
@@ -267,16 +290,16 @@ This setting is mostly used for generating the sidebar.</p>
 </div>
 
             <div class="docblock">
-                <p>A list of all page categories, only provided when rendering &quot;index&quot; or &quot;page&quot;</p>
+                <p>A list of all page categories, only provided when rendering <code>index</code> or <code>page</code></p>
 
             </div>
             
 <div class="item" id=".branches">
-<div class="item-name"><a class="property-name" href="#.branches">branches</a><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Array</span></span></span><span>&lt;<span><span class="c-tooltip"><a class="reference-link object" href="../../../m.ts-docs/interface/BranchSetting.html">BranchSetting</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">BranchSetting</span><span style="display:block" class="monospace fw-bold">ts-docs/<span class="item-name object">BranchSetting</span></span></span></span></span>&gt;</span></span></div>
+<div class="item-name"><a class="property-name" href="#.branches">branches</a><span class="symbol">?</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Array</span></span></span><span>&lt;<span><span class="c-tooltip"><a class="reference-link object" href="../../../m.ts-docs/interface/BranchSetting.html">BranchSetting</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">BranchSetting</span><span style="display:block" class="monospace fw-bold">ts-docs/<span class="item-name object">BranchSetting</span></span></span></span></span>&gt;</span></span></div>
 </div>
 
             <div class="docblock">
-                <p>A list of all branches, only provided when rendering &quot;index&quot;</p>
+                <p>A list of all branches, only provided when rendering <code>index</code></p>
 
             </div>
     </div>

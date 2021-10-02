@@ -55,14 +55,7 @@
         <span class="sidebar-category"><a id="#custom-documentation-structure">Custom documentation structure</a></span>
         </div>
         <div class="collapsible-body open"> 
-        <span class="sidebar-category-member">
-    <div>
-    <a class="fw-bold" href="#css-classes">CSS classes</a>
-    <div style="padding-left:15px"> 
-    <a href="#depth-mess" class="sidebar-category-member">Depth-mess</a>
-    </div>
-    </div>
-    </span>
+        <span class="sidebar-category-member"><a href="#css-classes" class="sidebar-category-member">CSS classes</a></span><span class="sidebar-category-member"><a href="#depth-mess" class="sidebar-category-member">Depth-mess</a></span><span class="sidebar-category-member"><a href="#handling-of-jsdoc-tags" class="sidebar-category-member">Handling of JSDoc tags</a></span>
         </div>
         </div>
     
@@ -72,7 +65,7 @@
         <span class="sidebar-category">Guides</span>
         </div>
         <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="../Guides/Options.html">Options</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Markdown.html">Custom Markdown</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Pages.html">Custom Pages</a></span><span class="sidebar-category-member"><a href="../Guides/Documentation Structure.html">Documentation Structure</a></span><span class="sidebar-category-member"><a href="../Guides/Externals.html">Externals</a></span>
+        <span class="sidebar-category-member"><a href="../Guides/Options.html">Options</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Markdown.html">Custom Markdown</a></span><span class="sidebar-category-member"><a href="../Guides/Custom Pages.html">Custom Pages</a></span><span class="sidebar-category-member"><a href="../Guides/Externals.html">Externals</a></span><span class="sidebar-category-member"><a href="../Guides/Documentation Structure.html">Documentation Structure</a></span>
         </div>
         </div>
     
@@ -164,7 +157,8 @@
 <li><code>text-block</code>, <code>text-block-warning</code>, <code>text-block-note</code>, <code>text-block-success</code> - used for the markdown text blocks.</li>
 <li><code>section-header</code> - used for headers which were defined in <strong>markdown</strong>, by the author, not the documentation.</li>
 </ul>
-<h3 id="depth-mess" class="section-header">Depth-mess</h3><p>Due to how the documentation generator structures the docs, links can get a little... messy. The <code>depth</code> property specifies how &quot;deep&quot; the current item is from the <strong>root of the documentation</strong>. </p>
+<h2 id="depth-mess" class="section-header">Depth-mess</h2><p>Due to how the documentation generator structures the docs, links can get a little... messy. The <code>depth</code> property specifies how &quot;deep&quot; the current item is from the <strong>root of the documentation</strong>. </p>
+<h2 id="handling-of-jsdoc-tags" class="section-header">Handling of JSDoc tags</h2><p>jsdoc tags such as <code>@return</code> and <code>@example</code> are rendered by the generator, not the documentation structure.</p>
 
         </div>
 
