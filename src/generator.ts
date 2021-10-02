@@ -2,7 +2,7 @@
 import { DocumentStructure } from "./documentStructure";
 import marked from "marked";
 import { copyFolder, createFile, escapeHTML, fetchChangelog, getPathFileName, getTagFromJSDoc, hasTagFromJSDoc, isLargeArr, isLargeObject, isLargeSignature } from "./utils";
-import { Project, TypescriptExtractor, ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, Property, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl, ConditionalType, MappedType, TypeOperator, IndexAccessedType, FunctionSignature, TypePredicateType, InferType } from "@ts-docs/extractor";
+import { Project, TypescriptExtractor, ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl, ConditionalType, MappedType, TypeOperator, IndexAccessedType, FunctionSignature, TypePredicateType, InferType, ObjectProperty, ConstructorType } from "@ts-docs/extractor";
 import path from "path";
 import { TsDocsOptions } from "./options";
 import fs from "fs";
@@ -181,7 +181,7 @@ export class Generator {
     generateInterface(path: string, interfaceObj: InterfaceDecl) : void {
         this.generatePage(path, "interface", interfaceObj.id ? `${interfaceObj.name}_${interfaceObj.id}` : interfaceObj.name, this.structure.components.interface({
             ...interfaceObj, 
-            properties: interfaceObj.properties.map(p => ({comment: this.generateComment(p.jsDoc, { example: true} ), value: this.generateProperty(p.value, true) })),
+            properties: interfaceObj.properties.map(p => this.generateProperty(p, true)),
             extends: interfaceObj.extends && interfaceObj.extends.map(ext => this.generateType(ext)),
             implements: interfaceObj.implements && interfaceObj.implements.map(impl => this.generateType(impl)),
             typeParameters: interfaceObj.typeParameters?.map(p => this.generateTypeParameter(p)),
@@ -228,26 +228,62 @@ export class Generator {
         }), { type: "module", module, name: constant.name, realType: "constant" });
     }
 
-    generatePropertyMember(property: ClassProperty) : string {
-        return this.structure.components.propertyMember({
+    generatePropertyMember(property: ClassProperty|IndexSignatureDeclaration) : string {
+        if ("key" in property) {
+            return this.structure.components.propertyMember({
+                ...property,
+                type: property.type && this.generateType(property.type),
+                key: property.key && this.generateType(property.key)
+            });
+        } else return this.structure.components.propertyMember({
             ...property,
-            comment: this.generateComment(property.jsDoc, {example: true}),
+            comment: this.generateComment((property as ClassProperty).jsDoc, {example: true}),
             type: property.type && this.generateType(property.type),
-            initializer: property.initializer && this.generateType(property.initializer)
+            initializer: (property as ClassProperty).initializer && this.generateType((property as ClassProperty).initializer!)
         });
     }
 
-    generateProperty(property: Property|IndexSignatureDeclaration|ArrowFunction, isInterface?: boolean) : string {
-        let type;
-        if ("kind" in property) type = this.generateArrowFunction(property);
-        else if (property.type) type = this.generateType(property.type);
-        if (isInterface) return this.structure.components.interfaceProperty({
-            ...property, type,
-            key: "key" in property && property.key && this.generateType(property.key)
-        });
-        else return this.structure.components.objectProperty({
-            ...property, type,
-            key: "key" in property && property.key && this.generateType(property.key),
+    generateProperty(property: ObjectProperty, isInterface?: boolean) : string {
+        const comp = isInterface ? this.structure.components.interfaceProperty : this.structure.components.objectProperty;
+        if (property.prop) {
+            return comp({
+                isProperty: true,
+                ...property.prop,
+                type: property.prop.type && this.generateType(property.prop.type),
+                comment: this.generateComment(property.jsDoc, { example: true })
+            });
+        } else if (property.index) {
+            return comp({
+                isIndex: true,
+                ...property.index,
+                type: this.generateType(property.index.type),
+                index: property.index.key && this.generateType(property.index.key),
+                comment: this.generateComment(property.jsDoc, { example: true })
+            });
+        } else if (property.call) {
+            return comp({
+                isCall: true,
+                ...property.call,
+                content: this.generateConstructType(property.call, false),
+                comment: this.generateComment(property.jsDoc, { example: true })
+            });
+        } else if (property.construct) {
+            return comp({
+                isConstruct: true,
+                ...property.construct,
+                content: this.generateConstructType(property.construct, true),
+                comment: this.generateComment(property.jsDoc, { example: true })
+            });
+        }
+        return "";
+    }
+
+    generateConstructType(ref: FunctionSignature|ConstructorType, includeNew?: boolean) : string {
+        return this.structure.components.typeConstruct({
+            parameters: ref.parameters?.map(param => this.generateParameter(param)),
+            typeParameters: ref.typeParameters?.map(typeP => this.generateTypeParameter(typeP)),
+            returnType: ref.returnType && this.generateType(ref.returnType),
+            includeNew
         });
     }
 
@@ -403,6 +439,7 @@ export class Generator {
                 isLarge: isLargeObject(ref)
             });
         }
+        case TypeKinds.CONSTRUCTOR_TYPE: return this.generateConstructType((type as ConstructorType), true);
         case TypeKinds.STRINGIFIED_UNKNOWN: return escapeHTML((type as Literal).name);
         default: return "unknown";
         }

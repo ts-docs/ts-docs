@@ -5,7 +5,7 @@ import {Module, Project} from "@ts-docs/extractor";
 import path from "path";
 import { BranchSetting, PageCategory } from ".";
 
-export type Components = "class" | "constant" | "enum" | "function" | "functionParameter" | "interface" | "interfaceProperty" | "methodMember" | "module" | "propertyMember" | "type" | "typeArray" | "typeFunction" | "typeIntersection" | "typeObject" | "typeParameter" | "typeReference" | "typeTuple" | "typeUnion" | "typePrimitive" | "typeMapped" | "typeConditional" | "typeTemplateLiteral" | "typeIndexAccess" | "typeOperator" | "classConstructor" | "typePredicate" | "objectProperty" | "changelog";
+export type Components = "class" | "constant" | "enum" | "function" | "functionParameter" | "interface" | "interfaceProperty" | "methodMember" | "module" | "propertyMember" | "type" | "typeArray" | "typeFunction" | "typeIntersection" | "typeObject" | "typeParameter" | "typeReference" | "typeTuple" | "typeUnion" | "typePrimitive" | "typeMapped" | "typeConditional" | "typeTemplateLiteral" | "typeIndexAccess" | "typeOperator" | "classConstructor" | "typePredicate" | "objectProperty" | "changelog" | "typeConstruct";
 
 /**
  * ## What is a documentation structure?

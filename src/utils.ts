@@ -1,5 +1,5 @@
 
-import { ArrayType, ArrowFunction, FunctionParameter, JSDocData, Literal, ObjectLiteral, Property, Reference, Tuple, Type, TypeKinds, TypeOperator, UnionOrIntersection, JSDocTag, ExternalReference } from "@ts-docs/extractor";
+import { ArrayType, ArrowFunction, FunctionParameter, JSDocData, Literal, ObjectLiteral, Reference, Tuple, Type, TypeKinds, TypeOperator, UnionOrIntersection, JSDocTag, ExternalReference } from "@ts-docs/extractor";
 import fs from "fs";
 import path from "path";
 import ts from "typescript";
@@ -63,9 +63,16 @@ export function getTypeLength(type?: Type) : number {
     if (!type) return 0;
     switch (type.kind) {
     case TypeKinds.REFERENCE: return (type as Reference).type.name.length + ((type as Reference).typeArguments?.reduce((acc, t) => acc + getTypeLength(t), 0) || 0) + ((type as Reference).type.displayName?.length || 0);
-    case TypeKinds.OBJECT_LITERAL: return (type as ObjectLiteral).properties.reduce((acc, prop) => acc + (("key" in prop) ? getTypeLength(prop.type) : ((prop as Property).name.length + getTypeLength((prop as Property).type))), 0);
+    case TypeKinds.OBJECT_LITERAL: {
+        const t = type as ObjectLiteral;
+        return t.properties.reduce((prev, curr) => {
+            if (curr.prop) return prev + (curr.prop.name.length + (curr.prop.type ? getTypeLength(curr.prop.type) : 0));
+            else if (curr.index) return prev + 2 + (getTypeLength(curr.index.type) + (curr.index.key ? getTypeLength(curr.index.key) : 0));
+            else return 100;
+        }, 0);
+    }
     case TypeKinds.ARROW_FUNCTION: {
-        const fn = (type as ArrowFunction);
+        const fn = type as ArrowFunction;
         let total = getTypeLength(fn.returnType);
         if (fn.parameters) {
             for (const param of fn.parameters) {
@@ -114,7 +121,7 @@ export function isLargeSignature(sig: { parameters?: Array<FunctionParameter>, r
 }
 
 export function isLargeObject(obj: ObjectLiteral) : boolean {
-    if (obj.properties.length > 3) return true;
+    if (obj.properties.length > 3 || obj.properties.some(prop => prop.call || prop.construct)) return true;
     return getTypeLength(obj) > 48;
 }
 
