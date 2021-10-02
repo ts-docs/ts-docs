@@ -392,6 +392,7 @@ export class Generator {
         case TypeKinds.BIGINT:
         case TypeKinds.OBJECT:
         case TypeKinds.THIS:
+        case TypeKinds.REGEX_LITERAL:
         case TypeKinds.ANY: {
             return this.structure.components.typePrimitive({...type});
         }

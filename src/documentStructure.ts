@@ -111,24 +111,38 @@ export namespace DocumentStructureData {
         /**
          * The path which sits at top of classes / interfaces / etc. It's the structure's job to resolve it to links.
          */
-        path: [Array<string>, string]|undefined,
+        path?: [Array<string>, string],
         depth: number,
+        /**
+         * The name of the current global module. Used in search
+         */
         currentGlobalModuleName: string,
+        /**
+         * Relative path to the logo
+         */
         logo: string,
         hasChangelog: boolean,
+        /**
+         * The name of the active branch.
+         */
         activeBranch: string,
         /**
          * Only present when the generator is generating an index / module page.
          */
         module?: Module,
         /**
-         * The type of thing currently being generated. Can be: "index", "page", "module", "class", "interface", "enum".
-         * Functions and constants will have this set to "module".
+         * The type of thing currently being generated. Can be: `index`, `page`, `module`, `class`, `interface`, `enum`.
+         * Functions, constants and types will have this set to `module`.
          * This setting is mostly used for generating the sidebar.
          */
         type?: string,
         /**
-         * The name of the thing being currently generated. Not present when generating things of type "index".
+         * The real type of the thing currently being generated.
+         * This can only be `function`, `constant` or `type`.
+         */
+        realType?: string,
+        /**
+         * The name of the thing being currently generated. Not present when generating things of type `index`.
          */
         name?: string,
         /**
@@ -136,17 +150,17 @@ export namespace DocumentStructureData {
          */
         doNotGivePath?: boolean,
         /**
-         * The list of all projects, only provided when rendering "index"
+         * The list of all projects, only provided when rendering `index`
          */
         projects?: Array<Project>,
         /**
-         * A list of all page categories, only provided when rendering "index" or "page"
+         * A list of all page categories, only provided when rendering `index` or `page`
          */
         pages?: Array<PageCategory>,
         /**
-         * A list of all branches, only provided when rendering "index"
+         * A list of all branches, only provided when rendering `index`
          */
-        branches: Array<BranchSetting>,
+        branches?: Array<BranchSetting>,
     }
 
 }

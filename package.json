@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "A documentation generator for typescript",
   "main": "dist/index.js",
-  "bin": "./dist/cli.js",
+  "bin": "dist/cli.js",
   "devDependencies": {
     "@types/marked": "^2.0.4",
     "@types/minimist": "^1.2.2",
@@ -23,7 +23,12 @@
     "type": "git",
     "url": "git+https://github.com/ts-docs/ts-docs.git"
   },
-  "keywords": [],
+  "keywords": [
+    "documentation",
+    "generator",
+    "typescript",
+    "docs"
+  ],
   "author": "GoogleFeud",
   "license": "MIT",
   "bugs": {
@@ -31,7 +36,7 @@
   },
   "homepage": "https://github.com/ts-docs/ts-docs#readme",
   "dependencies": {
-    "@ts-docs/extractor": "^2.0.21",
+    "@ts-docs/extractor": "^2.0.22",
     "front-matter": "^4.0.2",
     "got": "^11.8.2",
     "handlebars": "^4.7.7",

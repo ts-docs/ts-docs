@@ -149,27 +149,38 @@ export function handleDefaultAPI() : ExternalReference {
         run: (sym) => {
             const name = typeof sym === "string" ? sym : sym.name;
             switch (name) {
+            /** Javascript global objects */
             case "Date": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date"};
             case "Bigint": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt" };
             case "Promise": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" }; 
             case "Set": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set" };
             case "Map": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map" };
+            case "WeakMap": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap" };
+            case "WeakSet": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet" };
+            case "Generator": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator" };
             case "URL": return { link: "https://developer.mozilla.org/en-US/docs/Web/API/URL/URL" };
             case "Buffer": return { link: "https://nodejs.org/api/buffer.html" };
             case "RegExp": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp" };
             case "Array": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" }; 
             case "Function": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function" };
-            case "Record": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeystype" };
-            case "Omit": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#omittype-keys" };
             case "Symbol": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol" };
             case "Error": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error" };
             case "URLSearchParams": return { link: "https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams" };
-            case "ReadonlyArray": return { link: "https://www.typescriptlang.org/docs/handbook/2/objects.html#the-readonlyarray-type" };
-            case "Pick": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#picktype-keys" };
-            case "Iterable": return { link: "https://www.typescriptlang.org/docs/handbook/iterators-and-generators.html#iterable-interface" };
             case "ArrayBuffer": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer" };
-            case "IterableIterator": return { link: "https://www.typescriptlang.org/docs/handbook/iterators-and-generators.html" };
             case "Infinity": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Infinity" };
+            /** Typescript types */
+            case "Record": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeystype" };
+            case "Omit": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#omittype-keys" };
+            case "Pick": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#picktype-keys" };
+            case "ReadonlyArray": return { link: "https://www.typescriptlang.org/docs/handbook/2/objects.html#the-readonlyarray-type" };
+            case "Iterable": return { link: "https://www.typescriptlang.org/docs/handbook/iterators-and-generators.html#iterable-interface" };
+            case "IterableIterator": return { link: "https://www.typescriptlang.org/docs/handbook/iterators-and-generators.html" };
+            case "Partial": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype" };
+            case "Required": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#requiredtype" };
+            case "Readonly": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#readonlytype" };
+            case "Exclude": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#excludetype-excludedunion" };
+            case "Extract": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#extracttype-union" };
+            case "NonNullable": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#nonnullabletype" };
             default: return;         
             }
         }
@@ -236,4 +247,13 @@ export async function fetchChangelog(githubLink: string) : Promise<{
     } catch {
         return;
     }
+}
+
+export function getComment(node: { jsDoc?: Array<JSDocData> }) : string|undefined {
+    const comment = node.jsDoc?.[0]?.comment;
+    if (comment) {
+        if (comment.length > 128) return comment.slice(0, 128) + "...";
+        return comment;
+    }
+    return;
 }

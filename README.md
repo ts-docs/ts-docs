@@ -21,7 +21,7 @@ ts-docs src/index.ts
 
 ## Features
 
-- Documentation structure akin to [docs-rs](https://docs.rs/), every folder inside the project is a different module. 
+- Documentation structure akin to [docs-rs](https://docs.rs/) ans rust in general, every folder inside the project is a different module. 
 - Document multiple projects, monorepo support out of the box.
 - Slick design, dark/light theme, powerful search function.
 - Link external references to their respective documentation.
@@ -29,6 +29,8 @@ ts-docs src/index.ts
 - Changelog generation, pulled from github releases.
 - Built-in custom pages support. Host your guides and tutorials right inside the documentation.
 - 100% accurate, you won't find missing references unless they're external.
+
+**This documentation generator may not work on your project at all. Most typescript projects follow the structure the generator supports and encourages.**
 
 ## Contributing
 

@@ -1,6 +1,6 @@
 ---
 name: Documentation Structure
-order: 4
+order: 5
 ---
 
 # Custom documentation structure
@@ -16,8 +16,10 @@ ts-docs expects the following CSS classes to be defined by the documentation str
 - `text-block`, `text-block-warning`, `text-block-note`, `text-block-success` - used for the markdown text blocks.
 - `section-header` - used for headers which were defined in **markdown**, by the author, not the documentation.
 
-### Depth-mess
+## Depth-mess
 
 Due to how the documentation generator structures the docs, links can get a little... messy. The `depth` property specifies how "deep" the current item is from the **root of the documentation**. 
 
+## Handling of JSDoc tags
 
+jsdoc tags such as `@return` and `@example` are rendered by the generator, not the documentation structure.

@@ -1,5 +1,6 @@
 import { Project, Property } from "@ts-docs/extractor";
 import fs from "fs";
+import { getComment } from "./utils";
 
 /**
  * Used for the [[packSearchData]] function.
@@ -15,12 +16,14 @@ function buildBitfield(...bits: Array<number|undefined|false>) : number {
     return (bits.filter(bit => bit) as Array<number>).reduce((acc, bit) => acc | bit, 0);
 }
 
+export type SearchDataComment = string|undefined;
+
 export type PackedSearchData = [
     Array<[
         number, // Module ID,
-        Array<[string, Array<[string, number, string|undefined]>, Array<[string, number, string|undefined]>, Array<number>]>, // Classes
-        Array<[string, Array<string>, Array<number>]>, // Interfaces,
-        Array<[string, Array<string>, Array<number>]>, // Enums,
+        Array<[string, Array<[string, number, SearchDataComment]>, Array<[string, number, SearchDataComment]>, Array<number>, SearchDataComment]>, // Classes
+        Array<[string, Array<string>, Array<number>, SearchDataComment]>, // Interfaces,
+        Array<[string, Array<string>, Array<number>, SearchDataComment]>, // Enums,
         Array<[string, Array<number>]>, // Types
         Array<[string, Array<number>]>, // Functions
         Array<[string, Array<number>]> // Constants
@@ -38,11 +41,11 @@ export type PackedSearchData = [
      * globalModules is an [[Array]] of module objects, which look like this:   
      * `[nameIndex, classes, interfaces, enums, types, functions, constants]`
      * 
-     * a **class**: `[name, properties, methods, path]`  
+     * a **class**: `[name, properties, methods, path, comment?]`  
      * a **method**: `[name, flags, comment?]`      
      * a **property**: `[name, flags, comment?]`       
-     * an **inteface**: `[name, properties, path]`        
-     * an **enum**: `[name, members, path]`       
+     * an **inteface**: `[name, properties, path, comment?]`        
+     * an **enum**: `[name, members, path, comment?]`       
      * a **type alias**: `[name, path]`       
      * a **function**: `[name, path]`     
      * a **constant**: `[name, path]`     
@@ -63,9 +66,9 @@ export function packSearchData(extractors: Array<Project>, path: string) : void 
         extractor.forEachModule(extractor.module, (mod, path) => {
             modObj[0] = res[1].push(mod.name) - 1;
             const numPath = path.map(pathName => res[1].indexOf(pathName));
-            for (const cl of mod.classes) modObj[1].push([`${cl.name}${cl.id ? `_${cl.id}`:""}`, cl.properties.map(p => [p.name, buildBitfield(p.isPrivate && ClassMemberFlags.IS_PRIVATE), p.jsDoc?.[0].comment?.slice(0, 128)]), cl.methods.map(p => [p.realName || (p.name as string), buildBitfield(p.isGetter && ClassMemberFlags.IS_GETTER, p.isSetter && ClassMemberFlags.IS_SETTER, p.isPrivate && ClassMemberFlags.IS_PRIVATE), p.jsDoc?.[0].comment?.slice(0, 128)]), numPath]);
-            for (const intf of mod.interfaces) modObj[2].push([`${intf.name}${intf.id ? `_${intf.id}`:""}`, intf.properties.filter(p => !("key" in p.value)).map(p => (p.value as Property).name), numPath]);
-            for (const en of mod.enums) modObj[3].push([`${en.name}${en.id ? `_${en.id}`:""}`, en.members.map(m => m.name), numPath]);
+            for (const cl of mod.classes) modObj[1].push([`${cl.name}${cl.id ? `_${cl.id}`:""}`, cl.properties.map(p => [p.name, buildBitfield(p.isPrivate && ClassMemberFlags.IS_PRIVATE), getComment(p)]), cl.methods.map(p => [p.realName || (p.name as string), buildBitfield(p.isGetter && ClassMemberFlags.IS_GETTER, p.isSetter && ClassMemberFlags.IS_SETTER, p.isPrivate && ClassMemberFlags.IS_PRIVATE), getComment(p)]), numPath, getComment(cl)]);
+            for (const intf of mod.interfaces) modObj[2].push([`${intf.name}${intf.id ? `_${intf.id}`:""}`, intf.properties.filter(p => !("key" in p.value)).map(p => (p.value as Property).name), numPath, getComment(intf)]);
+            for (const en of mod.enums) modObj[3].push([`${en.name}${en.id ? `_${en.id}`:""}`, en.members.map(m => m.name), numPath, getComment(en)]);
             for (const typ of mod.types) modObj[4].push([`${typ.name}${typ.id ? `_${typ.id}`:""}`, numPath]);
             for (const fn of mod.functions) modObj[5].push([`${fn.name}${fn.id ? `_${fn.id}`:""}`, numPath]);
             for (const constant of mod.constants) modObj[6].push([`${constant.name}${constant.id ? `_${constant.id}`:""}`, numPath]);

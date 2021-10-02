@@ -19,7 +19,7 @@ module.exports = {
                 // path is the path the reference was imported from
                 const name = sym.name || sym;
                 switch(name) {
-                    case "...": return { link: `https://other-docs.com/type/${referenceName}.html` };
+                    case "...": return { link: `https://other-docs.com/type/${name}.html` };
                 }
             }
         }
