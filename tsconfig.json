@@ -23,6 +23,7 @@
     "entryPoints": ["./ts-extractor/src/index.ts", "./src/index.ts"],
     "name": "ts-docs",
     "landingPage": "ts-docs",
-    "customPages": "./docsPages"
+    "customPages": "./docsPages",
+    "changelog": true
   },
 }
