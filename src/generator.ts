@@ -4,7 +4,7 @@ import marked from "marked";
 import { copyFolder, createFile, escapeHTML, fetchChangelog, getPathFileName, getTagFromJSDoc, hasTagFromJSDoc, isLargeArr, isLargeObject, isLargeSignature } from "./utils";
 import { Project, TypescriptExtractor, ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl, ConditionalType, MappedType, TypeOperator, IndexAccessedType, FunctionSignature, TypePredicateType, InferType, ObjectProperty, ConstructorType } from "@ts-docs/extractor";
 import path from "path";
-import { TsDocsOptions } from "./options";
+import { LandingPage, TsDocsOptions } from "./options";
 import fs from "fs";
 import Highlight from "highlight.js";
 import { Heading, initMarkdown } from "./markdown";
@@ -36,10 +36,12 @@ export class Generator {
      */
     renderingPages?: boolean
     activeBranch = "main"
+    landingPage!: LandingPage
     constructor(structure: DocumentStructure, settings: TsDocsOptions) {
         this.structure = structure;
         this.settings = settings;
         this.depth = 0;
+        this.landingPage = settings.landingPage as LandingPage;
     }
 
     async generate(extractor: TypescriptExtractor, projects: Array<Project>) : Promise<void> {
@@ -76,38 +78,37 @@ export class Generator {
         }
         if (projects.length === 1) {
             const pkg = projects[0];
+            if (this.settings.changelog && pkg.repository) await this.generateChangelog(pkg.repository, undefined, pkg.module);
             this.generateModule("", pkg.module, false);
-            if (pkg.readme) {
-                if (this.settings.changelog && pkg.repository) this.generateChangelog(pkg.repository, undefined, pkg.module);
-                this.generatePage("", "./", "index", this.structure.components.module({
-                    ...pkg.module,
-                    readme: marked.parse(pkg.readme),
-                    exports: pkg.module.exports.map(ex => ({alias: ex.alias, ref: this.generateRef({kind: TypeKinds.REFERENCE, type: ex})})),
-                    reExports: pkg.module.reExports.map(ex => ({module: this.generateRef({kind: TypeKinds.REFERENCE, type: ex.module}), references: ex.references.map(r => ({ref: this.generateRef({kind: TypeKinds.REFERENCE, type: r}), alias: r.alias})), alias: ex.alias, reExportsReExport: ex.reExportsReExport})),
-                }), { 
-                    type: "module", 
-                    module: pkg.module, 
-                    pages: this.settings.customPages, 
-                    branches: this.settings.branches,
-                    doNotGivePath: true });
-            }
+            this.generatePage("", "./", "index", this.structure.components.module({
+                ...pkg.module,
+                readme: pkg.readme && marked.parse(pkg.readme),
+                exports: pkg.module.exports.map(ex => ({alias: ex.alias, ref: this.generateRef({kind: TypeKinds.REFERENCE, type: ex})})),
+                reExports: pkg.module.reExports.map(ex => ({module: this.generateRef({kind: TypeKinds.REFERENCE, type: ex.module}), references: ex.references.map(r => ({ref: this.generateRef({kind: TypeKinds.REFERENCE, type: r}), alias: r.alias})), alias: ex.alias, reExportsReExport: ex.reExportsReExport})),
+            }), { 
+                type: "module", 
+                module: pkg.module, 
+                pages: this.settings.customPages, 
+                branches: this.settings.branches,
+                doNotGivePath: true });
         } else {
+            if (this.settings.changelog && this.landingPage.repository) await this.generateChangelog(this.landingPage.repository, projects);
+            if (this.landingPage.readme) this.generatePage("", "./", "index", marked.parse(this.landingPage.readme), { type: "index", projects, pages: this.settings.customPages, branches: this.settings.branches, doNotGivePath: true });
             for (const pkg of projects) {
                 this.currentGlobalModuleName = pkg.module.name;
                 this.depth++;
                 this.generateModule("", pkg.module, true, pkg.readme);
                 this.depth--;
             }
-            if (this.settings.landingPage && this.settings.landingPage.readme) {
-                if (this.settings.changelog && this.settings.landingPage.repository) this.generateChangelog(this.settings.landingPage.repository, projects);
-                this.generatePage("", "./", "index", marked.parse(this.settings.landingPage.readme), { type: "index", projects, pages: this.settings.customPages, branches: this.settings.branches, doNotGivePath: true });
-            }
         }
     }
 
     async generateChangelog(repo: string, projects?: Array<Project>, module?: Module) : Promise<void> {
         const changelog = await fetchChangelog(repo);
-        if (!changelog) return;
+        if (!changelog) {
+            this.settings.changelog = false;
+            return;
+        }
         changelog.content = marked.parse(changelog.content);
         this.generatePage("", "./", "changelog", this.structure.components.changelog(changelog), { 
             type: projects ? "index":"module", 
@@ -503,9 +504,9 @@ export class Generator {
         return createFile(path.join(this.settings.out as string, p), directory, `${file}.html`, this.structure.index({
             content,
             headerName: this.settings.name,
-            headerRepository: this.settings.landingPage?.repository,
-            headerHomepage: this.settings.landingPage?.homepage,
-            headerVersion: this.settings.landingPage?.version,
+            headerRepository: this.landingPage.repository,
+            headerHomepage: this.landingPage.homepage,
+            headerVersion: this.landingPage.version,
             path: !other.doNotGivePath && [p, file !== "index" ? file:directory],
             depth: this.depth,
             currentGlobalModuleName: this.currentGlobalModuleName,

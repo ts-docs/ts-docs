@@ -31,7 +31,7 @@ declare module "marked" {
 function genReference(str: string, otherData: Record<string, unknown>, generator: Generator, extractor: TypescriptExtractor, modules: Array<Project>) : string {
     let type;
     for (const mod of modules) {
-        type = extractor.refs.findByNameWithModule(str, mod, modules.length > 1 ? [mod.module.name] : undefined);
+        type = extractor.refs.findByNameWithModule(str, mod);
         if (type) break;
     }
     if (!type) return str;
@@ -46,7 +46,7 @@ function genReference(str: string, otherData: Record<string, unknown>, generator
  * - Warning blocks (`|> This`)
  * - Adds the custom "section-header" class to all headings
  * - Wraps are codeblocks in the `hljs` class
- * - Resolves relative image links
+ * - Resolves relative asset links
  */
 export function initMarkdown(generator: Generator, extractor: TypescriptExtractor, modules: Array<Project>) : void {
     marked.use({
@@ -75,6 +75,7 @@ export function initMarkdown(generator: Generator, extractor: TypescriptExtracto
                 if (!link) return "";
                 if (link.startsWith("./assets")) link = `${"../".repeat(generator.depth)}${link.slice(2)}`;
                 else if (link.startsWith("assets")) link = `${"../".repeat(generator.depth)}${link}`;
+                else if (link.startsWith("/assets")) link = `${"../".repeat(generator.depth)}${link.slice(1)}`;
                 return `<img src="${link}" title="${title}" alt="${text}">`;
             }
         },
@@ -105,12 +106,13 @@ export function initMarkdown(generator: Generator, extractor: TypescriptExtracto
                     if (name.includes("/")) {
                         const parts = name.split("/");
                         const firstEl = parts.shift();
-                        let mod = modules.find(ex => ex.module.name === firstEl)?.module;
-                        if (!mod) return "";
+                        let mod = modules.find(ex => ex.module.name === firstEl)?.module || modules[0].module;
+                        if (!mod) return name;
                         const lastElement = parts.pop();
                         for (const part of parts) {
-                            mod = mod.modules.get(part);
-                            if (!mod) return name;
+                            const tempmod = mod.modules.get(part);
+                            if (!tempmod) return name;
+                            mod = tempmod;
                         }
                         if (mod && lastElement) {
                             let thingName: string = lastElement;

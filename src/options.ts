@@ -1,4 +1,5 @@
-import { Project, ExternalReference } from "@ts-docs/extractor";
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { Project, ExternalReference, Utils } from "@ts-docs/extractor";
 import FrontMatter from "front-matter";
 import fs from "fs";
 import path from "path";
@@ -118,6 +119,10 @@ export function initOptions(extractorList: Array<Project>) : TsDocsOptions {
             res.push({name: category.name, pages});
         }
         options.customPages = res;
+    }
+    if (!options.landingPage!.repository) options.changelog = false;
+    if (!options.landingPage!.readme) {
+        options.landingPage.readme = Utils.getReadme("./");
     }
     return options as TsDocsOptions;
 }

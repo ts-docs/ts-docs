@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import parseArgs from "minimist";
-import { TypescriptExtractor, Utils } from "@ts-docs/extractor";
+import { TypescriptExtractor } from "@ts-docs/extractor";
 import { setupDocumentStructure } from "./documentStructure";
 import { Generator } from "./generator";
 import { findTSConfig, findTsDocsJs, handleDefaultAPI, handleNodeAPI } from "./utils";
@@ -45,19 +45,6 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
     const finalOptions = initOptions(projects);
 
     if (finalOptions.json) return fs.writeFileSync(finalOptions.json, JSON.stringify(projects));
-
-    const packageJSON = Utils.findPackageJSON(process.cwd());
-    if (packageJSON) {
-        if (!finalOptions.landingPage) {
-            const metadata = Utils.extractMetadata(packageJSON.path);
-            finalOptions.landingPage = {
-                readme: metadata.readme,
-                repository: metadata.repository,
-                homepage: metadata.homepage
-            };
-        }
-        if (!finalOptions.name) finalOptions.name = packageJSON.contents.name;
-    } 
 
     const docStructure = setupDocumentStructure(finalOptions.structure);
     const generator = new Generator(docStructure, finalOptions);
