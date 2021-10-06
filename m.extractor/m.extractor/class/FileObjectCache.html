@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>ExternalReference |  ts-docs</title>
+  <title>FileObjectCache |  ts-docs</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link id="highlightTheme" rel="stylesheet" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -52,16 +52,16 @@
         
     <h1 class="lib-name text-center"><a href="../../../index.html">ts-docs</a></h1>
     
-    <p class="current-thing">interface <span class="object">ExternalReference</span></p>
+    <p class="current-thing text-center">class <span class="object">FileObjectCache</span></p>
     <div class="sidebar-members">
     
         <div class="sidebar-member">
         <div class="collapsible-trigger">
         <span class="collapsible-arrow open"></span>
-        <span class="sidebar-category">Properties</span>
+        <span class="sidebar-category">Methods</span>
         </div>
         <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="#.run">run</a></span><span class="sidebar-category-member"><a href="#.baseName">baseName</a></span>
+        <span class="sidebar-category-member"><a href="#.has">has</a></span>
         </div>
         </div>
     
@@ -144,47 +144,46 @@
             </div>
         </div>        <div id="content-main" class="d-none">
           <div class="path">
-            <a href="../../../index.html" class="path-member">index</a> / <a href="../../index.html" class="path-member">extractor</a> / <a href="../index.html" class="path-member">extractor</a> / <a class="path-member" href="">ExternalReference</a>
+            <a href="../../../index.html" class="path-member">index</a> / <a href="../../index.html" class="path-member">extractor</a> / <a href="../index.html" class="path-member">extractor</a> / <a class="path-member" href="">FileObjectCache</a>
           </div>
-          <div>
-    <h1>Interface <span class="referenceLink object">ExternalReference</span></h1>
+          
+<div>
+    <h1>Class <span class="referenceLink object">FileObjectCache</span></h1>
+    
+    <p><a class="secondary-text" href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/index.ts#L11>Defined in index.ts</a></p>
+
+    <p class="item-name"><span class="keyword">abstract class</span></p>
 
 
-        <p><a class="secondary-text" href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/ReferenceManager.ts#L6>Defined in ReferenceManager.ts</a></p>
 
+    
 
+    
 
-
-    <p></p>
-
-    <h2>Properties</h2>
+    <h2>Methods</h2>
 
     <div>
-            
-<div>
-        <div class="item" id=".run">
-             <div class="item-name"><a class="property-name" href="#.run">run</a><span class="symbol">:</span> <span>(<span class="item-name"><span class="param-name">symbol</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>, <span class="item-name"><span class="param-name">source</span><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>) <span class="symbol">=></span> 
-<span><span>{ <span class="item-name"><a class="item-name property-name" href="#.link">link</a><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>, <span class="item-name"><a class="item-name property-name" href="#.displayName">displayName</a><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>, <span class="item-name"><a class="item-name property-name" href="#.name">name</a><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span> }</span><span class='symbol'> | </span><span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></span></span></div>
-        </div>
+<div id=".has" class="item">
+    
+    <span class="modifier">abstract</span>
+    
+    
+    
+    
+        <span class="monospace"><a class="item-name method-name" href="#.has">has</a><span>(<span class="item-name"><span class="param-name">filename</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>, <span class="item-name"><span class="param-name">absolute</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>)</span><span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span></span>
+        
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/index.ts#L19>
+<span class="float-end sourceCode">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
+  <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
+</svg>
+</span></a>
         <div class="docblock">
-            <p>The source is undefined only when the thing is not imported, which means it&#39;s a global object. (Array, Promise, etc.)</p>
-
-        </div>
-</div>
-
-            
-<div>
-        <div class="item" id=".baseName">
-             <div class="item-name"><a class="property-name" href="#.baseName">baseName</a><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></div>
-        </div>
-        <div class="docblock">
-            <p>If this property is provided to the reference manager, it&#39;s going to parse the import module name and if the first part of it matches the baseName, the 
-run function will be called.</p>
-
-        </div>
-</div>
+        <ul><li class="item-name"><span class="param-name">filename</span> - <span>The path to the file. It&#39;s going to be relative to the root of the project.</span></li><li class="item-name"><span class="param-name">absolute</span> - <span>The absolute path to the file.</span></li></ul>
+        <h1 id="returns" class="section-header">Returns</h1><p>Return true if the file is cached, false otherwise.</p>
 
     </div>
+</div></div>
 
 </div>
         </div>

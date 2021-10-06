@@ -41,7 +41,7 @@
               </a>
              </div>
             <div class="col">
-              <span style="font-size: 1.2em">v0.1.0</span>
+              <span style="font-size: 1.2em">v0.1.1</span>
             </div>
           </div>
         </div>
@@ -163,11 +163,10 @@
         {
             <span class="hljs-attr">baseName</span>: <span class="hljs-string">&quot;name of the library you want to link types for&quot;</span>,
             <span class="hljs-attr">run</span>: <span class="hljs-function">(<span class="hljs-params">sym, path</span>) =&gt;</span> {
-                <span class="hljs-comment">// sym is either a typescript symbol, or a string</span>
+                <span class="hljs-comment">// sym is a string</span>
                 <span class="hljs-comment">// path is the path the reference was imported from</span>
-                <span class="hljs-keyword">const</span> name = sym.<span class="hljs-property">name</span> || sym;
-                <span class="hljs-keyword">switch</span>(name) {
-                    <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;...&quot;</span>: <span class="hljs-keyword">return</span> { <span class="hljs-attr">link</span>: <span class="hljs-string">`https://other-docs.com/type/<span class="hljs-subst">${name}</span>.html`</span> };
+                <span class="hljs-keyword">switch</span>(sym) {
+                    <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;...&quot;</span>: <span class="hljs-keyword">return</span> { <span class="hljs-attr">link</span>: <span class="hljs-string">`https://other-docs.com/type/<span class="hljs-subst">${sym}</span>.html`</span> };
                 }
             }
         }
