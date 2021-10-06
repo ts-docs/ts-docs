@@ -154,8 +154,7 @@ export function getPathFileName(p?: string) : string|undefined {
 export function handleDefaultAPI() : ExternalReference {
     return {
         run: (sym) => {
-            const name = typeof sym === "string" ? sym : sym.name;
-            switch (name) {
+            switch (sym) {
             /** Javascript global objects */
             case "Date": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date"};
             case "Bigint": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt" };
@@ -197,8 +196,7 @@ export function handleDefaultAPI() : ExternalReference {
 export function handleNodeAPI() : Array<ExternalReference> {
     return [
         {
-            run: (sym) => {
-                const name = typeof sym === "string" ? sym : sym.name;
+            run: (name) => {
                 if (name.startsWith("NodeJS")) {
                     const [, obj] = name.split(".");
                     switch(obj) {
@@ -214,8 +212,7 @@ export function handleNodeAPI() : Array<ExternalReference> {
         },
         {
             baseName: "events",
-            run: (sym) => {
-                const name = typeof sym === "string" ? sym : sym.name;
+            run: (name) => {
                 switch (name) {
                 case "EventEmitter": return { link: "https://nodejs.org/api/events.html#events_class_eventemitter", name: "NodeJS", displayName: "EventEmitter" };
                 default: return;

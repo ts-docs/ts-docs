@@ -15,11 +15,10 @@ module.exports = {
         {
             baseName: "name of the library you want to link types for",
             run: (sym, path) => {
-                // sym is either a typescript symbol, or a string
+                // sym is a string
                 // path is the path the reference was imported from
-                const name = sym.name || sym;
-                switch(name) {
-                    case "...": return { link: `https://other-docs.com/type/${name}.html` };
+                switch(sym) {
+                    case "...": return { link: `https://other-docs.com/type/${sym}.html` };
                 }
             }
         }

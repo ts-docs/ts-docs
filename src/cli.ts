@@ -8,6 +8,7 @@ import { findTSConfig, findTsDocsJs, handleDefaultAPI, handleNodeAPI } from "./u
 import { addOptionSource, initOptions, options, OptionSource, showHelp, initConfig } from "./options";
 import { renderBranches } from "./branches";
 import fs from "fs";
+import { FileCache } from "./fileCache";
 
 export interface TsDocsCLIArgs extends OptionSource {
      "--": Array<string>,
@@ -18,7 +19,7 @@ export interface TsDocsCLIArgs extends OptionSource {
 
 const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
 
-(() => {
+(async () => {
     if (args.help) return showHelp();
     if (args.init) return initConfig();
 
@@ -33,12 +34,15 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
 
     if (!options.entryPoints.length) throw new Error("Expected at least one entry point.");
 
+    const fileCache = new FileCache(options);
+
     const types = new TypescriptExtractor({
         entryPoints: options.entryPoints,
         externals: [handleDefaultAPI(), ...(options.externals||[]), ...handleNodeAPI()],
         maxConstantTextLength: 1024,
         ignoreFolderNames: ["lib"],
-        passthroughModules: options.passthroughModules
+        passthroughModules: options.passthroughModules,
+        fileCache
     });
 
     const projects = types.run();
@@ -49,7 +53,10 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
     const docStructure = setupDocumentStructure(finalOptions.structure);
     const generator = new Generator(docStructure, finalOptions);
 
-    generator.generate(types, projects);
+    await generator.generate(types, projects);
+
+    fileCache.save();
+
 
     if (options.branches) renderBranches(projects, finalOptions, docStructure);
 })();

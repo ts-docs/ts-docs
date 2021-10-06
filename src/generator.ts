@@ -46,11 +46,10 @@ export class Generator {
 
     async generate(extractor: TypescriptExtractor, projects: Array<Project>) : Promise<void> {
         initMarkdown(this, extractor, projects);
-        if (fs.existsSync(this.settings.out)) fs.rmSync(this.settings.out, { force: true, recursive: true });
-        fs.mkdirSync(this.settings.out);
-
+        if (!fs.existsSync(this.settings.out)) fs.mkdirSync(this.settings.out);
         const assetsFolder = path.join(this.settings.out, "assets");
-        fs.mkdirSync(assetsFolder);
+        if (!fs.existsSync(assetsFolder)) fs.mkdirSync(assetsFolder);
+
         if (this.settings.assets) copyFolder(this.settings.assets, assetsFolder);
         copyFolder(path.join(this.structure.path, "assets"), assetsFolder);
 
@@ -158,6 +157,7 @@ export class Generator {
     }
 
     generateClass(path: string, classObj: ClassDecl) : void {
+        if (classObj.isCached) return;
         this.generatePage(path, "class", classObj.id ? `${classObj.name}_${classObj.id}` : classObj.name, 
             this.structure.components.class({
                 ...classObj,
@@ -180,6 +180,7 @@ export class Generator {
     }
 
     generateInterface(path: string, interfaceObj: InterfaceDecl) : void {
+        if (interfaceObj.isCached) return;
         this.generatePage(path, "interface", interfaceObj.id ? `${interfaceObj.name}_${interfaceObj.id}` : interfaceObj.name, this.structure.components.interface({
             ...interfaceObj, 
             properties: interfaceObj.properties.map(p => this.generateProperty(p, true)),
@@ -192,6 +193,7 @@ export class Generator {
     }
 
     generateEnum(path: string, enumObj: EnumDecl) : void {
+        if (enumObj.isCached) return;
         this.generatePage(path, "enum", enumObj.id ? `${enumObj.name}_${enumObj.id}` : enumObj.name, this.structure.components.enum({
             ...enumObj,
             comment: this.generateComment(enumObj.jsDoc),
@@ -201,6 +203,7 @@ export class Generator {
     }
 
     generateTypeDecl(path: string, typeObj: TypeDecl, module: Module) : void {
+        if (typeObj.isCached) return;
         this.generatePage(path, "type", typeObj.id ? `${typeObj.name}_${typeObj.id}` : typeObj.name, this.structure.components.type({
             ...typeObj,
             comment: this.generateComment(typeObj.jsDoc),
@@ -211,6 +214,7 @@ export class Generator {
     }
 
     generateFunction(path: string, func: FunctionDecl, module: Module) : void {
+        if (func.isCached) return;
         this.generatePage(path, "function", func.id ? `${func.name}_${func.id}` : func.name, this.structure.components.function({
             ...func,
             signatures: func.signatures.map(sig => this.generateSignature(sig)),
@@ -220,6 +224,7 @@ export class Generator {
     }
 
     generateConstant(path: string, constant: ConstantDecl, module: Module) : void {
+        if (constant.isCached) return;
         this.generatePage(path, "constant", constant.id ? `${constant.name}_${constant.id}` : constant.name, this.structure.components.constant({
             ...constant,
             comment: this.generateComment(constant.jsDoc),
