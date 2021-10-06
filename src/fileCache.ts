@@ -26,12 +26,16 @@ export class FileCache implements FileObjectCache {
 
     has(filename: string, path: string) : boolean {
         const entry = this.data[filename];
-        const stats = fs.statSync(path);
-        if (!entry || stats.mtimeMs > entry) {
-            this.newData[filename] = stats.mtimeMs;
+        try {
+            const stats = fs.statSync(path);
+            if (!entry || stats.mtimeMs > entry) {
+                this.newData[filename] = stats.mtimeMs;
+                return false;
+            }
+            return true;
+        } catch {
             return false;
         }
-        return true;
     }
 
     save() : void {
