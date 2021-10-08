@@ -76,7 +76,7 @@ export function initMarkdown(generator: Generator, extractor: TypescriptExtracto
                 if (link.startsWith("./assets")) link = `${"../".repeat(generator.depth)}${link.slice(2)}`;
                 else if (link.startsWith("assets")) link = `${"../".repeat(generator.depth)}${link}`;
                 else if (link.startsWith("/assets")) link = `${"../".repeat(generator.depth)}${link.slice(1)}`;
-                return `<img src="${link}" title="${title}" alt="${text}">`;
+                return `<img src="${link}" title="${title}" alt="${text}" class="img-fluid">`;
             }
         },
         extensions: [
