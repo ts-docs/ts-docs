@@ -4,6 +4,8 @@ An opinionated documentation generator for typescript - generate informative and
 
 If you want to check out how a typical ts-docs documentation looks like, head over to the official docs, found [here](https://ts-docs.github.io/ts-docs/index.html).
 
+[Example](https://imgur.com/AWVYvHz)
+
 ## Installation
 
 ```
