@@ -41,7 +41,7 @@
               </a>
              </div>
             <div class="col">
-              <span style="font-size: 1.2em">v0.1.1</span>
+              <span style="font-size: 1.2em">v0.1.2</span>
             </div>
           </div>
         </div>
@@ -65,7 +65,7 @@
     <div>
     <a class="fw-bold" href="#list-of-options">List of options</a>
     <div style="padding-left:15px"> 
-    <a href="#entrypoints" class="sidebar-category-member">entryPoints</a><a href="#structure" class="sidebar-category-member">structure</a><a href="#landingpage" class="sidebar-category-member">landingPage</a><a href="#name" class="sidebar-category-member">name</a><a href="#out" class="sidebar-category-member">out</a><a href="#json" class="sidebar-category-member">json</a><a href="#custompages" class="sidebar-category-member">customPages</a><a href="#assets" class="sidebar-category-member">assets</a><a href="#logo" class="sidebar-category-member">logo</a><a href="#externals" class="sidebar-category-member">externals</a><a href="#passthroughmodules" class="sidebar-category-member">passthroughModules</a><a href="#branches" class="sidebar-category-member">branches</a><a href="#changelog" class="sidebar-category-member">changelog</a>
+    <a href="#entrypoints" class="sidebar-category-member">entryPoints</a><a href="#structure" class="sidebar-category-member">structure</a><a href="#landingpage" class="sidebar-category-member">landingPage</a><a href="#name" class="sidebar-category-member">name</a><a href="#out" class="sidebar-category-member">out</a><a href="#json" class="sidebar-category-member">json</a><a href="#custompages" class="sidebar-category-member">customPages</a><a href="#assets" class="sidebar-category-member">assets</a><a href="#logo" class="sidebar-category-member">logo</a><a href="#externals" class="sidebar-category-member">externals</a><a href="#passthroughmodules" class="sidebar-category-member">passthroughModules</a><a href="#branches" class="sidebar-category-member">branches</a><a href="#changelog" class="sidebar-category-member">changelog</a><a href="#forceemit" class="sidebar-category-member">forceEmit</a><a href="#tsconfig" class="sidebar-category-member">tsconfig</a>
     </div>
     </div>
     </span>
@@ -207,6 +207,8 @@
             ]
         }
     ],</code></pre><h3 id="changelog" class="section-header">changelog</h3><p>If this option is enabled, a changelog will be generated. ts-docs will attempt to get the latest release in the <strong>repository of the landing page</strong>.</p>
+<h3 id="forceemit" class="section-header">forceEmit</h3><p>To make the generation process faster, ts-docs will save the last time your files were modified, and the next time you want to generate documentation, ts-docs will skip untouched files. Turning on this option will always make it so new documentation is generated.</p>
+<h3 id="tsconfig" class="section-header">tsconfig</h3><p>Path to a <code>tsconfig.json</code> file to use for the typescript compiler.</p>
 
         </div>
 
