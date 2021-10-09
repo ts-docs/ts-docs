@@ -159,22 +159,23 @@
           
 <div>
     <h1>Changelog</h1>
-    <p class="monospace">Tag v0.1.1, by <a href=https://github.com/GoogleFeud>GoogleFeud</a>, released on <span>06/10/2021, 18:34:50</span></p>
+    <p class="monospace">Tag v0.1.2, by <a href=https://github.com/GoogleFeud>GoogleFeud</a>, released on <span>09/10/2021, 14:14:03</span></p>
 
     <div>
         <div class="monospace">
-            <p><a href=https://api.github.com/repos/ts-docs/ts-docs/tarball/v0.1.1>Download .zip</a></p>
-            <p><a href=https://api.github.com/repos/ts-docs/ts-docs/zipball/v0.1.1>Download .tar</a></p>
+            <p><a href=https://api.github.com/repos/ts-docs/ts-docs/tarball/v0.1.2>Download .zip</a></p>
+            <p><a href=https://api.github.com/repos/ts-docs/ts-docs/zipball/v0.1.2>Download .tar</a></p>
         </div>
         <h2 id="bug-fixes" class="section-header">Bug fixes</h2><ul>
-<li>More externals are now linked</li>
-<li>Fixed search bar clipping through</li>
-<li>Key indexes weren&#39;t rendering properly</li>
+<li>The tsconfig file wasn&#39;t correctly parsed before it was given to the typescript compiler.</li>
+<li>Interface properties section in the sidebar was rendered even if there weren&#39;t any parameters.</li>
 </ul>
 <h2 id="additions" class="section-header">Additions</h2><ul>
-<li>Added a file cache, making the generation process a lot faster after the first generation. (closes #2)</li>
+<li>Added a <code>forceEmit</code> option, which skips the file caching.</li>
+<li>Added a <code>tsconfig</code> option, which allows you to specify the tsconfig.json to use with the typescript compiler. </li>
+<li>Added rendering for <a href="https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html">template literal types</a> (completely forgot about em)</li>
 </ul>
-<h2 id="thanks" class="section-header">Thanks</h2><p>@insyri</p>
+<h2 id="thanks" class="section-header">Thanks</h2><p>@Seanitzel</p>
 
     </div>
 
