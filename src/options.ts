@@ -50,7 +50,9 @@ export interface TsDocsOptions {
     passthroughModules?: Array<string>,
     branches?: Array<BranchSetting>,
     changelog?: boolean,
-    json?: string
+    json?: string,
+    tsconfig?: string,
+    forceEmit?: boolean
 }
 
 export interface OptionSource {
@@ -66,7 +68,9 @@ export interface OptionSource {
     passthroughModules?: Array<string>,
     branches?: Array<BranchSetting>,
     changelog?: boolean,
-    json?: string
+    json?: string,
+    tsconfig?: string,
+    forceEmit?: boolean
 }
 
 export const options: TsDocsOptions = {
@@ -139,9 +143,11 @@ Usage: ts-docs [...entryFiles]
 --customPages       A folder which contains folders which contain .md files.
 --assets            All files and folders inside the folder will be copied to the /assets output directory. In markdown, files in this directory can be linked with "./assets/filename.ext"
 --logo              Path to the project's logo.
---changelog         If to add a changelog to the generated output
+--changelog         If to add a changelog to the generated output.
 --json              Instead of generating documentation, ts-docs will spit all the json data in the path you provide.
---init              Creates a tsdocs.config.js file
+--init              Creates a tsdocs.config.js file.
+--forceEmit         Skips checking file cache for changes, always produces new documentation.
+--tsconfig          Path to tsconfig.json file.
 --help
 `);
 }

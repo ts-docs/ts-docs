@@ -2,7 +2,7 @@
 import { DocumentStructure } from "./documentStructure";
 import marked from "marked";
 import { copyFolder, createFile, escapeHTML, fetchChangelog, getPathFileName, getTagFromJSDoc, hasTagFromJSDoc, isLargeArr, isLargeObject, isLargeSignature } from "./utils";
-import { Project, TypescriptExtractor, ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl, ConditionalType, MappedType, TypeOperator, IndexAccessedType, FunctionSignature, TypePredicateType, InferType, ObjectProperty, ConstructorType } from "@ts-docs/extractor";
+import { Project, TypescriptExtractor, ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl, ConditionalType, MappedType, TypeOperator, IndexAccessedType, FunctionSignature, TypePredicateType, InferType, ObjectProperty, ConstructorType, TemplateLiteralType } from "@ts-docs/extractor";
 import path from "path";
 import { LandingPage, TsDocsOptions } from "./options";
 import fs from "fs";
@@ -46,17 +46,18 @@ export class Generator {
 
     async generate(extractor: TypescriptExtractor, projects: Array<Project>) : Promise<void> {
         initMarkdown(this, extractor, projects);
-        if (!fs.existsSync(this.settings.out)) fs.mkdirSync(this.settings.out);
-        const assetsFolder = path.join(this.settings.out, "assets");
+        const out = path.join(process.cwd(), this.settings.out);
+        if (!fs.existsSync(out)) fs.mkdirSync(out);
+        const assetsFolder = path.join(out, "./assets");
         if (!fs.existsSync(assetsFolder)) fs.mkdirSync(assetsFolder);
-
-        if (this.settings.assets) copyFolder(this.settings.assets, assetsFolder);
         copyFolder(path.join(this.structure.path, "assets"), assetsFolder);
+        if (this.settings.assets) copyFolder(this.settings.assets, assetsFolder);
 
         packSearchData(projects, `${assetsFolder}/search.json`);
 
         if (this.settings.customPages) {
-            fs.mkdirSync(path.join(this.settings.out, "./pages"));
+            const pagesPath = path.join(out, "./pages");
+            if (!fs.existsSync(pagesPath)) fs.mkdirSync(pagesPath);
             this.renderingPages = true;
             for (const category of this.settings.customPages) {
                 category.pages.sort((a, b) => +(a.attributes.order || Infinity) - +(b.attributes.order || Infinity));
@@ -407,6 +408,16 @@ export class Generator {
             const ref = type as IndexAccessedType;
             return this.structure.components.typeIndexAccess({index: this.generateType(ref.index), object: this.generateType(ref.object)});
         }
+        case TypeKinds.TEMPLATE_LITERAL: {
+            const ref = type as TemplateLiteralType;
+            return this.structure.components.typeTemplateLiteral({
+                start: ref.head, 
+                types: ref.spans.map(t => ({
+                    type: this.generateType(t.type),
+                    text: t.text
+                }))
+            });
+        }
         case TypeKinds.INFER_TYPE: {
             return this.structure.components.typeOperator({name: "infer", type: this.generateTypeParameter((type as InferType).typeParameter)});       
         }
@@ -506,7 +517,7 @@ export class Generator {
     }
 
     generatePage(p: string, directory: string, file: string, content: string, other: OtherProps = {}) : string {
-        return createFile(path.join(this.settings.out as string, p), directory, `${file}.html`, this.structure.index({
+        return createFile(path.join(this.settings.out, p), directory, `${file}.html`, this.structure.index({
             content,
             headerName: this.settings.name,
             headerRepository: this.landingPage.repository,

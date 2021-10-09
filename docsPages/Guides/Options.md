@@ -109,3 +109,11 @@ branches: [
 ### changelog
 
 If this option is enabled, a changelog will be generated. ts-docs will attempt to get the latest release in the **repository of the landing page**.
+
+### forceEmit
+
+To make the generation process faster, ts-docs will save the last time your files were modified, and the next time you want to generate documentation, ts-docs will skip untouched files. Turning on this option will always make it so new documentation is generated.
+
+### tsconfig
+
+Path to a `tsconfig.json` file to use for the typescript compiler.

@@ -1,6 +1,6 @@
 {
   "name": "@ts-docs/ts-docs",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A documentation generator for typescript",
   "main": "dist/index.js",
   "bin": "dist/cli.js",
@@ -36,7 +36,7 @@
   },
   "homepage": "https://github.com/ts-docs/ts-docs#readme",
   "dependencies": {
-    "@ts-docs/extractor": "^2.2.4",
+    "@ts-docs/extractor": "^2.2.5",
     "front-matter": "^4.0.2",
     "got": "^11.8.2",
     "handlebars": "^4.7.7",

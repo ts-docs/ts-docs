@@ -42,7 +42,8 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
         maxConstantTextLength: 1024,
         ignoreFolderNames: ["lib"],
         passthroughModules: options.passthroughModules,
-        fileCache
+        tsconfig: options.tsconfig,
+        fileCache: options.forceEmit ? undefined : fileCache
     });
 
     const projects = types.run();
@@ -56,7 +57,6 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
     await generator.generate(types, projects);
 
     fileCache.save();
-
 
     if (options.branches) renderBranches(projects, finalOptions, docStructure);
 })();
