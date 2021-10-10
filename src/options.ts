@@ -27,14 +27,30 @@ export interface PageCategory {
     pages: Array<CustomPage>
 }
 
+export interface BranchOption {
+    /**
+     * The actual name of the branch. 
+     */
+    name: string,
+    /**
+     * The entry point of the project, relative to the project's root
+     */
+    entryPoint: string,
+    /**
+     * Use this if the branch is of a project that's inside your "entryPoints" setting, simply provide the name of the project (the one inside package.json!)
+     */
+    project?: string,
+    /**
+     * Use this if you want to generate documentation for a branch of a repository which is completely separate from this documentation, provide a **link** to the repository.
+     * It's recommended that the link excludes the "/tree/branch" part.
+     */
+    external?: string
+}
+
 export interface BranchSetting {
     displayName: string,
     landingPage?: string,
-    branches: Array<{
-        name: string,
-        entryPoint: string,
-        project?: string
-    }>
+    branches: Array<BranchOption>
 }
 
 export interface TsDocsOptions {

@@ -79,32 +79,38 @@ If for some reason you don't want a specific folder to become a module, include 
 
 ### branches
 
-You can also document future (or previous) stable versions of your module using the `branches` option. When the option is provided, a "Branches" section is added to the left of the index page, where you can switch between other branches of your project.
+You can also document future (or previous) stable versions of your project using the `branches` option. When the option is provided, a "Branches" section is added to the left of the index page, where you can switch between other branches of your project.
 
-The generator is going to use your already provided options for generating the different branches, except for the `landingPage` option. The branches in the `branches` array need to be a part of a `project`, so you cannot include branches from completely different repositories, which are from projects that are not in your `entryPoints` option.
+ts-docs will use the same options to generate the different branches, except for `landingPage` - you have to specify the landing page yourself.
 
 Here's how the option looks:
 
 ```js
-branches: [
+{
+    entryPoints: ["./project-a/src/index"],
+    branches: [
         {
             displayName: "next", // The name of the branch that will be displayed, can be anything you want
-            landingPage: "detritus-client", // The landing page of that branch
+            landingPage: "project-a", // The landing page of that branch
             branches: [ // The ACTUAL branches that will be included
                 {
-                    name: "master", // The name of the branch
+                    name: "dev", // The name of the branch
                     entryPoint: "./src/index", // The entry point of the project, relative to the root directory of the project
-                    project: "detritus-utils" // The name of the project (the name in package.json)
+                    project: "project-a" // The name of the project (the name in package.json)
                 },
                 {
-                    name: "0.16.4",
+                    name: "main",
                     entryPoint: "./src/index",
-                    project: "detritus-client"
+                    external: "https://github.com/ts-docs/ts-extractor" // Link to the repository
                 }
             ]
         }
     ],
+}
 ```
+
+The `branches` property should be an array of [[BranchOption]]. Use the `project` property if the branch is part of a project that is inside your `entryPoints` option, otherwise, use the `external` option with a link to the repository.
+
 
 ### changelog
 

@@ -24,6 +24,12 @@ export function renderBranches(
         const branchPath = path.join(tempFolder, branchSetting.displayName);
         fs.mkdirSync(branchPath);
         for (const branch of branchSetting.branches) {
+            if (branch.external) {
+                const baseLink = branch.external.includes("/tree") ? branch.external.slice(0, branch.external.indexOf("/tree")) : branch.external;
+                execSync(`git clone -b ${branch.name} ${baseLink}`, { cwd: branchPath, stdio: "ignore" });
+                entryPoints.push(path.join(branchPath, baseLink.split("/").pop() as string, branch.entryPoint).replace(/\\/g, "/"));
+                continue;
+            }
             const project = branch.project ? projects.find(pr => pr.module.name === branch.project) : projects[0];
             if (!project) throw new Error(`Couldn't find project with name ${branch.project}`);
             if (!project.repository) throw new Error(`Couldn't find repository for project ${branch.project}`);
