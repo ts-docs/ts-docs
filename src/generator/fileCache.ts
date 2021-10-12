@@ -1,7 +1,7 @@
 import { FileObjectCache } from "@ts-docs/extractor";
 import fs from "fs";
 import path from "path";
-import { TsDocsOptions } from ".";
+import { TsDocsOptions } from "..";
 
 /**
 * filename - last modified timestamp

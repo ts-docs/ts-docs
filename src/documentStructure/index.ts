@@ -3,9 +3,9 @@ import fs from "fs";
 import Handlebars from "handlebars";
 import {Module, Project} from "@ts-docs/extractor";
 import path from "path";
-import { BranchSetting, PageCategory } from ".";
+import { BranchSetting, PageCategory } from "..";
 
-export type Components = "class" | "constant" | "enum" | "function" | "functionParameter" | "interface" | "interfaceProperty" | "methodMember" | "module" | "propertyMember" | "type" | "typeArray" | "typeFunction" | "typeIntersection" | "typeObject" | "typeParameter" | "typeReference" | "typeTuple" | "typeUnion" | "typePrimitive" | "typeMapped" | "typeConditional" | "typeTemplateLiteral" | "typeIndexAccess" | "typeOperator" | "classConstructor" | "typePredicate" | "objectProperty" | "changelog" | "typeConstruct";
+export type Components = "class" | "constant" | "enum" | "function" | "functionParameter" | "interface" | "interfaceProperty" | "methodMember" | "module" | "propertyMember" | "type" | "typeArray" | "typeFunction" | "typeIntersection" | "typeObject" | "typeParameter" | "typeReference" | "typeTuple" | "typeUnion" | "typePrimitive" | "typeMapped" | "typeConditional" | "typeTemplateLiteral" | "typeIndexAccess" | "typeOperator" | "classConstructor" | "typePredicate" | "objectProperty" | "changelog" | "typeConstruct" | "jsdocTags";
 
 /**
  * ## What is a documentation structure?
@@ -20,7 +20,7 @@ export type Components = "class" | "constant" | "enum" | "function" | "functionP
  * like to use [React Static](https://github.com/react-static/react-static) instead of handlebars, then write
  * your completely own generator using the [typescript extractor](https://github.com/ts-docs/ts-extractor)
  * 
- * To see how a documentation structure should look like, visit the repository of the [default documentation structure](https://github.com/ts-docs/default-docs-structure)
+ * To see how a documentation structure should look like, visit the repository of the [default documentation structure](https://github.com/ts-docs/default-docs-structure).
  * 
  * ### index.hbs
  * 
@@ -30,7 +30,7 @@ export type Components = "class" | "constant" | "enum" | "function" | "functionP
  * 
  * The generator pre-compiles all the components in the `components` folder and uses them. It does it like this
  * because we believe that there should be almost no logic inside your handlebars templates. Each template should
- * be short and easily read, without many if/each blocks. The rendered HTML from the component is then passed to
+ * be short and easily read, without many nested if/each blocks. The rendered HTML from the component is then passed to
  * other components or the `index.hbs` file directly. For example, the generation process for a single class is this:
  * 
  * First, all children of the class are compiled: constructor (`classConstructor` component), methods (`methodMember` component) and properties (`propertyMember` component).
@@ -51,7 +51,15 @@ export type Components = "class" | "constant" | "enum" | "function" | "functionP
  * ### helpers.js file
  * 
  * The helpers.js file is executed during the generation process, it allows you to create helpers which can be used in components.
- * The helpers.js file has access to the `Handlebars` object. 
+ * You need to export a function from the file, like so:
+ * 
+ * ```js
+ * module.exports = (Handlebars, components) => {
+ *    // Your helpers here... maybe something else...
+ * }
+ * ```
+ * 
+ * The first parameter is the Handlebars object, the second is an object with all the components.
  * 
  * ### assets folder
  * 
@@ -85,8 +93,9 @@ export function setupDocumentStructure(structName: string) : DocumentStructure {
     }
     const index = path.join(pathToStructure, "index.hbs");
     if (!fs.existsSync(index)) throw new Error("Couldn't find index.hbs file.");
-    const helpers = path.join(pathToStructure, "helpers.js");
-    if (fs.existsSync(helpers)) (new Function("Handlebars", fs.readFileSync(helpers, "utf-8")))(Handlebars);
+    const helpers = path.join(process.cwd(), pathToStructure, "helpers.js");
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    if (fs.existsSync(helpers)) require(helpers)(Handlebars, components);
     return {
         path: pathToStructure,
         components,

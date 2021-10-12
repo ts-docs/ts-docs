@@ -8,7 +8,7 @@ import { findTSConfig, findTsDocsJs, handleDefaultAPI, handleNodeAPI } from "./u
 import { addOptionSource, initOptions, options, OptionSource, showHelp, initConfig } from "./options";
 import { renderBranches } from "./branches";
 import fs from "fs";
-import { FileCache } from "./fileCache";
+import { FileCache } from "./generator/fileCache";
 
 export interface TsDocsCLIArgs extends OptionSource {
      "--": Array<string>,

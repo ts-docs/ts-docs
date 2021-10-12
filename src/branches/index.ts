@@ -1,11 +1,11 @@
 import { Project, TypescriptExtractor } from "@ts-docs/extractor";
-import { Generator } from "./generator";
+import { Generator } from "../generator";
 import fs from "fs";
 import os from "os";
 import path from "path";
 import { execSync } from "child_process";
-import { handleDefaultAPI, handleNodeAPI } from "./utils";
-import { DocumentStructure, TsDocsOptions } from ".";
+import { handleDefaultAPI, handleNodeAPI } from "../utils";
+import { DocumentStructure, TsDocsOptions } from "..";
 
 /**
  * The documentation will always have at least one branch: `stable`. All other branches will be placed in the main docs folder, with the prefix `b.`

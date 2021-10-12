@@ -19,7 +19,3 @@ ts-docs expects the following CSS classes to be defined by the documentation str
 ## Depth-mess
 
 Due to how the documentation generator structures the docs, links can get a little... messy. The `depth` property specifies how "deep" the current item is from the **root of the documentation**. 
-
-## Handling of JSDoc tags
-
-jsdoc tags such as `@return` and `@example` are rendered by the generator, not the documentation structure.

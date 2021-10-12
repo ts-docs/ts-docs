@@ -1,6 +1,6 @@
 import { ClassProperty, Project } from "@ts-docs/extractor";
 import fs from "fs";
-import { getComment } from "./utils";
+import { getComment } from "../utils";
 
 /**
  * Used for the [[packSearchData]] function.

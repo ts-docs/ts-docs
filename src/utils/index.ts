@@ -114,19 +114,19 @@ export function isLargeSignature(sig: { parameters?: Array<FunctionParameter>, r
     if (sig.parameters) {
         if (sig.parameters.length > 3) return true;
         const total = sig.parameters.reduce((acc, param) => acc + param.name.length + getTypeLength(param.type) + getTypeLength(param.defaultValue), getTypeLength(sig.returnType));
-        if (total > 65) return true;
+        if (total > 32) return true;
     }
     return false;
 }
 
 export function isLargeObject(obj: ObjectLiteral) : boolean {
     if (obj.properties.length > 3 || obj.properties.some(prop => prop.call || prop.construct)) return true;
-    return getTypeLength(obj) > 48;
+    return getTypeLength(obj) > 42;
 }
 
 export function isLargeArr(arr: Array<Type>) : boolean {
     if (arr.length > 4) return true;
-    return arr.reduce((acc, t) => acc + getTypeLength(t), 0) > 48;
+    return arr.reduce((acc, t) => acc + getTypeLength(t), 0) > 42;
 }
 
 export function getTagFromJSDoc(searchFor: string, doc: Array<JSDocData>) : JSDocTag|undefined {
@@ -136,13 +136,6 @@ export function getTagFromJSDoc(searchFor: string, doc: Array<JSDocData>) : JSDo
         if (tag) return tag;
     }
     return;
-}
-
-export function hasTagFromJSDoc(searchFor: string, doc: Array<JSDocData>) : boolean {
-    for (const jsdoc of doc) {
-        if (jsdoc.tags && jsdoc.tags.some(t => t.name === searchFor)) return true;
-    }
-    return false;
 }
 
 export function getPathFileName(p?: string) : string|undefined {
