@@ -65,7 +65,7 @@ export function getTypeLength(type?: Type) : number {
     case TypeKinds.OBJECT_LITERAL: {
         const t = type as ObjectLiteral;
         return t.properties.reduce((prev, curr) => {
-            if (curr.prop) return prev + (curr.prop.name.length + (curr.prop.type ? getTypeLength(curr.prop.type) : 0));
+            if (curr.prop) return prev + (curr.prop.rawName.length + (curr.prop.type ? getTypeLength(curr.prop.type) : 0));
             else if (curr.index) return prev + 2 + (getTypeLength(curr.index.type) + (curr.index.key ? getTypeLength(curr.index.key) : 0));
             else return 100;
         }, 0);

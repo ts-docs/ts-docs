@@ -256,6 +256,7 @@ export class Generator {
             return comp({
                 isProperty: true,
                 ...property.prop,
+                name: typeof property.prop.name === "string" ? property.prop.name : this.generateType(property.prop.name),
                 type: property.prop.type && this.generateType(property.prop.type),
                 comment: this.generateComment(property.jsDoc, true, { returns: false, param: false })
             });
@@ -298,7 +299,6 @@ export class Generator {
         return this.structure.components.methodMember({
             ...method,
             name: typeof method.name === "string" ? method.name : this.generateType(method.name),
-            rawName: method.realName || method.name,
             signatures: method.signatures.map(sig => this.generateSignature(sig))
         });
     }
