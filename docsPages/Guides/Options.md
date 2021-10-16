@@ -14,7 +14,7 @@ ts-docs first gets all CLI arguments, then joins them with the options from the 
 
 ## CLI usage
 
-```ts-docs --options <entry points>```
+```ts-docs /entry/point.js```
 
 ## Tsconfig usage
 
@@ -23,6 +23,15 @@ ts-docs first gets all CLI arguments, then joins them with the options from the 
     "entryPoints": ["/entry/point.js"],
     ...other options
   }
+```
+
+## tsdocs.config.js usage
+
+```js
+module.exports = {
+    "entryPoints": ["/entry/point.js"]
+    ...other options
+}
 ```
 
 ## List of options
@@ -109,7 +118,7 @@ Here's how the option looks:
 }
 ```
 
-The `branches` property should be an array of [[BranchOption]]. Use the `project` property if the branch is part of a project that is inside your `entryPoints` option, otherwise, use the `external` option with a link to the repository.
+The `branches` property should be an array of [[BranchOption]]. Use the [[BranchOption.project]] property if the branch is part of a project that is inside your [[TsDocsOptions.entryPoints]] option, otherwise, use the [[BranchOption.external]] option with a link to the repository.
 
 
 ### changelog
@@ -122,4 +131,4 @@ To make the generation process faster, ts-docs will save the last time your file
 
 ### tsconfig
 
-Path to a `tsconfig.json` file to use for the typescript compiler.
+Path to a `tsconfig.json` file to use for the typescript compiler. The ts-docs extractor works best with a specific set of options, so if for some reason the docs you're getting are messed up, either provide a path to your project's `tsconfig.json` file, or pass `"none"`, which will pick the best compiler options to use.

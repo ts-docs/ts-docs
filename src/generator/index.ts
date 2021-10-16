@@ -245,6 +245,7 @@ export class Generator {
         } else return this.structure.components.propertyMember({
             ...property,
             name: (typeof (property as ClassProperty).name === "string") ? (property as ClassProperty).name : this.generateType((property as ClassProperty).name as Type),
+            isComputed: (property as ClassProperty).name !== (property as ClassProperty).rawName,
             comment: this.generateComment((property as ClassProperty).jsDoc, true, { returns: false, param: false }),
             type: property.type && this.generateType(property.type),
             initializer: (property as ClassProperty).initializer && this.generateType((property as ClassProperty).initializer!)
@@ -258,6 +259,7 @@ export class Generator {
                 isProperty: true,
                 ...property.prop,
                 name: typeof property.prop.name === "string" ? property.prop.name : this.generateType(property.prop.name),
+                isComputed: property.prop.name !== property.prop.rawName,
                 type: property.prop.type && this.generateType(property.prop.type),
                 comment: this.generateComment(property.jsDoc, true, { returns: false, param: false })
             });
@@ -299,7 +301,8 @@ export class Generator {
     generateMethodMember(method: ClassMethod) : string {
         return this.structure.components.methodMember({
             ...method,
-            name: typeof method.name === "string" ? method.name : this.generateType(method.name),
+            name: (typeof method.name === "string") ? method.name : this.generateType(method.name),
+            isComputed: method.name !== method.rawName,
             signatures: method.signatures.map(sig => this.generateSignature(sig))
         });
     }
@@ -377,7 +380,10 @@ export class Generator {
         }
         case TypeKinds.ARRAY_TYPE: {
             const ref = type as ArrayType;
-            return this.structure.components.typeArray({type: this.generateType(ref.type) });
+            return this.structure.components.typeArray({ 
+                type: this.generateType(ref.type),
+                compoundType: ref.type.kind === TypeKinds.UNION || ref.type.kind === TypeKinds.INTERSECTION
+            });
         }
         case TypeKinds.MAPPED_TYPE: {
             const ref = type as MappedType;

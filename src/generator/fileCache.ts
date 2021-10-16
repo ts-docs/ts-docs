@@ -6,8 +6,10 @@ import { TsDocsOptions } from "..";
 /**
 * filename - last modified timestamp
 */
-export type FileCacheStructure = Record<string, number> 
+export type FileCacheStructure = Record<string, number|string> 
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const packageInfo = require("../../package.json") as { version: string };
 
 const FILE_CACHE_NAME = "__fileCache.json";
 
@@ -21,7 +23,10 @@ export class FileCache implements FileObjectCache {
             this.data = JSON.parse(fs.readFileSync(this.path, "utf-8"));
         }
         else this.data = {};
-        this.newData = {};
+        if (this.data.__version__ && this.data.__version__ !== packageInfo.version) this.data = {};
+        this.newData = {
+            "__version__": packageInfo.version
+        };
     }
 
     has(filename: string, path: string) : boolean {
