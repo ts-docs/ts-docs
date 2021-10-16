@@ -544,3 +544,7 @@ export class Generator {
     }
 
 }
+
+export * from "./markdown";
+export * from "./searchData";
+export * from "./fileCache";
