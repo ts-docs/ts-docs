@@ -145,7 +145,8 @@ export function getPathFileName(p?: string) : string|undefined {
 
 export function handleDefaultAPI() : ExternalReference {
     return {
-        run: (sym) => {
+        run: (sym, source) => {
+            if (source) return;
             switch (sym) {
             /** Javascript global objects */
             case "Date": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date"};
