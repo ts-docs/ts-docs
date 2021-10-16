@@ -41,7 +41,7 @@
               </a>
              </div>
             <div class="col">
-              <span style="font-size: 1.2em">v0.1.2</span>
+              <span style="font-size: 1.2em">v0.1.3</span>
             </div>
           </div>
         </div>
@@ -54,6 +54,7 @@
     
     <p class="current-thing text-center">class <span class="object">Project</span></p>
     <div class="sidebar-members">
+    
     
         <div class="sidebar-member">
         <div class="collapsible-trigger">
@@ -71,7 +72,7 @@
         <span class="sidebar-category">Methods</span>
         </div>
         <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="#.visitor">visitor</a></span><span class="sidebar-category-member"><a href="#.getOrCreateModule">getOrCreateModule</a></span><span class="sidebar-category-member"><a href="#.forEachModule">forEachModule</a></span><span class="sidebar-category-member"><a href="#.handleSymbol">handleSymbol</a></span><span class="sidebar-category-member"><a href="#.handleClassDecl">handleClassDecl</a></span><span class="sidebar-category-member"><a href="#.handleInterfaceDecl">handleInterfaceDecl</a></span><span class="sidebar-category-member"><a href="#.handleEnumDecl">handleEnumDecl</a></span><span class="sidebar-category-member"><a href="#.handleTypeAliasDecl">handleTypeAliasDecl</a></span><span class="sidebar-category-member"><a href="#.handleNamespaceDecl">handleNamespaceDecl</a></span><span class="sidebar-category-member"><a href="#.handleVariableDecl">handleVariableDecl</a></span><span class="sidebar-category-member"><a href="#.handleFunctionDecl">handleFunctionDecl</a></span><span class="sidebar-category-member"><a href="#.resolveSymbolOrStr">resolveSymbolOrStr</a></span><span class="sidebar-category-member"><a href="#.resolveSymbol">resolveSymbol</a></span><span class="sidebar-category-member"><a href="#.resolveType">resolveType</a></span><span class="sidebar-category-member"><a href="#.resolveReturnType">resolveReturnType</a></span><span class="sidebar-category-member"><a href="#.resolveTypeParameters">resolveTypeParameters</a></span><span class="sidebar-category-member"><a href="#.resolveObjectProperty">resolveObjectProperty</a></span><span class="sidebar-category-member"><a href="#.resolveHeritage">resolveHeritage</a></span><span class="sidebar-category-member"><a href="#.resolveParameter">resolveParameter</a></span><span class="sidebar-category-member"><a href="#.resolveExpressionToType">resolveExpressionToType</a></span><span class="sidebar-category-member"><a href="#.resolveAliasedSymbol">resolveAliasedSymbol</a></span><span class="sidebar-category-member"><a href="#.getJSDocCommentOfParam">getJSDocCommentOfParam</a></span><span class="sidebar-category-member"><a href="#.getJSDocData">getJSDocData</a></span><span class="sidebar-category-member"><a href="#.getLOC">getLOC</a></span><span class="sidebar-category-member"><a href="#.resolveSourceFile">resolveSourceFile</a></span><span class="sidebar-category-member"><a href="#.moduleToJSON">moduleToJSON</a></span><span class="sidebar-category-member"><a href="#.toJSON">toJSON</a></span>
+        <span class="sidebar-category-member"><a href="#.visitor">visitor</a></span><span class="sidebar-category-member"><a href="#.getOrCreateModule">getOrCreateModule</a></span><span class="sidebar-category-member"><a href="#.forEachModule">forEachModule</a></span><span class="sidebar-category-member"><a href="#.handleSymbol">handleSymbol</a></span><span class="sidebar-category-member"><a href="#.handleClassDecl">handleClassDecl</a></span><span class="sidebar-category-member"><a href="#.handleInterfaceDecl">handleInterfaceDecl</a></span><span class="sidebar-category-member"><a href="#.handleEnumDecl">handleEnumDecl</a></span><span class="sidebar-category-member"><a href="#.handleTypeAliasDecl">handleTypeAliasDecl</a></span><span class="sidebar-category-member"><a href="#.handleNamespaceDecl">handleNamespaceDecl</a></span><span class="sidebar-category-member"><a href="#.handleVariableDecl">handleVariableDecl</a></span><span class="sidebar-category-member"><a href="#.handleFunctionDecl">handleFunctionDecl</a></span><span class="sidebar-category-member"><a href="#.resolveSymbolOrStr">resolveSymbolOrStr</a></span><span class="sidebar-category-member"><a href="#.resolveSymbol">resolveSymbol</a></span><span class="sidebar-category-member"><a href="#.resolveType">resolveType</a></span><span class="sidebar-category-member"><a href="#.resolveReturnType">resolveReturnType</a></span><span class="sidebar-category-member"><a href="#.resolveTypeParameters">resolveTypeParameters</a></span><span class="sidebar-category-member"><a href="#.resolveObjectProperty">resolveObjectProperty</a></span><span class="sidebar-category-member"><a href="#.resolveHeritage">resolveHeritage</a></span><span class="sidebar-category-member"><a href="#.resolveParameter">resolveParameter</a></span><span class="sidebar-category-member"><a href="#.resolveExpressionToType">resolveExpressionToType</a></span><span class="sidebar-category-member"><a href="#.resolveTypeType">resolveTypeType</a></span><span class="sidebar-category-member"><a href="#.resolveAliasedSymbol">resolveAliasedSymbol</a></span><span class="sidebar-category-member"><a href="#.getJSDocCommentOfParam">getJSDocCommentOfParam</a></span><span class="sidebar-category-member"><a href="#.getJSDocData">getJSDocData</a></span><span class="sidebar-category-member"><a href="#.getLOC">getLOC</a></span><span class="sidebar-category-member"><a href="#.resolveSourceFile">resolveSourceFile</a></span><span class="sidebar-category-member"><a href="#.moduleToJSON">moduleToJSON</a></span><span class="sidebar-category-member"><a href="#.toJSON">toJSON</a></span>
         </div>
         </div>
     
@@ -160,10 +161,11 @@
 <div>
     <h1>Class <span class="referenceLink object">Project</span></h1>
     
+
+
+
+    
     <p><a class="secondary-text" href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L8>Defined in Project.ts</a></p>
-
-
-
 
     
 
@@ -172,11 +174,8 @@
 
 <div id="class.constructor" class="item">
     <span class="item-name"><span class="keyword">constructor</span><span>(<div class="left-item"><span class="item-name"><span class="param-name">__namedParameters</span><span class="symbol">:</span> 
-<span>{ <div class="left-item"><span class="item-name"><a class="item-name property-name" href="#.folderPath">folderPath</a><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Array</span></span></span><span>&lt;<span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>&gt;</span></span></span>,<br><span class="item-name"><a class="item-name property-name" href="#.extractor">extractor</a><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/class/TypescriptExtractor.html">TypescriptExtractor</a><span class="c-tooltip-content"><span class="keyword">class</span> <span class="item-name object">TypescriptExtractor</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">TypescriptExtractor</span></span></span></span></span></span>,<br><span class="item-name"><a class="item-name property-name" href="#.packageJSON">packageJSON</a><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/interface/PackageJSON.html">PackageJSON</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">PackageJSON</span><span style="display:block" class="monospace fw-bold">extractor/<span class="item-name object">PackageJSON</span></span></span></span></span></span></div> }</span></span></div>)</span></span>
+<span>{​<div class="left-item"><span class="item-name"><a class="item-name property-name" href="#.folderPath"}>folderPath</a><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Array</span></span></span><span>&lt;<span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>&gt;</span></span></span>,<br><span class="item-name"><a class="item-name property-name" href="#.extractor"}>extractor</a><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/class/TypescriptExtractor.html">TypescriptExtractor</a><span class="c-tooltip-content"><span class="keyword">class</span> <span class="item-name object">TypescriptExtractor</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">TypescriptExtractor</span></span></span></span></span></span>,<br><span class="item-name"><a class="item-name property-name" href="#.packageJSON"}>packageJSON</a><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/interface/PackageJSON.html">PackageJSON</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">PackageJSON</span><span style="display:block" class="monospace fw-bold">extractor/<span class="item-name object">PackageJSON</span></span></span></span></span></span></div>​}</span></span></div>)</span></span>
 
-    <div class="docblock">
-    <ul></ul>
-    </div>
 </div>
 
     
@@ -187,7 +186,7 @@
     
     
     
-    <span class="item-name"><a class="property-name" href="#.repository">repository</a><span>: <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
+    <span class="item-name"><a class="property-name" href="#.repository"}>repository</a><span>: <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
     </span>
     <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L9>
 <span class="float-end sourceCode">
@@ -195,9 +194,6 @@
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-    <div class="docblock">
-        
-    </div>
 </div></div>
     <div><div class="item" id=".readme">
     
@@ -205,7 +201,7 @@
     
     
     
-    <span class="item-name"><a class="property-name" href="#.readme">readme</a><span>: <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
+    <span class="item-name"><a class="property-name" href="#.readme"}>readme</a><span>: <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
     </span>
     <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L10>
 <span class="float-end sourceCode">
@@ -213,9 +209,6 @@
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-    <div class="docblock">
-        
-    </div>
 </div></div>
     <div><div class="item" id=".homepage">
     
@@ -223,7 +216,7 @@
     
     
     
-    <span class="item-name"><a class="property-name" href="#.homepage">homepage</a><span>: <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
+    <span class="item-name"><a class="property-name" href="#.homepage"}>homepage</a><span>: <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
     </span>
     <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L11>
 <span class="float-end sourceCode">
@@ -231,9 +224,6 @@
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-    <div class="docblock">
-        
-    </div>
 </div></div>
     <div><div class="item" id=".version">
     
@@ -241,7 +231,7 @@
     
     
     
-    <span class="item-name"><a class="property-name" href="#.version">version</a><span>: <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
+    <span class="item-name"><a class="property-name" href="#.version"}>version</a><span>: <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
     </span>
     <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L12>
 <span class="float-end sourceCode">
@@ -249,9 +239,6 @@
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-    <div class="docblock">
-        
-    </div>
 </div></div>
     <div><div class="item" id=".module">
     
@@ -259,7 +246,7 @@
     
     
     
-    <span class="item-name"><a class="property-name" href="#.module">module</a><span>: <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>
+    <span class="item-name"><a class="property-name" href="#.module"}>module</a><span>: <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>
     </span>
     <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L13>
 <span class="float-end sourceCode">
@@ -267,9 +254,6 @@
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-    <div class="docblock">
-        
-    </div>
 </div></div>
     <div><div class="item" id=".extractor">
     
@@ -277,7 +261,7 @@
     
     
     
-    <span class="item-name"><a class="property-name" href="#.extractor">extractor</a><span>: <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/class/TypescriptExtractor.html">TypescriptExtractor</a><span class="c-tooltip-content"><span class="keyword">class</span> <span class="item-name object">TypescriptExtractor</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">TypescriptExtractor</span></span></span></span></span></span>
+    <span class="item-name"><a class="property-name" href="#.extractor"}>extractor</a><span>: <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/class/TypescriptExtractor.html">TypescriptExtractor</a><span class="c-tooltip-content"><span class="keyword">class</span> <span class="item-name object">TypescriptExtractor</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">TypescriptExtractor</span></span></span></span></span></span>
     </span>
     <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L14>
 <span class="float-end sourceCode">
@@ -285,9 +269,6 @@
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-    <div class="docblock">
-        
-    </div>
 </div></div>
     <div><div class="item" id=".baseDir">
     
@@ -295,7 +276,7 @@
     
     
     
-    <span class="item-name"><a class="property-name" href="#.baseDir">baseDir</a><span>: <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
+    <span class="item-name"><a class="property-name" href="#.baseDir"}>baseDir</a><span>: <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
     </span>
     <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L15>
 <span class="float-end sourceCode">
@@ -303,9 +284,6 @@
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-    <div class="docblock">
-        
-    </div>
 </div></div>
     <div><div class="item" id=".ignoreNamespaceMembers">
     
@@ -313,7 +291,7 @@
     
     <span class="modifier">private</span>
     
-    <span class="item-name"><a class="property-name" href="#.ignoreNamespaceMembers">ignoreNamespaceMembers</a><span>: <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+    <span class="item-name"><a class="property-name" href="#.ignoreNamespaceMembers"}>ignoreNamespaceMembers</a><span>: <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
     </span>
     <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L16>
 <span class="float-end sourceCode">
@@ -321,9 +299,6 @@
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-    <div class="docblock">
-        
-    </div>
 </div></div>
     <div><div class="item" id=".idAcc">
     
@@ -331,7 +306,7 @@
     
     <span class="modifier">private</span>
     
-    <span class="item-name"><a class="property-name" href="#.idAcc">idAcc</a><span>: <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+    <span class="item-name"><a class="property-name" href="#.idAcc"}>idAcc</a><span>: <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
     </span>
     <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L17>
 <span class="float-end sourceCode">
@@ -339,9 +314,6 @@
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-    <div class="docblock">
-        
-    </div>
 </div></div>
 
     <h2>Methods</h2>
@@ -354,19 +326,14 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.visitor">visitor</a><span>(<div class="left-item"><span class="item-name"><span class="param-name">sourceFile</span><span class="symbol">:</span> 
-<span>ts.SourceFile<span class='symbol'> | </span>ts.Symbol</span></span>,<br><span class="item-name"><span class="param-name">currentModule</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>,<br><span class="item-name"><span class="param-name">addToExports</span> <span class="symbol">=</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">false</a></span></span></div>)</span><span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://www.typescriptlang.org/docs/handbook/2/functions.html#void">void</a></span></span></span>
-        
+        <span class="monospace"><a class="item-name method-name" href="#.visitor"}>visitor</a><span>(<div class="left-item"><span class="item-name"><span class="param-name">sourceFile</span><span class="symbol">:</span> 
+<span>ts.SourceFile<span class='symbol'> | </span><span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol">Symbol</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Symbol</span></span></span></span></span></span>,<br><span class="item-name"><span class="param-name">currentModule</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>,<br><span class="item-name"><span class="param-name">addToExports</span> <span class="symbol">=</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">false</a></span></span></div>)</span><span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://www.typescriptlang.org/docs/handbook/2/functions.html#void">void</a></span></span></span>
     <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L37>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".getOrCreateModule" class="item">
@@ -376,18 +343,13 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.getOrCreateModule">getOrCreateModule</a><span>(<span class="item-name"><span class="param-name">source</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span></span>
-        
+        <span class="monospace"><a class="item-name method-name" href="#.getOrCreateModule"}>getOrCreateModule</a><span>(<span class="item-name"><span class="param-name">source</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span></span>
     <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L133>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".forEachModule" class="item">
@@ -397,20 +359,15 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.forEachModule">forEachModule</a><span>&lt;<span>R</span>&gt;</span><span>(<span class="item-name"><span class="param-name">module</span> <span class="symbol">=</span> <span><span class="reference-link item-name">module</span></span></span>, <span class="item-name"><span class="param-name">cb</span><span class="symbol">:</span> <span>(<span class="item-name"><span class="param-name">module</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>, <span class="item-name"><span class="param-name">path</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Array</span></span></span><span>&lt;<span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>&gt;</span></span></span>) <span class="symbol">=></span> 
-<span><span><span class="c-tooltip"><a class="reference-link object">R</a><span class="c-tooltip-content"><span class="keyword">type parameter</span> <span class="item-name object">R</span></span></span></span><span class='symbol'> | </span><span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></span></span></span>, <span class="item-name"><span class="param-name">pathToMod</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Array</span></span></span><span>&lt;<span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>&gt;</span></span> <span class="symbol">=</span> []</span>)</span><span><span class="symbol">:</span> 
+        <span class="monospace"><a class="item-name method-name" href="#.forEachModule"}>forEachModule</a><span>&lt;<span>R</span>&gt;</span><span>(<div class="left-item"><span class="item-name"><span class="param-name">module</span> <span class="symbol">=</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>,<br><span class="item-name"><span class="param-name">cb</span><span class="symbol">:</span> <span>(<span class="item-name"><span class="param-name">module</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>, <span class="item-name"><span class="param-name">path</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Array</span></span></span><span>&lt;<span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>&gt;</span></span></span>) <span class="symbol">=></span> 
+<span><span><span class="c-tooltip"><a class="reference-link object">R</a><span class="c-tooltip-content"><span class="keyword">type parameter</span> <span class="item-name object">R</span></span></span></span><span class='symbol'> | </span><span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></span></span></span>,<br><span class="item-name"><span class="param-name">pathToMod</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Array</span></span></span><span>&lt;<span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>&gt;</span></span> <span class="symbol">=</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Array</span></span></span><span>&lt;<span class="reference-link"><a class='primitive'>never</a></span>&gt;</span></span></span></div>)</span><span><span class="symbol">:</span> 
 <span><span><span class="c-tooltip"><a class="reference-link object">R</a><span class="c-tooltip-content"><span class="keyword">type parameter</span> <span class="item-name object">R</span></span></span></span><span class='symbol'> | </span><span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></span></span></span>
-        
     <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L174>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".handleSymbol" class="item">
@@ -420,19 +377,14 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.handleSymbol">handleSymbol</a><span>(<span class="item-name"><span class="param-name">val</span><span class="symbol">:</span> ts.Symbol</span>, <span class="item-name"><span class="param-name">currentModule</span><span class="symbol">?</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>, <span class="item-name"><span class="param-name">isCached</span><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>)</span><span><span class="symbol">:</span> 
+        <span class="monospace"><a class="item-name method-name" href="#.handleSymbol"}>handleSymbol</a><span>(<div class="left-item"><span class="item-name"><span class="param-name">val</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol">Symbol</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Symbol</span></span></span></span></span>,<br><span class="item-name"><span class="param-name">currentModule</span><span class="symbol">?</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>,<br><span class="item-name"><span class="param-name">isCached</span><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span></div>)</span><span><span class="symbol">:</span> 
 <span><span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/ReferenceType.html">ReferenceType</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">ReferenceType</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">ReferenceType</span></span></span></span></span><span class='symbol'> | </span><span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></span></span></span>
-        
     <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L184>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".handleClassDecl" class="item">
@@ -442,19 +394,14 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.handleClassDecl">handleClassDecl</a><span>(<span class="item-name"><span class="param-name">symbol</span><span class="symbol">:</span> ts.Symbol</span>, <span class="item-name"><span class="param-name">currentModule</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>, <span class="item-name"><span class="param-name">isCached</span><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>)</span><span><span class="symbol">:</span> 
+        <span class="monospace"><a class="item-name method-name" href="#.handleClassDecl"}>handleClassDecl</a><span>(<div class="left-item"><span class="item-name"><span class="param-name">symbol</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol">Symbol</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Symbol</span></span></span></span></span>,<br><span class="item-name"><span class="param-name">currentModule</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>,<br><span class="item-name"><span class="param-name">isCached</span><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span></div>)</span><span><span class="symbol">:</span> 
 <span><span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/ReferenceType.html">ReferenceType</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">ReferenceType</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">ReferenceType</span></span></span></span></span><span class='symbol'> | </span><span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></span></span></span>
-        
     <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L228>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".handleInterfaceDecl" class="item">
@@ -464,19 +411,14 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.handleInterfaceDecl">handleInterfaceDecl</a><span>(<span class="item-name"><span class="param-name">sym</span><span class="symbol">:</span> ts.Symbol</span>, <span class="item-name"><span class="param-name">currentModule</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>, <span class="item-name"><span class="param-name">isCached</span><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>)</span><span><span class="symbol">:</span> 
+        <span class="monospace"><a class="item-name method-name" href="#.handleInterfaceDecl"}>handleInterfaceDecl</a><span>(<div class="left-item"><span class="item-name"><span class="param-name">sym</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol">Symbol</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Symbol</span></span></span></span></span>,<br><span class="item-name"><span class="param-name">currentModule</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>,<br><span class="item-name"><span class="param-name">isCached</span><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span></div>)</span><span><span class="symbol">:</span> 
 <span><span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/ReferenceType.html">ReferenceType</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">ReferenceType</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">ReferenceType</span></span></span></span></span><span class='symbol'> | </span><span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></span></span></span>
-        
-    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L367>
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L371>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".handleEnumDecl" class="item">
@@ -486,19 +428,14 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.handleEnumDecl">handleEnumDecl</a><span>(<span class="item-name"><span class="param-name">sym</span><span class="symbol">:</span> ts.Symbol</span>, <span class="item-name"><span class="param-name">currentModule</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>, <span class="item-name"><span class="param-name">isCached</span><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>)</span><span><span class="symbol">:</span> 
+        <span class="monospace"><a class="item-name method-name" href="#.handleEnumDecl"}>handleEnumDecl</a><span>(<div class="left-item"><span class="item-name"><span class="param-name">sym</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol">Symbol</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Symbol</span></span></span></span></span>,<br><span class="item-name"><span class="param-name">currentModule</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>,<br><span class="item-name"><span class="param-name">isCached</span><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span></div>)</span><span><span class="symbol">:</span> 
 <span><span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/ReferenceType.html">ReferenceType</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">ReferenceType</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">ReferenceType</span></span></span></span></span><span class='symbol'> | </span><span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></span></span></span>
-        
-    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L407>
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L412>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".handleTypeAliasDecl" class="item">
@@ -508,19 +445,14 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.handleTypeAliasDecl">handleTypeAliasDecl</a><span>(<span class="item-name"><span class="param-name">sym</span><span class="symbol">:</span> ts.Symbol</span>, <span class="item-name"><span class="param-name">currentModule</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>, <span class="item-name"><span class="param-name">isCached</span><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>)</span><span><span class="symbol">:</span> 
+        <span class="monospace"><a class="item-name method-name" href="#.handleTypeAliasDecl"}>handleTypeAliasDecl</a><span>(<div class="left-item"><span class="item-name"><span class="param-name">sym</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol">Symbol</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Symbol</span></span></span></span></span>,<br><span class="item-name"><span class="param-name">currentModule</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>,<br><span class="item-name"><span class="param-name">isCached</span><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span></div>)</span><span><span class="symbol">:</span> 
 <span><span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/ReferenceType.html">ReferenceType</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">ReferenceType</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">ReferenceType</span></span></span></span></span><span class='symbol'> | </span><span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></span></span></span>
-        
-    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L455>
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L460>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".handleNamespaceDecl" class="item">
@@ -530,19 +462,14 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.handleNamespaceDecl">handleNamespaceDecl</a><span>(<span class="item-name"><span class="param-name">symbol</span><span class="symbol">:</span> ts.Symbol</span>, <span class="item-name"><span class="param-name">currentModule</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>, <span class="item-name"><span class="param-name">isCached</span><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>)</span><span><span class="symbol">:</span> 
+        <span class="monospace"><a class="item-name method-name" href="#.handleNamespaceDecl"}>handleNamespaceDecl</a><span>(<div class="left-item"><span class="item-name"><span class="param-name">symbol</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol">Symbol</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Symbol</span></span></span></span></span>,<br><span class="item-name"><span class="param-name">currentModule</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>,<br><span class="item-name"><span class="param-name">isCached</span><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span></div>)</span><span><span class="symbol">:</span> 
 <span><span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/ReferenceType.html">ReferenceType</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">ReferenceType</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">ReferenceType</span></span></span></span></span><span class='symbol'> | </span><span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></span></span></span>
-        
-    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L477>
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L482>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".handleVariableDecl" class="item">
@@ -552,19 +479,14 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.handleVariableDecl">handleVariableDecl</a><span>(<span class="item-name"><span class="param-name">sym</span><span class="symbol">:</span> ts.Symbol</span>, <span class="item-name"><span class="param-name">currentModule</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>, <span class="item-name"><span class="param-name">isCached</span><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>)</span><span><span class="symbol">:</span> 
+        <span class="monospace"><a class="item-name method-name" href="#.handleVariableDecl"}>handleVariableDecl</a><span>(<div class="left-item"><span class="item-name"><span class="param-name">sym</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol">Symbol</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Symbol</span></span></span></span></span>,<br><span class="item-name"><span class="param-name">currentModule</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>,<br><span class="item-name"><span class="param-name">isCached</span><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span></div>)</span><span><span class="symbol">:</span> 
 <span><span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/ReferenceType.html">ReferenceType</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">ReferenceType</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">ReferenceType</span></span></span></span></span><span class='symbol'> | </span><span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></span></span></span>
-        
-    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L500>
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L505>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".handleFunctionDecl" class="item">
@@ -574,19 +496,14 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.handleFunctionDecl">handleFunctionDecl</a><span>(<span class="item-name"><span class="param-name">sym</span><span class="symbol">:</span> ts.Symbol</span>, <span class="item-name"><span class="param-name">currentModule</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>, <span class="item-name"><span class="param-name">isCached</span><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>)</span><span><span class="symbol">:</span> 
+        <span class="monospace"><a class="item-name method-name" href="#.handleFunctionDecl"}>handleFunctionDecl</a><span>(<div class="left-item"><span class="item-name"><span class="param-name">sym</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol">Symbol</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Symbol</span></span></span></span></span>,<br><span class="item-name"><span class="param-name">currentModule</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>,<br><span class="item-name"><span class="param-name">isCached</span><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span></div>)</span><span><span class="symbol">:</span> 
 <span><span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/ReferenceType.html">ReferenceType</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">ReferenceType</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">ReferenceType</span></span></span></span></span><span class='symbol'> | </span><span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></span></span></span>
-        
-    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L523>
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L528>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".resolveSymbolOrStr" class="item">
@@ -596,18 +513,13 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.resolveSymbolOrStr">resolveSymbolOrStr</a><span>(<span class="item-name"><span class="param-name">node</span><span class="symbol">:</span> ts.Node</span>, <span class="item-name"><span class="param-name">typeArguments</span><span class="symbol">?</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Array</span></span></span><span>&lt;<span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/type/Type.html">Type</a><span class="c-tooltip-content"><span class="keyword">type</span> <span class="item-name object">Type</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Type</span></span></span></span></span>&gt;</span></span></span>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/type/Type.html">Type</a><span class="c-tooltip-content"><span class="keyword">type</span> <span class="item-name object">Type</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Type</span></span></span></span></span></span></span>
-        
-    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L552>
+        <span class="monospace"><a class="item-name method-name" href="#.resolveSymbolOrStr"}>resolveSymbolOrStr</a><span>(<div class="left-item"><span class="item-name"><span class="param-name">node</span><span class="symbol">:</span> ts.Node</span>,<br><span class="item-name"><span class="param-name">typeArguments</span><span class="symbol">?</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Array</span></span></span><span>&lt;<span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/type/Type.html">Type</a><span class="c-tooltip-content"><span class="keyword">type</span> <span class="item-name object">Type</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Type</span></span></span></span></span>&gt;</span></span></span></div>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/type/Type.html">Type</a><span class="c-tooltip-content"><span class="keyword">type</span> <span class="item-name object">Type</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Type</span></span></span></span></span></span></span>
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L558>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".resolveSymbol" class="item">
@@ -617,18 +529,13 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.resolveSymbol">resolveSymbol</a><span>(<span class="item-name"><span class="param-name">sym</span><span class="symbol">:</span> ts.Symbol</span>, <span class="item-name"><span class="param-name">typeArguments</span><span class="symbol">?</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Array</span></span></span><span>&lt;<span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/type/Type.html">Type</a><span class="c-tooltip-content"><span class="keyword">type</span> <span class="item-name object">Type</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Type</span></span></span></span></span>&gt;</span></span></span>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Reference.html">Reference</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Reference</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Reference</span></span></span></span></span></span></span>
-        
-    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L564>
+        <span class="monospace"><a class="item-name method-name" href="#.resolveSymbol"}>resolveSymbol</a><span>(<div class="left-item"><span class="item-name"><span class="param-name">sym</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol">Symbol</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Symbol</span></span></span></span></span>,<br><span class="item-name"><span class="param-name">typeArguments</span><span class="symbol">?</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Array</span></span></span><span>&lt;<span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/type/Type.html">Type</a><span class="c-tooltip-content"><span class="keyword">type</span> <span class="item-name object">Type</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Type</span></span></span></span></span>&gt;</span></span></span></div>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Reference.html">Reference</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Reference</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Reference</span></span></span></span></span></span></span>
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L578>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".resolveType" class="item">
@@ -638,18 +545,13 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.resolveType">resolveType</a><span>(<span class="item-name"><span class="param-name">type</span><span class="symbol">:</span> ts.Node</span>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/type/Type.html">Type</a><span class="c-tooltip-content"><span class="keyword">type</span> <span class="item-name object">Type</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Type</span></span></span></span></span></span></span>
-        
-    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L583>
+        <span class="monospace"><a class="item-name method-name" href="#.resolveType"}>resolveType</a><span>(<span class="item-name"><span class="param-name">type</span><span class="symbol">:</span> ts.Node</span>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/type/Type.html">Type</a><span class="c-tooltip-content"><span class="keyword">type</span> <span class="item-name object">Type</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Type</span></span></span></span></span></span></span>
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L597>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".resolveReturnType" class="item">
@@ -659,20 +561,15 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.resolveReturnType">resolveReturnType</a><span>(<div class="left-item"><span class="item-name"><span class="param-name">fn</span><span class="symbol">:</span> 
-<span>ts.MethodDeclaration<span class='symbol'> | </span>ts.FunctionDeclaration<span class='symbol'> | </span>ts.GetAccessorDeclaration<span class='symbol'> | </span>ts.SetAccessorDeclaration</span></span></div>)</span><span><span class="symbol">:</span> 
+        <span class="monospace"><a class="item-name method-name" href="#.resolveReturnType"}>resolveReturnType</a><span>(<div class="left-item"><span class="item-name"><span class="param-name">fn</span><span class="symbol">:</span> 
+<span>ts.MethodDeclaration<span class='symbol'> | </span>ts.FunctionDeclaration<span class='symbol'> | </span>ts.GetAccessorDeclaration<span class='symbol'> | </span>ts.SetAccessorDeclaration<span class='symbol'> | </span>ts.FunctionExpression<span class='symbol'> | </span>ts.ArrowFunction</span></span></div>)</span><span><span class="symbol">:</span> 
 <span><span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/type/Type.html">Type</a><span class="c-tooltip-content"><span class="keyword">type</span> <span class="item-name object">Type</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Type</span></span></span></span></span><span class='symbol'> | </span><span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></span></span></span>
-        
-    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L735>
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L749>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".resolveTypeParameters" class="item">
@@ -682,18 +579,13 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.resolveTypeParameters">resolveTypeParameters</a><span>(<span class="item-name"><span class="param-name">generic</span><span class="symbol">:</span> ts.TypeParameterDeclaration</span>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/TypeParameter.html">TypeParameter</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">TypeParameter</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">TypeParameter</span></span></span></span></span></span></span>
-        
-    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L758>
+        <span class="monospace"><a class="item-name method-name" href="#.resolveTypeParameters"}>resolveTypeParameters</a><span>(<div class="left-item"><span class="item-name"><span class="param-name">generic</span><span class="symbol">:</span> ts.TypeParameterDeclaration</span></div>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/TypeParameter.html">TypeParameter</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">TypeParameter</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">TypeParameter</span></span></span></span></span></span></span>
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L756>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".resolveObjectProperty" class="item">
@@ -703,18 +595,13 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.resolveObjectProperty">resolveObjectProperty</a><span>(<span class="item-name"><span class="param-name">prop</span><span class="symbol">:</span> ts.TypeElement</span>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/ObjectProperty.html">ObjectProperty</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">ObjectProperty</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">ObjectProperty</span></span></span></span></span></span></span>
-        
-    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L766>
+        <span class="monospace"><a class="item-name method-name" href="#.resolveObjectProperty"}>resolveObjectProperty</a><span>(<span class="item-name"><span class="param-name">prop</span><span class="symbol">:</span> ts.TypeElement</span>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/ObjectProperty.html">ObjectProperty</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">ObjectProperty</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">ObjectProperty</span></span></span></span></span></span></span>
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L764>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".resolveHeritage" class="item">
@@ -724,18 +611,13 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.resolveHeritage">resolveHeritage</a><span>(<span class="item-name"><span class="param-name">param</span><span class="symbol">:</span> ts.ExpressionWithTypeArguments</span>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/type/Type.html">Type</a><span class="c-tooltip-content"><span class="keyword">type</span> <span class="item-name object">Type</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Type</span></span></span></span></span></span></span>
-        
-    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L817>
+        <span class="monospace"><a class="item-name method-name" href="#.resolveHeritage"}>resolveHeritage</a><span>(<div class="left-item"><span class="item-name"><span class="param-name">param</span><span class="symbol">:</span> ts.ExpressionWithTypeArguments</span></div>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/type/Type.html">Type</a><span class="c-tooltip-content"><span class="keyword">type</span> <span class="item-name object">Type</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Type</span></span></span></span></span></span></span>
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L821>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".resolveParameter" class="item">
@@ -745,18 +627,13 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.resolveParameter">resolveParameter</a><span>(<span class="item-name"><span class="param-name">param</span><span class="symbol">:</span> ts.ParameterDeclaration</span>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/FunctionParameter.html">FunctionParameter</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">FunctionParameter</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">FunctionParameter</span></span></span></span></span></span></span>
-        
-    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L821>
+        <span class="monospace"><a class="item-name method-name" href="#.resolveParameter"}>resolveParameter</a><span>(<div class="left-item"><span class="item-name"><span class="param-name">param</span><span class="symbol">:</span> ts.ParameterDeclaration</span></div>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/FunctionParameter.html">FunctionParameter</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">FunctionParameter</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">FunctionParameter</span></span></span></span></span></span></span>
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L825>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".resolveExpressionToType" class="item">
@@ -766,18 +643,29 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.resolveExpressionToType">resolveExpressionToType</a><span>(<span class="item-name"><span class="param-name">exp</span><span class="symbol">:</span> ts.Node</span>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/type/Type.html">Type</a><span class="c-tooltip-content"><span class="keyword">type</span> <span class="item-name object">Type</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Type</span></span></span></span></span></span></span>
-        
-    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L833>
+        <span class="monospace"><a class="item-name method-name" href="#.resolveExpressionToType"}>resolveExpressionToType</a><span>(<span class="item-name"><span class="param-name">exp</span><span class="symbol">:</span> ts.Node</span>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/type/Type.html">Type</a><span class="c-tooltip-content"><span class="keyword">type</span> <span class="item-name object">Type</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Type</span></span></span></span></span></span></span>
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L837>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
+</div></div>
+    <div>
+<div id=".resolveTypeType" class="item">
+    
+    
+    
+    
+    
+    
+        <span class="monospace"><a class="item-name method-name" href="#.resolveTypeType"}>resolveTypeType</a><span>(<span class="item-name"><span class="param-name">type</span><span class="symbol">:</span> ts.Type</span>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/type/Type.html">Type</a><span class="c-tooltip-content"><span class="keyword">type</span> <span class="item-name object">Type</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Type</span></span></span></span></span></span></span>
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L868>
+<span class="float-end sourceCode">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
+  <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
+</svg>
+</span></a>
 </div></div>
     <div>
 <div id=".resolveAliasedSymbol" class="item">
@@ -787,18 +675,13 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.resolveAliasedSymbol">resolveAliasedSymbol</a><span>(<span class="item-name"><span class="param-name">symbol</span><span class="symbol">:</span> ts.Symbol</span>)</span><span><span class="symbol">:</span> ts.Symbol</span></span>
-        
-    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L854>
+        <span class="monospace"><a class="item-name method-name" href="#.resolveAliasedSymbol"}>resolveAliasedSymbol</a><span>(<span class="item-name"><span class="param-name">symbol</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol">Symbol</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Symbol</span></span></span></span></span>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol">Symbol</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Symbol</span></span></span></span></span></span>
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L943>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".getJSDocCommentOfParam" class="item">
@@ -808,19 +691,14 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.getJSDocCommentOfParam">getJSDocCommentOfParam</a><span>(<span class="item-name"><span class="param-name">node</span><span class="symbol">:</span> ts.ParameterDeclaration</span>)</span><span><span class="symbol">:</span> 
+        <span class="monospace"><a class="item-name method-name" href="#.getJSDocCommentOfParam"}>getJSDocCommentOfParam</a><span>(<div class="left-item"><span class="item-name"><span class="param-name">node</span><span class="symbol">:</span> ts.ParameterDeclaration</span></div>)</span><span><span class="symbol">:</span> 
 <span><span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span class='symbol'> | </span><span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></span></span></span>
-        
-    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L863>
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L952>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".getJSDocData" class="item">
@@ -830,19 +708,14 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.getJSDocData">getJSDocData</a><span>(<span class="item-name"><span class="param-name">node</span><span class="symbol">:</span> ts.Node</span>)</span><span><span class="symbol">:</span> 
+        <span class="monospace"><a class="item-name method-name" href="#.getJSDocData"}>getJSDocData</a><span>(<span class="item-name"><span class="param-name">node</span><span class="symbol">:</span> ts.Node</span>)</span><span><span class="symbol">:</span> 
 <span><span><span class="c-tooltip"><a class="reference-link object" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Array</span></span></span><span>&lt;<span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/JSDocData.html">JSDocData</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">JSDocData</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">JSDocData</span></span></span></span></span>&gt;</span></span><span class='symbol'> | </span><span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></span></span></span>
-        
-    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L869>
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L958>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".getLOC" class="item">
@@ -852,18 +725,13 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.getLOC">getLOC</a><span>(<div class="left-item"><span class="item-name"><span class="param-name">currentModule</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>,<br><span class="item-name"><span class="param-name">node</span><span class="symbol">:</span> ts.Node</span>,<br><span class="item-name"><span class="param-name">sourceFile</span> <span class="symbol">=</span> node.getSourceFile()</span>,<br><span class="item-name"><span class="param-name">includeLine</span> <span class="symbol">=</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">true</a></span></span></div>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Loc.html">Loc</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Loc</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Loc</span></span></span></span></span></span></span>
-        
-    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L892>
+        <span class="monospace"><a class="item-name method-name" href="#.getLOC"}>getLOC</a><span>(<div class="left-item"><span class="item-name"><span class="param-name">currentModule</span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>,<br><span class="item-name"><span class="param-name">node</span><span class="symbol">:</span> ts.Node</span>,<br><span class="item-name"><span class="param-name">sourceFile</span> <span class="symbol">=</span> <span class="reference-link"><span class='primitive'>any</span></span></span>,<br><span class="item-name"><span class="param-name">includeLine</span> <span class="symbol">=</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">true</a></span></span></div>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Loc.html">Loc</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Loc</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Loc</span></span></span></span></span></span></span>
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L981>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".resolveSourceFile" class="item">
@@ -873,19 +741,14 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.resolveSourceFile">resolveSourceFile</a><span>(<span class="item-name"><span class="param-name">filePath</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>, <span class="item-name"><span class="param-name">relative</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>)</span><span><span class="symbol">:</span> 
+        <span class="monospace"><a class="item-name method-name" href="#.resolveSourceFile"}>resolveSourceFile</a><span>(<div class="left-item"><span class="item-name"><span class="param-name">filePath</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>,<br><span class="item-name"><span class="param-name">relative</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span></div>)</span><span><span class="symbol">:</span> 
 <span>ts.SourceFile<span class='symbol'> | </span><span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></span></span></span>
-        
-    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L902>
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L991>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".moduleToJSON" class="item">
@@ -895,18 +758,13 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.moduleToJSON">moduleToJSON</a><span>(<span class="item-name"><span class="param-name">module</span> <span class="symbol">=</span> <span><span class="reference-link item-name">module</span></span></span>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeystype">Record</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Record</span></span></span><span>&lt;<span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, <span class="reference-link"><span class='primitive'>unknown</span></span>&gt;</span></span></span></span>
-        
-    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L916>
+        <span class="monospace"><a class="item-name method-name" href="#.moduleToJSON"}>moduleToJSON</a><span>(<span class="item-name"><span class="param-name">module</span> <span class="symbol">=</span> <span><span class="c-tooltip"><a class="reference-link object" href="../../../m.extractor/m.extractor/interface/Module.html">Module</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">Module</span><span style="display:block" class="monospace fw-bold">extractor/extractor/<span class="item-name object">Module</span></span></span></span></span></span>)</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeystype">Record</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Record</span></span></span><span>&lt;<span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, <span class="reference-link"><span class='primitive'>unknown</span></span>&gt;</span></span></span></span>
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L1011>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
     <div>
 <div id=".toJSON" class="item">
@@ -916,18 +774,13 @@
     
     
     
-        <span class="monospace"><a class="item-name method-name" href="#.toJSON">toJSON</a><span>()</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeystype">Record</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Record</span></span></span><span>&lt;<span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, <span class="reference-link"><span class='primitive'>unknown</span></span>&gt;</span></span></span></span>
-        
-    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L925>
+        <span class="monospace"><a class="item-name method-name" href="#.toJSON"}>toJSON</a><span>()</span><span><span class="symbol">:</span> <span><span class="c-tooltip"><a class="reference-link object" href="https://www.typescriptlang.org/docs/handbook/utility-types.html#recordkeystype">Record</a><span class="c-tooltip-content"><span class="keyword">external item</span> <span class="item-name object">Record</span></span></span><span>&lt;<span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, <span class="reference-link"><span class='primitive'>unknown</span></span>&gt;</span></span></span></span>
+    <a href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/Project.ts#L1020>
 <span class="float-end sourceCode">
 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
   <path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294l4-13zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z"></path>
 </svg>
 </span></a>
-        <div class="docblock">
-        <ul></ul>
-        
-    </div>
 </div></div>
 
 </div>

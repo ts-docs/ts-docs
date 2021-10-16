@@ -41,7 +41,7 @@
               </a>
              </div>
             <div class="col">
-              <span style="font-size: 1.2em">v0.1.2</span>
+              <span style="font-size: 1.2em">v0.1.3</span>
             </div>
           </div>
         </div>
@@ -54,6 +54,7 @@
     
     <p class="current-thing">interface <span class="object">ExternalReference</span></p>
     <div class="sidebar-members">
+    
     
         <div class="sidebar-member">
         <div class="collapsible-trigger">
@@ -149,11 +150,11 @@
           <div>
     <h1>Interface <span class="referenceLink object">ExternalReference</span></h1>
 
+    
+
+
 
         <p><a class="secondary-text" href=https://github.com/GoogleFeud/ts-extractor/tree/rewrite/src/extractor/ReferenceManager.ts#L6>Defined in ReferenceManager.ts</a></p>
-
-
-
 
     <p></p>
 
@@ -162,10 +163,8 @@
     <div>
             
 <div>
-        <div class="item" id=".run">
-             <div class="item-name"><a class="property-name" href="#.run">run</a><span class="symbol">:</span> <span>(<span class="item-name"><span class="param-name">symbol</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>, <span class="item-name"><span class="param-name">source</span><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>) <span class="symbol">=></span> 
-<span><span>{ <span class="item-name"><a class="item-name property-name" href="#.link">link</a><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>, <span class="item-name"><a class="item-name property-name" href="#.displayName">displayName</a><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>, <span class="item-name"><a class="item-name property-name" href="#.name">name</a><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span> }</span><span class='symbol'> | </span><span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></span></span></div>
-        </div>
+    <div class="item" id=".run"><div class="item-name"><a class="property-name" href="#.run"}>run</a><span class="symbol">:</span> <span>(<span class="item-name"><span class="param-name">symbol</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>, <span class="item-name"><span class="param-name">source</span><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>) <span class="symbol">=></span> 
+<span><span>{​<span class="item-name"><a class="item-name property-name" href="#.link"}>link</a><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>, <span class="item-name"><a class="item-name property-name" href="#.displayName"}>displayName</a><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>, <span class="item-name"><a class="item-name property-name" href="#.name"}>name</a><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>​}</span><span class='symbol'> | </span><span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined">undefined</a></span></span></span></div></div>
         <div class="docblock">
             <p>The source is undefined only when the thing is not imported, which means it&#39;s a global object. (Array, Promise, etc.)</p>
 
@@ -174,9 +173,7 @@
 
             
 <div>
-        <div class="item" id=".baseName">
-             <div class="item-name"><a class="property-name" href="#.baseName">baseName</a><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></div>
-        </div>
+    <div class="item" id=".baseName"><div class="item-name"><a class="property-name" href="#.baseName"}>baseName</a><span class="symbol">?</span><span class="symbol">:</span> <span class="reference-link"><a class='primitive' href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></div></div>
         <div class="docblock">
             <p>If this property is provided to the reference manager, it&#39;s going to parse the import module name and if the first part of it matches the baseName, the 
 run function will be called.</p>

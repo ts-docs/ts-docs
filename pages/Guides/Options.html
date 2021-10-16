@@ -41,7 +41,7 @@
               </a>
              </div>
             <div class="col">
-              <span style="font-size: 1.2em">v0.1.2</span>
+              <span style="font-size: 1.2em">v0.1.3</span>
             </div>
           </div>
         </div>
@@ -55,13 +55,14 @@
     
     <div class="sidebar-members">
     
+    
         <div class="sidebar-member">
         <div class="collapsible-trigger">
         <span class="collapsible-arrow open"></span>
         <span class="sidebar-category"><a id="#options">Options</a></span>
         </div>
         <div class="collapsible-body open"> 
-        <span class="sidebar-category-member"><a href="#cli-usage" class="sidebar-category-member">CLI usage</a></span><span class="sidebar-category-member"><a href="#tsconfig-usage" class="sidebar-category-member">Tsconfig usage</a></span><span class="sidebar-category-member">
+        <span class="sidebar-category-member"><a href="#cli-usage" class="sidebar-category-member">CLI usage</a></span><span class="sidebar-category-member"><a href="#tsconfig-usage" class="sidebar-category-member">Tsconfig usage</a></span><span class="sidebar-category-member"><a href="#tsdocsconfigjs-usage" class="sidebar-category-member">tsdocs.config.js usage</a></span><span class="sidebar-category-member">
     <div>
     <a class="fw-bold" href="#list-of-options">List of options</a>
     <div style="padding-left:15px"> 
@@ -170,11 +171,14 @@
 <li><code>tsdocs.config.js</code> file, which must export an object with the options. You can generate this file with the <code>--init</code> flag.</li>
 </ul>
 <p>ts-docs first gets all CLI arguments, then joins them with the options from the typescript configuration, and finally with the <code>tsdocs.config.js</code> file. </p>
-<h2 id="cli-usage" class="section-header">CLI usage</h2><p><code>ts-docs --options &lt;entry points&gt;</code></p>
+<h2 id="cli-usage" class="section-header">CLI usage</h2><p><code>ts-docs /entry/point.js</code></p>
 <h2 id="tsconfig-usage" class="section-header">Tsconfig usage</h2><pre><code class="hljs">  <span class="hljs-attr">&quot;tsdocsOptions&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
     <span class="hljs-attr">&quot;entryPoints&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;/entry/point.js&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
     ...other options
-  <span class="hljs-punctuation">}</span></code></pre><h2 id="list-of-options" class="section-header">List of options</h2><p>To check out all the default options in one place, see the <span><span class="c-tooltip"><a class="reference-link constant" href="../../m.ts-docs/constant/options.html">options</a><span class="c-tooltip-content"><span class="keyword">const</span> <span class="item-name constant">options</span><span style="display:block" class="monospace fw-bold">ts-docs/<span class="item-name constant">options</span></span></span></span></span> constant.</p>
+  <span class="hljs-punctuation">}</span></code></pre><h2 id="tsdocsconfigjs-usage" class="section-header">tsdocs.config.js usage</h2><pre><code class="hljs"><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = {
+    <span class="hljs-string">&quot;entryPoints&quot;</span>: [<span class="hljs-string">&quot;/entry/point.js&quot;</span>]
+    ...other options
+}</code></pre><h2 id="list-of-options" class="section-header">List of options</h2><p>To check out all the default options in one place, see the <span><span class="c-tooltip"><a class="reference-link constant" href="../../m.ts-docs/constant/options.html">options</a><span class="c-tooltip-content"><span class="keyword">const</span> <span class="item-name constant">options</span><span style="display:block" class="monospace fw-bold">ts-docs/<span class="item-name constant">options</span></span></span></span></span> constant.</p>
 <h3 id="entrypoints" class="section-header">entryPoints</h3><p>The entry points of all projects you want to be included in the documentation. Every project should have exactly one entry point, and the <strong>order</strong> matters. If package A relies on package B, but package A is specified first, then you&#39;ll see some of package B&#39;s modules being inside of package A. This will be fixed in the future, but for now, <strong>the order matters</strong>.</p>
 <h3 id="structure" class="section-header">structure</h3><p>Which documentation structure to use. You should only provide the <strong>name</strong> of the documentation structure, ts-docs expects it to be located inside your <code>node_modules</code> folder. ts-docs doesn&#39;t come with any documentation structures, but the default of this option is <code>default-docs-structure</code>. To install the default structure use the following command:</p>
 <pre><code class="hljs">npm i --save-dev @ts-docs/<span class="hljs-keyword">default</span>-docs-structure</code></pre><h3 id="landingpage" class="section-header">landingPage</h3><p>If your project is a monorepo, you can use this option to tell ts-docs which repository to use the README, version and name of for the landing page. The first provided entry point is used by default. </p>
@@ -186,29 +190,33 @@
 <h3 id="logo" class="section-header">logo</h3><p>A logo to use. It MUST be inside the folder provided to the <code>assets</code> option. The logo will be placed in the sidebar, below the name. </p>
 <h3 id="externals" class="section-header">externals</h3><p>An array of extenal libs. This option can only be supplied with the <code>tsdocs.config.js</code> file. To read more about external libraries and how to set them up, go <a href="https://ts-docs.github.io/ts-docs/pages/Guides/Externals.html">here</a> </p>
 <h3 id="passthroughmodules" class="section-header">passthroughModules</h3><p>If for some reason you don&#39;t want a specific folder to become a module, include the name of the folder it in the <code>passthroughModules</code> array. All the things inside that folder will be in the <strong>parent</strong> module. </p>
-<h3 id="branches" class="section-header">branches</h3><p>You can also document future (or previous) stable versions of your module using the <code>branches</code> option. When the option is provided, a &quot;Branches&quot; section is added to the left of the index page, where you can switch between other branches of your project.</p>
-<p>The generator is going to use your already provided options for generating the different branches, except for the <code>landingPage</code> option. The branches in the <code>branches</code> array need to be a part of a <code>project</code>, so you cannot include branches from completely different repositories, which are from projects that are not in your <code>entryPoints</code> option.</p>
+<h3 id="branches" class="section-header">branches</h3><p>You can also document future (or previous) stable versions of your project using the <code>branches</code> option. When the option is provided, a &quot;Branches&quot; section is added to the left of the index page, where you can switch between other branches of your project.</p>
+<p>ts-docs will use the same options to generate the different branches, except for <code>landingPage</code> - you have to specify the landing page yourself.</p>
 <p>Here&#39;s how the option looks:</p>
-<pre><code class="hljs"><span class="hljs-attr">branches</span>: [
+<pre><code class="hljs">{
+    <span class="hljs-attr">entryPoints</span>: [<span class="hljs-string">&quot;./project-a/src/index&quot;</span>],
+    <span class="hljs-attr">branches</span>: [
         {
             <span class="hljs-attr">displayName</span>: <span class="hljs-string">&quot;next&quot;</span>, <span class="hljs-comment">// The name of the branch that will be displayed, can be anything you want</span>
-            <span class="hljs-attr">landingPage</span>: <span class="hljs-string">&quot;detritus-client&quot;</span>, <span class="hljs-comment">// The landing page of that branch</span>
+            <span class="hljs-attr">landingPage</span>: <span class="hljs-string">&quot;project-a&quot;</span>, <span class="hljs-comment">// The landing page of that branch</span>
             <span class="hljs-attr">branches</span>: [ <span class="hljs-comment">// The ACTUAL branches that will be included</span>
                 {
-                    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;master&quot;</span>, <span class="hljs-comment">// The name of the branch</span>
+                    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;dev&quot;</span>, <span class="hljs-comment">// The name of the branch</span>
                     <span class="hljs-attr">entryPoint</span>: <span class="hljs-string">&quot;./src/index&quot;</span>, <span class="hljs-comment">// The entry point of the project, relative to the root directory of the project</span>
-                    <span class="hljs-attr">project</span>: <span class="hljs-string">&quot;detritus-utils&quot;</span> <span class="hljs-comment">// The name of the project (the name in package.json)</span>
+                    <span class="hljs-attr">project</span>: <span class="hljs-string">&quot;project-a&quot;</span> <span class="hljs-comment">// The name of the project (the name in package.json)</span>
                 },
                 {
-                    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;0.16.4&quot;</span>,
+                    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;main&quot;</span>,
                     <span class="hljs-attr">entryPoint</span>: <span class="hljs-string">&quot;./src/index&quot;</span>,
-                    <span class="hljs-attr">project</span>: <span class="hljs-string">&quot;detritus-client&quot;</span>
+                    <span class="hljs-attr">external</span>: <span class="hljs-string">&quot;https://github.com/ts-docs/ts-extractor&quot;</span> <span class="hljs-comment">// Link to the repository</span>
                 }
             ]
         }
-    ],</code></pre><h3 id="changelog" class="section-header">changelog</h3><p>If this option is enabled, a changelog will be generated. ts-docs will attempt to get the latest release in the <strong>repository of the landing page</strong>.</p>
+    ],
+}</code></pre><p>The <code>branches</code> property should be an array of <span><span class="c-tooltip"><a class="reference-link object" href="../../m.ts-docs/m.branches/interface/BranchOption.html">BranchOption</a><span class="c-tooltip-content"><span class="keyword">interface</span> <span class="item-name object">BranchOption</span><span style="display:block" class="monospace fw-bold">ts-docs/branches/<span class="item-name object">BranchOption</span></span></span></span></span>. Use the <span><a class="reference-link" href="../../m.ts-docs/m.branches/interface/BranchOption.html#.project"><span class="object">BranchOption</span><span class="symbol">.</span><span class="property-name">project</span></a></span> property if the branch is part of a project that is inside your <span><a class="reference-link" href="../../m.ts-docs/interface/TsDocsOptions.html#.entryPoints"><span class="object">TsDocsOptions</span><span class="symbol">.</span><span class="property-name">entryPoints</span></a></span> option, otherwise, use the <span><a class="reference-link" href="../../m.ts-docs/m.branches/interface/BranchOption.html#.external"><span class="object">BranchOption</span><span class="symbol">.</span><span class="property-name">external</span></a></span> option with a link to the repository.</p>
+<h3 id="changelog" class="section-header">changelog</h3><p>If this option is enabled, a changelog will be generated. ts-docs will attempt to get the latest release in the <strong>repository of the landing page</strong>.</p>
 <h3 id="forceemit" class="section-header">forceEmit</h3><p>To make the generation process faster, ts-docs will save the last time your files were modified, and the next time you want to generate documentation, ts-docs will skip untouched files. Turning on this option will always make it so new documentation is generated.</p>
-<h3 id="tsconfig" class="section-header">tsconfig</h3><p>Path to a <code>tsconfig.json</code> file to use for the typescript compiler.</p>
+<h3 id="tsconfig" class="section-header">tsconfig</h3><p>Path to a <code>tsconfig.json</code> file to use for the typescript compiler. The ts-docs extractor works best with a specific set of options, so if for some reason the docs you&#39;re getting are messed up, either provide a path to your project&#39;s <code>tsconfig.json</code> file, or pass <code>&quot;none&quot;</code>, which will pick the best compiler options to use.</p>
 
         </div>
 
