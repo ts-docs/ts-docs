@@ -4,6 +4,9 @@ on:
     branches:
       - main
   workflow_dispatch:
+  release:
+    branches:
+      - main
 jobs:
   deploy-docs:
     runs-on: ubuntu-latest

@@ -3,6 +3,7 @@ import { Project, ExternalReference, Utils } from "@ts-docs/extractor";
 import FrontMatter from "front-matter";
 import fs from "fs";
 import path from "path";
+import { BranchSetting } from "./branches";
 
 export interface LandingPage {
     repository?: string,
@@ -27,15 +28,6 @@ export interface PageCategory {
     pages: Array<CustomPage>
 }
 
-export interface BranchSetting {
-    displayName: string,
-    landingPage?: string,
-    branches: Array<{
-        name: string,
-        entryPoint: string,
-        project?: string
-    }>
-}
 
 export interface TsDocsOptions {
     entryPoints: Array<string>,

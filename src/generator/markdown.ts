@@ -2,7 +2,7 @@
 import { Project, TypeKinds, TypescriptExtractor } from "@ts-docs/extractor";
 import highlight from "highlight.js";
 import marked from "marked";
-import { Generator } from "./generator";
+import { Generator } from ".";
 
 export interface Heading {
     name: string,

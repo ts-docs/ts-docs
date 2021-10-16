@@ -14,7 +14,7 @@ ts-docs first gets all CLI arguments, then joins them with the options from the 
 
 ## CLI usage
 
-```ts-docs --options <entry points>```
+```ts-docs /entry/point.js```
 
 ## Tsconfig usage
 
@@ -23,6 +23,15 @@ ts-docs first gets all CLI arguments, then joins them with the options from the 
     "entryPoints": ["/entry/point.js"],
     ...other options
   }
+```
+
+## tsdocs.config.js usage
+
+```js
+module.exports = {
+    "entryPoints": ["/entry/point.js"]
+    ...other options
+}
 ```
 
 ## List of options
@@ -79,32 +88,38 @@ If for some reason you don't want a specific folder to become a module, include 
 
 ### branches
 
-You can also document future (or previous) stable versions of your module using the `branches` option. When the option is provided, a "Branches" section is added to the left of the index page, where you can switch between other branches of your project.
+You can also document future (or previous) stable versions of your project using the `branches` option. When the option is provided, a "Branches" section is added to the left of the index page, where you can switch between other branches of your project.
 
-The generator is going to use your already provided options for generating the different branches, except for the `landingPage` option. The branches in the `branches` array need to be a part of a `project`, so you cannot include branches from completely different repositories, which are from projects that are not in your `entryPoints` option.
+ts-docs will use the same options to generate the different branches, except for `landingPage` - you have to specify the landing page yourself.
 
 Here's how the option looks:
 
 ```js
-branches: [
+{
+    entryPoints: ["./project-a/src/index"],
+    branches: [
         {
             displayName: "next", // The name of the branch that will be displayed, can be anything you want
-            landingPage: "detritus-client", // The landing page of that branch
+            landingPage: "project-a", // The landing page of that branch
             branches: [ // The ACTUAL branches that will be included
                 {
-                    name: "master", // The name of the branch
+                    name: "dev", // The name of the branch
                     entryPoint: "./src/index", // The entry point of the project, relative to the root directory of the project
-                    project: "detritus-utils" // The name of the project (the name in package.json)
+                    project: "project-a" // The name of the project (the name in package.json)
                 },
                 {
-                    name: "0.16.4",
+                    name: "main",
                     entryPoint: "./src/index",
-                    project: "detritus-client"
+                    external: "https://github.com/ts-docs/ts-extractor" // Link to the repository
                 }
             ]
         }
     ],
+}
 ```
+
+The `branches` property should be an array of [[BranchOption]]. Use the [[BranchOption.project]] property if the branch is part of a project that is inside your [[TsDocsOptions.entryPoints]] option, otherwise, use the [[BranchOption.external]] option with a link to the repository.
+
 
 ### changelog
 
@@ -116,4 +131,4 @@ To make the generation process faster, ts-docs will save the last time your file
 
 ### tsconfig
 
-Path to a `tsconfig.json` file to use for the typescript compiler.
+Path to a `tsconfig.json` file to use for the typescript compiler. The ts-docs extractor works best with a specific set of options, so if for some reason the docs you're getting are messed up, either provide a path to your project's `tsconfig.json` file, or pass `"none"`, which will pick the best compiler options to use.

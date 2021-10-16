@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { DocumentStructure } from "./documentStructure";
+import { DocumentStructure } from "../documentStructure";
 import marked from "marked";
-import { copyFolder, createFile, escapeHTML, fetchChangelog, getPathFileName, getTagFromJSDoc, hasTagFromJSDoc, isLargeArr, isLargeObject, isLargeSignature } from "./utils";
+import { copyFolder, createFile, escapeHTML, fetchChangelog, getPathFileName, getTagFromJSDoc, isLargeArr, isLargeObject, isLargeSignature } from "../utils";
 import { Project, TypescriptExtractor, ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl, ConditionalType, MappedType, TypeOperator, IndexAccessedType, FunctionSignature, TypePredicateType, InferType, ObjectProperty, ConstructorType, TemplateLiteralType } from "@ts-docs/extractor";
 import path from "path";
-import { LandingPage, TsDocsOptions } from "./options";
+import { LandingPage, TsDocsOptions } from "../options";
 import fs from "fs";
 import Highlight from "highlight.js";
 import { Heading, initMarkdown } from "./markdown";
@@ -244,7 +244,9 @@ export class Generator {
             });
         } else return this.structure.components.propertyMember({
             ...property,
-            comment: this.generateComment((property as ClassProperty).jsDoc, {example: true}),
+            name: (typeof (property as ClassProperty).name === "string") ? (property as ClassProperty).name : this.generateType((property as ClassProperty).name as Type),
+            isComputed: (property as ClassProperty).name !== (property as ClassProperty).rawName,
+            comment: this.generateComment((property as ClassProperty).jsDoc, true, { returns: false, param: false }),
             type: property.type && this.generateType(property.type),
             initializer: (property as ClassProperty).initializer && this.generateType((property as ClassProperty).initializer!)
         });
@@ -256,8 +258,10 @@ export class Generator {
             return comp({
                 isProperty: true,
                 ...property.prop,
+                name: typeof property.prop.name === "string" ? property.prop.name : this.generateType(property.prop.name),
+                isComputed: property.prop.name !== property.prop.rawName,
                 type: property.prop.type && this.generateType(property.prop.type),
-                comment: this.generateComment(property.jsDoc, { example: true })
+                comment: this.generateComment(property.jsDoc, true, { returns: false, param: false })
             });
         } else if (property.index) {
             return comp({
@@ -265,21 +269,21 @@ export class Generator {
                 ...property.index,
                 type: this.generateType(property.index.type),
                 index: property.index.key && this.generateType(property.index.key),
-                comment: this.generateComment(property.jsDoc, { example: true })
+                comment: this.generateComment(property.jsDoc, true, { returns: false, param: false })
             });
         } else if (property.call) {
             return comp({
                 isCall: true,
                 ...property.call,
                 content: this.generateConstructType(property.call, false),
-                comment: this.generateComment(property.jsDoc, { example: true })
+                comment: this.generateComment(property.jsDoc, true, { returns: false, param: false })
             });
         } else if (property.construct) {
             return comp({
                 isConstruct: true,
                 ...property.construct,
                 content: this.generateConstructType(property.construct, true),
-                comment: this.generateComment(property.jsDoc, { example: true })
+                comment: this.generateComment(property.jsDoc, true, { returns: false, param: false })
             });
         }
         return "";
@@ -297,9 +301,8 @@ export class Generator {
     generateMethodMember(method: ClassMethod) : string {
         return this.structure.components.methodMember({
             ...method,
-            name: typeof method.name === "string" ? method.name : this.generateType(method.name),
-            rawName: method.realName || method.name,
-            isDeprecated: method.jsDoc && hasTagFromJSDoc("deprecated", method.jsDoc),
+            name: (typeof method.name === "string") ? method.name : this.generateType(method.name),
+            isComputed: method.name !== method.rawName,
             signatures: method.signatures.map(sig => this.generateSignature(sig))
         });
     }
@@ -377,7 +380,10 @@ export class Generator {
         }
         case TypeKinds.ARRAY_TYPE: {
             const ref = type as ArrayType;
-            return this.structure.components.typeArray({type: this.generateType(ref.type) });
+            return this.structure.components.typeArray({ 
+                type: this.generateType(ref.type),
+                compoundType: ref.type.kind === TypeKinds.UNION || ref.type.kind === TypeKinds.INTERSECTION
+            });
         }
         case TypeKinds.MAPPED_TYPE: {
             const ref = type as MappedType;
@@ -467,9 +473,8 @@ export class Generator {
         return {
             parameters: sig.parameters?.map(p => this.generateParameter(p)),
             typeParameters: sig.typeParameters?.map(p => this.generateTypeParameter(p)),
-            paramComments: sig.parameters?.filter(param => param.jsDoc.comment).map(param => ({name: param.name, comment:  param.jsDoc.comment && marked.parseInline(param.jsDoc.comment)})),
             returnType: (returnTag && returnTag.type) ? this.generateType(returnTag.type) : sig.returnType && this.generateType(sig.returnType),
-            comment: this.generateComment(sig.jsDoc, {example: true, returns: true}),
+            comment: this.generateComment(sig.jsDoc, true),
             isLarge: isLargeSignature(sig)
         };
     }
@@ -491,20 +496,21 @@ export class Generator {
         });
     }
 
-    generateComment(comment?: Array<JSDocData>, generate?: {
-        example?: boolean,
-        returns?: boolean
-    }) : string|undefined {
-        if (!comment) return undefined;
-        let text = marked.parse(comment.map(c => c.comment || "").join("\n\n"));
-        if (generate) {
-            if (generate.example) {
-                const example = getTagFromJSDoc("example", comment);
-                if (example && example.comment) text += marked.parse(`# Example\n\n${example.comment}`); 
-            } 
-            if (generate.returns) {
-                const returns = getTagFromJSDoc("returns", comment);
-                if (returns && returns.comment) text += marked.parse(`# Returns\n\n${returns.comment}`); 
+    generateComment(comments?: Array<JSDocData>, includeTags = false, exclude?: Record<string, boolean>) : string|undefined {
+        if (!comments) return undefined;
+        let text = marked.parse(comments.map(c => c.comment || "").join("\n"));
+        if (includeTags) {
+            for (const comment of comments) {
+                if (!comment.tags) continue;
+                for (const tag of comment.tags) {
+                    if (exclude && exclude[tag.name]) continue;
+                    text += this.structure.components.jsdocTags({
+                        [tag.name]: true,
+                        comment: tag.comment && marked.parse(tag.comment),
+                        arg: tag.arg,
+                        type: tag.type && this.generateType(tag.type)
+                    });
+                }
             }
         }
         return text;
