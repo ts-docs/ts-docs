@@ -244,6 +244,7 @@ export class Generator {
             });
         } else return this.structure.components.propertyMember({
             ...property,
+            name: (typeof (property as ClassProperty).name === "string") ? (property as ClassProperty).name : this.generateType((property as ClassProperty).name as Type),
             comment: this.generateComment((property as ClassProperty).jsDoc, true, { returns: false, param: false }),
             type: property.type && this.generateType(property.type),
             initializer: (property as ClassProperty).initializer && this.generateType((property as ClassProperty).initializer!)
