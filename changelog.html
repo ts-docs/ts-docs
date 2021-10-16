@@ -32,7 +32,7 @@
   </svg>
             </a>
             <div class="col">
-              <a href=https://github.com/ts-docs/ts-docs/tree/main class="clickable-icon">
+              <a href=https://github.com/ts-docs/ts-docs/tree/HEAD class="clickable-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-github"
                   viewBox="0 0 16 16">
                   <path
@@ -160,24 +160,31 @@
           
 <div>
     <h1>Changelog</h1>
-    <p class="monospace">Tag v0.1.2, by <a href=https://github.com/GoogleFeud>GoogleFeud</a>, released on <span>09/10/2021, 14:14:03</span></p>
+    <p class="monospace">Tag v0.1.3, by <a href=https://github.com/GoogleFeud>GoogleFeud</a>, released on <span>16/10/2021, 14:41:51</span></p>
 
     <div>
         <div class="monospace">
-            <p><a href=https://api.github.com/repos/ts-docs/ts-docs/tarball/v0.1.2>Download .zip</a></p>
-            <p><a href=https://api.github.com/repos/ts-docs/ts-docs/zipball/v0.1.2>Download .tar</a></p>
+            <p><a href=https://api.github.com/repos/ts-docs/ts-docs/tarball/v0.1.3>Download .zip</a></p>
+            <p><a href=https://api.github.com/repos/ts-docs/ts-docs/zipball/v0.1.3>Download .tar</a></p>
         </div>
-        <h2 id="bug-fixes" class="section-header">Bug fixes</h2><ul>
-<li>The tsconfig file wasn&#39;t correctly parsed before it was given to the typescript compiler.</li>
-<li>Interface properties section in the sidebar was rendered even if there weren&#39;t any properties.</li>
-<li>Markdown images weren&#39;t dynamic</li>
+        <h2 id="bug-fixes" class="section-header">Bug Fixes</h2><ul>
+<li>Fixed error &quot;cannot read text of undefined&quot; coming from the extractor.</li>
+<li>CLI can now be ran on Linux / Mac OS (#5)</li>
+</ul>
+<h2 id="changes" class="section-header">Changes</h2><ul>
+<li>Class / Interface / Type alias type arguments are now shown below the name of the class, in a way smaller font size</li>
+<li>JSDoc tags are now rendered differently</li>
+<li>If you are on a large screen you may notice that the main content takes up around 60% of your screen, this makes the page less cluttered, and you can view more information at once.</li>
+<li>Slightly changed structures API</li>
+<li>You can now pass &quot;none&quot; to the <code>tsconfig</code> option so the extractor uses the most appropriate options.</li>
+<li>Return types are now traced back if they are not explicit.</li>
+<li>The generator will always generate new docs if the version of the generator used to generate the previous docs is not the same as the current version of the generator.</li>
 </ul>
 <h2 id="additions" class="section-header">Additions</h2><ul>
-<li>Added a <code>forceEmit</code> option, which skips the file caching.</li>
-<li>Added a <code>tsconfig</code> option, which allows you to specify the tsconfig.json to use with the typescript compiler. </li>
-<li>Added rendering for <a href="https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html">template literal types</a> (completely forgot about em)</li>
+<li>External branches! Provide an <code>external</code> property with a link to any github repository as the value, instead of the <code>project</code> property!</li>
+<li>Property initializers are now rendered properly. (#6)</li>
 </ul>
-<h2 id="thanks" class="section-header">Thanks</h2><p>@Seanitzel</p>
+<h2 id="thanks" class="section-header">Thanks</h2><p>@JakeStanger</p>
 
     </div>
 
