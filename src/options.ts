@@ -44,7 +44,8 @@ export interface TsDocsOptions {
     changelog?: boolean,
     json?: string,
     tsconfig?: string,
-    forceEmit?: boolean
+    forceEmit?: boolean,
+    exportMode: "simple" | "detailed"
 }
 
 export interface OptionSource {
@@ -62,14 +63,16 @@ export interface OptionSource {
     changelog?: boolean,
     json?: string,
     tsconfig?: string,
-    forceEmit?: boolean
+    forceEmit?: boolean,
+    exportMode?: string
 }
 
 export const options: TsDocsOptions = {
     out: "./docs",
     structure: "@ts-docs/default-docs-structure",
     entryPoints: [],
-    name: ""
+    name: "",
+    exportMode: "simple"
 };
 
 export function addOptionSource(source: OptionSource) : void {
@@ -128,6 +131,7 @@ export function showHelp() : void {
         `──── ts-docs help ────
 Usage: ts-docs [...entryFiles]
 
+
 --structure         The documentation structure to use. 
 --landingPage       Which module to act as the landing page. 
 --name              The name of the page.
@@ -140,6 +144,7 @@ Usage: ts-docs [...entryFiles]
 --init              Creates a tsdocs.config.js file.
 --forceEmit         Skips checking file cache for changes, always produces new documentation.
 --tsconfig          Path to tsconfig.json file.
+--exportMode        "simple" or "detailed". Simple mode just lists all the exports from the index file, detailed mode lists all exports of all files in the module.
 --help
 `);
 }
@@ -153,6 +158,7 @@ module.exports = {
     entryPoints: [], // Entry points, every project you want to include in the documentation should have exactly one entry point
     name: "", // The name of your project
     out: "./docs", // Where to put the generated documentation
+    exportMode: "simple"
 }
     `);
     console.log("Successfully created a ts-docs configuration file.");

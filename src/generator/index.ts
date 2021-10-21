@@ -9,6 +9,7 @@ import fs from "fs";
 import Highlight from "highlight.js";
 import { Heading, initMarkdown } from "./markdown";
 import { packSearchData } from "./searchData";
+import { FileExports } from "@ts-docs/extractor/dist/extractor/ExportHandler";
 
 export interface OtherProps {
     [key: string]: unknown,
@@ -83,8 +84,8 @@ export class Generator {
             this.generatePage("", "./", "index", this.structure.components.module({
                 ...pkg.module,
                 readme: pkg.readme && marked.parse(pkg.readme),
-                exports: pkg.module.exports.map(ex => ({alias: ex.alias, ref: this.generateRef({kind: TypeKinds.REFERENCE, type: ex})})),
-                reExports: pkg.module.reExports.map(ex => ({module: this.generateRef({kind: TypeKinds.REFERENCE, type: ex.module}), references: ex.references.map(r => ({ref: this.generateRef({kind: TypeKinds.REFERENCE, type: r}), alias: r.alias})), alias: ex.alias, reExportsReExport: ex.reExportsReExport})),
+                exports: this.generateExports(pkg.module),
+                exportMode: this.settings.exportMode
             }), { 
                 type: "module", 
                 module: pkg.module, 
@@ -126,8 +127,8 @@ export class Generator {
             this.generatePage(path, `m.${module.name}`, "index", this.structure.components.module({
                 ...module, 
                 readme: readme && marked.parse(readme), 
-                exports: module.exports.map(ex => ({alias: ex.alias, ref: this.generateRef({kind: TypeKinds.REFERENCE, type: ex})})),
-                reExports: module.reExports.map(ex => ({module: this.generateRef({kind: TypeKinds.REFERENCE, type: ex.module}), references: ex.references.map(r => ({ref: this.generateRef({kind: TypeKinds.REFERENCE, type: r}), alias: r.alias})), alias: ex.alias, reExportsReExport: ex.reExportsReExport}))
+                exports: this.generateExports(module),
+                exportMode: this.settings.exportMode
             }), { type: "module", module, name: module.name });
             path += `/m.${module.name}`;
         }
@@ -520,6 +521,41 @@ export class Generator {
         const headings: Array<Heading> = [];
         const markdown = marked.parse(content, {headings});
         return [markdown, headings];
+    }
+
+    generateExports(module: Module) : Record<string, unknown>|undefined {
+        if (this.settings.exportMode === "simple") {
+            const index = module.exports.index;
+            if (!index) return;
+            const newExp = { exports: index.exports.slice(), reExports: [] } as FileExports;
+            for (const reExport of index.reExports) {
+                if (reExport.sameModule && !reExport.namespace) {
+                    const modExp = module.exports[reExport.filename!];
+                    if (!modExp) continue;
+                    newExp.exports.push(...modExp.exports);
+                    newExp.reExports.push(...modExp.reExports);
+                } else {
+                    if (!reExport.namespace && newExp.reExports.some(r => r.module === reExport.module)) continue;
+                    let references;
+                    if (reExport.sameModule && !reExport.references.length) references = module.exports[reExport.filename!].exports;
+                    else references = reExport.references;
+                    newExp.reExports.push({...reExport, references});
+                }
+            }
+            return {
+                exports: newExp.exports.map(ex => ({ alias: ex.alias, ref: this.generateRef({kind: TypeKinds.REFERENCE, type: ex}) })),
+                reExports: newExp.reExports.map(reExport => ({module: this.generateRef({kind: TypeKinds.REFERENCE, type: reExport.module }), references: reExport.references.map(ex => ({ alias: ex.alias, ref: this.generateRef({kind: TypeKinds.REFERENCE, type: ex}) })), namespace: reExport.namespace, reExportsOfReExport: reExport.reExportsOfReExport }))
+            };
+        } else {
+            const newExp = {} as Record<string, unknown>;
+            for (const filename in module.exports) {
+                newExp[filename] = {
+                    exports: module.exports[filename].exports.map(ex => ({ alias: ex.alias, ref: this.generateRef({kind: TypeKinds.REFERENCE, type: ex}) })),
+                    reExports: module.exports[filename].reExports.map(ex => ({module: this.generateRef({kind: TypeKinds.REFERENCE, type: ex.module}), references: ex.references.map(r => ({ref: this.generateRef({kind: TypeKinds.REFERENCE, type: r}), alias: r.alias})), namespace: ex.namespace, reExportsOfReExport: ex.reExportsOfReExport }))
+                }
+            }
+            return newExp;
+        }
     }
 
     generatePage(p: string, directory: string, file: string, content: string, other: OtherProps = {}) : string {

@@ -1,8 +1,5 @@
 name: Deploy docs to Github Pages
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
   release:
     branches:

@@ -132,3 +132,12 @@ To make the generation process faster, ts-docs will save the last time your file
 ### tsconfig
 
 Path to a `tsconfig.json` file to use for the typescript compiler. The ts-docs extractor works best with a specific set of options, so if for some reason the docs you're getting are messed up, either provide a path to your project's `tsconfig.json` file, or pass `"none"`, which will pick the best compiler options to use.
+
+### exportMode
+
+How should exports be displayed.
+
+- `simple` - Only the names of all the exported elements from the `index.ts` file are shown, along with short previews of them. If the module doesn't have an `index.ts` file, then no exports are shown. 
+- `detailed` - The exports from every file in the module are shown separately, along with their short descriptions. 
+
+The default option is set to `simple`.
