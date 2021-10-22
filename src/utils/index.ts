@@ -17,6 +17,13 @@ export function createFile(basePath: string, folder: string, file: string, conte
 }
 
 /**
+ * Creates a folder if it already doesn't exist
+ */
+export function createFolder(path: string) : void {
+    if (!fs.existsSync(path)) fs.mkdirSync(path);
+}
+
+/**
  * Finds a `tsconfig.json` file, starting from `basePath` and going up.
  */
 export function findTSConfig<T = string>(basePath: string) : Record<string, T>|undefined {
@@ -246,10 +253,10 @@ export async function fetchChangelog(githubLink: string) : Promise<{
     }
 }
 
-export function getComment(node: { jsDoc?: Array<JSDocData> }) : string|undefined {
+export function getComment(node: { jsDoc?: Array<JSDocData> }, limit = 128) : string|undefined {
     const comment = node.jsDoc?.[0]?.comment;
     if (comment) {
-        if (comment.length > 128) return comment.slice(0, 128) + "...";
+        if (comment.length > limit) return comment.slice(0, limit) + "...";
         return comment;
     }
     return;

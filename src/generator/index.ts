@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { DocumentStructure } from "../documentStructure";
 import marked from "marked";
-import { copyFolder, createFile, escapeHTML, fetchChangelog, getPathFileName, getTagFromJSDoc, isLargeArr, isLargeObject, isLargeSignature } from "../utils";
+import { copyFolder, createFile, createFolder, escapeHTML, fetchChangelog, getPathFileName, getTagFromJSDoc, isLargeArr, isLargeObject, isLargeSignature } from "../utils";
 import { Project, TypescriptExtractor, ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl, ConditionalType, MappedType, TypeOperator, IndexAccessedType, FunctionSignature, TypePredicateType, InferType, ObjectProperty, ConstructorType, TemplateLiteralType } from "@ts-docs/extractor";
 import path from "path";
 import { LandingPage, TsDocsOptions } from "../options";
@@ -45,12 +45,12 @@ export class Generator {
         this.landingPage = settings.landingPage as LandingPage;
     }
 
-    async generate(extractor: TypescriptExtractor, projects: Array<Project>) : Promise<void> {
+    async generate(extractor: TypescriptExtractor, projects: Array<Project>): Promise<void> {
         initMarkdown(this, extractor, projects);
         const out = path.join(process.cwd(), this.settings.out);
-        if (!fs.existsSync(out)) fs.mkdirSync(out);
+        createFolder(out);
         const assetsFolder = path.join(out, "./assets");
-        if (!fs.existsSync(assetsFolder)) fs.mkdirSync(assetsFolder);
+        createFolder(assetsFolder);
         copyFolder(path.join(this.structure.path, "assets"), assetsFolder);
         if (this.settings.assets) copyFolder(this.settings.assets, assetsFolder);
 
@@ -58,21 +58,21 @@ export class Generator {
 
         if (this.settings.customPages) {
             const pagesPath = path.join(out, "./pages");
-            if (!fs.existsSync(pagesPath)) fs.mkdirSync(pagesPath);
+            createFolder(pagesPath);
             this.renderingPages = true;
             for (const category of this.settings.customPages) {
                 category.pages.sort((a, b) => +(a.attributes.order || Infinity) - +(b.attributes.order || Infinity));
                 for (const page of category.pages) {
                     // +2 because pages/category
-                    this.depth+=2;
+                    this.depth += 2;
                     const [markdown, headings] = this.generateMarkdownWithHeaders(page.content);
-                    this.generatePage("pages", category.name, page.name, markdown, {
+                    this.generatePage(pagesPath, category.name, page.name, markdown, {
                         type: "page",
                         pages: this.settings.customPages,
                         unclickablePath: 0,
                         headings
                     });
-                    this.depth-=2;
+                    this.depth -= 2;
                 }
             }
             delete this.renderingPages;
@@ -80,58 +80,49 @@ export class Generator {
         if (projects.length === 1) {
             const pkg = projects[0];
             if (this.settings.changelog && pkg.repository) await this.generateChangelog(pkg.repository, undefined, pkg.module);
-            this.generateModule("", pkg.module, false);
-            this.generatePage("", "./", "index", this.structure.components.module({
+            this.generateThingsInsideModule("", pkg.module);
+            this.generatePage(this.settings.out, "./", "index", this.structure.components.module({
                 ...pkg.module,
                 readme: pkg.readme && marked.parse(pkg.readme),
                 exports: this.generateExports(pkg.module),
                 exportMode: this.settings.exportMode
-            }), { 
-                type: "module", 
-                module: pkg.module, 
-                pages: this.settings.customPages, 
+            }), {
+                type: "module",
+                module: pkg.module,
+                pages: this.settings.customPages,
                 branches: this.settings.branches,
-                doNotGivePath: true });
+                doNotGivePath: true
+            });
         } else {
             if (this.settings.changelog && this.landingPage.repository) await this.generateChangelog(this.landingPage.repository, projects);
-            if (this.landingPage.readme) this.generatePage("", "./", "index", marked.parse(this.landingPage.readme), { type: "index", projects, pages: this.settings.customPages, branches: this.settings.branches, doNotGivePath: true });
+            if (this.landingPage.readme) this.generatePage(this.settings.out, "./", "index", marked.parse(this.landingPage.readme), { type: "index", projects, pages: this.settings.customPages, branches: this.settings.branches, doNotGivePath: true });
             for (const pkg of projects) {
                 this.currentGlobalModuleName = pkg.module.name;
                 this.depth++;
-                this.generateModule("", pkg.module, true, pkg.readme);
+                this.generateModule(this.settings.out, pkg.module, pkg.readme);
                 this.depth--;
             }
         }
     }
 
-    async generateChangelog(repo: string, projects?: Array<Project>, module?: Module) : Promise<void> {
+    async generateChangelog(repo: string, projects?: Array<Project>, module?: Module): Promise<void> {
         const changelog = await fetchChangelog(repo);
         if (!changelog) {
             this.settings.changelog = false;
             return;
         }
         changelog.content = marked.parse(changelog.content);
-        this.generatePage("", "./", "changelog", this.structure.components.changelog(changelog), { 
-            type: projects ? "index":"module", 
-            module, 
-            pages: this.settings.customPages, 
-            branches: this.settings.branches, 
+        this.generatePage(this.settings.out, "./", "changelog", this.structure.components.changelog(changelog), {
+            type: projects ? "index" : "module",
+            module,
+            pages: this.settings.customPages,
+            branches: this.settings.branches,
             activeBranch: this.activeBranch,
             projects
         });
     }
 
-    generateModule(path: string, module: Module, createFolder = true, readme?: string) : void {
-        if (createFolder) {
-            if (!module.name) return;
-            this.generatePage(path, `m.${module.name}`, "index", this.structure.components.module({
-                ...module, 
-                readme: readme && marked.parse(readme), 
-                exports: this.generateExports(module),
-                exportMode: this.settings.exportMode
-            }), { type: "module", module, name: module.name });
-            path += `/m.${module.name}`;
-        }
+    generateThingsInsideModule(path: string, module: Module): void {
         // +1 because class/interface/enum/function/type/constant
         this.depth++;
         for (const classObj of module.classes) {
@@ -158,9 +149,21 @@ export class Generator {
         this.depth--;
     }
 
-    generateClass(path: string, classObj: ClassDecl) : void {
+    generateModule(p: string, module: Module, readme?: string): void {
+        const newPath = `${p}/m.${module.name}`;
+        this.generateFolder(newPath);
+        this.generateThingsInsideModule(newPath, module);
+        this.generatePage(p, `m.${module.name}`, "index", this.structure.components.module({
+            ...module,
+            readme: readme && marked.parse(readme),
+            exports: this.generateExports(module),
+            exportMode: this.settings.exportMode
+        }), { type: "module", module, name: module.name });
+    }
+
+    generateClass(path: string, classObj: ClassDecl): void {
         if (classObj.isCached) return;
-        this.generatePage(path, "class", classObj.id ? `${classObj.name}_${classObj.id}` : classObj.name, 
+        this.generatePage(path, "class", classObj.id ? `${classObj.name}_${classObj.id}` : classObj.name,
             this.structure.components.class({
                 ...classObj,
                 properties: classObj.properties.map(p => this.generatePropertyMember(p)),
@@ -171,40 +174,40 @@ export class Generator {
                 extends: classObj.extends && this.generateType(classObj.extends),
                 constructor: classObj._constructor && this.generateConstructor(classObj._constructor),
                 definedIn: getPathFileName(classObj.loc.sourceFile)
-            }), {properties: classObj.properties, name: classObj.name, methods: classObj.methods, type: "class" });
+            }), { properties: classObj.properties, name: classObj.name, methods: classObj.methods, type: "class" });
     }
 
-    generateConstructor(constructor: Omit<FunctionDecl, "name">) : string {
+    generateConstructor(constructor: Omit<FunctionDecl, "name">): string {
         return this.structure.components.classConstructor({
             ...constructor,
             signatures: constructor.signatures.map(sig => this.generateSignature(sig))
         });
     }
 
-    generateInterface(path: string, interfaceObj: InterfaceDecl) : void {
+    generateInterface(path: string, interfaceObj: InterfaceDecl): void {
         if (interfaceObj.isCached) return;
         this.generatePage(path, "interface", interfaceObj.id ? `${interfaceObj.name}_${interfaceObj.id}` : interfaceObj.name, this.structure.components.interface({
-            ...interfaceObj, 
+            ...interfaceObj,
             properties: interfaceObj.properties.map(p => this.generateProperty(p, true)),
             extends: interfaceObj.extends && interfaceObj.extends.map(ext => this.generateType(ext)),
             implements: interfaceObj.implements && interfaceObj.implements.map(impl => this.generateType(impl)),
             typeParameters: interfaceObj.typeParameters?.map(p => this.generateTypeParameter(p)),
             comment: this.generateComment(interfaceObj.jsDoc),
-            definedIn: interfaceObj.loc.map(loc => ({filename: getPathFileName(loc.sourceFile), link: loc.sourceFile}))
-        }), {properties: interfaceObj.properties, name: interfaceObj.name, type: "interface" });
+            definedIn: interfaceObj.loc.map(loc => ({ filename: getPathFileName(loc.sourceFile), link: loc.sourceFile }))
+        }), { properties: interfaceObj.properties, name: interfaceObj.name, type: "interface" });
     }
 
-    generateEnum(path: string, enumObj: EnumDecl) : void {
+    generateEnum(path: string, enumObj: EnumDecl): void {
         if (enumObj.isCached) return;
         this.generatePage(path, "enum", enumObj.id ? `${enumObj.name}_${enumObj.id}` : enumObj.name, this.structure.components.enum({
             ...enumObj,
             comment: this.generateComment(enumObj.jsDoc),
-            members: enumObj.members.map(m => ({...m, initializer: m.initializer && this.generateType(m.initializer), comment: this.generateComment(m.jsDoc)})),
-            definedIn: enumObj.loc.map(loc => ({filename: getPathFileName(loc.sourceFile), link: loc.sourceFile}))
+            members: enumObj.members.map(m => ({ ...m, initializer: m.initializer && this.generateType(m.initializer), comment: this.generateComment(m.jsDoc) })),
+            definedIn: enumObj.loc.map(loc => ({ filename: getPathFileName(loc.sourceFile), link: loc.sourceFile }))
         }), { type: "enum", members: enumObj.members, name: enumObj.name });
     }
 
-    generateTypeDecl(path: string, typeObj: TypeDecl, module: Module) : void {
+    generateTypeDecl(path: string, typeObj: TypeDecl, module: Module): void {
         if (typeObj.isCached) return;
         this.generatePage(path, "type", typeObj.id ? `${typeObj.name}_${typeObj.id}` : typeObj.name, this.structure.components.type({
             ...typeObj,
@@ -215,7 +218,7 @@ export class Generator {
         }), { type: "module", module, name: typeObj.name, realType: "type" });
     }
 
-    generateFunction(path: string, func: FunctionDecl, module: Module) : void {
+    generateFunction(path: string, func: FunctionDecl, module: Module): void {
         if (func.isCached) return;
         this.generatePage(path, "function", func.id ? `${func.name}_${func.id}` : func.name, this.structure.components.function({
             ...func,
@@ -225,7 +228,7 @@ export class Generator {
         }), { type: "module", module, name: func.name, realType: "function" });
     }
 
-    generateConstant(path: string, constant: ConstantDecl, module: Module) : void {
+    generateConstant(path: string, constant: ConstantDecl, module: Module): void {
         if (constant.isCached) return;
         this.generatePage(path, "constant", constant.id ? `${constant.name}_${constant.id}` : constant.name, this.structure.components.constant({
             ...constant,
@@ -236,7 +239,7 @@ export class Generator {
         }), { type: "module", module, name: constant.name, realType: "constant" });
     }
 
-    generatePropertyMember(property: ClassProperty|IndexSignatureDeclaration) : string {
+    generatePropertyMember(property: ClassProperty | IndexSignatureDeclaration): string {
         if ("key" in property) {
             return this.structure.components.propertyMember({
                 ...property,
@@ -253,7 +256,7 @@ export class Generator {
         });
     }
 
-    generateProperty(property: ObjectProperty, isInterface?: boolean) : string {
+    generateProperty(property: ObjectProperty, isInterface?: boolean): string {
         const comp = isInterface ? this.structure.components.interfaceProperty : this.structure.components.objectProperty;
         if (property.prop) {
             return comp({
@@ -290,7 +293,7 @@ export class Generator {
         return "";
     }
 
-    generateConstructType(ref: FunctionSignature|ConstructorType, includeNew?: boolean) : string {
+    generateConstructType(ref: FunctionSignature | ConstructorType, includeNew?: boolean): string {
         return this.structure.components.typeConstruct({
             parameters: ref.parameters?.map(param => this.generateParameter(param)),
             typeParameters: ref.typeParameters?.map(typeP => this.generateTypeParameter(typeP)),
@@ -299,7 +302,7 @@ export class Generator {
         });
     }
 
-    generateMethodMember(method: ClassMethod) : string {
+    generateMethodMember(method: ClassMethod): string {
         return this.structure.components.methodMember({
             ...method,
             name: (typeof method.name === "string") ? method.name : this.generateType(method.name),
@@ -308,47 +311,47 @@ export class Generator {
         });
     }
 
-    generateRef(ref: Reference, other: Record<string, unknown> = {}) : string {
-        if (ref.type.link) return this.structure.components.typeReference({...ref, typeParameters: ref.typeArguments?.map(param => this.generateType(param))});
+    generateRef(ref: Reference, other: Record<string, unknown> = {}): string {
+        if (ref.type.link) return this.structure.components.typeReference({ ...ref, typeParameters: ref.typeArguments?.map(param => this.generateType(param)) });
         let refType: string;
         switch (ref.type.kind) {
-        case TypeReferenceKinds.STRINGIFIED_UNKNOWN: return ref.type.name;
-        case TypeReferenceKinds.CLASS:
-            refType = "class";
-            break;
-        case TypeReferenceKinds.INTERFACE:
-            refType = "interface";
-            break;
-        case TypeReferenceKinds.ENUM:
-        case TypeReferenceKinds.ENUM_MEMBER:
-            refType = "enum";
-            break;
-        case TypeReferenceKinds.TYPE_ALIAS:
-            refType = "type";
-            break;
-        case TypeReferenceKinds.FUNCTION:
-            refType = "function";
-            break;
-        case TypeReferenceKinds.CONSTANT:
-            refType = "constant";
-            break;
-        case TypeReferenceKinds.NAMESPACE_OR_MODULE: {
-            if (!ref.type.path) return ref.type.name;
-            return this.structure.components.typeReference({
-                ...ref, ...other,
-                link: ref.type.path && this.generateLink(path.join(...ref.type.path.map(p => `m.${p}`), ref.type.path[ref.type.path.length - 1] !== ref.type.name ? `m.${ref.type.name}`:"", "index.html"))
-            });
-        }
-        default: refType = "";
+            case TypeReferenceKinds.STRINGIFIED_UNKNOWN: return ref.type.name;
+            case TypeReferenceKinds.CLASS:
+                refType = "class";
+                break;
+            case TypeReferenceKinds.INTERFACE:
+                refType = "interface";
+                break;
+            case TypeReferenceKinds.ENUM:
+            case TypeReferenceKinds.ENUM_MEMBER:
+                refType = "enum";
+                break;
+            case TypeReferenceKinds.TYPE_ALIAS:
+                refType = "type";
+                break;
+            case TypeReferenceKinds.FUNCTION:
+                refType = "function";
+                break;
+            case TypeReferenceKinds.CONSTANT:
+                refType = "constant";
+                break;
+            case TypeReferenceKinds.NAMESPACE_OR_MODULE: {
+                if (!ref.type.path) return ref.type.name;
+                return this.structure.components.typeReference({
+                    ...ref, ...other,
+                    link: ref.type.path && this.generateLink(path.join(...ref.type.path.map(p => `m.${p}`), ref.type.path[ref.type.path.length - 1] !== ref.type.name ? `m.${ref.type.name}` : "", "index.html"))
+                });
+            }
+            default: refType = "";
         }
         return this.structure.components.typeReference({
             ...ref, ...other,
-            link: ref.type.path && this.generateLink(path.join(...ref.type.path.map(p => `m.${p}`), refType, `${ref.type.name}${ref.type.id ? `_${ref.type.id}`:""}.html`), ref.type.displayName),
+            link: ref.type.path && this.generateLink(path.join(...ref.type.path.map(p => `m.${p}`), refType, `${ref.type.name}${ref.type.id ? `_${ref.type.id}` : ""}.html`), ref.type.displayName),
             typeParameters: ref.typeArguments?.map(param => this.generateType(param)),
         });
     }
 
-    generateArrowFunction(ref: ArrowFunction) : string {
+    generateArrowFunction(ref: ArrowFunction): string {
         return this.structure.components.typeFunction({
             typeParameters: ref.typeParameters?.map(param => this.generateTypeParameter(param)),
             parameters: ref.parameters?.map(param => this.generateParameter(param)),
@@ -356,120 +359,120 @@ export class Generator {
         });
     }
 
-    generateType(type: Type, other: Record<string, unknown> = {}) : string {
+    generateType(type: Type, other: Record<string, unknown> = {}): string {
         switch (type.kind) {
-        case TypeKinds.REFERENCE: return this.generateRef(type as Reference, other);
-        case TypeKinds.ARROW_FUNCTION: return this.generateArrowFunction(type as ArrowFunction);
-        case TypeKinds.UNION: {
-            const ref = type as UnionOrIntersection;
-            return this.structure.components.typeUnion({
-                types: ref.types.map(t => this.generateType(t)),
-            });
-        }
-        case TypeKinds.INTERSECTION: {
-            const ref = type as UnionOrIntersection;
-            return this.structure.components.typeIntersection({
-                types: ref.types.map(t => this.generateType(t))
-            });
-        }
-        case TypeKinds.TUPLE: {
-            const ref = type as Tuple;
-            return this.structure.components.typeTuple({
-                types: ref.types.map(t => this.generateType(t)),
-                isLarge: isLargeArr(ref.types)
-            });
-        }
-        case TypeKinds.ARRAY_TYPE: {
-            const ref = type as ArrayType;
-            return this.structure.components.typeArray({ 
-                type: this.generateType(ref.type),
-                compoundType: ref.type.kind === TypeKinds.UNION || ref.type.kind === TypeKinds.INTERSECTION
-            });
-        }
-        case TypeKinds.MAPPED_TYPE: {
-            const ref = type as MappedType;
-            return this.structure.components.typeMapped({
-                typeParameter: ref.typeParameter,
-                optional: ref.optional,
-                constraint: ref.constraint && this.generateType(ref.constraint),
-                type: ref.type && this.generateType(ref.type)
-            });
-        }
-        case TypeKinds.CONDITIONAL_TYPE: {
-            const ref = type as ConditionalType;
-            return this.structure.components.typeConditional({
-                checkType: this.generateType(ref.checkType),
-                extendsType: this.generateType(ref.extendsType),
-                trueType: this.generateType(ref.trueType),
-                falseType: this.generateType(ref.falseType)
-            });
-        }
-        case TypeKinds.TYPE_PREDICATE: {
-            const ref = type as TypePredicateType;
-            return this.structure.components.typePredicate({
-                parameter: typeof ref.parameter === "string" ? ref.parameter:this.generateType(ref.parameter),
-                type: ref.type && this.generateType(ref.type)
-            });
-        }
-        case TypeKinds.INDEX_ACCESS: {
-            const ref = type as IndexAccessedType;
-            return this.structure.components.typeIndexAccess({index: this.generateType(ref.index), object: this.generateType(ref.object)});
-        }
-        case TypeKinds.TEMPLATE_LITERAL: {
-            const ref = type as TemplateLiteralType;
-            return this.structure.components.typeTemplateLiteral({
-                start: ref.head, 
-                types: ref.spans.map(t => ({
-                    type: this.generateType(t.type),
-                    text: t.text
-                }))
-            });
-        }
-        case TypeKinds.INFER_TYPE: {
-            return this.structure.components.typeOperator({name: "infer", type: this.generateTypeParameter((type as InferType).typeParameter)});       
-        }
-        case TypeKinds.UNIQUE_OPERATOR:
-            return this.structure.components.typeOperator({name: "unique", type: this.generateType((type as TypeOperator).type)});       
-        case TypeKinds.KEYOF_OPERATOR:
-            return this.structure.components.typeOperator({name: "keyof", type: this.generateType((type as TypeOperator).type)}); 
-        case TypeKinds.READONLY_OPERATOR:
-            return this.structure.components.typeOperator({name: "readonly", type: this.generateType((type as TypeOperator).type)}); 
-        case TypeKinds.TYPEOF_OPERATOR:
-            return this.structure.components.typeOperator({name: "typeof", type: this.generateType((type as TypeOperator).type)}); 
-        case TypeKinds.STRING:
-        case TypeKinds.NUMBER: 
-        case TypeKinds.VOID: 
-        case TypeKinds.TRUE: 
-        case TypeKinds.FALSE: 
-        case TypeKinds.BOOLEAN: 
-        case TypeKinds.UNDEFINED: 
-        case TypeKinds.NULL: 
-        case TypeKinds.UNKNOWN:
-        case TypeKinds.STRING_LITERAL:
-        case TypeKinds.NUMBER_LITERAL:
-        case TypeKinds.SYMBOL:
-        case TypeKinds.NEVER:
-        case TypeKinds.BIGINT:
-        case TypeKinds.OBJECT:
-        case TypeKinds.THIS:
-        case TypeKinds.REGEX_LITERAL:
-        case TypeKinds.ANY: {
-            return this.structure.components.typePrimitive({...type});
-        }
-        case TypeKinds.OBJECT_LITERAL: {
-            const ref = type as ObjectLiteral;
-            return this.structure.components.typeObject({
-                properties: ref.properties.map(p => this.generateProperty(p)),
-                isLarge: isLargeObject(ref)
-            });
-        }
-        case TypeKinds.CONSTRUCTOR_TYPE: return this.generateConstructType((type as ConstructorType), true);
-        case TypeKinds.STRINGIFIED_UNKNOWN: return escapeHTML((type as Literal).name);
-        default: return "unknown";
+            case TypeKinds.REFERENCE: return this.generateRef(type as Reference, other);
+            case TypeKinds.ARROW_FUNCTION: return this.generateArrowFunction(type as ArrowFunction);
+            case TypeKinds.UNION: {
+                const ref = type as UnionOrIntersection;
+                return this.structure.components.typeUnion({
+                    types: ref.types.map(t => this.generateType(t)),
+                });
+            }
+            case TypeKinds.INTERSECTION: {
+                const ref = type as UnionOrIntersection;
+                return this.structure.components.typeIntersection({
+                    types: ref.types.map(t => this.generateType(t))
+                });
+            }
+            case TypeKinds.TUPLE: {
+                const ref = type as Tuple;
+                return this.structure.components.typeTuple({
+                    types: ref.types.map(t => this.generateType(t)),
+                    isLarge: isLargeArr(ref.types)
+                });
+            }
+            case TypeKinds.ARRAY_TYPE: {
+                const ref = type as ArrayType;
+                return this.structure.components.typeArray({
+                    type: this.generateType(ref.type),
+                    compoundType: ref.type.kind === TypeKinds.UNION || ref.type.kind === TypeKinds.INTERSECTION
+                });
+            }
+            case TypeKinds.MAPPED_TYPE: {
+                const ref = type as MappedType;
+                return this.structure.components.typeMapped({
+                    typeParameter: ref.typeParameter,
+                    optional: ref.optional,
+                    constraint: ref.constraint && this.generateType(ref.constraint),
+                    type: ref.type && this.generateType(ref.type)
+                });
+            }
+            case TypeKinds.CONDITIONAL_TYPE: {
+                const ref = type as ConditionalType;
+                return this.structure.components.typeConditional({
+                    checkType: this.generateType(ref.checkType),
+                    extendsType: this.generateType(ref.extendsType),
+                    trueType: this.generateType(ref.trueType),
+                    falseType: this.generateType(ref.falseType)
+                });
+            }
+            case TypeKinds.TYPE_PREDICATE: {
+                const ref = type as TypePredicateType;
+                return this.structure.components.typePredicate({
+                    parameter: typeof ref.parameter === "string" ? ref.parameter : this.generateType(ref.parameter),
+                    type: ref.type && this.generateType(ref.type)
+                });
+            }
+            case TypeKinds.INDEX_ACCESS: {
+                const ref = type as IndexAccessedType;
+                return this.structure.components.typeIndexAccess({ index: this.generateType(ref.index), object: this.generateType(ref.object) });
+            }
+            case TypeKinds.TEMPLATE_LITERAL: {
+                const ref = type as TemplateLiteralType;
+                return this.structure.components.typeTemplateLiteral({
+                    start: ref.head,
+                    types: ref.spans.map(t => ({
+                        type: this.generateType(t.type),
+                        text: t.text
+                    }))
+                });
+            }
+            case TypeKinds.INFER_TYPE: {
+                return this.structure.components.typeOperator({ name: "infer", type: this.generateTypeParameter((type as InferType).typeParameter) });
+            }
+            case TypeKinds.UNIQUE_OPERATOR:
+                return this.structure.components.typeOperator({ name: "unique", type: this.generateType((type as TypeOperator).type) });
+            case TypeKinds.KEYOF_OPERATOR:
+                return this.structure.components.typeOperator({ name: "keyof", type: this.generateType((type as TypeOperator).type) });
+            case TypeKinds.READONLY_OPERATOR:
+                return this.structure.components.typeOperator({ name: "readonly", type: this.generateType((type as TypeOperator).type) });
+            case TypeKinds.TYPEOF_OPERATOR:
+                return this.structure.components.typeOperator({ name: "typeof", type: this.generateType((type as TypeOperator).type) });
+            case TypeKinds.STRING:
+            case TypeKinds.NUMBER:
+            case TypeKinds.VOID:
+            case TypeKinds.TRUE:
+            case TypeKinds.FALSE:
+            case TypeKinds.BOOLEAN:
+            case TypeKinds.UNDEFINED:
+            case TypeKinds.NULL:
+            case TypeKinds.UNKNOWN:
+            case TypeKinds.STRING_LITERAL:
+            case TypeKinds.NUMBER_LITERAL:
+            case TypeKinds.SYMBOL:
+            case TypeKinds.NEVER:
+            case TypeKinds.BIGINT:
+            case TypeKinds.OBJECT:
+            case TypeKinds.THIS:
+            case TypeKinds.REGEX_LITERAL:
+            case TypeKinds.ANY: {
+                return this.structure.components.typePrimitive({ ...type });
+            }
+            case TypeKinds.OBJECT_LITERAL: {
+                const ref = type as ObjectLiteral;
+                return this.structure.components.typeObject({
+                    properties: ref.properties.map(p => this.generateProperty(p)),
+                    isLarge: isLargeObject(ref)
+                });
+            }
+            case TypeKinds.CONSTRUCTOR_TYPE: return this.generateConstructType((type as ConstructorType), true);
+            case TypeKinds.STRINGIFIED_UNKNOWN: return escapeHTML((type as Literal).name);
+            default: return "unknown";
         }
     }
 
-    generateSignature(sig: FunctionSignature) : Record<string, unknown> {
+    generateSignature(sig: FunctionSignature): Record<string, unknown> {
         const returnTag = sig.jsDoc && getTagFromJSDoc("returns", sig.jsDoc);
         return {
             parameters: sig.parameters?.map(p => this.generateParameter(p)),
@@ -480,7 +483,7 @@ export class Generator {
         };
     }
 
-    generateTypeParameter(type: TypeParameter) : string {
+    generateTypeParameter(type: TypeParameter): string {
         return this.structure.components.typeParameter({
             default: type.default && this.generateType(type.default),
             constraint: type.constraint && this.generateType(type.constraint),
@@ -488,7 +491,7 @@ export class Generator {
         });
     }
 
-    generateParameter(type: FunctionParameter) : string {
+    generateParameter(type: FunctionParameter): string {
         return this.structure.components.functionParameter({
             ...type,
             raw: type,
@@ -497,7 +500,7 @@ export class Generator {
         });
     }
 
-    generateComment(comments?: Array<JSDocData>, includeTags = false, exclude?: Record<string, boolean>) : string|undefined {
+    generateComment(comments?: Array<JSDocData>, includeTags = false, exclude?: Record<string, boolean>): string | undefined {
         if (!comments) return undefined;
         let text = marked.parse(comments.map(c => c.comment || "").join("\n"));
         if (includeTags) {
@@ -517,13 +520,13 @@ export class Generator {
         return text;
     }
 
-    generateMarkdownWithHeaders(content: string) : [string, Array<Heading>] {
+    generateMarkdownWithHeaders(content: string): [string, Array<Heading>] {
         const headings: Array<Heading> = [];
-        const markdown = marked.parse(content, {headings});
+        const markdown = marked.parse(content, { headings });
         return [markdown, headings];
     }
 
-    generateExports(module: Module) : Record<string, unknown>|undefined {
+    generateExports(module: Module): Record<string, unknown> | undefined {
         if (this.settings.exportMode === "simple") {
             const index = module.exports.index;
             if (!index) return;
@@ -539,33 +542,33 @@ export class Generator {
                     let references;
                     if (reExport.sameModule && !reExport.references.length) references = module.exports[reExport.filename!].exports;
                     else references = reExport.references;
-                    newExp.reExports.push({...reExport, references});
+                    newExp.reExports.push({ ...reExport, references });
                 }
             }
             return {
-                exports: newExp.exports.map(ex => ({ alias: ex.alias, ref: this.generateRef({kind: TypeKinds.REFERENCE, type: ex}) })),
-                reExports: newExp.reExports.map(reExport => ({module: this.generateRef({kind: TypeKinds.REFERENCE, type: reExport.module }), references: reExport.references.map(ex => ({ alias: ex.alias, ref: this.generateRef({kind: TypeKinds.REFERENCE, type: ex}) })), namespace: reExport.namespace, reExportsOfReExport: reExport.reExportsOfReExport }))
+                exports: newExp.exports.map(ex => ({ alias: ex.alias, ref: this.generateRef({ kind: TypeKinds.REFERENCE, type: ex }) })),
+                reExports: newExp.reExports.map(reExport => ({ module: this.generateRef({ kind: TypeKinds.REFERENCE, type: reExport.module }), references: reExport.references.map(ex => ({ alias: ex.alias, ref: this.generateRef({ kind: TypeKinds.REFERENCE, type: ex }) })), namespace: reExport.namespace, reExportsOfReExport: reExport.reExportsOfReExport }))
             };
         } else {
             const newExp = {} as Record<string, unknown>;
             for (const filename in module.exports) {
                 newExp[filename] = {
-                    exports: module.exports[filename].exports.map(ex => ({ alias: ex.alias, ref: this.generateRef({kind: TypeKinds.REFERENCE, type: ex}) })),
-                    reExports: module.exports[filename].reExports.map(ex => ({module: this.generateRef({kind: TypeKinds.REFERENCE, type: ex.module}), references: ex.references.map(r => ({ref: this.generateRef({kind: TypeKinds.REFERENCE, type: r}), alias: r.alias})), namespace: ex.namespace, reExportsOfReExport: ex.reExportsOfReExport }))
+                    exports: module.exports[filename].exports.map(ex => ({ alias: ex.alias, ref: this.generateRef({ kind: TypeKinds.REFERENCE, type: ex }) })),
+                    reExports: module.exports[filename].reExports.map(ex => ({ module: this.generateRef({ kind: TypeKinds.REFERENCE, type: ex.module }), references: ex.references.map(r => ({ ref: this.generateRef({ kind: TypeKinds.REFERENCE, type: r }), alias: r.alias })), namespace: ex.namespace, reExportsOfReExport: ex.reExportsOfReExport }))
                 }
             }
             return newExp;
         }
     }
 
-    generatePage(p: string, directory: string, file: string, content: string, other: OtherProps = {}) : string {
-        return createFile(path.join(this.settings.out, p), directory, `${file}.html`, this.structure.index({
+    generatePage(p: string, directory: string, file: string, content: string, other: OtherProps = {}): string {
+        return createFile(p, directory, `${file}.html`, this.structure.index({
             content,
             headerName: this.settings.name,
             headerRepository: this.landingPage.repository,
             headerHomepage: this.landingPage.homepage,
             headerVersion: this.landingPage.version,
-            path: !other.doNotGivePath && [p, file !== "index" ? file:directory],
+            path: !other.doNotGivePath && [p.replace(this.settings.out, ""), file !== "index" ? file : directory],
             depth: this.depth,
             currentGlobalModuleName: this.currentGlobalModuleName,
             logo: this.settings.logo,
@@ -575,8 +578,12 @@ export class Generator {
         }));
     }
 
-    generateLink(p: string, hash?: string) : string {
-        return `${path.join("../".repeat(this.depth), p)}${hash ? `#.${hash}`:""}`;
+    generateFolder(p: string) : void {
+        if (!fs.existsSync(p)) fs.mkdirSync(p);
+    }
+
+    generateLink(p: string, hash?: string): string {
+        return `${path.join("../".repeat(this.depth), p)}${hash ? `#.${hash}` : ""}`;
     }
 
 }
