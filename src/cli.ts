@@ -43,7 +43,7 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
         ignoreFolderNames: ["lib"],
         passthroughModules: options.passthroughModules,
         tsconfig: options.tsconfig,
-        fileCache: options.forceEmit ? undefined : fileCache
+        fileCache: options.forceEmit ? undefined : fileCache,
     });
 
     const projects = types.run();

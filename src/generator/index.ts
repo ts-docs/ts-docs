@@ -38,16 +38,26 @@ export class Generator {
     renderingPages?: boolean
     activeBranch = "main"
     landingPage!: LandingPage
+    private staticPageSettings: Record<string, unknown>
     constructor(structure: DocumentStructure, settings: TsDocsOptions) {
         this.structure = structure;
         this.settings = settings;
         this.depth = 0;
         this.landingPage = settings.landingPage as LandingPage;
+        this.staticPageSettings = {
+            headerName: this.settings.name,
+            headerRepository: this.landingPage.repository,
+            headerHomepage: this.landingPage.homepage,
+            headerVersion: this.landingPage.version,
+            logo: this.settings.logo,
+            hasChangelog: this.settings.changelog,
+            activeBranch: this.activeBranch,
+        }
     }
 
     async generate(extractor: TypescriptExtractor, projects: Array<Project>): Promise<void> {
         initMarkdown(this, extractor, projects);
-        const out = path.join(process.cwd(), this.settings.out);
+        const out = this.settings.out;
         createFolder(out);
         const assetsFolder = path.join(out, "./assets");
         createFolder(assetsFolder);
@@ -69,7 +79,6 @@ export class Generator {
                     this.generatePage(pagesPath, category.name, page.name, markdown, {
                         type: "page",
                         pages: this.settings.customPages,
-                        unclickablePath: 0,
                         headings
                     });
                     this.depth -= 2;
@@ -80,7 +89,6 @@ export class Generator {
         if (projects.length === 1) {
             const pkg = projects[0];
             if (this.settings.changelog && pkg.repository) await this.generateChangelog(pkg.repository, undefined, pkg.module);
-            this.generateThingsInsideModule("", pkg.module);
             this.generatePage(this.settings.out, "./", "index", this.structure.components.module({
                 ...pkg.module,
                 readme: pkg.readme && marked.parse(pkg.readme),
@@ -93,6 +101,7 @@ export class Generator {
                 branches: this.settings.branches,
                 doNotGivePath: true
             });
+            this.generateThingsInsideModule(this.settings.out, pkg.module);
         } else {
             if (this.settings.changelog && this.landingPage.repository) await this.generateChangelog(this.landingPage.repository, projects);
             if (this.landingPage.readme) this.generatePage(this.settings.out, "./", "index", marked.parse(this.landingPage.readme), { type: "index", projects, pages: this.settings.customPages, branches: this.settings.branches, doNotGivePath: true });
@@ -108,7 +117,7 @@ export class Generator {
     async generateChangelog(repo: string, projects?: Array<Project>, module?: Module): Promise<void> {
         const changelog = await fetchChangelog(repo);
         if (!changelog) {
-            this.settings.changelog = false;
+            this.staticPageSettings.changelog = false;
             return;
         }
         changelog.content = marked.parse(changelog.content);
@@ -150,15 +159,13 @@ export class Generator {
     }
 
     generateModule(p: string, module: Module, readme?: string): void {
-        const newPath = `${p}/m.${module.name}`;
-        this.generateFolder(newPath);
-        this.generateThingsInsideModule(newPath, module);
         this.generatePage(p, `m.${module.name}`, "index", this.structure.components.module({
             ...module,
             readme: readme && marked.parse(readme),
             exports: this.generateExports(module),
             exportMode: this.settings.exportMode
         }), { type: "module", module, name: module.name });
+        this.generateThingsInsideModule(`${p}/m.${module.name}`, module);
     }
 
     generateClass(path: string, classObj: ClassDecl): void {
@@ -563,17 +570,11 @@ export class Generator {
 
     generatePage(p: string, directory: string, file: string, content: string, other: OtherProps = {}): string {
         return createFile(p, directory, `${file}.html`, this.structure.index({
+            static: this.staticPageSettings, 
             content,
-            headerName: this.settings.name,
-            headerRepository: this.landingPage.repository,
-            headerHomepage: this.landingPage.homepage,
-            headerVersion: this.landingPage.version,
-            path: !other.doNotGivePath && [p.replace(this.settings.out, ""), file !== "index" ? file : directory],
+            path: !other.doNotGivePath && [p.slice(this.settings.out.length), directory, file],
             depth: this.depth,
             currentGlobalModuleName: this.currentGlobalModuleName,
-            logo: this.settings.logo,
-            hasChangelog: this.settings.changelog,
-            activeBranch: this.activeBranch,
             ...other
         }));
     }
