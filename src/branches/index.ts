@@ -70,7 +70,7 @@ export function renderBranches(
             maxConstantTextLength: 1024,
             ignoreFolderNames: ["lib"],
             passthroughModules: options.passthroughModules,
-            cwd: branchPath
+            cwd: branchPath,
         });
 
         const newProjects = extractor.run();
