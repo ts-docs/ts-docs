@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { DocumentStructure } from "../documentStructure";
+import { DocumentStructure, setupDocumentStructure } from "../documentStructure";
 import marked from "marked";
 import { copyFolder, createFile, createFolder, escapeHTML, fetchChangelog, getPathFileName, getTagFromJSDoc, isLargeArr, isLargeObject, isLargeSignature } from "../utils";
 import { Project, TypescriptExtractor, ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, UnionOrIntersection, Tuple, ObjectLiteral, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, ArrayType, TypeDecl, FunctionDecl, ConstantDecl, ConditionalType, MappedType, TypeOperator, IndexAccessedType, FunctionSignature, TypePredicateType, InferType, ObjectProperty, ConstructorType, TemplateLiteralType } from "@ts-docs/extractor";
@@ -26,7 +26,7 @@ export class Generator {
     /**
      * How "deep" the current thing is from the root.
      */
-    depth: number
+    depth = 0
     /**
      * The name of the current **global** [[Module]] being rendered.
      * It's going to be undefined if there is only one entry point.
@@ -38,21 +38,17 @@ export class Generator {
     renderingPages?: boolean
     activeBranch = "main"
     landingPage!: LandingPage
-    private staticPageSettings: Record<string, unknown>
-    constructor(structure: DocumentStructure, settings: TsDocsOptions) {
-        this.structure = structure;
+    constructor(settings: TsDocsOptions, documentStructure?: DocumentStructure) {
         this.settings = settings;
-        this.depth = 0;
         this.landingPage = settings.landingPage as LandingPage;
-        this.staticPageSettings = {
+        this.structure = documentStructure || setupDocumentStructure(this.settings.structure, {
             headerName: this.settings.name,
             headerRepository: this.landingPage.repository,
             headerHomepage: this.landingPage.homepage,
             headerVersion: this.landingPage.version,
             logo: this.settings.logo,
-            hasChangelog: this.settings.changelog,
             activeBranch: this.activeBranch,
-        }
+        });
     }
 
     async generate(extractor: TypescriptExtractor, projects: Array<Project>): Promise<void> {
@@ -117,7 +113,7 @@ export class Generator {
     async generateChangelog(repo: string, projects?: Array<Project>, module?: Module): Promise<void> {
         const changelog = await fetchChangelog(repo);
         if (!changelog) {
-            this.staticPageSettings.changelog = false;
+            this.structure.config.hasChangelog = false;
             return;
         }
         changelog.content = marked.parse(changelog.content);
@@ -561,7 +557,7 @@ export class Generator {
             for (const filename in module.exports) {
                 newExp[filename] = {
                     exports: module.exports[filename].exports.map(ex => ({ alias: ex.alias, ref: this.generateRef({ kind: TypeKinds.REFERENCE, type: ex }) })),
-                    reExports: module.exports[filename].reExports.map(ex => ({ module: this.generateRef({ kind: TypeKinds.REFERENCE, type: ex.module }), references: ex.references.map(r => ({ ref: this.generateRef({ kind: TypeKinds.REFERENCE, type: r }), alias: r.alias })), namespace: ex.namespace, reExportsOfReExport: ex.reExportsOfReExport }))
+                    reExports: module.exports[filename].reExports.map(ex => ({ ...ex, module: this.generateRef({ kind: TypeKinds.REFERENCE, type: ex.module }), references: ex.references.map(r => ({ ref: this.generateRef({ kind: TypeKinds.REFERENCE, type: r }), alias: r.alias })) }))
                 }
             }
             return newExp;
@@ -570,7 +566,6 @@ export class Generator {
 
     generatePage(p: string, directory: string, file: string, content: string, other: OtherProps = {}): string {
         return createFile(p, directory, `${file}.html`, this.structure.index({
-            static: this.staticPageSettings, 
             content,
             path: !other.doNotGivePath && [p.slice(this.settings.out.length), directory, file],
             depth: this.depth,

@@ -51,12 +51,11 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
 
     if (finalOptions.json) return fs.writeFileSync(finalOptions.json, JSON.stringify(projects));
 
-    const docStructure = setupDocumentStructure(finalOptions.structure);
-    const generator = new Generator(docStructure, finalOptions);
+    const generator = new Generator(finalOptions);
 
     await generator.generate(types, projects);
 
     fileCache.save();
 
-    if (options.branches) renderBranches(projects, finalOptions, docStructure);
+    if (options.branches) renderBranches(projects, finalOptions, generator.structure);
 })();
