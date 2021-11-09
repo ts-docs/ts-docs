@@ -36,7 +36,6 @@
   "homepage": "https://github.com/ts-docs/ts-docs#readme",
   "dependencies": {
     "@ts-docs/extractor": "^2.3.8",
-    "eta": "^1.12.3",
     "front-matter": "^4.0.2",
     "got": "^11.8.2",
     "highlight.js": "^11.2.0",
