@@ -66,7 +66,7 @@ export function packSearchData(extractors: Array<Project>, path: string) : void 
         extractor.forEachModule(extractor.module, (mod, path) => {
             modObj[0] = res[1].push(mod.name) - 1;
             const numPath = path.map(pathName => res[1].indexOf(pathName));
-            for (const cl of mod.classes) modObj[1].push([`${cl.name}${cl.id ? `_${cl.id}`:""}`, cl.properties.filter(p => !("key" in p)).map(p => [(p as ClassProperty).rawName, buildBitfield((p as ClassProperty).isPrivate && ClassMemberFlags.IS_PRIVATE), getComment(p as ClassProperty)]), cl.methods.map(p => [p.rawName, buildBitfield(p.isGetter && ClassMemberFlags.IS_GETTER, p.isSetter && ClassMemberFlags.IS_SETTER, p.isPrivate && ClassMemberFlags.IS_PRIVATE), getComment(p)]), numPath, getComment(cl)]);
+            for (const cl of mod.classes) modObj[1].push([`${cl.name}${cl.id ? `_${cl.id}`:""}`, cl.properties.filter(p => p.prop).map(p => [p.prop!.rawName, buildBitfield(p.isPrivate && ClassMemberFlags.IS_PRIVATE), getComment(p)]), cl.methods.map(p => [p.rawName, buildBitfield(p.isGetter && ClassMemberFlags.IS_GETTER, p.isSetter && ClassMemberFlags.IS_SETTER, p.isPrivate && ClassMemberFlags.IS_PRIVATE), getComment(p)]), numPath, getComment(cl)]);
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             for (const intf of mod.interfaces) modObj[2].push([`${intf.name}${intf.id ? `_${intf.id}`:""}`, intf.properties.filter(p => p.prop).map(p => p.prop!.rawName), numPath, getComment(intf)]);
             for (const en of mod.enums) modObj[3].push([`${en.name}${en.id ? `_${en.id}`:""}`, en.members.map(m => m.name), numPath, getComment(en)]);

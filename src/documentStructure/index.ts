@@ -5,15 +5,6 @@ import fs from "fs";
 
 export type Components = "class" | "constant" | "enum" | "function" | "functionParameter" | "interface" | "interfaceProperty" | "methodMember" | "module" | "propertyMember" | "type" | "typeArray" | "typeFunction" | "typeIntersection" | "typeObject" | "typeParameter" | "typeReference" | "typeTuple" | "typeUnion" | "typePrimitive" | "typeMapped" | "typeConditional" | "typeTemplateLiteral" | "typeIndexAccess" | "typeOperator" | "classConstructor" | "typePredicate" | "objectProperty" | "changelog" | "typeConstruct" | "jsdocTags" | "index";
 
-export interface StaticDocumentationData {
-    headerName: string,
-    headerRepository?: string,
-    headerHomepage?: string,
-    headerVersion?: string,
-    logo?: string,
-    activeBranch: string,
-    hasChangelog: boolean
-}
 /**
  * ## What is a documentation structure?
  * 
@@ -46,23 +37,21 @@ export interface StaticDocumentationData {
 
 export type DocumentStructure = {
     components: Record<Components, (data: unknown) => string>,
-    assetsPath: string,
-    data: StaticDocumentationData
+    assetsPath: string
 }
 
-export function setupDocumentStructure(structName: string, staticData: StaticDocumentationData, gen: Generator) : DocumentStructure {
+export function setupDocumentStructure(structName: string, gen: Generator) : DocumentStructure {
     let initFn;
     try {
         initFn = require(structName);
     } catch {
         throw new Error(`Couldn't find documentation structure "${structName}"`);
     }
-    let components = initFn.init(gen, staticData);
+    let components = initFn.init(gen);
     const baseDir = path.join("./node_modules", structName);
     const packageJson = JSON.parse(fs.readFileSync(path.join(baseDir, "package.json"), "utf-8"))
     return {
         components, 
-        assetsPath: path.join(baseDir, packageJson.assets),
-        data: staticData
+        assetsPath: path.join(baseDir, packageJson.assets)
     }
 }

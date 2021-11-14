@@ -4,7 +4,7 @@ import marked from "marked";
 import { copyFolder, createFile, createFolder, escapeHTML, fetchChangelog } from "../utils";
 import { Project, TypescriptExtractor, ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, TypeDecl, FunctionDecl, ConstantDecl, FunctionSignature, ObjectProperty, ConstructorType } from "@ts-docs/extractor";
 import path from "path";
-import { LandingPage, TsDocsOptions } from "../options";
+import { LandingPage, PageCategory, TsDocsOptions } from "../options";
 import fs from "fs";
 import Highlight from "highlight.js";
 import { Heading, initMarkdown } from "./markdown";
@@ -28,6 +28,19 @@ export interface OtherProps {
     [key: string]: unknown,
     depth?: number,
     type?: PageTypes
+}
+
+export interface IndexData {
+    name?: string,
+    type: PageTypes,
+    path: [string, string, string],
+    content: string,
+    class?: ClassDecl,
+    interface?: InterfaceDecl,
+    enum?: EnumDecl,
+    module?: Module,
+    pages: Array<PageCategory>,
+    headings: Array<Heading>
 }
 
 /**
@@ -54,15 +67,7 @@ export class Generator {
     constructor(settings: TsDocsOptions, documentStructure?: DocumentStructure) {
         this.settings = settings;
         this.landingPage = settings.landingPage as LandingPage;
-        this.structure = documentStructure || setupDocumentStructure(this.settings.structure, {
-            headerName: this.settings.name,
-            headerRepository: this.landingPage.repository,
-            headerHomepage: this.landingPage.homepage,
-            headerVersion: this.landingPage.version,
-            logo: this.settings.logo,
-            activeBranch: this.activeBranch,
-            hasChangelog: settings.changelog || false
-        }, this);
+        this.structure = documentStructure || setupDocumentStructure(this.settings.structure, this);
     }
 
     async generate(extractor: TypescriptExtractor, projects: Array<Project>): Promise<void> {
@@ -124,7 +129,7 @@ export class Generator {
     async generateChangelog(repo: string, projects?: Array<Project>, module?: Module): Promise<void> {
         const changelog = await fetchChangelog(repo);
         if (!changelog) {
-            this.structure.data.hasChangelog = false;
+            this.settings.changelog = false;
             return;
         }
         changelog.content = marked.parse(changelog.content);
@@ -177,10 +182,6 @@ export class Generator {
         this.structure.components.class(classObj), { class: classObj, name: classObj.name, type: PageTypes.CLASS });
     }
 
-    generateConstructor(constructor: Omit<FunctionDecl, "name">): string {
-        return this.structure.components.classConstructor(constructor);
-    }
-
     generateInterface(path: string, interfaceObj: InterfaceDecl): void {
         if (interfaceObj.isCached) return;
         this.generatePage(path, "interface", interfaceObj.id ? `${interfaceObj.name}_${interfaceObj.id}` : interfaceObj.name, this.structure.components.interface(interfaceObj), { interface: interfaceObj, name: interfaceObj.name, type: PageTypes.INTERFACE });
@@ -229,7 +230,7 @@ export class Generator {
     }
 
     generateRef(ref: Reference, other: Record<string, unknown> = {}): string {
-        if (ref.type.link) return this.structure.components.typeReference(ref);
+        if (ref.type.link) return this.structure.components.typeReference({ref, other});
         let refType = "";
         switch (ref.type.kind) {
             case TypeReferenceKinds.STRINGIFIED_UNKNOWN: return ref.type.name;
@@ -337,7 +338,11 @@ export class Generator {
         return [markdown, headings];
     }
 
-    generateExports(module: Module): Record<string, unknown> | undefined {
+    generateMarkdown(content: string) : string {
+        return marked.parse(content);
+    }
+
+    generateExports(module: Module): FileExports | Record<string, FileExports> | undefined  {
         if (this.settings.exportMode === "simple") {
             const index = module.exports.index;
             if (!index) return;
@@ -356,23 +361,13 @@ export class Generator {
                     newExp.reExports.push({ ...reExport, references });
                 }
             }
-            return {
-                exports: newExp.exports.map(ex => ({ alias: ex.alias, ref: this.generateRef({ kind: TypeKinds.REFERENCE, type: ex }) })),
-                reExports: newExp.reExports.map(reExport => ({ module: this.generateRef({ kind: TypeKinds.REFERENCE, type: reExport.module }), references: reExport.references.map(ex => ({ alias: ex.alias, ref: this.generateRef({ kind: TypeKinds.REFERENCE, type: ex }) })), namespace: reExport.namespace, reExportsOfReExport: reExport.reExportsOfReExport }))
-            };
-        } else {
-            const newExp = {} as Record<string, unknown>;
-            for (const filename in module.exports) {
-                newExp[filename] = {
-                    exports: module.exports[filename].exports.map(ex => ({ alias: ex.alias, ref: this.generateRef({ kind: TypeKinds.REFERENCE, type: ex }) })),
-                    reExports: module.exports[filename].reExports.map(ex => ({ ...ex, module: this.generateRef({ kind: TypeKinds.REFERENCE, type: ex.module }), references: ex.references.map(r => ({ ref: this.generateRef({ kind: TypeKinds.REFERENCE, type: r }), alias: r.alias })) }))
-                }
-            }
             return newExp;
+        } else {
+            return module.exports;
         }
     }
 
-    generatePage(p: string, directory: string, file: string, content: string, other: OtherProps = {}): string {
+    generatePage(p: string, directory: string, file: string, content: string, other: Partial<IndexData & OtherProps> = {}): string {
         return createFile(p, directory, `${file}.html`, this.structure.components.index({
             content,
             path: !other.doNotGivePath && [p.slice(this.settings.out.length), directory, file],
