@@ -2,7 +2,7 @@
 import { DocumentStructure, setupDocumentStructure } from "../documentStructure";
 import marked from "marked";
 import { copyFolder, createFile, createFolder, escapeHTML, fetchChangelog } from "../utils";
-import { Project, TypescriptExtractor, ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, TypeDecl, FunctionDecl, ConstantDecl, FunctionSignature, ObjectProperty, ConstructorType } from "@ts-docs/extractor";
+import { Project, TypescriptExtractor, ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, TypeDecl, FunctionDecl, ConstantDecl, FunctionSignature, ObjectProperty, ConstructorType, InferType, TypeOperator } from "@ts-docs/extractor";
 import path from "path";
 import { LandingPage, PageCategory, TsDocsOptions } from "../options";
 import fs from "fs";
@@ -39,6 +39,7 @@ export interface IndexData {
     interface?: InterfaceDecl,
     enum?: EnumDecl,
     module?: Module,
+    projects: Array<Project>,
     pages: Array<PageCategory>,
     headings: Array<Heading>
 }
@@ -210,23 +211,11 @@ export class Generator {
         }), { type: PageTypes.CONST, module, name: constant.name });
     }
 
-    generatePropertyMember(property: ClassProperty | IndexSignatureDeclaration): string {
-        return this.structure.components.propertyMember(property);
-    }
-
-    generateProperty(property: ObjectProperty, isInterface?: boolean): string {
-        return (isInterface ? this.structure.components.interfaceProperty : this.structure.components.objectProperty)(property);
-    }
-
     generateConstructType(ref: FunctionSignature | ConstructorType, includeNew?: boolean): string {
         return this.structure.components.typeConstruct({
             fn: ref,
             includeNew
         });
-    }
-
-    generateMethodMember(method: ClassMethod): string {
-        return this.structure.components.methodMember(method);
     }
 
     generateRef(ref: Reference, other: Record<string, unknown> = {}): string {
@@ -274,11 +263,11 @@ export class Generator {
             case TypeKinds.TYPE_PREDICATE: return this.structure.components.typePredicate(type);
             case TypeKinds.INDEX_ACCESS: return this.structure.components.typeIndexAccess(type);
             case TypeKinds.TEMPLATE_LITERAL: return this.structure.components.typeTemplateLiteral(type);
-            case TypeKinds.INFER_TYPE: return this.structure.components.typeOperator({ name: "infer", type });
-            case TypeKinds.UNIQUE_OPERATOR: return this.structure.components.typeOperator({ name: "unique", type });
-            case TypeKinds.KEYOF_OPERATOR: return this.structure.components.typeOperator({ name: "keyof", type });
-            case TypeKinds.READONLY_OPERATOR: return this.structure.components.typeOperator({ name: "readonly", type });
-            case TypeKinds.TYPEOF_OPERATOR: return this.structure.components.typeOperator({ name: "typeof", type });
+            case TypeKinds.INFER_TYPE: return this.structure.components.typeOperator({ name: "infer", type: (type as InferType).typeParameter });
+            case TypeKinds.UNIQUE_OPERATOR: return this.structure.components.typeOperator({ name: "unique", type: (type as TypeOperator).type });
+            case TypeKinds.KEYOF_OPERATOR: return this.structure.components.typeOperator({ name: "keyof", type: (type as TypeOperator).type });
+            case TypeKinds.READONLY_OPERATOR: return this.structure.components.typeOperator({ name: "readonly", type: (type as TypeOperator).type });
+            case TypeKinds.TYPEOF_OPERATOR: return this.structure.components.typeOperator({ name: "typeof", type: (type as TypeOperator).type });
             case TypeKinds.STRING:
             case TypeKinds.NUMBER:
             case TypeKinds.VOID:

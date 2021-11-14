@@ -3,7 +3,7 @@ import { Generator } from "..";
 import path from "path";
 import fs from "fs";
 
-export type Components = "class" | "constant" | "enum" | "function" | "functionParameter" | "interface" | "interfaceProperty" | "methodMember" | "module" | "propertyMember" | "type" | "typeArray" | "typeFunction" | "typeIntersection" | "typeObject" | "typeParameter" | "typeReference" | "typeTuple" | "typeUnion" | "typePrimitive" | "typeMapped" | "typeConditional" | "typeTemplateLiteral" | "typeIndexAccess" | "typeOperator" | "classConstructor" | "typePredicate" | "objectProperty" | "changelog" | "typeConstruct" | "jsdocTags" | "index";
+export type Components = "class" | "constant" | "enum" | "function" | "functionParameter" | "interface" | "module" | "type" | "typeArray" | "typeFunction" | "typeIntersection" | "typeObject" | "typeParameter" | "typeReference" | "typeTuple" | "typeUnion" | "typePrimitive" | "typeMapped" | "typeConditional" | "typeTemplateLiteral" | "typeIndexAccess" | "typeOperator" | "typePredicate" | "changelog" | "typeConstruct" | "jsdocTags" | "index";
 
 /**
  * ## What is a documentation structure?
@@ -43,7 +43,7 @@ export type DocumentStructure = {
 export function setupDocumentStructure(structName: string, gen: Generator) : DocumentStructure {
     let initFn;
     try {
-        initFn = require(structName);
+        initFn = require(path.join(process.cwd(), `./node_modules/${structName}`));
     } catch {
         throw new Error(`Couldn't find documentation structure "${structName}"`);
     }
