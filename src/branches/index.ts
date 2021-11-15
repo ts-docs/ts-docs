@@ -80,9 +80,7 @@ export function renderBranches(
             landingPage: branchSetting.landingPage ? newProjects.find(pr => pr.module.name === branchSetting.landingPage) : newProjects[0],
             out: path.join(options.out, `b.${branchSetting.displayName}`),
             changelog: false // Different branches don't have a changelog
-        }, documentStructure);
-
-        gen.activeBranch = branchSetting.displayName;
+        }, branchSetting.displayName);
 
         gen.generate(extractor, newProjects);
     }

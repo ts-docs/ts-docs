@@ -63,12 +63,13 @@ export class Generator {
      * Only true when the custom pages are being rendered
      */
     renderingPages?: boolean
-    activeBranch = "main"
+    activeBranch: string
     landingPage!: LandingPage
-    constructor(settings: TsDocsOptions, documentStructure?: DocumentStructure) {
+    constructor(settings: TsDocsOptions, activeBranch = "main") {
         this.settings = settings;
+        this.activeBranch = activeBranch;
         this.landingPage = settings.landingPage as LandingPage;
-        this.structure = documentStructure || setupDocumentStructure(this.settings.structure, this);
+        this.structure = setupDocumentStructure(this.settings.structure, this);
     }
 
     async generate(extractor: TypescriptExtractor, projects: Array<Project>): Promise<void> {
