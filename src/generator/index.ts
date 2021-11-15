@@ -65,6 +65,7 @@ export class Generator {
     renderingPages?: boolean
     activeBranch: string
     landingPage!: LandingPage
+    projects!: Array<Project>
     constructor(settings: TsDocsOptions, activeBranch = "main") {
         this.settings = settings;
         this.activeBranch = activeBranch;
@@ -73,7 +74,8 @@ export class Generator {
     }
 
     async generate(extractor: TypescriptExtractor, projects: Array<Project>): Promise<void> {
-        initMarkdown(this, extractor, projects);
+        this.projects = projects;
+        initMarkdown(this, extractor);
         const out = this.settings.out;
         createFolder(out);
         const assetsFolder = path.join(out, "./assets");
