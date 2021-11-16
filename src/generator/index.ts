@@ -29,6 +29,8 @@ export interface OtherProps {
     type?: PageTypes
 }
 
+export type ModuleExports = FileExports | Record<string, FileExports> | undefined;
+
 export interface IndexData {
     name?: string,
     type: PageTypes,
@@ -40,7 +42,14 @@ export interface IndexData {
     module?: Module,
     projects: Array<Project>,
     pages: Array<PageCategory>,
-    headings: Array<Heading>
+    headings: Array<Heading>,
+    exports: ModuleExports
+}
+
+export interface OtherRefData {
+    displayName?: string,
+    hash?: string,
+    filename?: string
 }
 
 /**
@@ -173,11 +182,12 @@ export class Generator {
     }
 
     generateModule(p: string, module: Module, readme?: string): void {
+        const exports = this.generateExports(module);
         this.generatePage(p, `m.${module.name}`, "index", this.structure.components.module({
             module,
             readme: readme && marked.parse(readme),
-            exports: this.generateExports(module),
-        }), { type: PageTypes.MODULE, module, name: module.name });
+            exports,
+        }), { type: PageTypes.MODULE, module, name: module.name, exports });
         this.generateThingsInsideModule(`${p}/m.${module.name}`, module);
     }
 
@@ -222,7 +232,7 @@ export class Generator {
         });
     }
 
-    generateRef(ref: Reference, other: Record<string, unknown> = {}): string {
+    generateRef(ref: Reference, other: OtherRefData = {}): string {
         if (ref.type.link) return this.structure.components.typeReference({ref, other});
         let refType = "";
         switch (ref.type.kind) {
@@ -239,7 +249,7 @@ export class Generator {
                 if (!ref.type.path) return ref.type.name;
                 return this.structure.components.typeReference({
                     ref, other,
-                    link: ref.type.path && this.generateLink(path.join(...ref.type.path.map(p => `m.${p}`), ref.type.path[ref.type.path.length - 1] !== ref.type.name ? `m.${ref.type.name}` : "", "index.html"))
+                    link: ref.type.path && this.generateLink(path.join(...ref.type.path.map(p => `m.${p}`), ref.type.path[ref.type.path.length - 1] !== ref.type.name ? `m.${ref.type.name}` : "", `index.html${other.hash ? `#${other.hash}`:""}`))
                 });
             }
             default: refType = "";
@@ -336,7 +346,7 @@ export class Generator {
         return marked.parse(content);
     }
 
-    generateExports(module: Module): FileExports | Record<string, FileExports> | undefined  {
+    generateExports(module: Module): ModuleExports {
         if (this.settings.exportMode === "simple") {
             const index = module.exports.index;
             if (!index) return { exports: [], reExports: [] };
