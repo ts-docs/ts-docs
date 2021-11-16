@@ -38,8 +38,7 @@ export interface BranchSetting {
  */
 export function renderBranches(
     projects: Array<Project>,
-    options: TsDocsOptions,
-    documentStructure: DocumentStructure
+    options: TsDocsOptions
 ) : void {
     if (!options.branches) return;
 
@@ -70,6 +69,7 @@ export function renderBranches(
             maxConstantTextLength: 1024,
             ignoreFolderNames: ["lib"],
             passthroughModules: options.passthroughModules,
+            stripInternal: options.stripInternal,
             cwd: branchPath,
         });
 

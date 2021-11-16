@@ -45,7 +45,8 @@ export interface TsDocsOptions {
     json?: string,
     tsconfig?: string,
     forceEmit?: boolean,
-    exportMode: "simple" | "detailed"
+    exportMode: "simple" | "detailed",
+    stripInternal?: boolean
 }
 
 export interface OptionSource {
@@ -64,7 +65,8 @@ export interface OptionSource {
     json?: string,
     tsconfig?: string,
     forceEmit?: boolean,
-    exportMode?: string
+    exportMode?: string,
+    stripInternal?: boolean
 }
 
 export const options: TsDocsOptions = {
@@ -145,6 +147,7 @@ Usage: ts-docs [...entryFiles]
 --forceEmit         Skips checking file cache for changes, always produces new documentation.
 --tsconfig          Path to tsconfig.json file.
 --exportMode        "simple" or "detailed". Simple mode just lists all the exports from the index file, detailed mode lists all exports of all files in the module.
+--stripInternal     Removes all items flagged with the internal tag.
 --help
 `);
 }

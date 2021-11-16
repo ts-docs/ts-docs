@@ -6,8 +6,7 @@ import { Project, TypescriptExtractor, ClassDecl, ClassProperty, Reference, Type
 import path from "path";
 import { LandingPage, PageCategory, TsDocsOptions } from "../options";
 import fs from "fs";
-import Highlight from "highlight.js";
-import { Heading, initMarkdown } from "./markdown";
+import { Heading, highlightAndLink, initMarkdown } from "./markdown";
 import { packSearchData } from "./searchData";
 import { FileExports } from "@ts-docs/extractor/dist/extractor/ExportHandler";
 
@@ -66,6 +65,7 @@ export class Generator {
     activeBranch: string
     landingPage!: LandingPage
     projects!: Array<Project>
+    extractor!: TypescriptExtractor
     constructor(settings: TsDocsOptions, activeBranch = "main") {
         this.settings = settings;
         this.activeBranch = activeBranch;
@@ -75,6 +75,7 @@ export class Generator {
 
     async generate(extractor: TypescriptExtractor, projects: Array<Project>): Promise<void> {
         this.projects = projects;
+        this.extractor = extractor;
         initMarkdown(this, extractor);
         const out = this.settings.out;
         createFolder(out);
@@ -210,7 +211,7 @@ export class Generator {
         if (constant.isCached) return;
         this.generatePage(path, "constant", constant.id ? `${constant.name}_${constant.id}` : constant.name, this.structure.components.constant({
             constant,
-            content: constant.content && Highlight.highlight(constant.content, { language: "ts" }).value,
+            content: constant.content && highlightAndLink(this, this.extractor, constant.content),
         }), { type: PageTypes.CONST, module, name: constant.name });
     }
 
@@ -233,6 +234,7 @@ export class Generator {
             case TypeReferenceKinds.TYPE_ALIAS: refType = "type"; break;
             case TypeReferenceKinds.FUNCTION: refType = "function"; break;
             case TypeReferenceKinds.CONSTANT: refType = "constant"; break;
+            case TypeReferenceKinds.INTERNAL: return this.structure.components.typeReference({ref, other});
             case TypeReferenceKinds.NAMESPACE_OR_MODULE: {
                 if (!ref.type.path) return ref.type.name;
                 return this.structure.components.typeReference({
@@ -337,7 +339,7 @@ export class Generator {
     generateExports(module: Module): FileExports | Record<string, FileExports> | undefined  {
         if (this.settings.exportMode === "simple") {
             const index = module.exports.index;
-            if (!index) return;
+            if (!index) return { exports: [], reExports: [] };
             const newExp = { exports: index.exports.slice(), reExports: [] } as FileExports;
             for (const reExport of index.reExports) {
                 if (reExport.sameModule && !reExport.namespace) {

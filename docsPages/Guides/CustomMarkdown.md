@@ -7,6 +7,18 @@ order: 2
 
 You can use custom ts-docs markdown syntax in order to make your documentation more informative and prettier. You can use this syntax in custom pages and in jsdoc comments.
 
+## References in codeblocks
+
+If the language inside the codeblock is typescript or javascript, ts-docs will try link every reference used in the code.
+
+```ts
+import { Generator } from "ts-docs";
+
+
+const gen = new Generator({...});
+gen.generate();
+```
+
 ## Linking assets
 
 If you want to have an image which comes from the `assets` folder, simply start the link of the image with `./assets` or `assets`. 
@@ -124,3 +136,21 @@ Any property or method with that tag will have a red "deprecated" tag, letting r
 ### `@returns`
 
 Documents information about the return value of a method. You can provide a type here, in case ts-docs isn't able to find it. 
+
+### `@internal`
+
+Omit an item from the documentation. This tag works for the following items:
+
+- classes
+    - class members (methods, properties, getters, setters)
+- interfaces
+    - interface members
+- enums
+    - enum members
+- functions
+- type aliases
+- constants
+
+**It doesn't work for namespaces.**
+
+You also have to enable the `stripInternal` option.

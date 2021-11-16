@@ -141,3 +141,7 @@ How should exports be displayed.
 - `detailed` - The exports from every file in the module are shown separately, along with their short descriptions. 
 
 The default option is set to `simple`.
+
+### stripInternal
+
+Removes all internal items from the generated documentation, **but** it keeps references around. This option is inherited from the `stripInternal` option in your `tsconfig.json` file. (You may have to point ts-docs to your `tsconfig.json` file via the `tsconfig` option.)

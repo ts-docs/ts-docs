@@ -44,6 +44,7 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
         passthroughModules: options.passthroughModules,
         tsconfig: options.tsconfig,
         fileCache: options.forceEmit ? undefined : fileCache,
+        stripInternal: options.stripInternal
     });
 
     const projects = types.run();
@@ -57,5 +58,5 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
 
     fileCache.save();
 
-    if (options.branches) renderBranches(projects, finalOptions, generator.structure);
+    if (options.branches) renderBranches(projects, finalOptions);
 })();

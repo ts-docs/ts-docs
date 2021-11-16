@@ -195,7 +195,12 @@ export function initMarkdown(generator: Generator, extractor: TypescriptExtracto
 }
 
 export function highlightAndLink(gen: Generator, extractor: TypescriptExtractor, text: string, lang = "ts") : string {
-    let highlighted = highlight.highlight(text, {language: lang}).value;
+    let highlighted;
+    try {
+        highlighted = highlight.highlight(text, {language: lang}).value;
+    } catch {
+        return "";
+    }
     if (lang === "ts" || lang === "typescript" || lang === "js" || lang === "javascript") {
         const matched = highlighted.matchAll(/<span class=\"hljs-title class_\">(.*?)<\/span>/g);
         for (const [matchingEl, typeName] of matched) {
