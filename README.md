@@ -4,9 +4,9 @@ An opinionated documentation generator for typescript - generate informative and
 
 If you want to check out how a typical ts-docs documentation looks like, head over to the official docs, found [here](https://ts-docs.github.io/ts-docs/index.html).
 
-![Example](https://i.imgur.com/8FpQb1F.png)
-
 ## Installation
+
+**Important:** You need typescript 4.3+ in order to use ts-docs!
 
 ```
 npm i --save-dev @ts-docs/ts-docs @ts-docs/default-docs-structure 
@@ -25,7 +25,7 @@ ts-docs src/index.ts
 
 - Documentation structure akin to [docs-rs](https://docs.rs/) and rust in general, every folder inside the project is a different module. 
 - Document multiple projects, monorepo support out of the box.
-- Slick design, dark/light theme, powerful search function.
+- Slick design, dark/light theme, powerful search and filter function.
 - Link external references to their respective documentation.
 - Out of the box branches documentation, generate documentation for multiple branches.
 - Changelog generation, pulled from github releases.
@@ -33,6 +33,19 @@ ts-docs src/index.ts
 - 100% accurate, you won't find missing references unless they're external.
 
 **This documentation generator may not work on your project at all, although most typescript projects follow the structure the generator supports.**
+
+## Examples
+
+<details>
+<summary>ts-docs</summary>
+![Example](https://i.imgur.com/8FpQb1F.png)
+</details>
+
+<details>
+<summary>detritus</summary>
+![Example](ttps://i.imgur.com/yBtBsg4.png)
+</details>
+
 
 ## Contributing
 

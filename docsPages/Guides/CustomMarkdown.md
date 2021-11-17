@@ -9,7 +9,7 @@ You can use custom ts-docs markdown syntax in order to make your documentation m
 
 ## References in codeblocks
 
-If the language inside the codeblock is typescript or javascript, ts-docs will try link every reference used in the code.
+If the language inside the codeblock is typescript or javascript, ts-docs will try to link every reference used in the code.
 
 ```ts
 import { Generator } from "ts-docs";
@@ -58,7 +58,7 @@ The style specifier (`[note|warning|success]`) must be RIGHT after the text bloc
 
 ## References
 
-You can reference classes, interfaces, enums, type aliases, methods, properties, functions, constants and namespaces by putting their name inside double square brackets, for example:
+You can reference classes, interfaces, enums, type aliases, methods, properties, functions, constants, namespaces and modules by putting their name inside double square brackets, for example:
 
 `[[Generator]]` becomes [[Generator]]
 
@@ -74,7 +74,7 @@ You can reference a method by adding a dot (`.`), the method's name, and then `(
 
 ### By path
 
-ts-docs searches each module in order to find the name of the references, this could lead to inaccurate links, so you always can just provide the entire path to the thing.
+ts-docs searches each module in order to find the name of the references, this could lead to inaccurate links, so you always can just provide the entire path to the item.
 
 `[[extractor/extractor/TypescriptExtractor]]` becomes [[extractor/extractor/TypescriptExtractor]]
 

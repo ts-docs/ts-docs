@@ -14,7 +14,7 @@ export type Components = "class" | "constant" | "enum" | "function" | "functionP
  * 
  * If you would like to change the generated site only stylistically, it's highly recommended to just use a
  * custom documentation structure. If you'd like to change how things are generated, for example maybe you'd
- * like to use [React Static](https://github.com/react-static/react-static), then write
+ * like to use [React Static](https://github.com/react-static/react-static) to make your documentation an SPA, then write
  * your completely own generator using the [typescript extractor](https://github.com/ts-docs/ts-extractor)
  * 
  * To see how a documentation structure should look like, visit the repository of the [default documentation structure](https://github.com/ts-docs/default-docs-structure).
@@ -22,7 +22,7 @@ export type Components = "class" | "constant" | "enum" | "function" | "functionP
  * ### index
  * 
  * Every document structure should have an entry point which exports a function called `init`. The function must return an object containing all the functions for the [[Components as components]].
- * The default documentation structure uses plain template strings to generate the HMTL output (via [js-to-str](https://github.com/ts-docs/jsx-to-str)), but you could use a template engine, too.
+ * The default documentation structure uses plain template strings to generate the HMTL output, but you could use a templating engine, too.
  * 
  * The init function has two arguments, the [[StaticDocumentationData]] and the [[Generator as generator]].
  * 
@@ -32,7 +32,12 @@ export type Components = "class" | "constant" | "enum" | "function" | "functionP
  * 
  * ### assets folder
  * 
- * The assets folder contains files which will be used by the client. Images, css files and javascript files.
+ * The assets folder contains files which will be used by the client. Images, css files and javascript files. You need to specify where the assets folder is located via the `assets` property in
+ * the package.json for the documentation generator.
+ * 
+ * ### jsx-to-str
+ * 
+ * The default documentation generator uses [jsx-to-str](https://github.com/ts-docs/jsx-to-str), a typescript transformer which turns JSX literals into plain strings **during transpilation**.
  */
 
 export type DocumentStructure = {
