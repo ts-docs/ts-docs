@@ -118,6 +118,7 @@ export class Generator {
         if (projects.length === 1) {
             const pkg = projects[0];
             if (this.settings.changelog && pkg.repository) await this.generateChangelog(pkg.repository, undefined, pkg.module);
+            this.generateThingsInsideModule(this.settings.out, pkg.module);
             this.generatePage(this.settings.out, "./", "index", this.structure.components.module({
                 module: pkg.module,
                 readme: pkg.readme && marked.parse(pkg.readme),
@@ -127,7 +128,6 @@ export class Generator {
                 module: pkg.module,
                 doNotGivePath: true
             });
-            this.generateThingsInsideModule(this.settings.out, pkg.module);
         } else {
             if (this.settings.changelog && this.landingPage.repository) await this.generateChangelog(this.landingPage.repository, projects);
             if (this.landingPage.readme) this.generatePage(this.settings.out, "./", "index", marked.parse(this.landingPage.readme), { type: PageTypes.INDEX, projects, doNotGivePath: true });
@@ -157,25 +157,33 @@ export class Generator {
     generateThingsInsideModule(path: string, module: Module): void {
         // +1 because class/interface/enum/function/type/constant
         this.depth++;
+        this.sortArr(module.classes, "name");
         for (const classObj of module.classes) {
             this.generateClass(path, classObj);
         }
+        this.sortArr(module.interfaces, "name");
         for (const interfaceObj of module.interfaces) {
             this.generateInterface(path, interfaceObj);
         }
+        this.sortArr(module.enums, "name");
         for (const enumObj of module.enums) {
             this.generateEnum(path, enumObj);
         }
+        this.sortArr(module.types, "name");
         for (const typeObj of module.types) {
             this.generateTypeDecl(path, typeObj, module);
         }
+        this.sortArr(module.functions, "name");
         for (const fnObj of module.functions) {
             this.generateFunction(path, fnObj, module);
         }
+        this.sortArr(module.constants, "name");
         for (const constantObj of module.constants) {
             this.generateConstant(path, constantObj, module);
         }
-        for (const [, mod] of module.modules) {
+        const modArr = [...module.modules.values()];
+        this.sortArr(modArr, "name");
+        for (const mod of modArr) {
             this.generateModule(path, mod);
         }
         this.depth--;
@@ -183,27 +191,45 @@ export class Generator {
 
     generateModule(p: string, module: Module, readme?: string): void {
         const exports = this.generateExports(module);
+        const folderName = `${p}/m.${module.name}`;
+        createFolder(folderName);
+        this.generateThingsInsideModule(folderName, module);
         this.generatePage(p, `m.${module.name}`, "index", this.structure.components.module({
             module,
             readme: readme && marked.parse(readme),
             exports,
         }), { type: PageTypes.MODULE, module, name: module.name, exports });
-        this.generateThingsInsideModule(`${p}/m.${module.name}`, module);
     }
 
     generateClass(path: string, classObj: ClassDecl): void {
         if (classObj.isCached) return;
+        if (this.settings.sort === "alphabetical") {
+            classObj.properties.sort((a, b) => {
+                if (a.index) return 1;
+                if (b.index) return -1;
+                return a.prop!.rawName.localeCompare(b.prop!.rawName);
+            })
+        }
+        this.sortArr(classObj.methods, "rawName");
         this.generatePage(path, "class", classObj.id ? `${classObj.name}_${classObj.id}` : classObj.name,
         this.structure.components.class(classObj), { class: classObj, name: classObj.name, type: PageTypes.CLASS });
     }
 
     generateInterface(path: string, interfaceObj: InterfaceDecl): void {
         if (interfaceObj.isCached) return;
+        if (this.settings.sort === "alphabetical") {
+            interfaceObj.properties.sort((a, b) => {
+                if (!a.prop) return 1;
+                if (!b.prop) return -1;
+                return a.prop.rawName.localeCompare(b.prop.rawName);
+            });
+        }
         this.generatePage(path, "interface", interfaceObj.id ? `${interfaceObj.name}_${interfaceObj.id}` : interfaceObj.name, this.structure.components.interface(interfaceObj), { interface: interfaceObj, name: interfaceObj.name, type: PageTypes.INTERFACE });
     }
 
     generateEnum(path: string, enumObj: EnumDecl): void {
         if (enumObj.isCached) return;
+        this.sortArr(enumObj.members, "name");
         this.generatePage(path, "enum", enumObj.id ? `${enumObj.name}_${enumObj.id}` : enumObj.name, this.structure.components.enum(enumObj), { type: PageTypes.ENUM, enum: enumObj, name: enumObj.name });
     }
 
@@ -387,6 +413,10 @@ export class Generator {
 
     generateLink(p: string, hash?: string): string {
         return `${path.join("../".repeat(this.depth), p)}${hash ? `#.${hash}` : ""}`;
+    }
+
+    sortArr(arr: Array<any>, name: "rawName" | "name") : void {
+        if (this.settings.sort === "alphabetical") arr.sort((a, b) => (a[name] as string).localeCompare(b[name]!));
     }
 
 }

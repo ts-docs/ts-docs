@@ -137,11 +137,18 @@ Path to a `tsconfig.json` file to use for the typescript compiler. The ts-docs e
 
 How should exports be displayed.
 
-- `simple` - Only the names of all the exported elements from the `index.ts` file are shown, along with short previews of them. If the module doesn't have an `index.ts` file, then no exports are shown. 
-- `detailed` - The exports from every file in the module are shown separately, along with their short descriptions. 
+- `simple` - Only the names of all the exported elements from the `index.ts` file are shown. If the module doesn't have an `index.ts` file, then no exports are shown. 
+- `detailed` - The exports from every file in the module are shown separately. 
 
 The default option is set to `simple`.
 
 ### stripInternal
 
 Removes all internal items from the generated documentation, **but** it keeps references around. This option is inherited from the `stripInternal` option in your `tsconfig.json` file. (You may have to point ts-docs to your `tsconfig.json` file via the `tsconfig` option.)
+
+### sort
+
+How to sort items (classes, interfaces, enums, functions, constants, types, methods, properties, enum members)
+
+- `source` - How they were found in the source code, this is the default option
+- `alphabetical`

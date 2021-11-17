@@ -46,7 +46,8 @@ export interface TsDocsOptions {
     tsconfig?: string,
     forceEmit?: boolean,
     exportMode: "simple" | "detailed",
-    stripInternal?: boolean
+    stripInternal?: boolean,
+    sort?: "source" | "alphabetical"
 }
 
 export interface OptionSource {
@@ -66,7 +67,8 @@ export interface OptionSource {
     tsconfig?: string,
     forceEmit?: boolean,
     exportMode?: string,
-    stripInternal?: boolean
+    stripInternal?: boolean,
+    sort?: "source" | "alphabetical"
 }
 
 export const options: TsDocsOptions = {
