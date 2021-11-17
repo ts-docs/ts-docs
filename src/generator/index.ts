@@ -247,7 +247,7 @@ export class Generator {
         if (constant.isCached) return;
         this.generatePage(path, "constant", constant.id ? `${constant.name}_${constant.id}` : constant.name, this.structure.components.constant({
             constant,
-            content: constant.content && highlightAndLink(this, this.extractor, constant.content),
+            content: constant.content && highlightAndLink(this, this.extractor, constant.content, "ts"),
         }), { type: PageTypes.CONST, module, name: constant.name });
     }
 
