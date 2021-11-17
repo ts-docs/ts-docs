@@ -38,12 +38,12 @@ ts-docs src/index.ts
 
 <details>
 <summary>ts-docs</summary>
-![Example](https://i.imgur.com/8FpQb1F.png)
+<img src="https://i.imgur.com/8FpQb1F.png">
 </details>
 
 <details>
 <summary>detritus</summary>
-![Example](ttps://i.imgur.com/yBtBsg4.png)
+<img src="https://i.imgur.com/yBtBsg4.png">
 </details>
 
 
