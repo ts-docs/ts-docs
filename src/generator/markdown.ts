@@ -194,10 +194,10 @@ export function initMarkdown(generator: Generator, extractor: TypescriptExtracto
     });
 }
 
-export function highlightAndLink(gen: Generator, extractor: TypescriptExtractor, text: string, lang = "ts") : string {
+export function highlightAndLink(gen: Generator, extractor: TypescriptExtractor, text: string, lang?: string) : string {
     let highlighted;
     try {
-        highlighted = highlight.highlight(text, {language: lang}).value;
+        highlighted = lang ? highlight.highlight(text, {language: lang}).value : highlight.highlightAuto(text).value;
     } catch {
         return "";
     }
