@@ -1,5 +1,7 @@
 # ts-docs
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1ad389cd1f3f4a848bf8b47898b53388)](https://app.codacy.com/gh/ts-docs/ts-docs?utm_source=github.com&utm_medium=referral&utm_content=ts-docs/ts-docs&utm_campaign=Badge_Grade_Settings)
+
 An opinionated documentation generator for typescript - generate informative and accurate documentation sites with zero setup.
 
 If you want to check out how a typical ts-docs documentation looks like, head over to the official docs, found [here](https://ts-docs.github.io/ts-docs/index.html).
