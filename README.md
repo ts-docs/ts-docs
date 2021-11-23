@@ -1,3 +1,8 @@
+
+<p align="center">
+  <img src="https://github.com/ts-docs/ts-docs/blob/main/assets/logo.png?raw=true" width="300px" />
+</p>
+
 # ts-docs
 
 [![GitHub license](https://img.shields.io/github/license/ts-docs/ts-docs?style=flat-square)](https://github.com/ts-docs/ts-docs/blob/main/LICENSE)

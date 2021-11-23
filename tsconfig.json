@@ -26,6 +26,8 @@
     "name": "ts-docs",
     "landingPage": "ts-docs",
     "customPages": "./docsPages",
+    "assets": "./assets",
+    "logo": "./assets/logo.png",
     "changelog": true
   },
 }
