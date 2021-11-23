@@ -1,5 +1,10 @@
 # ts-docs
 
+[![GitHub license](https://img.shields.io/github/license/ts-docs/ts-docs?style=flat-square)](https://github.com/ts-docs/ts-docs/blob/main/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/ts-docs/ts-docs?style=flat-square)](https://github.com/ts-docs/ts-docs/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/ts-docs/ts-docs?style=flat-square)](https://github.com/ts-docs/ts-docs/issues)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/639fba225a094e769b4c8976a30bf7c1)](https://www.codacy.com/gh/ts-docs/ts-docs/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ts-docs/ts-docs&amp;utm_campaign=Badge_Grade)
+
 An opinionated documentation generator for typescript - generate informative and accurate documentation sites with zero setup.
 
 If you want to check out how a typical ts-docs documentation looks like, head over to the official docs, found [here](https://ts-docs.github.io/ts-docs/index.html).
