@@ -1,7 +1,8 @@
 
-import { Project, TypeKinds, TypescriptExtractor } from "@ts-docs/extractor";
+import { TypeKinds, TypescriptExtractor } from "@ts-docs/extractor";
 import highlight from "highlight.js";
 import marked from "marked";
+import sanitizer from "sanitize-html";
 import { Generator } from ".";
 
 export interface Heading {
@@ -49,10 +50,12 @@ function genReference(str: string, otherData: Record<string, unknown>, generator
  * - Resolves relative asset links
  */
 export function initMarkdown(generator: Generator, extractor: TypescriptExtractor) : void {
-
+    const allowedTags = [...sanitizer.defaults.allowedTags, "img", "details", "summary"];
     marked.use({
+        sanitizer: (html) => sanitizer(html, {allowedTags}),
         renderer: {
             code: (code, lang) : string => {
+                if (!lang) return `<pre><code class="hljs">${code}</code></pre>`;
                 return `<pre><code class="hljs">${highlightAndLink(generator, extractor, code, lang)}</code></pre>`;
             },
             heading: function(text, level, raw, slug) {
@@ -199,7 +202,7 @@ export function highlightAndLink(gen: Generator, extractor: TypescriptExtractor,
     try {
         highlighted = lang ? highlight.highlight(text, {language: lang}).value : highlight.highlightAuto(text).value;
     } catch {
-        return "";
+        return text;
     }
     if (lang === "ts" || lang === "typescript" || lang === "js" || lang === "javascript") {
         const matched = highlighted.matchAll(/<span class=\"hljs-title class_\">(.*?)<\/span>/g);

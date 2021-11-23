@@ -2,7 +2,7 @@
 
 import parseArgs from "minimist";
 import { TypescriptExtractor } from "@ts-docs/extractor";
-import { setupDocumentStructure } from "./documentStructure";
+import ts from "typescript";
 import { Generator } from "./generator";
 import { findTSConfig, findTsDocsJs, handleDefaultAPI, handleNodeAPI } from "./utils";
 import { addOptionSource, initOptions, options, OptionSource, showHelp, initConfig } from "./options";
