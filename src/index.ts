@@ -1,5 +1,5 @@
 
-export * from "./cli";
+export type { TsDocsCLIArgs } from "./cli";
 export * from "./generator";
 export * from "./documentStructure";
 export * from "./options";
