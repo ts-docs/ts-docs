@@ -219,8 +219,8 @@ export class Generator {
         if (interfaceObj.isCached) return;
         if (this.settings.sort === "alphabetical") {
             interfaceObj.properties.sort((a, b) => {
-                if (!a.prop) return 1;
-                if (!b.prop) return -1;
+                if (!a.prop || !a.prop.rawName) return 1;
+                if (!b.prop || !b.prop.rawName) return -1;
                 return a.prop.rawName.localeCompare(b.prop.rawName);
             });
         }
