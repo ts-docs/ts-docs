@@ -14,7 +14,7 @@ jobs:
       - run: npm i @ts-docs/default-docs-structure
       - run: tsc
       - run: git clone https://github.com/ts-docs/ts-extractor.git
-      - run: node dist/index
+      - run: node dist/cli
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@4.1.3
         with:

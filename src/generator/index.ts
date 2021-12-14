@@ -119,16 +119,16 @@ export class Generator {
             const pkg = projects[0];
             if (this.settings.changelog && pkg.repository) await this.generateChangelog(pkg.repository, undefined, pkg.module);
             this.generateThingsInsideModule(this.settings.out, pkg.module);
-            //const exports = this.generateExports(pkg.module);
+            const exports = this.generateExports(pkg.module);
             this.generatePage(this.settings.out, "./", "index", this.structure.components.module({
                 module: pkg.module,
                 readme: pkg.readme && marked.parse(pkg.readme),
-                exports: this.generateExports(pkg.module)
+                exports
             }), {
                 type: PageTypes.MODULE,
                 module: pkg.module,
                 doNotGivePath: true,
-                //exports
+                exports
             });
         } else {
             if (this.settings.changelog && this.landingPage.repository) await this.generateChangelog(this.landingPage.repository, projects);
