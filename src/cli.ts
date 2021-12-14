@@ -48,9 +48,6 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
     });
 
     const projects = types.run();
-
-    console.log(projects);
-
     const finalOptions = initOptions(projects);
 
     if (finalOptions.json) return fs.writeFileSync(finalOptions.json, JSON.stringify(projects));
