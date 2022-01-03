@@ -2,7 +2,7 @@
 import { DocumentStructure, setupDocumentStructure } from "../documentStructure";
 import marked from "marked";
 import { copyFolder, createFile, createFolder, escapeHTML, fetchChangelog } from "../utils";
-import { Project, TypescriptExtractor, ClassDecl, ClassProperty, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, TypeDecl, FunctionDecl, ConstantDecl, FunctionSignature, ObjectProperty, ConstructorType, InferType, TypeOperator } from "@ts-docs/extractor";
+import { Project, TypescriptExtractor, ClassDecl, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, TypeDecl, FunctionDecl, ConstantDecl, FunctionSignature, ObjectProperty, ConstructorType, InferType, TypeOperator } from "@ts-docs/extractor";
 import path from "path";
 import { LandingPage, PageCategory, TsDocsOptions } from "../options";
 import fs from "fs";
@@ -344,24 +344,27 @@ export class Generator {
         return this.structure.components.functionParameter(type);
     }
 
-    generateComment(comments?: Array<JSDocData>, includeTags = false, exclude?: Record<string, boolean>): string | undefined {
+    generateComment(comments?: Array<JSDocData>, includeTags = false, exclude?: Record<string, boolean>): [block: string, inline: string] | undefined {
         if (!comments) return undefined;
         let text = marked.parse(comments.map(c => c.comment || "").join("\n"));
+        let inline = "";
         if (includeTags) {
             for (const comment of comments) {
                 if (!comment.tags) continue;
                 for (const tag of comment.tags) {
                     if (exclude && exclude[tag.name]) continue;
-                    text += this.structure.components.jsdocTags({
-                        [tag.name]: true,
-                        comment: tag.comment && marked.parse(tag.comment),
+                    const res = this.structure.components.jsdocTags({
+                        tagName: tag.name,
+                        comment: tag.comment && marked.parseInline(tag.comment),
                         arg: tag.arg,
                         type: tag.type
-                    });
+                    }) as { block?: string, inline?: string };
+                    if (res.block) text += res.block;
+                    if (res.inline) inline += res.inline;
                 }
             }
         }
-        return text;
+        return [text, inline];
     }
 
     generateMarkdownWithHeaders(content: string): [string, Array<Heading>] {
