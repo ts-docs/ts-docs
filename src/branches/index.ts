@@ -34,7 +34,7 @@ export interface BranchSetting {
 }
 
 /**
- * The documentation will always have at least one branch: `stable`. All other branches will be placed in the main docs folder, with the prefix `b.`
+ * The documentation will always have at least one branch: `main`. All other branches will be placed in the main docs folder, with the prefix `b.`
  */
 export function renderBranches(
     projects: Array<Project>,

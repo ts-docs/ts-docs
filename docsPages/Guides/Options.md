@@ -16,7 +16,7 @@ ts-docs first gets all CLI arguments, then joins them with the options from the 
 
 ```ts-docs /entry/point.js```
 
-## Tsconfig usage
+## tsconfig.json usage
 
 ```json
   "tsdocsOptions": {

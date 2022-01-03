@@ -154,3 +154,22 @@ Omit an item from the documentation. This tag works for the following items:
 **It doesn't work for namespaces.**
 
 You also have to enable the `stripInternal` option.
+
+### `@since`
+
+Adds a `since` tag to the item that has the tag, along with a version name.
+
+Example:
+
+```js
+/**
+ * @since 1.0.1 
+*/
+function example() {
+    //...
+} 
+```
+
+### `@beta`
+
+Adds a `beta` tag to the item that has the tag.
