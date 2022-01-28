@@ -1,6 +1,6 @@
 {
   "name": "@ts-docs/ts-docs",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "A documentation generator for typescript",
   "main": "dist/index.js",
   "bin": "dist/cli.js",
