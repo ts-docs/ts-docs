@@ -14,7 +14,7 @@ ts-docs first gets all CLI arguments, then joins them with the options from the 
 
 ## CLI usage
 
-```ts-docs /entry/point.js```
+`ts-docs /entry/point.js`
 
 ## tsconfig.json usage
 
