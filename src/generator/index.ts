@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { DocumentStructure, setupDocumentStructure } from "../documentStructure";
-import marked from "marked";
+import { parse as markedParse } from "marked";
 import { copyFolder, createFile, createFolder, escapeHTML, fetchChangelog } from "../utils";
 import { Project, TypescriptExtractor, ClassDecl, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, TypeDecl, FunctionDecl, ConstantDecl, FunctionSignature, ObjectProperty, ConstructorType, InferType, TypeOperator } from "@ts-docs/extractor";
 import path from "path";
@@ -122,7 +122,7 @@ export class Generator {
             const exports = this.generateExports(pkg.module);
             this.generatePage(this.settings.out, "./", "index", this.structure.components.module({
                 module: pkg.module,
-                readme: pkg.readme && marked.parse(pkg.readme),
+                readme: pkg.readme && markedParse(pkg.readme),
                 exports
             }), {
                 type: PageTypes.MODULE,
@@ -132,7 +132,7 @@ export class Generator {
             });
         } else {
             if (this.settings.changelog && this.landingPage.repository) await this.generateChangelog(this.landingPage.repository, projects);
-            if (this.landingPage.readme) this.generatePage(this.settings.out, "./", "index", marked.parse(this.landingPage.readme), { type: PageTypes.INDEX, projects, doNotGivePath: true });
+            if (this.landingPage.readme) this.generatePage(this.settings.out, "./", "index", markedParse(this.landingPage.readme), { type: PageTypes.INDEX, projects, doNotGivePath: true });
             for (const pkg of projects) {
                 this.currentGlobalModuleName = pkg.module.name;
                 this.depth++;
@@ -148,7 +148,7 @@ export class Generator {
             this.settings.changelog = false;
             return;
         }
-        changelog.content = marked.parse(changelog.content);
+        changelog.content = markedParse(changelog.content);
         this.generatePage(this.settings.out, "./", "changelog", this.structure.components.changelog(changelog), {
             type: projects ? PageTypes.INDEX : PageTypes.MODULE,
             module,
@@ -198,7 +198,7 @@ export class Generator {
         this.generateThingsInsideModule(folderName, module);
         this.generatePage(p, `m.${module.name}`, "index", this.structure.components.module({
             module,
-            readme: readme && marked.parse(readme),
+            readme: readme && markedParse(readme),
             exports,
         }), { type: PageTypes.MODULE, module, name: module.name, exports });
     }
@@ -346,7 +346,7 @@ export class Generator {
 
     generateComment(comments?: Array<JSDocData>, includeTags = false, exclude?: Record<string, boolean>): [block: string, inline: string] | undefined {
         if (!comments) return undefined;
-        let text = marked.parse(comments.map(c => c.comment || "").join("\n"));
+        let text = markedParse(comments.map(c => c.comment || "").join("\n"));
         let inline = "";
         if (includeTags) {
             for (const comment of comments) {
@@ -355,7 +355,7 @@ export class Generator {
                     if (exclude && exclude[tag.name]) continue;
                     const res = this.structure.components.jsdocTags({
                         tagName: tag.name,
-                        comment: tag.comment && marked.parse(tag.comment),
+                        comment: tag.comment && markedParse(tag.comment),
                         arg: tag.arg,
                         type: tag.type
                     }) as { block?: string, inline?: string };
@@ -369,12 +369,12 @@ export class Generator {
 
     generateMarkdownWithHeaders(content: string): [string, Array<Heading>] {
         const headings: Array<Heading> = [];
-        const markdown = marked.parse(content, { headings });
+        const markdown = markedParse(content, { headings });
         return [markdown, headings];
     }
 
     generateMarkdown(content: string) : string {
-        return marked.parse(content);
+        return markedParse(content);
     }
 
     generateExports(module: Module): ModuleExports {

@@ -19,13 +19,34 @@ const gen = new Generator({...});
 gen.generate();
 ```
 
-### Code tabs
+## Code tabs
 
-Use this if you want to provide code snippets in multiple languages, formats, styles, etc.
+Use this if you want to provide code snippets in multiple languages, formats, styles, etc. 
 
-```js
-
+````markdown
+```ts --Typescript
+function add(a: number, b: number) : number {
+    return a + b;
+}
 ```
+```rs --Rust
+fn add(a: i32, b: i32) -> i32 {
+    a + b
+}
+```
+````
+
+Becomes:
+
+```ts --Typescript
+function add(a: number, b: number) : number {
+    return a + b;
+}
+```
+```rs --Rust
+fn add(a: i32, b: i32) -> i32 {
+    a + b
+}
 ```
 
 ## Linking assets
