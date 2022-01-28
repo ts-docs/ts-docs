@@ -355,7 +355,7 @@ export class Generator {
                     if (exclude && exclude[tag.name]) continue;
                     const res = this.structure.components.jsdocTags({
                         tagName: tag.name,
-                        comment: tag.comment && marked.parseInline(tag.comment),
+                        comment: tag.comment && marked.parse(tag.comment),
                         arg: tag.arg,
                         type: tag.type
                     }) as { block?: string, inline?: string };

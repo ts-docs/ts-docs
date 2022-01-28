@@ -3,7 +3,7 @@ import { Generator } from "..";
 import path from "path";
 import fs from "fs";
 
-export type Components = "class" | "constant" | "enum" | "function" | "functionParameter" | "interface" | "module" | "type" | "typeArray" | "typeFunction" | "typeIntersection" | "typeObject" | "typeParameter" | "typeReference" | "typeTuple" | "typeUnion" | "typePrimitive" | "typeMapped" | "typeConditional" | "typeTemplateLiteral" | "typeIndexAccess" | "typeOperator" | "typePredicate" | "changelog" | "typeConstruct" | "jsdocTags" | "index";
+export type Components = "class" | "constant" | "enum" | "function" | "functionParameter" | "interface" | "module" | "type" | "typeArray" | "typeFunction" | "typeIntersection" | "typeObject" | "typeParameter" | "typeReference" | "typeTuple" | "typeUnion" | "typePrimitive" | "typeMapped" | "typeConditional" | "typeTemplateLiteral" | "typeIndexAccess" | "typeOperator" | "typePredicate" | "changelog" | "typeConstruct" | "jsdocTags" | "codeTabs" | "index";
 
 /**
  * ## What is a documentation structure?

@@ -19,6 +19,15 @@ const gen = new Generator({...});
 gen.generate();
 ```
 
+### Code tabs
+
+Use this if you want to provide code snippets in multiple languages, formats, styles, etc.
+
+```js
+
+```
+```
+
 ## Linking assets
 
 If you want to have an image which comes from the `assets` folder, simply start the link of the image with `./assets` or `assets`. 

@@ -11,6 +11,12 @@ export interface Heading {
     subHeadings: Array<Heading>
 }
 
+export interface CodeTab {
+    lang: string,
+    tabName: string,
+    content: string
+}
+
 declare module "marked" {
 
     export interface MarkedExtension {
@@ -18,8 +24,8 @@ declare module "marked" {
             name: string,
             level: string,
             start: (src: string) => number|boolean|undefined,
-            tokenizer: (this: {lexer: marked.Lexer}, src: string, tokens: Array<marked.Token>) => {type: string, raw: string, text: string, tokens?: Array<marked.Token>}|undefined,
-            renderer: (this: {parser: marked.Parser}, token: {type: string, raw: string, text: string, tokens?: Array<marked.Token>}) => string
+            tokenizer: (this: {lexer: marked.Lexer}, src: string, tokens: Array<marked.Token>) => {type: string, raw: string, text?: string, tokens?: Array<marked.Token>, tabs?: Array<CodeTab>}|undefined,
+            renderer: (this: {parser: marked.Parser}, token: {type: string, raw: string, text: string, tokens?: Array<marked.Token>, tabs?: Array<CodeTab>}) => string
         }>
     }
 
@@ -48,6 +54,7 @@ function genReference(str: string, otherData: Record<string, unknown>, generator
  * - Adds the custom "section-header" class to all headings
  * - Wraps are codeblocks in the `hljs` class
  * - Resolves relative asset links
+ * - Code tabs
  */
 export function initMarkdown(generator: Generator, extractor: TypescriptExtractor) : void {
     const allowedTags = [...sanitizer.defaults.allowedTags, "img", "details", "summary"];
@@ -191,6 +198,35 @@ export function initMarkdown(generator: Generator, extractor: TypescriptExtracto
                 renderer: function(token) {
                     //@ts-expect-error Marked has outdated typings.
                     return `<p class="text-block text-block-${token.style}">${this.parser.parseInline(token.tokens)}</p>`;
+                }
+            },
+            {
+                name: "tabcode",
+                level: "block",
+                start: (src) => src.indexOf("```"),
+                tokenizer: function (src, tokens) {
+                    const full = src.match(/(?:```[a-z]* --.+\n[\s\S]*?\n```\n?)+/);
+                    if (!full || !full[0]) return; 
+                    const matches: Array<CodeTab> = [];
+                    const separateMatches = [...full[0].matchAll(/```(?<lang>[a-z]*) --(?<tabName>.+)\n(?<content>[\s\S]*?)\n```/g)];
+                    if (!separateMatches.length) return;
+                    for (const match of separateMatches) {
+                        if (!match.groups) continue;
+                        const data = match.groups as unknown as CodeTab;
+                        matches.push({
+                            ...data,
+                            content: `<pre><code class="hljs">${highlightAndLink(generator, extractor, data.content, data.lang)}</code></pre>`
+                        });
+                    }
+                    return {
+                        type: "tabcode",
+                        raw: full[0],
+                        tabs: matches,
+                        tokens: []
+                    }
+                },
+                renderer: function(token) {
+                    return generator.structure.components.codeTabs(token.tabs);
                 }
             }
         ]
