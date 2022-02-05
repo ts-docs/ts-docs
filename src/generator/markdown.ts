@@ -1,7 +1,7 @@
 
 import { TypeKinds, TypescriptExtractor } from "@ts-docs/extractor";
 import highlight from "highlight.js";
-import { use } from "marked";
+import marked from "marked";
 import sanitizer from "sanitize-html";
 import { Generator } from ".";
 
@@ -58,7 +58,7 @@ function genReference(str: string, otherData: Record<string, unknown>, generator
  */
 export function initMarkdown(generator: Generator, extractor: TypescriptExtractor) : void {
     const allowedTags = [...sanitizer.defaults.allowedTags, "img", "details", "summary"];
-    use({
+    marked.use({
         sanitizer: (html) => sanitizer(html, {allowedTags}),
         renderer: {
             code: (code, lang) : string => {
@@ -205,7 +205,7 @@ export function initMarkdown(generator: Generator, extractor: TypescriptExtracto
                 level: "block",
                 start: (src) => src.indexOf("```"),
                 tokenizer: function (src, tokens) {
-                    const full = src.match(/^(?:```[a-z]* --.+\n[\s\S]*?\n```\n?)+/);
+                    const full = src.match(/(?:```[a-z]* --.+\n[\s\S]*?\n```\n?)+/);
                     if (!full || !full[0]) return; 
                     const matches: Array<CodeTab> = [];
                     const separateMatches = [...full[0].matchAll(/```(?<lang>[a-z]*) --(?<tabName>.+)\n(?<content>[\s\S]*?)\n```/g)];
