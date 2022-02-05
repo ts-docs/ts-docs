@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { DocumentStructure, setupDocumentStructure } from "../documentStructure";
-import { parse as markedParse } from "marked";
+import { parse as markedParse, parseInline as markedParseInline } from "marked";
 import { copyFolder, createFile, createFolder, escapeHTML, fetchChangelog } from "../utils";
-import { Project, TypescriptExtractor, ClassDecl, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, TypeDecl, FunctionDecl, ConstantDecl, FunctionSignature, ObjectProperty, ConstructorType, InferType, TypeOperator } from "@ts-docs/extractor";
+import { Project, TypescriptExtractor, ClassDecl, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, TypeDecl, FunctionDecl, ConstantDecl, FunctionSignature, ObjectProperty, ConstructorType, InferType, TypeOperator, Declaration } from "@ts-docs/extractor";
 import path from "path";
 import { LandingPage, PageCategory, TsDocsOptions } from "../options";
 import fs from "fs";
 import { Heading, highlightAndLink, initMarkdown } from "./markdown";
 import { packSearchData } from "./searchData";
 import { FileExports } from "@ts-docs/extractor/dist/extractor/ExportHandler";
+import { TestCollector } from "../tests";
 
 export const enum PageTypes {
     INDEX,
@@ -27,6 +28,10 @@ export interface OtherProps {
     [key: string]: unknown,
     depth?: number,
     type?: PageTypes
+}
+
+const BlockTags: Record<string, boolean> = {
+    example: true
 }
 
 export type ModuleExports = FileExports | Record<string, FileExports> | undefined;
@@ -77,12 +82,18 @@ export class Generator {
     extractor!: TypescriptExtractor
     currentModule!: Module
     currentProject!: Project
-    currentItem!: ClassDecl | InterfaceDecl | TypeDecl | FunctionDecl | EnumDecl | ConstantDecl
+    currentItem!: Declaration
+    tests?: TestCollector
+    /**
+     * Used for doc tests. 
+     */
+    _fnName?: string
     constructor(settings: TsDocsOptions, activeBranch = "main") {
         this.settings = settings;
         this.activeBranch = activeBranch;
         this.landingPage = settings.landingPage as LandingPage;
         this.structure = setupDocumentStructure(this.settings.structure, this);
+        if (settings.docTests) this.tests = new TestCollector();
     }
 
     async generate(extractor: TypescriptExtractor, projects?: Array<Project>): Promise<void> {
@@ -351,8 +362,9 @@ export class Generator {
         return this.structure.components.functionParameter(type);
     }
 
-    generateComment(comments?: Array<JSDocData>, includeTags = false, exclude?: Record<string, boolean>): [block: string, inline: string] | undefined {
+    generateComment(comments?: Array<JSDocData>, includeTags = false, exclude?: Record<string, boolean>, fnName?: string): [block: string, inline: string] | undefined {
         if (!comments) return undefined;
+        this._fnName = fnName;
         let text = markedParse(comments.map(c => c.comment || "").join("\n"));
         let inline = "";
         if (includeTags) {
@@ -362,7 +374,7 @@ export class Generator {
                     if (exclude && exclude[tag.name]) continue;
                     const res = this.structure.components.jsdocTags({
                         tagName: tag.name,
-                        comment: tag.comment && markedParse(tag.comment),
+                        comment: tag.comment && (BlockTags[tag.name] ? markedParse(tag.comment) : markedParseInline(tag.comment)),
                         arg: tag.arg,
                         type: tag.type
                     }) as { block?: string, inline?: string };
@@ -371,6 +383,7 @@ export class Generator {
                 }
             }
         }
+        delete this._fnName;
         return [text, inline];
     }
 

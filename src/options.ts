@@ -47,7 +47,8 @@ export interface TsDocsOptions {
     forceEmit?: boolean,
     exportMode: "simple" | "detailed",
     stripInternal?: boolean,
-    sort?: "source" | "alphabetical"
+    sort?: "source" | "alphabetical",
+    docTests?: boolean
 }
 
 export interface OptionSource {
@@ -68,7 +69,8 @@ export interface OptionSource {
     forceEmit?: boolean,
     exportMode?: string,
     stripInternal?: boolean,
-    sort?: "source" | "alphabetical"
+    sort?: "source" | "alphabetical",
+    docTests?: boolean
 }
 
 export const options: TsDocsOptions = {
@@ -152,6 +154,7 @@ Usage: ts-docs [...entryFiles]
 --exportMode        "simple" or "detailed". Simple mode just lists all the exports from the index file, detailed mode lists all exports of all files in the module.
 --stripInternal     Removes all items flagged with the internal tag.
 --sort              Either "source" or "alphabetical".
+--docTests          Runs any typescript code blocks above methods / functions as unit tests.
 --help
 `);
 }

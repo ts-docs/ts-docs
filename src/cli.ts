@@ -56,6 +56,8 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
 
     await generator.generate(types, projects);
 
+    if (generator.tests) generator.tests.runClassSuites(generator);
+
     fileCache.save();
 
     if (options.branches) renderBranches(projects, finalOptions);

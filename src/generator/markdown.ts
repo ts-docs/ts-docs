@@ -1,7 +1,7 @@
 
-import { TypeKinds, TypescriptExtractor } from "@ts-docs/extractor";
+import { TypeKinds } from "@ts-docs/extractor";
 import highlight from "highlight.js";
-import marked from "marked";
+import { use } from "marked";
 import sanitizer from "sanitize-html";
 import { Generator } from ".";
 
@@ -58,7 +58,7 @@ function genReference(str: string, otherData: Record<string, unknown>, generator
  */
 export function initMarkdown(generator: Generator) : void {
     const allowedTags = [...sanitizer.defaults.allowedTags, "img", "details", "summary"];
-    marked.use({
+    use({
         sanitizer: (html) => sanitizer(html, {allowedTags}),
         renderer: {
             code: (code, lang) : string => {
@@ -234,18 +234,22 @@ export function initMarkdown(generator: Generator) : void {
 }
 
 export function highlightAndLink(gen: Generator, text: string, lang?: string) : string {
-    let highlighted;
-    try {
-        highlighted = lang ? highlight.highlight(text, {language: lang}).value : highlight.highlightAuto(text).value;
-    } catch {
-        return text;
-    }
-    if (lang === "ts" || lang === "typescript" || lang === "js" || lang === "javascript") {
+    if (!lang) return highlight.highlightAuto(text).value;
+    if (lang === "no_test" || lang === "ts" || lang === "typescript" || lang === "js" || lang === "javascript") {
+        if (gen.tests && !gen.renderingPages) {
+            if (lang === "no_test") lang = "ts";
+            else if (gen.tests) gen.tests.addTest(gen, text);
+        }
+        let highlighted = highlight.highlight(text, { language: lang }).value;
         const matched = highlighted.matchAll(/<span class=\"hljs-title class_\">(.*?)<\/span>/g);
         for (const [matchingEl, typeName] of matched) {
             highlighted = highlighted.replace(matchingEl, genReference(typeName, {}, gen));
         }
         return highlighted;
     }
-    return highlighted;
+    try {
+        return highlight.highlight(text, { language: lang }).value;
+    } catch {
+        return "";
+    }
 }
