@@ -35,10 +35,10 @@ declare module "marked" {
 
 }
 
-function genReference(str: string, otherData: Record<string, unknown>, generator: Generator, extractor: TypescriptExtractor) : string {
+function genReference(str: string, otherData: Record<string, unknown>, generator: Generator) : string {
     let type;
     for (const mod of generator.projects) {
-        type = extractor.refs.findByNameWithModule(str, mod);
+        type = generator.extractor.refs.findByNameWithModule(str, mod);
         if (type) break;
     }
     if (!type) return str;
@@ -56,14 +56,14 @@ function genReference(str: string, otherData: Record<string, unknown>, generator
  * - Resolves relative asset links
  * - Code tabs
  */
-export function initMarkdown(generator: Generator, extractor: TypescriptExtractor) : void {
+export function initMarkdown(generator: Generator) : void {
     const allowedTags = [...sanitizer.defaults.allowedTags, "img", "details", "summary"];
     marked.use({
         sanitizer: (html) => sanitizer(html, {allowedTags}),
         renderer: {
             code: (code, lang) : string => {
                 if (!lang) return `<pre><code class="hljs">${code}</code></pre>`;
-                return `<pre><code class="hljs">${highlightAndLink(generator, extractor, code, lang)}</code></pre>`;
+                return `<pre><code class="hljs">${highlightAndLink(generator, code, lang)}</code></pre>`;
             },
             heading: function(text, level, raw, slug) {
                 const headings = (this as marked.Renderer).options.headings;
@@ -132,19 +132,19 @@ export function initMarkdown(generator: Generator, extractor: TypescriptExtracto
                                 thingName = newThingName;
                                 otherData.hash = hash;
                             }
-                            return genReference(thingName, otherData, generator, extractor);
+                            return genReference(thingName, otherData, generator);
                         }
                     }
                     if (name.includes(".")) {
                         const [thingName, hash] = name.split(".");
                         otherData.hash = hash;
-                        return genReference(thingName, otherData, generator, extractor);
+                        return genReference(thingName, otherData, generator);
                     } else if (name.includes("#")) {
                         const [thingName, hash] = name.split("#");
                         otherData.hash = hash;
-                        return genReference(thingName, otherData, generator, extractor);
+                        return genReference(thingName, otherData, generator);
                     }
-                    return genReference(name, otherData, generator, extractor);
+                    return genReference(name, otherData, generator);
                 }
             },
             {
@@ -163,7 +163,7 @@ export function initMarkdown(generator: Generator, extractor: TypescriptExtracto
                     return undefined;
                 },
                 renderer: (token) => {
-                    return genReference(token.text, {}, generator, extractor);
+                    return genReference(token.text, {}, generator);
                 }
             },
             {
@@ -215,7 +215,7 @@ export function initMarkdown(generator: Generator, extractor: TypescriptExtracto
                         const data = match.groups as unknown as CodeTab;
                         matches.push({
                             ...data,
-                            content: `<pre><code class="hljs">${highlightAndLink(generator, extractor, data.content, data.lang)}</code></pre>`
+                            content: `<pre><code class="hljs">${highlightAndLink(generator, data.content, data.lang)}</code></pre>`
                         });
                     }
                     return {
@@ -233,7 +233,7 @@ export function initMarkdown(generator: Generator, extractor: TypescriptExtracto
     });
 }
 
-export function highlightAndLink(gen: Generator, extractor: TypescriptExtractor, text: string, lang?: string) : string {
+export function highlightAndLink(gen: Generator, text: string, lang?: string) : string {
     let highlighted;
     try {
         highlighted = lang ? highlight.highlight(text, {language: lang}).value : highlight.highlightAuto(text).value;
@@ -243,7 +243,7 @@ export function highlightAndLink(gen: Generator, extractor: TypescriptExtractor,
     if (lang === "ts" || lang === "typescript" || lang === "js" || lang === "javascript") {
         const matched = highlighted.matchAll(/<span class=\"hljs-title class_\">(.*?)<\/span>/g);
         for (const [matchingEl, typeName] of matched) {
-            highlighted = highlighted.replace(matchingEl, genReference(typeName, {}, gen, extractor));
+            highlighted = highlighted.replace(matchingEl, genReference(typeName, {}, gen));
         }
         return highlighted;
     }

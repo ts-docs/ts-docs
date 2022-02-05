@@ -151,6 +151,7 @@ Usage: ts-docs [...entryFiles]
 --tsconfig          Path to tsconfig.json file.
 --exportMode        "simple" or "detailed". Simple mode just lists all the exports from the index file, detailed mode lists all exports of all files in the module.
 --stripInternal     Removes all items flagged with the internal tag.
+--sort              Either "source" or "alphabetical".
 --help
 `);
 }
@@ -159,7 +160,7 @@ export function initConfig() : void {
     if (fs.existsSync("./tsdocs.config.js")) return console.log("A ts-docs configuration file already exists here.");
     fs.writeFileSync("./tsdocs.config.js", `
 module.exports = {
-    // See more options at https://ts-docs.github.io/ts-docs/pages/Guides/Options
+    // See more options at https://tsdocs.xyz/pages/Guides/Options
 
     entryPoints: [], // Entry points, every project you want to include in the documentation should have exactly one entry point
     name: "", // The name of your project

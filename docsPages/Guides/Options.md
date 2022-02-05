@@ -10,27 +10,21 @@ You can provide options for ts-docs in three ways:
 - `tsdocsOptions` property in your typescript configuration file.
 - `tsdocs.config.js` file, which must export an object with the options. You can generate this file with the `--init` flag.
 
-ts-docs first gets all CLI arguments, then joins them with the options from the typescript configuration, and finally with the `tsdocs.config.js` file. 
+ts-docs first gets all CLI arguments, then combines them with the options from the typescript configuration, and finally with the `tsdocs.config.js` file. 
 
-## CLI usage
-
-`ts-docs /entry/point.js`
-
-## tsconfig.json usage
-
-```json
-  "tsdocsOptions": {
-    "entryPoints": ["/entry/point.js"],
-    ...other options
-  }
+``` --CLI
+ts-docs ./entry/point.js --out ./docs
 ```
-
-## tsdocs.config.js usage
-
-```js
+```json --tsconfig.json
+"tsdocsOptions": {
+    "entryPoints": ["./entry/point.js"],
+    "out": "./docs"
+}
+```
+```js --tsdocs.config.js
 module.exports = {
-    "entryPoints": ["/entry/point.js"]
-    ...other options
+    entryPoints: ["./entry/point.js"],
+    out: "./docs"
 }
 ```
 
