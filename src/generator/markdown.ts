@@ -30,7 +30,8 @@ declare module "marked" {
     }
 
     export interface MarkedOptions {
-        headings: Array<Heading>
+        headings?: Array<Heading>,
+        fnName?: string
     }
 
 }
@@ -61,9 +62,9 @@ export function initMarkdown(generator: Generator) : void {
     use({
         sanitizer: (html) => sanitizer(html, {allowedTags}),
         renderer: {
-            code: (code, lang) : string => {
+            code: function(code, lang) {
                 if (!lang) return `<pre><code class="hljs">${code}</code></pre>`;
-                return `<pre><code class="hljs">${highlightAndLink(generator, code, lang)}</code></pre>`;
+                return `<pre><code class="hljs">${highlightAndLink(generator, code, lang, (this as marked.Renderer).options.fnName)}</code></pre>`;
             },
             heading: function(text, level, raw, slug) {
                 const headings = (this as marked.Renderer).options.headings;
@@ -215,7 +216,7 @@ export function initMarkdown(generator: Generator) : void {
                         const data = match.groups as unknown as CodeTab;
                         matches.push({
                             ...data,
-                            content: `<pre><code class="hljs">${highlightAndLink(generator, data.content, data.lang)}</code></pre>`
+                            content: `<pre><code class="hljs">${highlightAndLink(generator, data.content, data.lang, this.lexer.options.renderer?.options.fnName)}</code></pre>`
                         });
                     }
                     return {
@@ -233,12 +234,12 @@ export function initMarkdown(generator: Generator) : void {
     });
 }
 
-export function highlightAndLink(gen: Generator, text: string, lang?: string) : string {
+export function highlightAndLink(gen: Generator, text: string, lang?: string, fnName?: string) : string {
     if (!lang) return highlight.highlightAuto(text).value;
-    if (lang === "no_test" || lang === "ts" || lang === "typescript" || lang === "js" || lang === "javascript") {
+    if (lang === "notest" || lang === "ts" || lang === "typescript" || lang === "js" || lang === "javascript") {
         if (gen.tests && !gen.renderingPages) {
-            if (lang === "no_test") lang = "ts";
-            else if (gen.tests) gen.tests.addTest(gen, text);
+            if (lang === "notest") lang = "ts";
+            else gen.tests.addTest(gen, text, fnName);
         }
         let highlighted = highlight.highlight(text, { language: lang }).value;
         const matched = highlighted.matchAll(/<span class=\"hljs-title class_\">(.*?)<\/span>/g);

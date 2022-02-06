@@ -19,14 +19,14 @@ export class TestCollector {
         this.fnSuites = [];
     }
 
-    addTest(generator: Generator, content: string) : void {
+    addTest(generator: Generator, content: string, fnName?: string) : void {
         const current = generator.currentItem;
         if (!current) return;
         if (current.kind === DeclarationTypes.CLASS) {
-            if (this.classSuites.has(current)) this.classSuites.get(current)!.tests.push({functionName: generator._fnName || "", testCode: content});
+            if (this.classSuites.has(current)) this.classSuites.get(current)!.tests.push({functionName: fnName || "", testCode: content});
             else this.classSuites.set(current, {
                 module: generator.currentModule,
-                tests: [{functionName: generator._fnName || "", testCode: content}]
+                tests: [{functionName: fnName || "", testCode: content}]
             });
         } else if (current.kind === DeclarationTypes.FUNCTION) {
             this.fnSuites.push({functionName: current.name, testCode: content});

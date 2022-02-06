@@ -84,10 +84,6 @@ export class Generator {
     currentProject!: Project
     currentItem!: Declaration
     tests?: TestCollector
-    /**
-     * Used for doc tests. 
-     */
-    _fnName?: string
     constructor(settings: TsDocsOptions, activeBranch = "main") {
         this.settings = settings;
         this.activeBranch = activeBranch;
@@ -364,8 +360,7 @@ export class Generator {
 
     generateComment(comments?: Array<JSDocData>, includeTags = false, exclude?: Record<string, boolean>, fnName?: string): [block: string, inline: string] | undefined {
         if (!comments) return undefined;
-        this._fnName = fnName;
-        let text = markedParse(comments.map(c => c.comment || "").join("\n"));
+        let text = markedParse(comments.map(c => c.comment || "").join("\n"), { fnName });
         let inline = "";
         if (includeTags) {
             for (const comment of comments) {
@@ -383,7 +378,6 @@ export class Generator {
                 }
             }
         }
-        delete this._fnName;
         return [text, inline];
     }
 
