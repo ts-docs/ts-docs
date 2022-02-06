@@ -239,7 +239,7 @@ export function highlightAndLink(gen: Generator, text: string, lang?: string, fn
     if (lang === "notest" || lang === "ts" || lang === "typescript" || lang === "js" || lang === "javascript") {
         if (gen.tests && !gen.renderingPages) {
             if (lang === "notest") lang = "ts";
-            else gen.tests.addTest(gen, text, fnName);
+            else text = gen.tests.addTest(gen, text, fnName);
         }
         let highlighted = highlight.highlight(text, { language: lang }).value;
         const matched = highlighted.matchAll(/<span class=\"hljs-title class_\">(.*?)<\/span>/g);
