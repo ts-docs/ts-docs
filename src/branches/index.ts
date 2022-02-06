@@ -5,7 +5,8 @@ import os from "os";
 import path from "path";
 import { execSync } from "child_process";
 import { handleDefaultAPI, handleNodeAPI } from "../utils";
-import { DocumentStructure, TsDocsOptions } from "..";
+import { TsDocsOptions } from "..";
+import ts from "typescript";
 
 export interface BranchOption {
     /**
@@ -38,6 +39,7 @@ export interface BranchSetting {
  */
 export function renderBranches(
     projects: Array<Project>,
+    tsconfig: ts.CompilerOptions,
     options: TsDocsOptions
 ) : void {
     if (!options.branches) return;
@@ -75,7 +77,7 @@ export function renderBranches(
 
         const newProjects = extractor.run();
 
-        const gen = new Generator({
+        const gen = new Generator(tsconfig, {
             ...options,
             landingPage: branchSetting.landingPage ? newProjects.find(pr => pr.module.name === branchSetting.landingPage) : newProjects[0],
             out: path.join(options.out, `b.${branchSetting.displayName}`),

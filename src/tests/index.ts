@@ -1,21 +1,27 @@
 import { ClassDecl, DeclarationTypes, Module } from "@ts-docs/extractor";
-import ts from "typescript";
 import { Generator } from "..";
+import { Worker } from "worker_threads";
+import path from "path";
 
 export interface TestSuite {
     functionName: string,
     testCode: string
 }
 
+export interface TestFnRange {
+    start: number,
+    end: number,
+    fnName: string
+}
+
 export class TestCollector {
-    classSuites: Map<ClassDecl, {
-        module: Module,
-        tests: Array<TestSuite>
-    }>;
+    classSuites: Map<ClassDecl, Array<TestSuite>>;
+    classMods: Map<ClassDecl, Module>;
     fnSuites: Array<TestSuite>;
 
     constructor() {
         this.classSuites = new Map();
+        this.classMods = new Map();
         this.fnSuites = [];
     }
 
@@ -24,11 +30,9 @@ export class TestCollector {
         if (!current) return "";
         const [filtered, full] = this.filterSource(content);
         if (current.kind === DeclarationTypes.CLASS) {
-            if (this.classSuites.has(current)) this.classSuites.get(current)!.tests.push({functionName: fnName || "", testCode: full});
-            else this.classSuites.set(current, {
-                module: generator.currentModule,
-                tests: [{functionName: fnName || "", testCode: full}]
-            });
+            if (!this.classMods.has(current)) this.classMods.set(current, generator.currentModule);
+            if (this.classSuites.has(current)) this.classSuites.get(current)!.push({functionName: fnName || "", testCode: full});
+            else this.classSuites.set(current, [{functionName: fnName || "", testCode: full}]);
         } else if (current.kind === DeclarationTypes.FUNCTION) {
             this.fnSuites.push({functionName: current.name, testCode: full});
         }
@@ -61,8 +65,38 @@ export class TestCollector {
     }
 
     runClassSuites(generator: Generator) : void {
-        for (const [cl, info] of this.classSuites) {
-            console.log(cl.name, info.tests);
+        const output = generator.tsconfig.outDir;
+        if (!output) return;
+        for (const [cl, methods] of this.classSuites) {
+            const module = this.classMods.get(cl)!;
+            const dir = path.join(process.cwd(), output, ...module.path).replace(/\\/g, "/");
+            const filename = `${dir}/${cl.loc.filename!.replace(".ts", ".js")}`
+            let finalScript = 
+`${module.name !== "default" ? `const { ${cl.name} } = require("${filename}")` : ""}
+const assert = require("assert");
+`;
+            const methodRanges: Array<TestFnRange> = [];
+            for (const method of methods) {
+                const loc: TestFnRange = { start: finalScript.length, fnName: method.functionName, end: 0 };
+                finalScript += `(async () => {
+                    try {
+                        ${method.testCode}
+                    } catch(err) {
+                        console.error("🛑 Documentation test error in \x1b[31m${cl.name}.${method.functionName}\x1b[0m: ");
+                        console.error(err);
+                    }
+                })();`;
+                loc.end += finalScript.length;
+                methodRanges.push(loc);
+            }
+
+            new Worker(`${__dirname}/worker.js`, { workerData: {
+                tsconfig: generator.tsconfig,
+                className: cl.name,
+                ranges: methodRanges,
+                code: finalScript,
+                dir
+            }});
         }
     } 
 

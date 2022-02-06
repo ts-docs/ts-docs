@@ -2,7 +2,7 @@
 import { DocumentStructure, setupDocumentStructure } from "../documentStructure";
 import { parse as markedParse, parseInline as markedParseInline } from "marked";
 import { copyFolder, createFile, createFolder, escapeHTML, fetchChangelog } from "../utils";
-import { Project, TypescriptExtractor, ClassDecl, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, TypeDecl, FunctionDecl, ConstantDecl, FunctionSignature, ObjectProperty, ConstructorType, InferType, TypeOperator, Declaration } from "@ts-docs/extractor";
+import { Project, TypescriptExtractor, ClassDecl, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, JSDocData, Module, TypeReferenceKinds, InterfaceDecl, EnumDecl, Literal, TypeDecl, FunctionDecl, ConstantDecl, FunctionSignature, ConstructorType, InferType, TypeOperator, Declaration } from "@ts-docs/extractor";
 import path from "path";
 import { LandingPage, PageCategory, TsDocsOptions } from "../options";
 import fs from "fs";
@@ -10,6 +10,7 @@ import { Heading, highlightAndLink, initMarkdown } from "./markdown";
 import { packSearchData } from "./searchData";
 import { FileExports } from "@ts-docs/extractor/dist/extractor/ExportHandler";
 import { TestCollector } from "../tests";
+import { CompilerOptions } from "typescript";
 
 export const enum PageTypes {
     INDEX,
@@ -63,6 +64,7 @@ export interface OtherRefData {
 export class Generator {
     structure: DocumentStructure
     settings: TsDocsOptions
+    tsconfig: CompilerOptions
     /**
      * How "deep" the current thing is from the root.
      */
@@ -84,8 +86,9 @@ export class Generator {
     currentProject!: Project
     currentItem!: Declaration
     tests?: TestCollector
-    constructor(settings: TsDocsOptions, activeBranch = "main") {
+    constructor(tsconfig: CompilerOptions, settings: TsDocsOptions, activeBranch = "main") {
         this.settings = settings;
+        this.tsconfig = tsconfig;
         this.activeBranch = activeBranch;
         this.landingPage = settings.landingPage as LandingPage;
         this.structure = setupDocumentStructure(this.settings.structure, this);
@@ -369,7 +372,7 @@ export class Generator {
                     if (exclude && exclude[tag.name]) continue;
                     const res = this.structure.components.jsdocTags({
                         tagName: tag.name,
-                        comment: tag.comment && (BlockTags[tag.name] ? markedParse(tag.comment) : markedParseInline(tag.comment)),
+                        comment: tag.comment && (BlockTags[tag.name] ? markedParse(tag.comment, { fnName }) : markedParseInline(tag.comment)),
                         arg: tag.arg,
                         type: tag.type
                     }) as { block?: string, inline?: string };

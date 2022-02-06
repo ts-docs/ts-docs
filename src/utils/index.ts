@@ -4,6 +4,7 @@ import fs from "fs";
 import path from "path";
 import ts from "typescript";
 import fetch from "got";
+import { OptionSource } from "..";
 
 /**
  * Creates a file with the name `file`, which is located inside `folder`, which gets created if it doesn't
@@ -26,7 +27,7 @@ export function createFolder(path: string) : void {
 /**
  * Finds a `tsconfig.json` file, starting from `basePath` and going up.
  */
-export function findTSConfig<T = string>(basePath: string) : Record<string, T>|undefined {
+export function findTSConfig<T = string>(basePath: string) : { compilerOptions: ts.CompilerOptions, tsdocsOptions?: OptionSource } | undefined {
     const p = path.join(basePath, "tsconfig.json");
     if (fs.existsSync(p)) return ts.parseConfigFileTextToJson("tsconfig.json", fs.readFileSync(p, "utf-8")).config;
     const newPath = path.join(basePath, "../");

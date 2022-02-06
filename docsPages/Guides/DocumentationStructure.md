@@ -1,6 +1,6 @@
 ---
 name: Custom Styling
-order: 5
+order: 6
 ---
 
 # Custom styling

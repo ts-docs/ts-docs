@@ -25,9 +25,9 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
 
     addOptionSource({...args, entryPoints: args._});
 
-    const tsconfig = findTSConfig<OptionSource>(process.cwd());
+    const tsconfig = findTSConfig<OptionSource>(process.cwd()) || { compilerOptions: ts.getDefaultCompilerOptions() };
 
-    if (tsconfig && tsconfig.tsdocsOptions) addOptionSource(tsconfig.tsdocsOptions);
+    if (tsconfig.tsdocsOptions) addOptionSource(tsconfig.tsdocsOptions);
 
     const tsDocsJs = findTsDocsJs(process.cwd());
     if (tsDocsJs) addOptionSource(tsDocsJs);
@@ -52,7 +52,7 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
 
     if (finalOptions.json) return fs.writeFileSync(finalOptions.json, JSON.stringify(projects));
 
-    const generator = new Generator(finalOptions);
+    const generator = new Generator(tsconfig.compilerOptions, finalOptions);
 
     await generator.generate(types, projects);
 
@@ -60,5 +60,5 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
 
     fileCache.save();
 
-    if (options.branches) renderBranches(projects, finalOptions);
+    if (options.branches) renderBranches(projects, tsconfig.compilerOptions, finalOptions);
 })();

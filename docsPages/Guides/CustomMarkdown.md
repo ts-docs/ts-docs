@@ -3,7 +3,7 @@ name: Custom Markdown
 order: 2
 ---
 
-# Custom Markdown
+# Custom markdown
 
 You can use custom ts-docs markdown syntax in order to make your documentation more informative and prettier. You can use this syntax in custom pages and in jsdoc comments.
 
