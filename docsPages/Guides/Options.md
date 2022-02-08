@@ -146,3 +146,7 @@ How to sort items (classes, interfaces, enums, functions, constants, types, meth
 
 - `source` - How they were found in the source code, this is the default option
 - `alphabetical`
+
+### docTests
+
+Transpiles and runs typescript and javascript code inside function / method documentation comments. This option only works when there is a single output directory. Check out the [Documentation Tests](./Documentation Tests) guide for more information.

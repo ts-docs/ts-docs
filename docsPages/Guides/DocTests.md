@@ -24,7 +24,7 @@ module.exports = {
 }
 ```
 
-|> Important! Only code that is inside a documentation comment for a class **method** / **constructor**, or a **function** will be executed.
+|> Only code that is inside a documentation comment for a class **method** / **constructor**, or a **function** will be executed.
 
 Turning this single option on will cause all your typescript / javascript codeblocks inside comments to be executed.
 

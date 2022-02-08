@@ -64,7 +64,6 @@ export interface OtherRefData {
 export class Generator {
     structure: DocumentStructure
     settings: TsDocsOptions
-    tsconfig: CompilerOptions
     /**
      * How "deep" the current thing is from the root.
      */
@@ -86,9 +85,8 @@ export class Generator {
     currentProject!: Project
     currentItem!: Declaration
     tests?: TestCollector
-    constructor(tsconfig: CompilerOptions, settings: TsDocsOptions, activeBranch = "main") {
+    constructor(settings: TsDocsOptions, activeBranch = "main") {
         this.settings = settings;
-        this.tsconfig = tsconfig;
         this.activeBranch = activeBranch;
         this.landingPage = settings.landingPage as LandingPage;
         this.structure = setupDocumentStructure(this.settings.structure, this);
@@ -148,11 +146,10 @@ export class Generator {
         } else {
             if (this.settings.changelog && this.landingPage.repository) await this.generateChangelog(this.landingPage.repository, this.projects);
             if (this.landingPage.readme) this.generatePage(this.settings.out, "./", "index", markedParse(this.landingPage.readme), { type: PageTypes.INDEX, projects: this.projects, doNotGivePath: true });
-            for (const pkg of this.projects) {
-                this.currentGlobalModuleName = pkg.module.name;
-                this.currentProject = pkg;
+            for (this.currentProject of this.projects) {
+                this.currentGlobalModuleName = this.currentProject.module.name;
                 this.depth++;
-                this.generateModule(this.settings.out, pkg.module, pkg.readme);
+                this.generateModule(this.settings.out, this.currentProject.module, this.currentProject.readme);
                 this.depth--;
             }
         }
