@@ -52,9 +52,13 @@ const val = "value";
 assert.equal(val, "foo", "Value must be equal to 'foo'");
 ```
 
+## Suites
+
+Documentation tests are grouped into **suites**. All documentation tests which belong to a single class are put in the same suite, and all functions inside a module are put in the same suite. Each suite runs on a different thread.
+
 ## Imports
 
-By default, the class / function that the test is for is automatically imported as well. If you need anything else in the test, you can import it.
+By default, the class / function that the test is for is automatically imported. If you need anything else in the test, you can import it. If the item being tested is export via `export default`, then you need to import it as well.
 
 |> If you want to import something, you **must** use the `import` syntax. Using `require` won't work.
 
@@ -70,6 +74,20 @@ export function someFn() {
 }
 ```
 
+## Async/await
+
+You **can** use top-level async / await in your examples. 
+
+```ts
+/**
+ * const value = await asyncFn(15);
+ * assert(value === 15);
+ */
+export function asyncFn(num: number) {
+    return Promise.resolve(num);
+}
+```
+
 ## Excluding code blocks
 
 You can make it so certain code blocks don't get executed by providing the language `notest`. This won't run the example, and the code will be highlighted as typescript.
@@ -77,7 +95,7 @@ You can make it so certain code blocks don't get executed by providing the langu
 ```ts
 /**
  * ```notest
- *  // Your test code here...
+ *  // Your ts code here...
  * ```
  */
 ```
