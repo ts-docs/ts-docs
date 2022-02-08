@@ -48,7 +48,8 @@ export interface TsDocsOptions {
     exportMode: "simple" | "detailed",
     stripInternal?: boolean,
     sort?: "source" | "alphabetical",
-    docTests?: boolean
+    docTests?: boolean,
+    test?: string
 }
 
 export interface OptionSource {
@@ -70,7 +71,8 @@ export interface OptionSource {
     exportMode?: string,
     stripInternal?: boolean,
     sort?: "source" | "alphabetical",
-    docTests?: boolean
+    docTests?: boolean,
+    test?: string
 }
 
 export const options: TsDocsOptions = {
@@ -94,6 +96,8 @@ export function addOptionSource(source: OptionSource) : void {
     if (source.passthroughModules && !Array.isArray(source.passthroughModules)) throw new Error("Passthrough Modules must be an array.");
     if (source.branches && !Array.isArray(source.branches)) throw new Error("Branches must be an array.");
     if (source.json && typeof source.json !== "string") throw new Error("JSON output path must be a string.");
+    if (source.sort && (source.sort !== "alphabetical" && source.sort !== "source")) throw new Error("Sort must be either 'alphabetical' or 'source'.");
+    if (source.test && typeof source.test !== "string") throw new Error("Test must be a string.");
 } 
 
 export function initOptions(extractorList: Array<Project>) : TsDocsOptions {
@@ -155,6 +159,7 @@ Usage: ts-docs [...entryFiles]
 --stripInternal     Removes all items flagged with the internal tag.
 --sort              Either "source" or "alphabetical".
 --docTests          Runs any typescript code blocks above methods / functions as unit tests.
+--test               Run only tests with a specific function / class name.
 --help
 `);
 }

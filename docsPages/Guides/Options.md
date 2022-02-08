@@ -150,3 +150,38 @@ How to sort items (classes, interfaces, enums, functions, constants, types, meth
 ### docTests
 
 Transpiles and runs typescript and javascript code inside function / method documentation comments. This option only works when there is a single output directory. Check out the [Documentation Tests](./Documentation Tests) guide for more information.
+
+### test
+
+Runs only specific tests. For example:
+
+```ts
+class A {
+
+    /**
+     * ```ts
+     * assert(true);
+     * ```
+     */
+    a() {
+        //...
+    }
+}
+
+/**
+ * ```ts
+ * // ...
+ * ```
+ */
+function a() {
+    //...
+}
+```
+
+Running ts-docs with:
+
+- `--test a` will only transpile and run the tests under any functions named `a`. This does **not** include the `a` method in the example above.
+- `--test A` will only tanspile and run tests which belong to methods inside the `A` class (or any functions caled `A`).
+- `--test A.a` will only transpile and run tests which belong to the `a` method inside the `A` class.
+
+Using this option automatically enables the `docTests` and the `forceEmit` options.

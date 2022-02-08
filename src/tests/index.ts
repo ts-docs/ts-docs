@@ -27,7 +27,13 @@ export class TestCollector {
 
     addTest(generator: Generator, content: string, fnName?: string): string {
         const current = generator.currentItem;
-        if (!current) return "";
+        if (!current) return content;
+        if (generator.settings.test) {
+            const doc = generator.settings.test.split(".");
+            if (doc.length === 2) {
+                if (doc[0] !== current.name || fnName !== doc[1]) return content;
+            } else if (doc[0] !== fnName && doc[0] !== current.name) return content;
+        }
         const [filtered, full] = this.filterSource(content);
         if (current.kind === DeclarationTypes.CLASS) {
             if (this.classSuites.has(current)) this.classSuites.get(current)!.tests.push({ functionName: fnName || "", testCode: full });
@@ -77,7 +83,7 @@ export class TestCollector {
     runClassSuites(): void {
         for (const [cl, { module, tests, project }] of this.classSuites) {
             if (!project.tsconfig || !project.tsconfig.outDir) continue;
-            const dir = path.join(process.cwd(), project.root, project.tsconfig.outDir, ...module.path.slice(1)).replace(/\\/g, "/");
+            const dir = path.join(project.root, project.tsconfig.outDir, ...module.path.slice(1)).replace(/\\/g, "/");
             const filename = `${dir}/${cl.loc.filename!.replace(".ts", ".js")}`
             let finalScript =
                 `${module.name !== "default" ? `const { ${cl.name} } = require("${filename}");` : ""}const assert = require("assert");(async () => {
@@ -89,7 +95,9 @@ export class TestCollector {
                         ${method.testCode}
                     } catch(err) {
                         console.error("🛑 Doc test error in \x1b[31m${cl.name}.${method.functionName}\x1b[0m: ");
-                        console.error(err);
+                        if (err instanceof assert.AssertionError) {
+                            console.error("         "+err);
+                        } else console.error(err);
                     }`;
                 loc.end += finalScript.length;
                 methodRanges.push(loc);
@@ -109,7 +117,7 @@ export class TestCollector {
     runFnSuites(): void {
         for (const [module, { project, tests }] of this.fnSuites) {
             if (!project.tsconfig || !project.tsconfig.outDir) continue;
-            const dir = path.join(process.cwd(), project.root, project.tsconfig.outDir, ...module.path).replace(/\\/g, "/");
+            const dir = path.join(project.root, project.tsconfig.outDir, ...module.path).replace(/\\/g, "/");
             let finalScript = "const assert = require(\"assert\");(async () => {";
             const ranges: Array<TestFnRange> = [];
             for (const [fnDecl, codes] of tests) {
@@ -121,7 +129,9 @@ export class TestCollector {
                         ${code}
                     } catch(err) {
                         console.error("🛑 Doc test error in \x1b[31m${fnDecl.name}\x1b[0m: ");
-                        console.error(err);
+                        if (err instanceof assert.AssertionError) {
+                            console.error("         "+err);
+                        } else console.error(err);
                     }`
                 }
                 loc.end = finalScript.length;
