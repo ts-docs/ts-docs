@@ -36,6 +36,11 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
 
     const fileCache = new FileCache(options);
 
+    if (options.test) {
+        options.docTests = true;
+        options.forceEmit = true;
+    }
+
     const types = new TypescriptExtractor({
         entryPoints: options.entryPoints,
         externals: [handleDefaultAPI(), ...(options.externals||[]), ...handleNodeAPI()],
@@ -55,6 +60,11 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
     const generator = new Generator(finalOptions);
 
     await generator.generate(types, projects);
+
+    if (generator.tests) {
+        generator.tests.runClassSuites();
+        generator.tests.runFnSuites();
+    }
 
     fileCache.save();
 

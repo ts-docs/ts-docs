@@ -3,7 +3,7 @@ name: Custom Pages
 order: 3
 ---
 
-# Custom Pages
+# Custom pages
 
 One unique feature of ts-docs is that it allows you to create custom pages directly in the documentation! Custom pages only appear at the landing page in the sidebar, and when in a custom page.
 
@@ -36,4 +36,4 @@ order: 5
 
 - `name` - The name of the page. If not provided, the file name will be used.     
 - `order` - Where the page will be placed.
-
+- `redirect` - If provided, the content of the file is ignored, and clicking on the custom page will redirect the user to the URL inside this value.

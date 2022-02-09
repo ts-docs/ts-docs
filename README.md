@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="https://github.com/ts-docs/ts-docs/blob/main/assets/logo.png?raw=true" width="300px" />
+  <img src="https://github.com/ts-docs/ts-docs/blob/main/assets/logo.png?raw=true" width="200px" />
 </p>
 
 # ts-docs
@@ -37,12 +37,11 @@ ts-docs src/index.ts
 - Document multiple projects, monorepo support out of the box.
 - Slick design, dark/light theme, powerful search and filter function.
 - Link external references to their respective documentation.
-- Out of the box branches documentation, generate documentation for multiple branches.
+- Out of the box documentation generation for different branches of your repository.
 - Changelog generation, pulled from github releases.
 - Built-in custom pages support. Host your guides and tutorials right inside the documentation.
 - 100% accurate, you won't find missing references unless they're external.
-
-**This documentation generator may not work on your project at all, although most typescript projects follow the structure the generator supports.**
+- Unit tests inside documentation comments.
 
 ## Examples
 
@@ -61,4 +60,4 @@ ts-docs src/index.ts
 
 Contributions are appreciated, feel free to open an issue or a pull request [here](https://github.com/ts-docs/ts-docs).
 
-Make sure to read the [contribution guide](https://github.com/ts-docs/ts-docs/blob/main/.github/CONTRIBUTING.md)
+Make sure to read the [contribution guide](https://github.com/ts-docs/ts-docs/blob/main/.github/CONTRIBUTING.md).

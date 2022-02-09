@@ -1,14 +1,16 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { DocumentStructure, setupDocumentStructure } from "../documentStructure";
-import { parse as markedParse } from "marked";
+import { parse as markedParse, parseInline as markedParseInline } from "marked";
 import { copyFolder, createFile, createFolder, escapeHTML, fetchChangelog } from "../utils";
-import { Project, TypescriptExtractor, ClassDecl, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, ClassMethod, JSDocData, Module, TypeReferenceKinds, IndexSignatureDeclaration, InterfaceDecl, EnumDecl, Literal, TypeDecl, FunctionDecl, ConstantDecl, FunctionSignature, ObjectProperty, ConstructorType, InferType, TypeOperator } from "@ts-docs/extractor";
+import { Project, TypescriptExtractor, ClassDecl, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, JSDocData, Module, TypeReferenceKinds, InterfaceDecl, EnumDecl, Literal, TypeDecl, FunctionDecl, ConstantDecl, FunctionSignature, ConstructorType, InferType, TypeOperator, Declaration } from "@ts-docs/extractor";
 import path from "path";
 import { LandingPage, PageCategory, TsDocsOptions } from "../options";
 import fs from "fs";
 import { Heading, highlightAndLink, initMarkdown } from "./markdown";
 import { packSearchData } from "./searchData";
 import { FileExports } from "@ts-docs/extractor/dist/extractor/ExportHandler";
+import { TestCollector } from "../tests";
+import { CompilerOptions } from "typescript";
 
 export const enum PageTypes {
     INDEX,
@@ -27,6 +29,10 @@ export interface OtherProps {
     [key: string]: unknown,
     depth?: number,
     type?: PageTypes
+}
+
+const BlockTags: Record<string, boolean> = {
+    example: true
 }
 
 export type ModuleExports = FileExports | Record<string, FileExports> | undefined;
@@ -75,17 +81,22 @@ export class Generator {
     landingPage!: LandingPage
     projects!: Array<Project>
     extractor!: TypescriptExtractor
+    currentModule!: Module
+    currentProject!: Project
+    currentItem!: Declaration
+    tests?: TestCollector
     constructor(settings: TsDocsOptions, activeBranch = "main") {
         this.settings = settings;
         this.activeBranch = activeBranch;
         this.landingPage = settings.landingPage as LandingPage;
         this.structure = setupDocumentStructure(this.settings.structure, this);
+        if (settings.docTests) this.tests = new TestCollector();
     }
 
-    async generate(extractor: TypescriptExtractor, projects: Array<Project>): Promise<void> {
-        this.projects = projects;
+    async generate(extractor: TypescriptExtractor, projects?: Array<Project>): Promise<void> {
         this.extractor = extractor;
-        initMarkdown(this, extractor);
+        this.projects = projects || extractor.run();
+        initMarkdown(this);
         const out = this.settings.out;
         createFolder(out);
         const assetsFolder = path.join(out, "./assets");
@@ -93,7 +104,7 @@ export class Generator {
         copyFolder(this.structure.assetsPath, assetsFolder);
         if (this.settings.assets) copyFolder(this.settings.assets, assetsFolder);
 
-        packSearchData(projects, `${assetsFolder}/search.json`);
+        packSearchData(this.projects, `${assetsFolder}/search.json`);
 
         if (this.settings.customPages) {
             const pagesPath = path.join(out, "./pages");
@@ -102,6 +113,7 @@ export class Generator {
             for (const category of this.settings.customPages) {
                 category.pages.sort((a, b) => +(a.attributes.order || Infinity) - +(b.attributes.order || Infinity));
                 for (const page of category.pages) {
+                    if (page.attributes.redirect) continue;
                     // +2 because pages/category
                     this.depth += 2;
                     const [markdown, headings] = this.generateMarkdownWithHeaders(page.content);
@@ -115,9 +127,11 @@ export class Generator {
             }
             delete this.renderingPages;
         }
-        if (projects.length === 1) {
-            const pkg = projects[0];
+        if (this.projects.length === 1) {
+            const pkg = this.projects[0];
             if (this.settings.changelog && pkg.repository) await this.generateChangelog(pkg.repository, undefined, pkg.module);
+            this.currentProject = pkg;
+            this.currentModule = pkg.module;
             this.generateThingsInsideModule(this.settings.out, pkg.module);
             const exports = this.generateExports(pkg.module);
             this.generatePage(this.settings.out, "./", "index", this.structure.components.module({
@@ -131,12 +145,12 @@ export class Generator {
                 exports
             });
         } else {
-            if (this.settings.changelog && this.landingPage.repository) await this.generateChangelog(this.landingPage.repository, projects);
-            if (this.landingPage.readme) this.generatePage(this.settings.out, "./", "index", markedParse(this.landingPage.readme), { type: PageTypes.INDEX, projects, doNotGivePath: true });
-            for (const pkg of projects) {
-                this.currentGlobalModuleName = pkg.module.name;
+            if (this.settings.changelog && this.landingPage.repository) await this.generateChangelog(this.landingPage.repository, this.projects);
+            if (this.landingPage.readme) this.generatePage(this.settings.out, "./", "index", markedParse(this.landingPage.readme), { type: PageTypes.INDEX, projects: this.projects, doNotGivePath: true });
+            for (this.currentProject of this.projects) {
+                this.currentGlobalModuleName = this.currentProject.module.name;
                 this.depth++;
-                this.generateModule(this.settings.out, pkg.module, pkg.readme);
+                this.generateModule(this.settings.out, this.currentProject.module, this.currentProject.readme);
                 this.depth--;
             }
         }
@@ -160,28 +174,28 @@ export class Generator {
         // +1 because class/interface/enum/function/type/constant
         this.depth++;
         this.sortArr(module.classes, "name");
-        for (const classObj of module.classes) {
-            this.generateClass(path, classObj);
+        for (this.currentItem of module.classes) {
+            this.generateClass(path, this.currentItem as ClassDecl);
         }
         this.sortArr(module.interfaces, "name");
-        for (const interfaceObj of module.interfaces) {
-            this.generateInterface(path, interfaceObj);
+        for (this.currentItem of module.interfaces) {
+            this.generateInterface(path, this.currentItem);
         }
         this.sortArr(module.enums, "name");
-        for (const enumObj of module.enums) {
-            this.generateEnum(path, enumObj);
+        for (this.currentItem of module.enums) {
+            this.generateEnum(path, this.currentItem);
         }
         this.sortArr(module.types, "name");
-        for (const typeObj of module.types) {
-            this.generateTypeDecl(path, typeObj, module);
+        for (this.currentItem of module.types) {
+            this.generateTypeDecl(path, this.currentItem);
         }
         this.sortArr(module.functions, "name");
-        for (const fnObj of module.functions) {
-            this.generateFunction(path, fnObj, module);
+        for (this.currentItem of module.functions) {
+            this.generateFunction(path, this.currentItem as FunctionDecl);
         }
         this.sortArr(module.constants, "name");
-        for (const constantObj of module.constants) {
-            this.generateConstant(path, constantObj, module);
+        for (this.currentItem of module.constants) {
+            this.generateConstant(path, this.currentItem);
         }
         const modArr = [...module.modules.values()];
         this.sortArr(modArr, "name");
@@ -195,6 +209,7 @@ export class Generator {
         const exports = this.generateExports(module);
         const folderName = `${p}/m.${module.name}`;
         createFolder(folderName);
+        this.currentModule = module;
         this.generateThingsInsideModule(folderName, module);
         this.generatePage(p, `m.${module.name}`, "index", this.structure.components.module({
             module,
@@ -235,22 +250,22 @@ export class Generator {
         this.generatePage(path, "enum", enumObj.id ? `${enumObj.name}_${enumObj.id}` : enumObj.name, this.structure.components.enum(enumObj), { type: PageTypes.ENUM, enum: enumObj, name: enumObj.name });
     }
 
-    generateTypeDecl(path: string, typeObj: TypeDecl, module: Module): void {
+    generateTypeDecl(path: string, typeObj: TypeDecl): void {
         if (typeObj.isCached) return;
-        this.generatePage(path, "type", typeObj.id ? `${typeObj.name}_${typeObj.id}` : typeObj.name, this.structure.components.type(typeObj), { type: PageTypes.TYPE, module, name: typeObj.name });
+        this.generatePage(path, "type", typeObj.id ? `${typeObj.name}_${typeObj.id}` : typeObj.name, this.structure.components.type(typeObj), { type: PageTypes.TYPE, module: this.currentModule, name: typeObj.name });
     }
 
-    generateFunction(path: string, func: FunctionDecl, module: Module): void {
+    generateFunction(path: string, func: FunctionDecl): void {
         if (func.isCached) return;
-        this.generatePage(path, "function", func.id ? `${func.name}_${func.id}` : func.name, this.structure.components.function(func), { type: PageTypes.FUNCTION, module, name: func.name });
+        this.generatePage(path, "function", func.id ? `${func.name}_${func.id}` : func.name, this.structure.components.function(func), { type: PageTypes.FUNCTION, module: this.currentModule, name: func.name });
     }
 
-    generateConstant(path: string, constant: ConstantDecl, module: Module): void {
+    generateConstant(path: string, constant: ConstantDecl): void {
         if (constant.isCached) return;
         this.generatePage(path, "constant", constant.id ? `${constant.name}_${constant.id}` : constant.name, this.structure.components.constant({
             constant,
-            content: constant.content && highlightAndLink(this, this.extractor, constant.content, "ts"),
-        }), { type: PageTypes.CONST, module, name: constant.name });
+            content: constant.content && highlightAndLink(this, constant.content, "ts"),
+        }), { type: PageTypes.CONST, module: this.currentModule, name: constant.name });
     }
 
     generateConstructType(ref: FunctionSignature | ConstructorType, includeNew?: boolean): string {
@@ -344,9 +359,9 @@ export class Generator {
         return this.structure.components.functionParameter(type);
     }
 
-    generateComment(comments?: Array<JSDocData>, includeTags = false, exclude?: Record<string, boolean>): [block: string, inline: string] | undefined {
+    generateComment(comments?: Array<JSDocData>, includeTags = false, exclude?: Record<string, boolean>, fnName?: string): [block: string, inline: string] | undefined {
         if (!comments) return undefined;
-        let text = markedParse(comments.map(c => c.comment || "").join("\n"));
+        let text = markedParse(comments.map(c => c.comment || "").join("\n"), { fnName });
         let inline = "";
         if (includeTags) {
             for (const comment of comments) {
@@ -355,7 +370,7 @@ export class Generator {
                     if (exclude && exclude[tag.name]) continue;
                     const res = this.structure.components.jsdocTags({
                         tagName: tag.name,
-                        comment: tag.comment && markedParse(tag.comment),
+                        comment: tag.comment && (BlockTags[tag.name] ? markedParse(tag.comment, { fnName }) : markedParseInline(tag.comment)),
                         arg: tag.arg,
                         type: tag.type
                     }) as { block?: string, inline?: string };

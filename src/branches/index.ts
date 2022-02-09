@@ -5,7 +5,7 @@ import os from "os";
 import path from "path";
 import { execSync } from "child_process";
 import { handleDefaultAPI, handleNodeAPI } from "../utils";
-import { DocumentStructure, TsDocsOptions } from "..";
+import { TsDocsOptions } from "..";
 
 export interface BranchOption {
     /**
@@ -79,6 +79,7 @@ export function renderBranches(
             ...options,
             landingPage: branchSetting.landingPage ? newProjects.find(pr => pr.module.name === branchSetting.landingPage) : newProjects[0],
             out: path.join(options.out, `b.${branchSetting.displayName}`),
+            docTests: false,
             changelog: false // Different branches don't have a changelog
         }, branchSetting.displayName);
 

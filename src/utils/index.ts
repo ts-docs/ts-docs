@@ -4,6 +4,7 @@ import fs from "fs";
 import path from "path";
 import ts from "typescript";
 import fetch from "got";
+import { OptionSource } from "..";
 
 /**
  * Creates a file with the name `file`, which is located inside `folder`, which gets created if it doesn't
@@ -26,7 +27,7 @@ export function createFolder(path: string) : void {
 /**
  * Finds a `tsconfig.json` file, starting from `basePath` and going up.
  */
-export function findTSConfig<T = string>(basePath: string) : Record<string, T>|undefined {
+export function findTSConfig<T = string>(basePath: string) : { compilerOptions: ts.CompilerOptions, tsdocsOptions?: OptionSource } | undefined {
     const p = path.join(basePath, "tsconfig.json");
     if (fs.existsSync(p)) return ts.parseConfigFileTextToJson("tsconfig.json", fs.readFileSync(p, "utf-8")).config;
     const newPath = path.join(basePath, "../");
@@ -83,10 +84,10 @@ export function getPathFileName(p?: string) : string|undefined {
 
 export function handleDefaultAPI() : ExternalReference {
     return {
-        run: (sym, source) => {
+        run: (sym, source, other) => {
             if (source) return;
             switch (sym) {
-            /** Javascript global objects */
+            /** Javascript / Node.js global objects */
             case "Date": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date"};
             case "Bigint": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt" };
             case "Promise": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" }; 
@@ -135,6 +136,7 @@ export function handleNodeAPI() : Array<ExternalReference> {
                     case "Process": return { link: "https://nodejs.org/api/process.html", name: "NodeJS", displayName: "Process" };
                     case "WriteStream": return { link: "https://nodejs.org/api/stream.html#stream_class_stream_writable", name: "NodeJS", displayName: "WriteStream"};
                     case "EventEmitter": return { link: "https://nodejs.org/api/events.html#events_class_eventemitter", name: "NodeJS", displayName: "EventEmitter" };
+                    case "ReadableStream": return { link: "https://nodejs.org/api/stream.html#class-streamreadable", name: "NodeJS", displayName: "ReadableStream" };
                     default: return;
                     }
                 }
@@ -147,6 +149,15 @@ export function handleNodeAPI() : Array<ExternalReference> {
                 switch (name) {
                 case "EventEmitter": return { link: "https://nodejs.org/api/events.html#events_class_eventemitter", name: "NodeJS", displayName: "EventEmitter" };
                 default: return;
+                }
+            }
+        },
+        {
+            baseName: "url",
+            run: (name) => {
+                switch (name) {
+                    case "URL": return { link: "https://nodejs.org/api/url.html#class-url", name: "URL" };
+                    default: return;
                 }
             }
         }

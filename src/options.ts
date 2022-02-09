@@ -14,7 +14,8 @@ export interface LandingPage {
 
 export interface CustomPageAttributes {
     order?: number,
-    name?: string
+    name?: string,
+    redirect?: string
 }
 
 export interface CustomPage {
@@ -47,7 +48,9 @@ export interface TsDocsOptions {
     forceEmit?: boolean,
     exportMode: "simple" | "detailed",
     stripInternal?: boolean,
-    sort?: "source" | "alphabetical"
+    sort?: "source" | "alphabetical",
+    docTests?: boolean,
+    test?: string
 }
 
 export interface OptionSource {
@@ -68,7 +71,9 @@ export interface OptionSource {
     forceEmit?: boolean,
     exportMode?: string,
     stripInternal?: boolean,
-    sort?: "source" | "alphabetical"
+    sort?: "source" | "alphabetical",
+    docTests?: boolean,
+    test?: string
 }
 
 export const options: TsDocsOptions = {
@@ -92,6 +97,8 @@ export function addOptionSource(source: OptionSource) : void {
     if (source.passthroughModules && !Array.isArray(source.passthroughModules)) throw new Error("Passthrough Modules must be an array.");
     if (source.branches && !Array.isArray(source.branches)) throw new Error("Branches must be an array.");
     if (source.json && typeof source.json !== "string") throw new Error("JSON output path must be a string.");
+    if (source.sort && (source.sort !== "alphabetical" && source.sort !== "source")) throw new Error("Sort must be either 'alphabetical' or 'source'.");
+    if (source.test && typeof source.test !== "string") throw new Error("Test must be a string.");
 } 
 
 export function initOptions(extractorList: Array<Project>) : TsDocsOptions {
@@ -151,6 +158,9 @@ Usage: ts-docs [...entryFiles]
 --tsconfig          Path to tsconfig.json file.
 --exportMode        "simple" or "detailed". Simple mode just lists all the exports from the index file, detailed mode lists all exports of all files in the module.
 --stripInternal     Removes all items flagged with the internal tag.
+--sort              Either "source" or "alphabetical".
+--docTests          Runs any typescript code blocks above methods / functions as unit tests.
+--test               Run only tests with a specific function / class name.
 --help
 `);
 }
@@ -159,7 +169,7 @@ export function initConfig() : void {
     if (fs.existsSync("./tsdocs.config.js")) return console.log("A ts-docs configuration file already exists here.");
     fs.writeFileSync("./tsdocs.config.js", `
 module.exports = {
-    // See more options at https://ts-docs.github.io/ts-docs/pages/Guides/Options
+    // See more options at https://tsdocs.xyz/pages/Guides/Options
 
     entryPoints: [], // Entry points, every project you want to include in the documentation should have exactly one entry point
     name: "", // The name of your project
