@@ -206,7 +206,7 @@ export function initMarkdown(generator: Generator) : void {
                 level: "block",
                 start: (src) => src.indexOf("```"),
                 tokenizer: function (src, tokens) {
-                    const full = src.match(/(?:```[a-z]* --.+\n[\s\S]*?\n```\n?)+/);
+                    const full = src.match(/^(?:```[a-z]* --.+\n[\s\S]*?\n```\n?)+/);
                     if (!full || !full[0]) return; 
                     const matches: Array<CodeTab> = [];
                     const separateMatches = [...full[0].matchAll(/```(?<lang>[a-z]*) --(?<tabName>.+)\n(?<content>[\s\S]*?)\n```/g)];
