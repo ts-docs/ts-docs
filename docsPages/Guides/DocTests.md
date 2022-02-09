@@ -24,6 +24,8 @@ module.exports = {
 }
 ```
 
+|> ts-docs relies on the code already being transpiled, so make sure you transpile your project's code before running ts-docs with this option enabled: `tsc && ts-docs`.
+
 |> Only code that is inside a documentation comment for a class **method** / **constructor**, or a **function** will be executed.
 
 Turning this single option on will cause all your typescript / javascript codeblocks inside comments to be executed.
@@ -135,3 +137,7 @@ const code = `
 # Title
 `
 ```
+
+## `docTests` with `forceEmit`
+
+If the `forceEmit` option is **not** enabled, ts-docs will not run any doc tests inside unchanged files. This can become a problem if any of your tests uses `import`, so it's a good idea to always run tests with the `forceEmit` option turned on.

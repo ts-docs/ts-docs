@@ -36,4 +36,4 @@ order: 5
 
 - `name` - The name of the page. If not provided, the file name will be used.     
 - `order` - Where the page will be placed.
-
+- `redirect` - If provided, the content of the file is ignored, and clicking on the custom page will redirect the user to the URL inside this value.

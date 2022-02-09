@@ -87,7 +87,7 @@ export function handleDefaultAPI() : ExternalReference {
         run: (sym, source, other) => {
             if (source) return;
             switch (sym) {
-            /** Javascript global objects */
+            /** Javascript / Node.js global objects */
             case "Date": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date"};
             case "Bigint": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt" };
             case "Promise": return { link: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" }; 
@@ -136,6 +136,7 @@ export function handleNodeAPI() : Array<ExternalReference> {
                     case "Process": return { link: "https://nodejs.org/api/process.html", name: "NodeJS", displayName: "Process" };
                     case "WriteStream": return { link: "https://nodejs.org/api/stream.html#stream_class_stream_writable", name: "NodeJS", displayName: "WriteStream"};
                     case "EventEmitter": return { link: "https://nodejs.org/api/events.html#events_class_eventemitter", name: "NodeJS", displayName: "EventEmitter" };
+                    case "ReadableStream": return { link: "https://nodejs.org/api/stream.html#class-streamreadable", name: "NodeJS", displayName: "ReadableStream" };
                     default: return;
                     }
                 }
@@ -148,6 +149,15 @@ export function handleNodeAPI() : Array<ExternalReference> {
                 switch (name) {
                 case "EventEmitter": return { link: "https://nodejs.org/api/events.html#events_class_eventemitter", name: "NodeJS", displayName: "EventEmitter" };
                 default: return;
+                }
+            }
+        },
+        {
+            baseName: "url",
+            run: (name) => {
+                switch (name) {
+                    case "URL": return { link: "https://nodejs.org/api/url.html#class-url", name: "URL" };
+                    default: return;
                 }
             }
         }

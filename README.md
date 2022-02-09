@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="https://github.com/ts-docs/ts-docs/blob/main/assets/logo.png?raw=true" width="300px" />
+  <img src="https://github.com/ts-docs/ts-docs/blob/main/assets/logo.png?raw=true" width="200px" />
 </p>
 
 # ts-docs

@@ -113,6 +113,7 @@ export class Generator {
             for (const category of this.settings.customPages) {
                 category.pages.sort((a, b) => +(a.attributes.order || Infinity) - +(b.attributes.order || Infinity));
                 for (const page of category.pages) {
+                    if (page.attributes.redirect) continue;
                     // +2 because pages/category
                     this.depth += 2;
                     const [markdown, headings] = this.generateMarkdownWithHeaders(page.content);

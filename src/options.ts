@@ -14,7 +14,8 @@ export interface LandingPage {
 
 export interface CustomPageAttributes {
     order?: number,
-    name?: string
+    name?: string,
+    redirect?: string
 }
 
 export interface CustomPage {
