@@ -30,7 +30,7 @@ if (diagnostics && diagnostics.length) {
     for (const dia of diagnostics) {
         const start = dia.start || Infinity;
         const inFn = data.ranges.find(r => start > r.start && start < r.end);
-        if (inFn) dia.messageText = `In method \x1b[31m${data.className}.${inFn.fnName}\x1b[0m: ${dia.messageText}`;
+        if (inFn) dia.messageText = `In method \x1b[31m${data.className}${inFn.fnName ? `.${inFn.fnName}`:""}\x1b[0m: ${dia.messageText}`;
         else dia.messageText = `In class \x1b[31m${data.className}\x1b[0m: ${dia.messageText}`;
     }
     console.error(ts.formatDiagnosticsWithColorAndContext(diagnostics, formatHost));

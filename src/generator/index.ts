@@ -59,7 +59,7 @@ export interface OtherRefData {
 }
 
 /**
- * The class responsible for documentation generator. Takes in a documentation structure and settings.
+ * The class responsible for creating the documentation. Takes in a documentation structure and settings.
  */
 export class Generator {
     structure: DocumentStructure

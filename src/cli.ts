@@ -62,8 +62,8 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
     await generator.generate(types, projects);
 
     if (generator.tests) {
-        generator.tests.runClassSuites();
-        generator.tests.runFnSuites();
+        generator.tests.runClassSuites(generator);
+        generator.tests.runFnSuites(generator);
     }
 
     fileCache.save();
