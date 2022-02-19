@@ -1,4 +1,4 @@
-import { ClassProperty, Project } from "@ts-docs/extractor";
+import { Project } from "@ts-docs/extractor";
 import fs from "fs";
 import { getComment } from "../utils";
 
@@ -19,16 +19,16 @@ function buildBitfield(...bits: Array<number|undefined|false>) : number {
 export type SearchDataComment = string|undefined;
 
 export type PackedSearchData = [
-    Array<[
-        number, // Module ID,
-        Array<[string, Array<[string, number, SearchDataComment]>, Array<[string, number, SearchDataComment]>, Array<number>, SearchDataComment]>, // Classes
-        Array<[string, Array<string>, Array<number>, SearchDataComment]>, // Interfaces,
-        Array<[string, Array<string>, Array<number>, SearchDataComment]>, // Enums,
-        Array<[string, Array<number>]>, // Types
-        Array<[string, Array<number>]>, // Functions
-        Array<[string, Array<number>]> // Constants
+    data: Array<[
+        moduleId: number, // Module ID,
+        classes: Array<[name: string, properties: Array<[string, number, SearchDataComment]>, methods: Array<[string, number, SearchDataComment]>, path: Array<number>, comment: SearchDataComment]>, // Classes
+        interfaces: Array<[name: string, fields: Array<string>, path: Array<number>, comment: SearchDataComment]>, // Interfaces,
+        enums: Array<[name: string, members: Array<string>, path: Array<number>, comment: SearchDataComment]>, // Enums,
+        types: Array<[name: string, path: Array<number>]>, // Types
+        functions: Array<[name: string, path: Array<number>]>, // Functions
+        constants: Array<[name: string, path: Array<number>]> // Constants
     ]>,
-    Array<string> // Module names
+    moduleNames: Array<string> // Module names
 ];
 
 /**
@@ -66,6 +66,7 @@ export function packSearchData(extractors: Array<Project>, path: string) : void 
         extractor.forEachModule(extractor.module, (mod, path) => {
             modObj[0] = res[1].push(mod.name) - 1;
             const numPath = path.map(pathName => res[1].indexOf(pathName));
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             for (const cl of mod.classes) modObj[1].push([`${cl.name}${cl.id ? `_${cl.id}`:""}`, cl.properties.filter(p => p.prop).map(p => [p.prop!.rawName, buildBitfield(p.isPrivate && ClassMemberFlags.IS_PRIVATE), getComment(p)]), cl.methods.map(p => [p.rawName, buildBitfield(p.isGetter && ClassMemberFlags.IS_GETTER, p.isSetter && ClassMemberFlags.IS_SETTER, p.isPrivate && ClassMemberFlags.IS_PRIVATE), getComment(p)]), numPath, getComment(cl)]);
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             for (const intf of mod.interfaces) modObj[2].push([`${intf.name}${intf.id ? `_${intf.id}`:""}`, intf.properties.filter(p => p.prop).map(p => p.prop!.rawName), numPath, getComment(intf)]);

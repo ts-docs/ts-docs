@@ -25,7 +25,7 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
 
     addOptionSource({...args, entryPoints: args._});
 
-    const tsconfig = findTSConfig<OptionSource>(process.cwd());
+    const tsconfig = findTSConfig(process.cwd());
 
     if (tsconfig && tsconfig.tsdocsOptions) addOptionSource(tsconfig.tsdocsOptions);
 

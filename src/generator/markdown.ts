@@ -205,7 +205,7 @@ export function initMarkdown(generator: Generator) : void {
                 name: "tabcode",
                 level: "block",
                 start: (src) => src.indexOf("```"),
-                tokenizer: function (src, tokens) {
+                tokenizer: function (src) {
                     const full = src.match(/^(?:```[a-z]* --.+\n[\s\S]*?\n```\n?)+/);
                     if (!full || !full[0]) return; 
                     const matches: Array<CodeTab> = [];
@@ -224,7 +224,7 @@ export function initMarkdown(generator: Generator) : void {
                         raw: full[0],
                         tabs: matches,
                         tokens: []
-                    }
+                    };
                 },
                 renderer: function(token) {
                     return generator.structure.components.codeTabs(token.tabs);
@@ -242,7 +242,7 @@ export function highlightAndLink(gen: Generator, text: string, lang?: string, fn
             else text = gen.tests.addTest(gen, text, fnName);
         }
         let highlighted = highlight.highlight(text, { language: lang }).value;
-        const matched = highlighted.matchAll(/<span class=\"hljs-title class_\">(.*?)<\/span>/g);
+        const matched = highlighted.matchAll(/<span class="hljs-title class_">(.*?)<\/span>/g);
         for (const [matchingEl, typeName] of matched) {
             highlighted = highlighted.replace(matchingEl, genReference(typeName, {}, gen));
         }

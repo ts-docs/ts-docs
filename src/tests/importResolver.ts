@@ -14,9 +14,9 @@ export function importResolver(dir: string) : ts.TransformerFactory<ts.SourceFil
                     return undefined;
                 }
                 return ts.visitEachChild(node, visitor, ctx);
-            }
+            };
             node = ts.visitEachChild(node, visitor, ctx);
             return ts.factory.updateSourceFile(node, [...newImports, ...node.statements]);
-        }
+        };
     };
 }

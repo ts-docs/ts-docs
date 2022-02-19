@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { ClassDecl, DeclarationTypes, FunctionDecl, Module, Project } from "@ts-docs/extractor";
-import { Generator, TsDocsCLIArgs } from "..";
+import { Generator } from "..";
 import { Worker } from "worker_threads";
 import path from "path";
 import ts from "typescript";
+import { red, cyan } from "../utils/formatter";
 
 export interface TestFnRange {
     start: number,
@@ -62,8 +64,8 @@ export class TestCollector {
      * first one.
      */
     filterSource(code: string): [filtered: string, full: string] {
-        let filtered = [];
-        let full = [];
+        const filtered = [];
+        const full = [];
         for (const line of code.split("\n")) {
             if (line[0] === "#") {
                 if (line[1] === "#") {
@@ -85,7 +87,7 @@ export class TestCollector {
         for (const [cl, { module, tests, project }] of this.classSuites) {
             if (!project.tsconfig || !project.tsconfig.outDir) continue;
             const dir = path.join(project.root, project.tsconfig.outDir, ...(generator.projects.length === 1 ? module.path : module.path.slice(1))).replace(/\\/g, "/");
-            const filename = `${dir}/${cl.loc.filename!.replace(".ts", ".js")}`
+            const filename = `${dir}/${cl.loc.filename!.replace(".ts", ".js")}`;
             let finalScript =
                 `${module.name !== "default" ? `const { ${cl.name} } = require("${filename}");` : ""}const assert = require("assert");(async () => {
 `;
@@ -93,13 +95,14 @@ export class TestCollector {
             for (const method of tests) {
                 const loc: TestFnRange = { start: finalScript.length, fnName: method.functionName, end: 0, pos: cl.loc.pos };
                 finalScript += `try {
-                        ${method.testCode}
-                    } catch(err) {
-                        console.error("🛑 Doc test error in \x1b[31m${cl.name}${method.functionName ? `.${method.functionName}` : ""}\x1b[0m: ");
-                        if (err instanceof assert.AssertionError) {
-                            console.error("         "+err);
-                        } else console.error(err);
-                    }`;
+    ${method.testCode}
+                } catch(err) {
+                    console.error(formatErrorObj(err, {
+                        filename: "${filename}",
+                        content: outputText,
+                        additionalMessage: "${red("in")} ${cyan(cl.name + (method.functionName ? `.${method.functionName}` : ""))} (${cl.loc.pos.line}:${cl.loc.pos.character})"
+                    }));
+                }`;
                 loc.end += finalScript.length;
                 methodRanges.push(loc);
             }
@@ -127,13 +130,14 @@ export class TestCollector {
                 if (fnDecl.name !== "default") finalScript += `const { ${fnDecl.name} } = require("${filename}");`;
                 for (const code of codes) {
                     finalScript += `try {
-                        ${code}
+    ${code}
                     } catch(err) {
-                        console.error("🛑 Doc test error in \x1b[31m${fnDecl.name}\x1b[0m: ");
-                        if (err instanceof assert.AssertionError) {
-                            console.error("         "+err);
-                        } else console.error(err);
-                    }`
+                        console.error(formatErrorObj(err, {
+                            filename: "${filename}",
+                            content: outputText,
+                            additionalMessage: "${red("in")} ${cyan(fnDecl.name)} (${fnDecl.loc.pos.line}:${fnDecl.loc.pos.character})"
+                        }));
+                    }`;
                 }
                 loc.end = finalScript.length;
                 ranges.push(loc);
