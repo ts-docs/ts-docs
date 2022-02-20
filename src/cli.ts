@@ -2,7 +2,6 @@
 
 import parseArgs from "minimist";
 import { TypescriptExtractor } from "@ts-docs/extractor";
-import ts from "typescript";
 import { Generator } from "./generator";
 import { findTSConfig, findTsDocsJs, handleDefaultAPI, handleNodeAPI } from "./utils";
 import { addOptionSource, initOptions, options, OptionSource, showHelp, initConfig } from "./options";
@@ -25,7 +24,7 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
 
     addOptionSource({...args, entryPoints: args._});
 
-    const tsconfig = findTSConfig<OptionSource>(process.cwd());
+    const tsconfig = findTSConfig(process.cwd());
 
     if (tsconfig && tsconfig.tsdocsOptions) addOptionSource(tsconfig.tsdocsOptions);
 
@@ -62,8 +61,8 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
     await generator.generate(types, projects);
 
     if (generator.tests) {
-        generator.tests.runClassSuites();
-        generator.tests.runFnSuites();
+        generator.tests.runClassSuites(generator);
+        generator.tests.runFnSuites(generator);
     }
 
     fileCache.save();

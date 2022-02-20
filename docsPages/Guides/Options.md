@@ -149,7 +149,7 @@ How to sort items (classes, interfaces, enums, functions, constants, types, meth
 
 ### docTests
 
-Transpiles and runs typescript and javascript code inside function / method documentation comments. This option only works when there is a single output directory. Check out the [Documentation Tests](./Documentation Tests) guide for more information.
+Transpiles and runs typescript and javascript code inside function / method documentation comments. This option only works when there is a single output directory. Check out the [Documentation Tests](./DocumentationDocumentation%20Tests) guide for more information.
 
 ### test
 

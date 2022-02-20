@@ -52,11 +52,11 @@ export function setupDocumentStructure(structName: string, gen: Generator) : Doc
     } catch {
         throw new Error(`Couldn't find documentation structure "${structName}"`);
     }
-    let components = initFn.init(gen);
+    const components = initFn.init(gen);
     const baseDir = path.join("./node_modules", structName);
-    const packageJson = JSON.parse(fs.readFileSync(path.join(baseDir, "package.json"), "utf-8"))
+    const packageJson = JSON.parse(fs.readFileSync(path.join(baseDir, "package.json"), "utf-8"));
     return {
         components, 
         assetsPath: path.join(baseDir, packageJson.assets)
-    }
+    };
 }

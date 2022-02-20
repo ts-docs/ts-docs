@@ -1,5 +1,5 @@
 
-import { ArrayType, ArrowFunction, FunctionParameter, JSDocData, Literal, ObjectLiteral, Reference, Tuple, Type, TypeKinds, TypeOperator, UnionOrIntersection, JSDocTag, ExternalReference } from "@ts-docs/extractor";
+import { JSDocData, JSDocTag, ExternalReference } from "@ts-docs/extractor";
 import fs from "fs";
 import path from "path";
 import ts from "typescript";
@@ -27,7 +27,7 @@ export function createFolder(path: string) : void {
 /**
  * Finds a `tsconfig.json` file, starting from `basePath` and going up.
  */
-export function findTSConfig<T = string>(basePath: string) : { compilerOptions: ts.CompilerOptions, tsdocsOptions?: OptionSource } | undefined {
+export function findTSConfig(basePath: string) : { compilerOptions: ts.CompilerOptions, tsdocsOptions?: OptionSource } | undefined {
     const p = path.join(basePath, "tsconfig.json");
     if (fs.existsSync(p)) return ts.parseConfigFileTextToJson("tsconfig.json", fs.readFileSync(p, "utf-8")).config;
     const newPath = path.join(basePath, "../");
@@ -60,7 +60,7 @@ const ESCAPE_CHARS = {
     "&": "&amp;",
     "<": "&lt;",
     ">": "&gt;",
-    '"': "&quot;",
+    "\"": "&quot;",
     "'": "&#39;",
 };
 
@@ -84,7 +84,7 @@ export function getPathFileName(p?: string) : string|undefined {
 
 export function handleDefaultAPI() : ExternalReference {
     return {
-        run: (sym, source, other) => {
+        run: (sym, source) => {
             if (source) return;
             switch (sym) {
             /** Javascript / Node.js global objects */
@@ -156,8 +156,8 @@ export function handleNodeAPI() : Array<ExternalReference> {
             baseName: "url",
             run: (name) => {
                 switch (name) {
-                    case "URL": return { link: "https://nodejs.org/api/url.html#class-url", name: "URL" };
-                    default: return;
+                case "URL": return { link: "https://nodejs.org/api/url.html#class-url", name: "URL" };
+                default: return;
                 }
             }
         }

@@ -10,7 +10,6 @@ import { Heading, highlightAndLink, initMarkdown } from "./markdown";
 import { packSearchData } from "./searchData";
 import { FileExports } from "@ts-docs/extractor/dist/extractor/ExportHandler";
 import { TestCollector } from "../tests";
-import { CompilerOptions } from "typescript";
 
 export const enum PageTypes {
     INDEX,
@@ -33,7 +32,7 @@ export interface OtherProps {
 
 const BlockTags: Record<string, boolean> = {
     example: true
-}
+};
 
 export type ModuleExports = FileExports | Record<string, FileExports> | undefined;
 
@@ -49,6 +48,7 @@ export interface IndexData {
     projects: Array<Project>,
     pages: Array<PageCategory>,
     headings: Array<Heading>,
+    pageName?: string,
     exports: ModuleExports
 }
 
@@ -59,7 +59,7 @@ export interface OtherRefData {
 }
 
 /**
- * The class responsible for documentation generator. Takes in a documentation structure and settings.
+ * The class responsible for creating the documentation. Takes in a documentation structure and settings.
  */
 export class Generator {
     structure: DocumentStructure
@@ -120,6 +120,7 @@ export class Generator {
                     this.generatePage(pagesPath, category.name, page.name, markdown, {
                         type: PageTypes.PAGE,
                         pages: this.settings.customPages,
+                        pageName: page.name,
                         headings
                     });
                     this.depth -= 2;
@@ -225,11 +226,11 @@ export class Generator {
                 if (a.index) return 1;
                 if (b.index) return -1;
                 return a.prop!.rawName.localeCompare(b.prop!.rawName);
-            })
+            });
         }
         this.sortArr(classObj.methods, "rawName");
         this.generatePage(path, "class", classObj.id ? `${classObj.name}_${classObj.id}` : classObj.name,
-        this.structure.components.class(classObj), { class: classObj, name: classObj.name, type: PageTypes.CLASS });
+            this.structure.components.class(classObj), { class: classObj, name: classObj.name, type: PageTypes.CLASS });
     }
 
     generateInterface(path: string, interfaceObj: InterfaceDecl): void {
@@ -279,23 +280,23 @@ export class Generator {
         if (ref.type.link) return this.structure.components.typeReference({ref, other});
         let refType = "";
         switch (ref.type.kind) {
-            case TypeReferenceKinds.STRINGIFIED_UNKNOWN: return ref.type.name;
-            case TypeReferenceKinds.CLASS: refType = "class"; break;
-            case TypeReferenceKinds.INTERFACE: refType = "interface"; break;
-            case TypeReferenceKinds.ENUM:
-            case TypeReferenceKinds.ENUM_MEMBER: refType = "enum";  break;
-            case TypeReferenceKinds.TYPE_ALIAS: refType = "type"; break;
-            case TypeReferenceKinds.FUNCTION: refType = "function"; break;
-            case TypeReferenceKinds.CONSTANT: refType = "constant"; break;
-            case TypeReferenceKinds.INTERNAL: return this.structure.components.typeReference({ref, other});
-            case TypeReferenceKinds.NAMESPACE_OR_MODULE: {
-                if (!ref.type.path) return ref.type.name;
-                return this.structure.components.typeReference({
-                    ref, other,
-                    link: ref.type.path && this.generateLink(path.join(...ref.type.path.map(p => `m.${p}`), ref.type.path[ref.type.path.length - 1] !== ref.type.name ? `m.${ref.type.name}` : "", `index.html${other.hash ? `#${other.hash}`:""}`))
-                });
-            }
-            default: refType = "";
+        case TypeReferenceKinds.STRINGIFIED_UNKNOWN: return ref.type.name;
+        case TypeReferenceKinds.CLASS: refType = "class"; break;
+        case TypeReferenceKinds.INTERFACE: refType = "interface"; break;
+        case TypeReferenceKinds.ENUM:
+        case TypeReferenceKinds.ENUM_MEMBER: refType = "enum";  break;
+        case TypeReferenceKinds.TYPE_ALIAS: refType = "type"; break;
+        case TypeReferenceKinds.FUNCTION: refType = "function"; break;
+        case TypeReferenceKinds.CONSTANT: refType = "constant"; break;
+        case TypeReferenceKinds.INTERNAL: return this.structure.components.typeReference({ref, other});
+        case TypeReferenceKinds.NAMESPACE_OR_MODULE: {
+            if (!ref.type.path) return ref.type.name;
+            return this.structure.components.typeReference({
+                ref, other,
+                link: ref.type.path && this.generateLink(path.join(...ref.type.path.map(p => `m.${p}`), ref.type.path[ref.type.path.length - 1] !== ref.type.name ? `m.${ref.type.name}` : "", `index.html${other.hash ? `#${other.hash}`:""}`))
+            });
+        }
+        default: refType = "";
         }
         return this.structure.components.typeReference({
             ref, other,
@@ -310,44 +311,44 @@ export class Generator {
 
     generateType(type: Type, other: Record<string, unknown> = {}): string {
         switch (type.kind) {
-            case TypeKinds.REFERENCE: return this.generateRef(type as Reference, other);
-            case TypeKinds.ARROW_FUNCTION: return this.generateArrowFunction(type as ArrowFunction);
-            case TypeKinds.UNION: return this.structure.components.typeUnion(type);
-            case TypeKinds.INTERSECTION: return this.structure.components.typeIntersection(type);
-            case TypeKinds.TUPLE: return this.structure.components.typeTuple(type);
-            case TypeKinds.ARRAY_TYPE: return this.structure.components.typeArray(type);
-            case TypeKinds.MAPPED_TYPE: return this.structure.components.typeMapped(type);
-            case TypeKinds.CONDITIONAL_TYPE: return this.structure.components.typeConditional(type);
-            case TypeKinds.TYPE_PREDICATE: return this.structure.components.typePredicate(type);
-            case TypeKinds.INDEX_ACCESS: return this.structure.components.typeIndexAccess(type);
-            case TypeKinds.TEMPLATE_LITERAL: return this.structure.components.typeTemplateLiteral(type);
-            case TypeKinds.INFER_TYPE: return this.structure.components.typeOperator({ name: "infer", type: (type as InferType).typeParameter });
-            case TypeKinds.UNIQUE_OPERATOR: return this.structure.components.typeOperator({ name: "unique", type: (type as TypeOperator).type });
-            case TypeKinds.KEYOF_OPERATOR: return this.structure.components.typeOperator({ name: "keyof", type: (type as TypeOperator).type });
-            case TypeKinds.READONLY_OPERATOR: return this.structure.components.typeOperator({ name: "readonly", type: (type as TypeOperator).type });
-            case TypeKinds.TYPEOF_OPERATOR: return this.structure.components.typeOperator({ name: "typeof", type: (type as TypeOperator).type });
-            case TypeKinds.STRING:
-            case TypeKinds.NUMBER:
-            case TypeKinds.VOID:
-            case TypeKinds.TRUE:
-            case TypeKinds.FALSE:
-            case TypeKinds.BOOLEAN:
-            case TypeKinds.UNDEFINED:
-            case TypeKinds.NULL:
-            case TypeKinds.UNKNOWN:
-            case TypeKinds.STRING_LITERAL:
-            case TypeKinds.NUMBER_LITERAL:
-            case TypeKinds.SYMBOL:
-            case TypeKinds.NEVER:
-            case TypeKinds.BIGINT:
-            case TypeKinds.OBJECT:
-            case TypeKinds.THIS:
-            case TypeKinds.REGEX_LITERAL:
-            case TypeKinds.ANY: return this.structure.components.typePrimitive(type);
-            case TypeKinds.OBJECT_LITERAL: return this.structure.components.typeObject(type);
-            case TypeKinds.CONSTRUCTOR_TYPE: return this.generateConstructType((type as ConstructorType), true);
-            case TypeKinds.STRINGIFIED_UNKNOWN: return escapeHTML((type as Literal).name);
-            default: return "unknown";
+        case TypeKinds.REFERENCE: return this.generateRef(type as Reference, other);
+        case TypeKinds.ARROW_FUNCTION: return this.generateArrowFunction(type as ArrowFunction);
+        case TypeKinds.UNION: return this.structure.components.typeUnion(type);
+        case TypeKinds.INTERSECTION: return this.structure.components.typeIntersection(type);
+        case TypeKinds.TUPLE: return this.structure.components.typeTuple(type);
+        case TypeKinds.ARRAY_TYPE: return this.structure.components.typeArray(type);
+        case TypeKinds.MAPPED_TYPE: return this.structure.components.typeMapped(type);
+        case TypeKinds.CONDITIONAL_TYPE: return this.structure.components.typeConditional(type);
+        case TypeKinds.TYPE_PREDICATE: return this.structure.components.typePredicate(type);
+        case TypeKinds.INDEX_ACCESS: return this.structure.components.typeIndexAccess(type);
+        case TypeKinds.TEMPLATE_LITERAL: return this.structure.components.typeTemplateLiteral(type);
+        case TypeKinds.INFER_TYPE: return this.structure.components.typeOperator({ name: "infer", type: (type as InferType).typeParameter });
+        case TypeKinds.UNIQUE_OPERATOR: return this.structure.components.typeOperator({ name: "unique", type: (type as TypeOperator).type });
+        case TypeKinds.KEYOF_OPERATOR: return this.structure.components.typeOperator({ name: "keyof", type: (type as TypeOperator).type });
+        case TypeKinds.READONLY_OPERATOR: return this.structure.components.typeOperator({ name: "readonly", type: (type as TypeOperator).type });
+        case TypeKinds.TYPEOF_OPERATOR: return this.structure.components.typeOperator({ name: "typeof", type: (type as TypeOperator).type });
+        case TypeKinds.STRING:
+        case TypeKinds.NUMBER:
+        case TypeKinds.VOID:
+        case TypeKinds.TRUE:
+        case TypeKinds.FALSE:
+        case TypeKinds.BOOLEAN:
+        case TypeKinds.UNDEFINED:
+        case TypeKinds.NULL:
+        case TypeKinds.UNKNOWN:
+        case TypeKinds.STRING_LITERAL:
+        case TypeKinds.NUMBER_LITERAL:
+        case TypeKinds.SYMBOL:
+        case TypeKinds.NEVER:
+        case TypeKinds.BIGINT:
+        case TypeKinds.OBJECT:
+        case TypeKinds.THIS:
+        case TypeKinds.REGEX_LITERAL:
+        case TypeKinds.ANY: return this.structure.components.typePrimitive(type);
+        case TypeKinds.OBJECT_LITERAL: return this.structure.components.typeObject(type);
+        case TypeKinds.CONSTRUCTOR_TYPE: return this.generateConstructType((type as ConstructorType), true);
+        case TypeKinds.STRINGIFIED_UNKNOWN: return escapeHTML((type as Literal).name);
+        default: return "unknown";
         }
     }
 
@@ -435,6 +436,7 @@ export class Generator {
         return `${path.join("../".repeat(this.depth), p)}${hash ? `#.${hash}` : ""}`;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     sortArr(arr: Array<any>, name: "rawName" | "name") : void {
         if (this.settings.sort === "alphabetical") arr.sort((a, b) => (a[name] as string).localeCompare(b[name]!));
     }
