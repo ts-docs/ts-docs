@@ -48,6 +48,7 @@ export interface IndexData {
     projects: Array<Project>,
     pages: Array<PageCategory>,
     headings: Array<Heading>,
+    pageName?: string,
     exports: ModuleExports
 }
 
@@ -119,6 +120,7 @@ export class Generator {
                     this.generatePage(pagesPath, category.name, page.name, markdown, {
                         type: PageTypes.PAGE,
                         pages: this.settings.customPages,
+                        pageName: page.name,
                         headings
                     });
                     this.depth -= 2;
