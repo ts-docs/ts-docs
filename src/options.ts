@@ -105,7 +105,7 @@ export function initOptions(extractorList: Array<Project>) : TsDocsOptions {
     if (typeof options.landingPage === "string") {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const module = extractorList.find(ext => ext.module.name === options.landingPage);
-        if (!module) throw new Error(`"${options.landingPage}" is not in the entry points.`)
+        if (!module) throw new Error(`"${options.landingPage}" is not in the entry points.`);
         options.landingPage = module;
         if (!options.name) options.name = module.module.name;
     }
