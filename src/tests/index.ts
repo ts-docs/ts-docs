@@ -10,6 +10,7 @@ export interface TestFnRange {
     start: number,
     end: number,
     fnName?: string,
+    path: string,
     pos: ts.LineAndCharacter
 }
 
@@ -93,9 +94,9 @@ export class TestCollector {
 `;
             const methodRanges: Array<TestFnRange> = [];
             for (const method of tests) {
-                const loc: TestFnRange = { start: finalScript.length, fnName: method.functionName, end: 0, pos: cl.loc.pos };
+                const loc: TestFnRange = { start: finalScript.length, fnName: method.functionName, end: 0, pos: cl.loc.pos, path: filename };
                 finalScript += `try {
-    ${method.testCode}
+    ${method.testCode}\n
                 } catch(err) {
                     console.error(formatErrorObj(err, {
                         filename: "${filename}",
@@ -126,11 +127,11 @@ export class TestCollector {
             const ranges: Array<TestFnRange> = [];
             for (const [fnDecl, codes] of tests) {
                 const filename = `${dir}/${fnDecl.loc.filename!.replace(".ts", ".js")}`;
-                const loc: TestFnRange = { start: finalScript.length, fnName: fnDecl.name, end: 0, pos: fnDecl.loc.pos };
+                const loc: TestFnRange = { start: finalScript.length, fnName: fnDecl.name, end: 0, pos: fnDecl.loc.pos, path: filename };
                 if (fnDecl.name !== "default") finalScript += `const { ${fnDecl.name} } = require("${filename}");`;
                 for (const code of codes) {
                     finalScript += `try {
-    ${code}
+    ${code}\n
                     } catch(err) {
                         console.error(formatErrorObj(err, {
                             filename: "${filename}",

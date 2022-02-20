@@ -32,17 +32,19 @@ if (diagnostics && diagnostics.length) {
         const ends = ts.getLineAndCharacterOfPosition(dia.file!, dia.length || 0);
         const start = dia.start || Infinity;
         const inFn = data.ranges.find(r => start > r.start && start < r.end);
-        console.error(formatError({
-            line: line,
-            col: character,
-            endCol: ends.character,
-            endLine: ends.line,
-            content: data.code,
-            filename: data.dir,
-            name: "TypescriptError",
-            message: dia.messageText.toString(),
-            additionalMessage: inFn ? `${red("in")} ${cyan(`${data.className}${inFn.fnName ? `.${inFn.fnName}` : ""}`)} (${inFn.pos.line}:${inFn.pos.character})` : undefined
-        }));
+        if (inFn) {
+            console.error(formatError({
+                line: line,
+                col: character,
+                endCol: ends.character,
+                endLine: ends.line,
+                content: data.code,
+                filename: inFn.path,
+                name: "TypescriptError",
+                message: dia.messageText.toString(),
+                additionalMessage: `${red("in")} ${cyan(`${data.className}${inFn.fnName ? `.${inFn.fnName}` : ""}`)} (${inFn.pos.line}:${inFn.pos.character})`
+            }));
+        }
     }
 }
 else eval(outputText);
