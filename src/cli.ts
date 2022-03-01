@@ -22,14 +22,15 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
     if (args.help) return showHelp();
     if (args.init) return initConfig();
 
-    addOptionSource({...args, entryPoints: args._});
-
     const tsconfig = findTSConfig(process.cwd());
 
     if (tsconfig && tsconfig.tsdocsOptions) addOptionSource(tsconfig.tsdocsOptions);
 
     const tsDocsJs = findTsDocsJs(process.cwd());
     if (tsDocsJs) addOptionSource(tsDocsJs);
+
+    if (args._.length) addOptionSource({ ...args, entryPoints: args._ });
+    else addOptionSource({ ...args });
 
     if (!options.entryPoints.length) throw new Error("Expected at least one entry point.");
 

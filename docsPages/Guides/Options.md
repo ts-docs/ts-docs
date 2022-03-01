@@ -4,13 +4,17 @@ order: 1
 
 # Options
 
-You can provide options for ts-docs in three ways:
+You can provide options in three ways:
 
 - The CLI
 - `tsdocsOptions` property in your typescript configuration file.
 - `tsdocs.config.js` file, which must export an object with the options. You can generate this file with the `--init` flag.
 
-ts-docs first gets all CLI arguments, then combines them with the options from the typescript configuration, and finally with the `tsdocs.config.js` file. 
+ts-docs combines all options in the following order:
+
+- First, ts-docs attempts to find the options inside the `tsconfig.json` file.
+- Then, ts-docs combines (overwrites if option is already specified, otherwise it adds it) the previous options with the options found inside the `tsdocs.config.js` file.
+- Finally, CLI options get combined last.
 
 ``` --CLI
 ts-docs ./entry/point.js --out ./docs

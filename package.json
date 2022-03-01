@@ -37,7 +37,7 @@
   "bugs": {
     "url": "https://github.com/ts-docs/ts-docs/issues"
   },
-  "homepage": "https://github.com/ts-docs/ts-docs#readme",
+  "homepage": "https://tsdocs.xyz/",
   "dependencies": {
     "@ts-docs/extractor": "^3.0.10",
     "front-matter": "^4.0.2",

@@ -371,7 +371,7 @@ export class Generator {
                     if (exclude && exclude[tag.name]) continue;
                     const res = this.structure.components.jsdocTags({
                         tagName: tag.name,
-                        comment: tag.comment && (BlockTags[tag.name] ? markedParse(tag.comment, { fnName }) : markedParseInline(tag.comment)),
+                        comment: tag.comment && (BlockTags[tag.name] ? markedParse(tag.comment, { fnName, gfm: true }) : markedParseInline(tag.comment)),
                         arg: tag.arg,
                         type: tag.type
                     }) as { block?: string, inline?: string };
@@ -385,12 +385,12 @@ export class Generator {
 
     generateMarkdownWithHeaders(content: string): [string, Array<Heading>] {
         const headings: Array<Heading> = [];
-        const markdown = markedParse(content, { headings });
+        const markdown = markedParse(content, { headings, gfm: true });
         return [markdown, headings];
     }
 
     generateMarkdown(content: string) : string {
-        return markedParse(content);
+        return markedParse(content, { gfm: true });
     }
 
     generateExports(module: Module): ModuleExports {
