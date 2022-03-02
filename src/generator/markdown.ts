@@ -1,9 +1,10 @@
 
-import { TypeKinds, DeclarationTypes } from "@ts-docs/extractor";
+import { TypeKinds, DeclarationTypes, ReferenceType } from "@ts-docs/extractor";
 import highlight from "highlight.js";
 import { use } from "marked";
 import sanitizer from "sanitize-html";
 import { Generator } from ".";
+import { OtherRefData } from "..";
 
 export interface Heading {
     name: string,
@@ -36,7 +37,7 @@ declare module "marked" {
 
 }
 
-function genReference(str: string, otherData: Record<string, unknown>, generator: Generator) : string {
+function genReference(str: string, otherData: OtherRefData, generator: Generator) : string {
     let type;
     for (const mod of generator.projects) {
         type = generator.extractor.refs.findByNameWithModule(str, mod);
@@ -46,6 +47,89 @@ function genReference(str: string, otherData: Record<string, unknown>, generator
     return generator.generateRef({kind: TypeKinds.REFERENCE, type }, otherData);
 }
 
+function parseRefString(name: string, generator: Generator, checkCurrent?: boolean) : string|[name: string, otherData: OtherRefData, ref?: ReferenceType] {
+    const otherData: OtherRefData = {};
+    let foundRef;
+    let refType: string|undefined;
+    // Detect aliases first
+    if (name.includes(" as ")) {
+        const [newName, alias] = name.split(" as ");
+        otherData.displayName = alias;
+        name = newName;
+    }
+    // Then property / method
+    if (name.includes(".")) {
+        const [thingName, hash] = name.split(".");
+        otherData.hash = hash;
+        name = thingName;
+    } else if (name.includes("#")) {
+        const [thingName, hash] = name.split("#");
+        otherData.hash = hash;
+        name = thingName;
+    }
+    // Lastly, type enforcement
+    if (name.includes(":")) {
+        const [realName, type] = name.split(":");
+        refType = type;
+        name = realName;
+    }
+    // If the name is a path, resolve it
+    if (name.includes("/")) {
+        const parts = name.split("/");
+        const firstEl = parts.shift();
+        let mod = generator.projects.find(ex => ex.module.name === firstEl)?.module || generator.projects[0].module;
+        if (!mod) return [name, otherData];
+        const lastElement = parts.pop();
+        for (const part of parts) {
+            const tempmod = mod.modules.get(part);
+            if (!tempmod)  return [name, otherData];
+            mod = tempmod;
+        }
+        if (mod && lastElement) {
+            name = lastElement;
+            if (refType) foundRef = generator.extractor.refs.findOfKindInModule(name, mod, refType.toLowerCase());
+            else foundRef = generator.extractor.refs.findByNameWithModule(name, generator.currentProject, mod);
+        }
+    }
+    if (!foundRef) {
+        // If checkCurrent is enabled, we attempt to 
+        if (checkCurrent) {
+            const decl = generator.currentItem;
+            if (decl) {
+                switch (decl.kind) {
+                case DeclarationTypes.CLASS:
+                    if (decl.methods.some(m => m.rawName === name)) return generator.structure.components.typeReference({local: {name, isMethod: true}, other: otherData});
+                    else if (decl.properties.some(p => p.prop && p.prop.rawName === name)) return generator.structure.components.typeReference({local: {name}, other: otherData});
+                    break;
+                case DeclarationTypes.INTERFACE: 
+                    if (decl.properties.some(p => p.prop && p.prop.rawName === name)) return generator.structure.components.typeReference({local: {name}, other: otherData});
+                    break;
+                case DeclarationTypes.ENUM:
+                    if (decl.members.some(m => m.name === name)) return generator.structure.components.typeReference({local: {name}, other: otherData});
+                }
+            }
+        }
+        if (refType) {
+            for (const mod of generator.projects) {
+                foundRef = mod.forEachModule(undefined, (module) => generator.extractor.refs.findOfKindInModule(name, module, refType as string));
+                if (foundRef) break;
+            }
+        } else {
+            for (const mod of generator.projects) {
+                foundRef = generator.extractor.refs.findByNameWithModule(name, mod);
+                if (foundRef) break;
+            }
+        }
+    }
+    return [name, otherData, foundRef];
+}
+
+function stringToRef(refName: string, generator: Generator) : string {
+    const results = parseRefString(refName, generator, true);
+    if (typeof results === "string") return results;
+    if (!results[2]) return results[0];
+    return generator.generateRef({kind: TypeKinds.REFERENCE, type: results[2]}, results[1]);
+}
 /**
  * Adds the following custom marked extensions:
  * 
@@ -105,54 +189,9 @@ export function initMarkdown(generator: Generator) : void {
                             text: match[1].trim(),
                         };
                     }
-                    return undefined;
+                    return;
                 },
-                renderer: (token) => {
-                    const otherData: Record<string, unknown> = {};
-                    let name = token.text;
-                    if (name.includes(" as ")) {
-                        const [newName, alias] = name.split(" as ");
-                        otherData.displayName = alias;
-                        name = newName;
-                    }
-                    if (name.includes("/")) {
-                        const parts = name.split("/");
-                        const firstEl = parts.shift();
-                        let mod = generator.projects.find(ex => ex.module.name === firstEl)?.module || generator.projects[0].module;
-                        if (!mod) return name;
-                        const lastElement = parts.pop();
-                        for (const part of parts) {
-                            const tempmod = mod.modules.get(part);
-                            if (!tempmod) return name;
-                            mod = tempmod;
-                        }
-                        if (mod && lastElement) name = lastElement;
-                    }
-                    if (name.includes(".")) {
-                        const [thingName, hash] = name.split(".");
-                        otherData.hash = hash;
-                        name = thingName;
-                    } else if (name.includes("#")) {
-                        const [thingName, hash] = name.split("#");
-                        otherData.hash = hash;
-                        name = thingName;
-                    }
-                    const decl = generator.currentItem;
-                    if (decl) {
-                        switch (decl.kind) {
-                        case DeclarationTypes.CLASS:
-                            if (decl.methods.some(m => m.rawName === name)) return generator.structure.components.typeReference({local: {name, isMethod: true}, other: otherData});
-                            else if (decl.properties.some(p => p.prop && p.prop.rawName === name)) return generator.structure.components.typeReference({local: {name}, other: otherData});
-                            break;
-                        case DeclarationTypes.INTERFACE: 
-                            if (decl.properties.some(p => p.prop && p.prop.rawName === name)) return generator.structure.components.typeReference({local: {name}, other: otherData});
-                            break;
-                        case DeclarationTypes.ENUM:
-                            if (decl.members.some(m => m.name === name)) return generator.structure.components.typeReference({local: {name}, other: otherData});
-                        }
-                    }
-                    return genReference(name, otherData, generator);
-                }
+                renderer: (token) => stringToRef(token.text, generator)
             },
             {
                 name: "ref-link",
@@ -167,11 +206,9 @@ export function initMarkdown(generator: Generator) : void {
                             text: match[3].trim(),
                         };
                     }
-                    return undefined;
+                    return;
                 },
-                renderer: (token) => {
-                    return genReference(token.text, {}, generator);
-                }
+                renderer: (token) => stringToRef(token.text, generator)
             },
             {
                 name: "warning",

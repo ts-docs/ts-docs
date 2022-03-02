@@ -33,28 +33,9 @@ export type PackedSearchData = [
 
 /**
      * Packs the data in a convinient, small format. Unlike the default strucutre provided by ts-extractor, this packed structure only registers the "global"
-     * modules and includes all of the sub-module's things (classes, interfaces, etc.).
+     * modules and includes all of the sub-module's things (classes, interfaces, etc.). 
      * 
-     * Returns an array which looks something like this:    
-     * `[globalModules, allModuleNames];`
-     * 
-     * globalModules is an [[Array]] of module objects, which look like this:   
-     * `[nameIndex, classes, interfaces, enums, types, functions, constants]`
-     * 
-     * a **class**: `[name, properties, methods, path, comment?]`  
-     * a **method**: `[name, flags, comment?]`      
-     * a **property**: `[name, flags, comment?]`       
-     * an **inteface**: `[name, properties, path, comment?]`        
-     * an **enum**: `[name, members, path, comment?]`       
-     * a **type alias**: `[name, path]`       
-     * a **function**: `[name, path]`     
-     * a **constant**: `[name, path]`     
-     *  
-     * 
-     * `flags` is a bitfield containing [[ClassMemberFlags]]    
-     * `path` is an array of numbers, which are the indexes of the module names inside the `allModuleNames` array. Since module names repeat very often, they're all placed in one array (`allModuleNames`) to save space.
-     * 
-     * Also check out [[PackedSearchData]]
+     * Writes [[PackedSearchData]] to the provided path.
      * 
 */
     

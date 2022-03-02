@@ -121,11 +121,19 @@ You can also follow up a normal reference or a reference by path with `as ...` t
 
 `[[ts-docs as the documentation generator]]` becomes [[ts-docs as the documentation generator]]
 
+### By type
+
+Let's say you have a class with the name `ABC`, and an interface with the same name, and both of the declarations are inside the same module. If you were to search for it either by name or by path, always the item declared first will show. To prevent this, you can prefix the name with `:<type>` to only search for items of the specified type and name. 
+
+`[[Generator:class]]` becomes [[Generator:class]]
+
+Available types are: `class`, `interface`, `enum`, `function`, `constant`, `type`, `module`.
+
 ## Supported JSDoc tags
 
-### `@link`
+### `@link` / `@linkplain` / `@linkcode`
 
-ts-docs supports the `@link` / `@linkplain` JSDoc tag, except it doesn't support properties / methods, name aliases and paths. It's not recommended to use `{@link}` in custom pages and documentation comments, it exists only for compatibility reasons.
+Work exactly the same as using the square bracket syntax `[[]]`. Currently, `@linkplain` and `@linkcode` do **not** change the style of the reference.
 
 ### `@param`
 
@@ -207,4 +215,18 @@ function example() {
 
 ### `@beta`
 
-Adds a `beta` tag to the item that has the tag.
+Adds a `beta` tag next to the item that has the tag.
+
+### `@alpha`
+
+Adds an `alpha` tag next to the item.
+
+### `@remarks`
+
+### `@throws`
+
+Use this if your method / function has the potential to throw, and provide examples of how and when.
+
+### `@experimental`
+
+Adds an `experimental` tag next to the item.
