@@ -10,6 +10,7 @@ import { Heading, highlightAndLink, initMarkdown } from "./markdown";
 import { packSearchData } from "./searchData";
 import { FileExports } from "@ts-docs/extractor/dist/extractor/ExportHandler";
 import { TestCollector } from "../tests";
+import { getReadme } from "@ts-docs/extractor/dist/utils";
 
 export const enum PageTypes {
     INDEX,
@@ -212,6 +213,7 @@ export class Generator {
         createFolder(folderName);
         this.currentModule = module;
         this.generateThingsInsideModule(folderName, module);
+        if (!readme) readme = getReadme(path.join(this.currentProject.root, this.currentProject.baseDir, ...module.path));
         this.generatePage(p, `m.${module.name}`, "index", this.structure.components.module({
             module,
             readme: readme && markedParse(readme),
