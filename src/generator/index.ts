@@ -364,7 +364,7 @@ export class Generator {
 
     generateComment(comments?: Array<JSDocData>, includeTags = false, exclude?: Record<string, boolean>, fnName?: string): [block: string, inline: string] | undefined {
         if (!comments) return undefined;
-        let text = markedParse(comments.map(c => c.comment || "").join("\n"), { fnName });
+        let text = markedParse(comments.map(c => c.comment || "").join("\n"), { fnName, gfm: true });
         let inline = "";
         if (includeTags) {
             for (const comment of comments) {
@@ -384,6 +384,11 @@ export class Generator {
         }
         return [text, inline];
     }
+
+    generateInlineComment(comments?: Array<JSDocData>) : string | undefined {
+        if (!comments) return undefined;
+        return markedParseInline(comments.map(c => c.comment || "").join("\n"), { gfm: true });
+    } 
 
     generateMarkdownWithHeaders(content: string): [string, Array<Heading>] {
         const headings: Array<Heading> = [];
