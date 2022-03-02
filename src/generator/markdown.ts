@@ -1,5 +1,5 @@
 
-import { TypeKinds } from "@ts-docs/extractor";
+import { TypeKinds, DeclarationTypes } from "@ts-docs/extractor";
 import highlight from "highlight.js";
 import { use } from "marked";
 import sanitizer from "sanitize-html";
@@ -126,24 +126,30 @@ export function initMarkdown(generator: Generator) : void {
                             if (!tempmod) return name;
                             mod = tempmod;
                         }
-                        if (mod && lastElement) {
-                            let thingName: string = lastElement;
-                            if (lastElement.includes(".")) {
-                                const [newThingName, hash] = name.split(".");
-                                thingName = newThingName;
-                                otherData.hash = hash;
-                            }
-                            return genReference(thingName, otherData, generator);
-                        }
+                        if (mod && lastElement) name = lastElement;
                     }
                     if (name.includes(".")) {
                         const [thingName, hash] = name.split(".");
                         otherData.hash = hash;
-                        return genReference(thingName, otherData, generator);
+                        name = thingName;
                     } else if (name.includes("#")) {
                         const [thingName, hash] = name.split("#");
                         otherData.hash = hash;
-                        return genReference(thingName, otherData, generator);
+                        name = thingName;
+                    }
+                    const decl = generator.currentItem;
+                    if (decl) {
+                        switch (decl.kind) {
+                        case DeclarationTypes.CLASS:
+                            if (decl.methods.some(m => m.rawName === name)) return generator.structure.components.typeReference({local: {name, isMethod: true}, other: otherData});
+                            else if (decl.properties.some(p => p.prop && p.prop.rawName === name)) return generator.structure.components.typeReference({local: {name}, other: otherData});
+                            break;
+                        case DeclarationTypes.INTERFACE: 
+                            if (decl.properties.some(p => p.prop && p.prop.rawName === name)) return generator.structure.components.typeReference({local: {name}, other: otherData});
+                            break;
+                        case DeclarationTypes.ENUM:
+                            if (decl.members.some(m => m.name === name)) return generator.structure.components.typeReference({local: {name}, other: otherData});
+                        }
                     }
                     return genReference(name, otherData, generator);
                 }

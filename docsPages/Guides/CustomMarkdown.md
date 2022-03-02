@@ -102,6 +102,11 @@ You can reference a method by adding a dot (`.`), the method's name, and then `(
 
 `[[Generator.generate()]]` becomes [[Generator.generate()]]
 
+If the method or property is inside the class you're currently writing documentation for, you can just provide their names, and ts-docs will figure out
+if it's a property or a method, and properly link it:
+
+`[[generate]]` becomes [[Generator.generate()]]
+
 ### By path
 
 ts-docs searches each module in order to find the name of the references, this could lead to inaccurate links, so you always can just provide the entire path to the item.
