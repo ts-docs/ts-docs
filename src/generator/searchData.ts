@@ -41,10 +41,10 @@ export type PackedSearchData = [
     
 export function packSearchData(extractors: Array<Project>, path: string) : void {
     const res = [[], []] as PackedSearchData;
-    const notSingleExtractor = extractors.length !== 1;
     for (const extractor of extractors) {
         const modObj = [0,[],[],[],[],[],[]] as PackedSearchData[0][0]; 
-        extractor.forEachModule(extractor.module, (mod, path) => {
+        extractor.forEachModule((mod) => {
+            const path = mod.path;
             modObj[0] = res[1].push(mod.name) - 1;
             const numPath = path.map(pathName => res[1].indexOf(pathName));
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -55,7 +55,7 @@ export function packSearchData(extractors: Array<Project>, path: string) : void 
             for (const typ of mod.types) modObj[4].push([`${typ.name}${typ.id ? `_${typ.id}`:""}`, numPath]);
             for (const fn of mod.functions) modObj[5].push([`${fn.name}${fn.id ? `_${fn.id}`:""}`, numPath]);
             for (const constant of mod.constants) modObj[6].push([`${constant.name}${constant.id ? `_${constant.id}`:""}`, numPath]);
-        }, notSingleExtractor ? [extractor.module.name] : []);
+        });
         res[0].push(modObj);
     }
     fs.writeFileSync(path, JSON.stringify(res));

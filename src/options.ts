@@ -4,6 +4,7 @@ import FrontMatter from "front-matter";
 import fs from "fs";
 import path from "path";
 import { BranchSetting } from "./branches";
+import { emitError } from "./utils";
 
 export interface LandingPage {
     repository?: string,
@@ -85,27 +86,31 @@ export const options: TsDocsOptions = {
 };
 
 export function addOptionSource(source: OptionSource) : void {
+    if (source.entryPoints) {
+        if (!Array.isArray(source.entryPoints)) emitError`Entry files must be an array of entry points.`;
+        if (source.entryPoints.some(entry => typeof entry !== "string")) return emitError`All entry points must be strings.`;
+    }
+    if (source.landingPage && typeof source.landingPage !== "string") emitError`Landing page must be a string.`;
+    if (source.out && typeof source.out !== "string") return emitError`Output directory must be a valid string.`;
+    if (source.structure && typeof source.structure !== "string") return emitError`Documentation structure must be a valid string.`;
+    if (source.name && typeof source.name !== "string") return emitError`Project name must be a valid string.`;
+    if (source.customPages && typeof source.customPages !== "string") return emitError`Custom pages must be path to a directory.`;
+    if (source.assets && typeof source.assets !== "string") return emitError`Path to assets must be a string.`;
+    if (source.logo && typeof source.logo !== "string") return emitError`Path to logo must be a string.`;
+    if (source.externals && !Array.isArray(source.externals)) return emitError`External Libraries must be an array.`;
+    if (source.passthroughModules && !Array.isArray(source.passthroughModules)) return emitError`Passthrough Modules must be an array.`;
+    if (source.branches && !Array.isArray(source.branches)) return emitError`Branches must be an array.`;
+    if (source.json && typeof source.json !== "string") return emitError`JSON output path must be a string.`;
+    if (source.sort && (source.sort !== "alphabetical" && source.sort !== "source")) return emitError`Sort must be either 'alphabetical' or 'source'.`;
+    if (source.test && typeof source.test !== "string") return emitError`Test must be a string.`;
     Object.assign(options, source);
-    if (source.entryPoints && !Array.isArray(source.entryPoints)) throw new Error("Entry files must be an array of entry points.");
-    if (source.out && typeof source.out !== "string") throw new Error("Output directory must be a valid string.");
-    if (source.structure && typeof source.structure !== "string") throw new Error("Documentation structure must be a valid string.");
-    if (source.name && typeof source.name !== "string") throw new Error("Project name must be a valid string.");
-    if (source.customPages && typeof source.customPages !== "string") throw new Error("Custom pages must be path to a directory.");
-    if (source.assets && typeof source.assets !== "string") throw new Error("Path to assets must be a string.");
-    if (source.logo && typeof source.logo !== "string") throw new Error("Path to logo must be a string.");
-    if (source.externals && !Array.isArray(source.externals)) throw new Error("External Libraries must be an array.");
-    if (source.passthroughModules && !Array.isArray(source.passthroughModules)) throw new Error("Passthrough Modules must be an array.");
-    if (source.branches && !Array.isArray(source.branches)) throw new Error("Branches must be an array.");
-    if (source.json && typeof source.json !== "string") throw new Error("JSON output path must be a string.");
-    if (source.sort && (source.sort !== "alphabetical" && source.sort !== "source")) throw new Error("Sort must be either 'alphabetical' or 'source'.");
-    if (source.test && typeof source.test !== "string") throw new Error("Test must be a string.");
 } 
 
 export function initOptions(extractorList: Array<Project>) : TsDocsOptions {
     if (typeof options.landingPage === "string") {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const module = extractorList.find(ext => ext.module.name === options.landingPage);
-        if (!module) throw new Error(`"${options.landingPage}" is not in the entry points.`);
+        if (!module) throw emitError`"${options.landingPage}" is not in the entry points.`;
         options.landingPage = module;
         if (!options.name) options.name = module.module.name;
     }

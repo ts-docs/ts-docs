@@ -131,23 +131,17 @@ Available types are: `class`, `interface`, `enum`, `function`, `constant`, `type
 
 ## Supported JSDoc tags
 
-### `@link` / `@linkplain` / `@linkcode`
+### `@alpha`
 
-Work exactly the same as using the square bracket syntax `[[]]`. Currently, `@linkplain` and `@linkcode` do **not** change the style of the reference.
+Adds an `alpha` tag next to the item.
 
-### `@param`
+### `@beta`
 
-Documents a method / function parameter, the parameter type WILL NOT be used by ts-docs. 
+Adds a `beta` tag next to the item that has the tag.
 
-```ts
-/**
- * @param a Parameter description... 
- *
-*/
-function doSomething(a: string) : void {
-    // Code...
-}
-```
+### `@deprecated`
+
+Any property or method with that tag will have a red "deprecated" tag, letting readers know that the method shouldn't be used.
 
 ### `@example`
 
@@ -172,13 +166,9 @@ class Apple {
 }
 ```
 
-### `@deprecated`
+### `@experimental`
 
-Any property or method with that tag will have a red "deprecated" tag, letting readers know that the method shouldn't be used.
-
-### `@returns`
-
-Documents information about the return value of a method. You can provide a type here, in case ts-docs isn't able to find it. 
+Adds an `experimental` tag next to the item.
 
 ### `@internal`
 
@@ -198,6 +188,42 @@ Omit an item from the documentation. This tag works for the following items:
 
 You also have to enable the `stripInternal` option.
 
+### `@inheritDoc`
+
+Automatically generates documentation by copying it from the specified item. It copies the following things:
+
+- The item's summary
+- The item's `@remark`s
+- The item's `@param`s
+- The item's `@return`
+
+
+### `@param`
+
+Documents a method / function parameter, the parameter type WILL NOT be used by ts-docs. 
+
+```ts
+/**
+ * @param a Parameter description... 
+ *
+*/
+function doSomething(a: string) : void {
+    // Code...
+}
+```
+
+### `@link` / `@linkplain` / `@linkcode`
+
+Work exactly the same as using the square bracket syntax `[[]]`. Currently, `@linkplain` and `@linkcode` do **not** change the style of the reference.
+
+### `@returns`
+
+Documents information about the return value of a method. You can provide a type here, in case ts-docs isn't able to find it. 
+
+### `@throws`
+
+Use this if your method / function has the potential to throw, and provide examples of how and when.
+
 ### `@since`
 
 Adds a `since` tag to the item that has the tag, along with a version name.
@@ -212,21 +238,3 @@ function example() {
     //...
 } 
 ```
-
-### `@beta`
-
-Adds a `beta` tag next to the item that has the tag.
-
-### `@alpha`
-
-Adds an `alpha` tag next to the item.
-
-### `@remarks`
-
-### `@throws`
-
-Use this if your method / function has the potential to throw, and provide examples of how and when.
-
-### `@experimental`
-
-Adds an `experimental` tag next to the item.

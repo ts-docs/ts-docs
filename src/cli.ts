@@ -3,7 +3,7 @@
 import parseArgs from "minimist";
 import { TypescriptExtractor } from "@ts-docs/extractor";
 import { Generator } from "./generator";
-import { findTSConfig, findTsDocsJs, handleDefaultAPI, handleNodeAPI } from "./utils";
+import { emitError, findTSConfig, findTsDocsJs, handleDefaultAPI, handleNodeAPI } from "./utils";
 import { addOptionSource, initOptions, options, OptionSource, showHelp, initConfig } from "./options";
 import { renderBranches } from "./branches";
 import fs from "fs";
@@ -32,7 +32,7 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
     if (args._.length) addOptionSource({ ...args, entryPoints: args._ });
     else addOptionSource({ ...args });
 
-    if (!options.entryPoints.length) throw new Error("Expected at least one entry point.");
+    if (!options.entryPoints.length) return emitError`Expected at least one entry point.`;
 
     const fileCache = new FileCache(options);
 

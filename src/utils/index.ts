@@ -5,6 +5,7 @@ import path from "path";
 import ts from "typescript";
 import fetch from "got";
 import { OptionSource } from "..";
+import { gray, red, yellow } from "./formatter";
 
 /**
  * Creates a file with the name `file`, which is located inside `folder`, which gets created if it doesn't
@@ -204,4 +205,22 @@ export function getComment(node: { jsDoc?: Array<JSDocData> }, limit = 128) : st
         return comment;
     }
     return;
+}
+
+export function emitColoredMessage(pre: string, text: TemplateStringsArray, ...exps: Array<string>) : void {
+    let i = 0;
+    let final = "";
+    for (const str of text) {
+        final += `${str}${exps[i] ? gray(exps[i++]) : ""}`;
+    }
+    console.error(`${pre}: ${final}`);
+}
+
+export function emitWarning(text: TemplateStringsArray, ...exps: Array<string>) : void {
+    emitColoredMessage(yellow("[Warning]"), text, ...exps);
+}
+
+export function emitError(text: TemplateStringsArray, ...exps: Array<string>) : void {
+    emitColoredMessage(red("[Error]"), text, ...exps);
+    process.exit();
 }

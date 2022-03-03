@@ -4,7 +4,7 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import { execSync } from "child_process";
-import { handleDefaultAPI, handleNodeAPI } from "../utils";
+import { emitWarning, handleDefaultAPI, handleNodeAPI } from "../utils";
 import { TsDocsOptions } from "..";
 
 export interface BranchOption {
@@ -56,8 +56,14 @@ export function renderBranches(
                 continue;
             }
             const project = branch.project ? projects.find(pr => pr.module.name === branch.project) : projects[0];
-            if (!project) throw new Error(`Couldn't find project with name ${branch.project}`);
-            if (!project.repository) throw new Error(`Couldn't find repository for project ${branch.project}`);
+            if (!project) {
+                emitWarning`Couldn't find project with name ${branch.project || "???"}`;
+                break;
+            }
+            if (!project.repository) {
+                emitWarning`Couldn't find repository for project ${branch.project || "???"}`;
+                break;
+            }
             const baseLink = project.repository.includes("/tree") ? project.repository.slice(0, project.repository.indexOf("/tree")) : project.repository;
             execSync(`git clone -b ${branch.name} ${baseLink}`, { cwd: branchPath, stdio: "ignore" });
             entryPoints.push(path.join(branchPath, baseLink.split("/").pop() as string, branch.entryPoint).replace(/\\/g, "/"));
