@@ -115,11 +115,11 @@ ts-docs searches each module in order to find the name of the references, this c
 
 ### Name aliases
 
-You can also follow up a normal reference or a reference by path with `as ...` to change the text that gets displayed.
+You can also follow up a normal reference or a reference by path with `as ...` or `| ...` to change the text that gets displayed.
 
 `[[Generator as TsDocsGenerator]]` becomes [[Generator as TsDocsGenerator]]
 
-`[[ts-docs as the documentation generator]]` becomes [[ts-docs as the documentation generator]]
+`[[ts-docs | the documentation generator]]` becomes [[ts-docs | the documentation generator]]
 
 ### By type
 

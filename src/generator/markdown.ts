@@ -1,5 +1,5 @@
 
-import { TypeKinds, DeclarationTypes, ReferenceType } from "@ts-docs/extractor";
+import { TypeKinds, DeclarationTypes, Module } from "@ts-docs/extractor";
 import highlight from "highlight.js";
 import { use } from "marked";
 import sanitizer from "sanitize-html";
@@ -47,13 +47,22 @@ function genReference(str: string, otherData: OtherRefData, generator: Generator
     return generator.generateRef({kind: TypeKinds.REFERENCE, type }, otherData);
 }
 
-function parseRefString(name: string, generator: Generator, checkCurrent?: boolean) : string|[name: string, otherData: OtherRefData, ref?: ReferenceType] {
+export function parseRefString(name: string, generator: Generator) : {
+    name: string,
+    otherData: OtherRefData,
+    module?: Module,
+    refType?: string
+} {
     const otherData: OtherRefData = {};
-    let foundRef;
+    let module;
     let refType: string|undefined;
     // Detect aliases first
     if (name.includes(" as ")) {
         const [newName, alias] = name.split(" as ");
+        otherData.displayName = alias;
+        name = newName;
+    } else if (name.includes(" | ")) {
+        const [newName, alias] = name.split(" | ");
         otherData.displayName = alias;
         name = newName;
     }
@@ -77,58 +86,56 @@ function parseRefString(name: string, generator: Generator, checkCurrent?: boole
     if (name.includes("/")) {
         const parts = name.split("/");
         const firstEl = parts.shift();
-        let mod = generator.projects.find(ex => ex.module.name === firstEl)?.module || generator.projects[0].module;
-        if (!mod) return [name, otherData];
+        let mod = generator.projects.find(ex => ex.module.name === firstEl)?.module || generator.currentModule;
+        if (!mod) return {name, otherData, refType};
         const lastElement = parts.pop();
+        if (!lastElement) return { name, otherData, refType };
+        name = lastElement;
         for (const part of parts) {
             const tempmod = mod.modules.get(part);
-            if (!tempmod)  return [name, otherData];
+            if (!tempmod) return {name: lastElement, otherData, refType};
             mod = tempmod;
         }
-        if (mod && lastElement) {
-            name = lastElement;
-            if (refType) foundRef = generator.extractor.refs.findOfKindInModule(name, mod, refType.toLowerCase());
-            else foundRef = generator.extractor.refs.findByNameWithModule(name, generator.currentProject, mod);
-        }
+        if (mod) module = mod;
     }
-    if (!foundRef) {
-        // If checkCurrent is enabled, we attempt to 
-        if (checkCurrent) {
-            const decl = generator.currentItem;
-            if (decl) {
-                switch (decl.kind) {
-                case DeclarationTypes.CLASS:
-                    if (decl.methods.some(m => m.rawName === name)) return generator.structure.components.typeReference({local: {name, isMethod: true}, other: otherData});
-                    else if (decl.properties.some(p => p.prop && p.prop.rawName === name)) return generator.structure.components.typeReference({local: {name}, other: otherData});
-                    break;
-                case DeclarationTypes.INTERFACE: 
-                    if (decl.properties.some(p => p.prop && p.prop.rawName === name)) return generator.structure.components.typeReference({local: {name}, other: otherData});
-                    break;
-                case DeclarationTypes.ENUM:
-                    if (decl.members.some(m => m.name === name)) return generator.structure.components.typeReference({local: {name}, other: otherData});
-                }
+    return { name, otherData, module, refType };
+}
+
+export function stringToRef(refName: string, generator: Generator) : string {
+    const { name, otherData, module, refType } = parseRefString(refName, generator);
+    if (!module) {
+        const decl = generator.currentItem;
+        if (decl) {
+            switch (decl.kind) {
+            case DeclarationTypes.CLASS:
+                if (decl.methods.some(m => m.rawName === name)) return generator.structure.components.typeReference({local: {name, isMethod: true}, other: otherData});
+                else if (decl.properties.some(p => p.prop && p.prop.rawName === name)) return generator.structure.components.typeReference({local: {name}, other: otherData});
+                break;
+            case DeclarationTypes.INTERFACE: 
+                if (decl.properties.some(p => p.prop && p.prop.rawName === name)) return generator.structure.components.typeReference({local: {name}, other: otherData});
+                break;
+            case DeclarationTypes.ENUM:
+                if (decl.members.some(m => m.name === name)) return generator.structure.components.typeReference({local: {name}, other: otherData});
             }
         }
         if (refType) {
             for (const mod of generator.projects) {
-                foundRef = mod.forEachModule(undefined, (module) => generator.extractor.refs.findOfKindInModule(name, module, refType as string));
-                if (foundRef) break;
+                const ref = mod.forEachModule(undefined, (module) => generator.extractor.refs.findOfKindInModule(name, module, refType as string));
+                if (ref) return generator.generateRef({kind: TypeKinds.REFERENCE, type: ref }, otherData);
             }
         } else {
             for (const mod of generator.projects) {
-                foundRef = generator.extractor.refs.findByNameWithModule(name, mod);
-                if (foundRef) break;
+                const ref = generator.extractor.refs.findByNameWithModule(name, mod);
+                if (ref) return generator.generateRef({kind: TypeKinds.REFERENCE, type: ref }, otherData);
             }
         }
+    } else {
+        let foundRef;
+        if (refType) foundRef = generator.extractor.refs.findOfKindInModule(name, module, refType);
+        else foundRef = generator.extractor.refs.findByNameWithModule(name, generator.currentProject, module);
+        if (foundRef) return generator.generateRef({kind: TypeKinds.REFERENCE, type: foundRef}, otherData);
     }
-    return [name, otherData, foundRef];
-}
-
-function stringToRef(refName: string, generator: Generator) : string {
-    const results = parseRefString(refName, generator, true);
-    if (typeof results === "string") return results;
-    if (!results[2]) return results[0];
-    return generator.generateRef({kind: TypeKinds.REFERENCE, type: results[2]}, results[1]);
+    return name;
 }
 /**
  * Adds the following custom marked extensions:
