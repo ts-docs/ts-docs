@@ -360,6 +360,7 @@ export function stringToRef(refName: string, generator: Generator) : string {
         const foundRef = refType ? ExtractorUtils.findOfKindInModule(name, module, refType) : ExtractorUtils.findByNameWithModule(name, module);
         if (foundRef) return generator.generateRef({kind: TypeKinds.REFERENCE, type: foundRef}, otherData);
     }
+    emitWarning`Couldn't find type "${name}"`;
     return name;
 }
 
@@ -390,7 +391,10 @@ export function stringToJsDoc(refName: string, generator: Generator) : [string, 
             }
         }
     } else foundDecl = refType ? ExtractorUtils.findDeclOfType(name, module, refType) : ExtractorUtils.findDeclWithModule(name, module);
-    if (!foundDecl) return;
+    if (!foundDecl) {
+        emitWarning`Couldn't find type "${name}"`;
+        return;
+    }
     if (otherData.hash) {
         const member = findMemberInsideDecl(otherData.hash, foundDecl);
         return [`${foundDecl.name}.${otherData.hash}`, member?.jsDoc];

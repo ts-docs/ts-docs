@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { DocumentStructure, setupDocumentStructure } from "../documentStructure";
 import { parse as markedParse, parseInline as markedParseInline } from "marked";
-import { copyFolder, createFile, createFolder, escapeHTML, fetchChangelog } from "../utils";
+import { copyFolder, createFile, createFolder, emitWarning, escapeHTML, fetchChangelog } from "../utils";
 import { Project, TypescriptExtractor, ClassDecl, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, JSDocData, Module, TypeReferenceKinds, InterfaceDecl, EnumDecl, Literal, TypeDecl, FunctionDecl, ConstantDecl, FunctionSignature, ConstructorType, InferType, TypeOperator, Declaration } from "@ts-docs/extractor";
 import path from "path";
 import { LandingPage, PageCategory, TsDocsOptions } from "../options";
@@ -149,6 +149,7 @@ export class Generator {
         } else {
             if (this.settings.changelog && this.landingPage.repository) await this.generateChangelog(this.landingPage.repository, this.projects);
             if (this.landingPage.readme) this.generatePage(this.settings.out, "./", "index", markedParse(this.landingPage.readme), { type: PageTypes.INDEX, projects: this.projects, doNotGivePath: true });
+            else emitWarning`Landing page doesn't have a README.md file.`;
             for (this.currentProject of this.projects) {
                 this.currentGlobalModuleName = this.currentProject.module.name;
                 this.depth++;
