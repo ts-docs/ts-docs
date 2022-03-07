@@ -131,17 +131,13 @@ Available types are: `class`, `interface`, `enum`, `function`, `constant`, `type
 
 ## Supported JSDoc tags
 
-### `@alpha`
+### `@category`
 
-Adds an `alpha` tag next to the item.
+Groups items (class, interface, enum, type alias, function, constant) into categories, which will be shown in the sidebar.
 
-### `@beta`
+### `@alpha`, `@beta`, `@deprecated`, `@experimental`
 
-Adds a `beta` tag next to the item that has the tag.
-
-### `@deprecated`
-
-Any property or method with that tag will have a red "deprecated" tag, letting readers know that the method shouldn't be used.
+Shows the state of the API being documented.
 
 ### `@example`
 
@@ -165,10 +161,6 @@ class Apple {
     }
 }
 ```
-
-### `@experimental`
-
-Adds an `experimental` tag next to the item.
 
 ### `@internal`
 
@@ -197,7 +189,6 @@ Automatically generates documentation by copying it from the specified item. It 
 - The item's `@param`s
 - The item's `@return`
 
-
 ### `@param`
 
 Documents a method / function parameter, the parameter type WILL NOT be used by ts-docs. 
@@ -212,29 +203,14 @@ function doSomething(a: string) : void {
 }
 ```
 
-### `@link` / `@linkplain` / `@linkcode`
+### `@link`, `@linkplain`, `@linkcode`
 
 Work exactly the same as using the square bracket syntax `[[]]`. Currently, `@linkplain` and `@linkcode` do **not** change the style of the reference.
 
-### `@returns`
+### `@returns`, `@throws`
 
-Documents information about the return value of a method. You can provide a type here, in case ts-docs isn't able to find it. 
-
-### `@throws`
-
-Use this if your method / function has the potential to throw, and provide examples of how and when.
+Documents information about the return value of the method, or the ways it can throw an error.
 
 ### `@since`
 
 Adds a `since` tag to the item that has the tag, along with a version name.
-
-Example:
-
-```js
-/**
- * @since 1.0.1 
-*/
-function example() {
-    //...
-} 
-```

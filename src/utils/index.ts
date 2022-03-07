@@ -1,5 +1,5 @@
 
-import { JSDocData, JSDocTag, ExternalReference } from "@ts-docs/extractor";
+import { JSDocData, JSDocTag, ExternalReference, Declaration, DeclarationTypes } from "@ts-docs/extractor";
 import fs from "fs";
 import path from "path";
 import ts from "typescript";
@@ -205,6 +205,16 @@ export function getComment(node: { jsDoc?: Array<JSDocData> }, limit = 128) : st
         return comment;
     }
     return;
+}
+
+export function getTag(node: Declaration, tagName: string) : Array<JSDocTag> {
+    const tags = node.jsDoc?.[0] ? node.jsDoc[0].tags.filter(t => t.name === tagName) : [];
+    if (node.kind === DeclarationTypes.FUNCTION) {
+        for (const sig of node.signatures) {
+            if (sig.jsDoc?.[0]) tags.push(...sig.jsDoc[0].tags.filter(t => t.name === tagName));
+        }
+    }
+    return tags;
 }
 
 export function emitColoredMessage(pre: string, text: TemplateStringsArray, ...exps: Array<string>) : void {
