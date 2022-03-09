@@ -120,6 +120,10 @@ export function handleDefaultAPI() : ExternalReference {
             case "Exclude": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#excludetype-excludedunion" };
             case "Extract": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#extracttype-union" };
             case "NonNullable": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#nonnullabletype" };
+            case "Capitalize": return { link: "https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html#capitalizestringtype" };
+            case "Uncapitalize": return { link: "https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html#uncapitalizestringtype" };
+            case "Uppercase": return { link: "https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html#uppercasestringtype" };
+            case "Lowercase": return { link: "https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html#lowercasestringtype" };
             default: return;         
             }
         }
@@ -229,6 +233,7 @@ export function emitColoredMessage(pre: string, text: TemplateStringsArray, ...e
 export function emitWarning(text: TemplateStringsArray, ...exps: Array<string>) : void {
     emitColoredMessage(yellow("[Warning]"), text, ...exps);
 }
+
 
 export function emitError(text: TemplateStringsArray, ...exps: Array<string>) : void {
     emitColoredMessage(red("[Error]"), text, ...exps);

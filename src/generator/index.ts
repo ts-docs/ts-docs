@@ -137,17 +137,7 @@ export class Generator {
             this.currentProject = pkg;
             this.currentModule = pkg.module;
             this.generateThingsInsideModule(this.settings.out, pkg.module);
-            const exports = this.generateExports(pkg.module);
-            this.generatePage(this.settings.out, "./", "index", this.structure.components.module({
-                module: pkg.module,
-                readme: pkg.readme && markedParse(pkg.readme),
-                exports
-            }), {
-                type: PageTypes.MODULE,
-                module: pkg.module,
-                doNotGivePath: true,
-                exports
-            });
+            this.generateLanding(pkg);
         } else {
             if (this.settings.changelog && this.landingPage.repository) await this.generateChangelog(this.landingPage.repository, this.projects);
             for (this.currentProject of this.projects) {
@@ -159,6 +149,26 @@ export class Generator {
             if (this.landingPage.readme) this.generatePage(this.settings.out, "./", "index", markedParse(this.landingPage.readme), { type: PageTypes.INDEX, projects: this.projects, doNotGivePath: true });
             else emitWarning`Landing page doesn't have a README.md file.`;
         }
+    }
+
+    /**
+     * Generates a landing page with data taken from a project.
+     * 
+     * |> This method changes the [[depth]] to `0`!
+     */
+    generateLanding(project: Project) : void {
+        this.depth = 0;
+        const exports = this.generateExports(project.module);
+        this.generatePage(this.settings.out, "./", "index", this.structure.components.module({
+            module: project.module,
+            readme: project.readme && markedParse(project.readme),
+            exports
+        }), {
+            type: PageTypes.MODULE,
+            module: project.module,
+            doNotGivePath: true,
+            exports
+        });
     }
 
     async generateChangelog(repo: string, projects?: Array<Project>, module?: Module): Promise<void> {
@@ -211,12 +221,16 @@ export class Generator {
     }
 
     generateModule(p: string, module: Module, readme?: string): void {
-        const exports = this.generateExports(module);
         const folderName = `${p}/m.${module.name}`;
         createFolder(folderName);
         this.currentModule = module;
         this.generateThingsInsideModule(folderName, module);
+        this.generateModuleIndex(p, module, readme);
+    }
+
+    generateModuleIndex(p: string, module: Module, readme?: string) : void {
         if (!readme) readme = getReadme(path.join(this.currentProject.root, this.currentProject.baseDir, ...module.path));
+        const exports = this.generateExports(module);
         this.generatePage(p, `m.${module.name}`, "index", this.structure.components.module({
             module,
             readme: readme && markedParse(readme),
@@ -461,7 +475,7 @@ export class Generator {
         for (const tag of getTag(decl, "category")) {
             if (!tag.comment) continue;
             if (this.categories[tag.comment as string]) this.categories[tag.comment as string].push(createRefFromDecl(decl, this.currentModule));
-            else this.categories[tag.comment as string] = [createRefFromDecl(decl, this.currentModule)];
+            else this.categories[tag.comment as string] = [createRefFromDecl(decl, this.currentModule)]; 
         }
     }
 
