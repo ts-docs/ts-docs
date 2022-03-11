@@ -8,12 +8,18 @@ import { addOptionSource, initOptions, options, OptionSource, showHelp, initConf
 import { renderBranches } from "./branches";
 import fs from "fs";
 import { FileCache } from "./generator/fileCache";
+import ts from "typescript";
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const packageInfo = require("../package.json") as { version: string };
 
 export interface TsDocsCLIArgs extends OptionSource {
      "--": Array<string>,
      _: Array<string>,
      help?: boolean,
-     init?: boolean
+     init?: boolean,
+     version?: boolean,
+     v?: boolean
 }
 
 const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
@@ -21,6 +27,7 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
 (async () => {
     if (args.help) return showHelp();
     if (args.init) return initConfig();
+    if (args.version || args.v) return emitNotification`\nTs-docs version: ${packageInfo.version}\nTypescript version: ${ts.version}\nNode.js version: ${process.version}`;
 
     const tsconfig = findTSConfig(process.cwd());
 
@@ -34,7 +41,7 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
 
     if (!options.entryPoints.length) return emitError`Expected at least one entry point.`;
 
-    const fileCache = new FileCache(options);
+    const fileCache = new FileCache(options, packageInfo.version);
 
     if (options.test) {
         options.docTests = true;

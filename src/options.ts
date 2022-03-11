@@ -154,7 +154,8 @@ Usage: ts-docs [...entryFiles]
 --sort                  Either "source" or "alphabetical".
 --docTests              Runs any typescript code blocks above methods / functions as unit tests.
 --test                  Run only tests with a specific function / class name.
---logNotDocumented      Lists all declarations (class, interface, enum, type, function, constant) without a comment.    
+--logNotDocumented      Lists all declarations (class, interface, enum, type, function, constant) without a documentation comment.
+--version, --v    
 --help
 `);
 }
