@@ -3,7 +3,7 @@
 import parseArgs from "minimist";
 import { TypescriptExtractor } from "@ts-docs/extractor";
 import { Generator } from "./generator";
-import { emitError, findTSConfig, findTsDocsJs, handleDefaultAPI, handleNodeAPI } from "./utils";
+import { emitError, emitNotification, findTSConfig, findTsDocsJs, handleDefaultAPI, handleNodeAPI } from "./utils";
 import { addOptionSource, initOptions, options, OptionSource, showHelp, initConfig } from "./options";
 import { renderBranches } from "./branches";
 import fs from "fs";
@@ -69,4 +69,6 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
     fileCache.save();
 
     if (options.branches) renderBranches(projects, finalOptions);
+
+    emitNotification`Successfully generated docs.`;
 })();

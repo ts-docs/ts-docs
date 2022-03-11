@@ -50,7 +50,7 @@ npm i --save-dev @ts-docs/default-docs-structure
 
 ### landingPage
 
-If your project is a monorepo, you can use this option to tell ts-docs which repository to use the README, version and name of for the landing page. The first provided entry point is used by default. 
+If your project is a monorepo, you can use this option to tell ts-docs which repository to use the README, version and name of for the landing page. The first provided entry point is used by default. Keep in mind, if your landing page doesn't have a README file, a landing page won't be created for the documentation.
 
 ### name
 
@@ -70,7 +70,7 @@ A path to a directory of custom pages. Inside that folder, each inner-folder is 
 
 ### assets
 
-A path to a folder with assets with additional assets for the docs. It will copy all files and folders inside that folder and paste them inside the generated `./assets` folder.
+A path to a folder with additional assets for the docs. It will copy all files and folders inside that folder and paste them inside the generated `./assets` folder.
 
 ### logo
 
@@ -189,3 +189,25 @@ Running ts-docs with:
 - `--test A.a` will only transpile and run tests which belong to the `a` method inside the `A` class.
 
 Using this option automatically enables the `docTests` and the `forceEmit` options.
+
+### logNotDocumented
+
+Logs all items which have no proper documentation to the console. These include:
+
+- Classes
+    - Methods with non-computed names
+    - Properties with non-computed names
+- Interfaces
+    - Properties with non-computed names / no functions / no constructors
+- Enums
+    - Enum members without initializers
+- Functions
+- Type aliases
+- Constants
+
+You can filter out items by passing an array of strings instead. If you have the following configuration, ts-docs will only log classes and interfaces, along with all their methods and properties:
+
+```json
+"logNotDocumented": ["class", "interface"]
+```
+

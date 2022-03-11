@@ -11,6 +11,7 @@ import { packSearchData } from "./searchData";
 import { FileExports } from "@ts-docs/extractor/dist/extractor/ExportHandler";
 import { TestCollector } from "../tests";
 import { getReadme } from "@ts-docs/extractor/dist/utils";
+import { validationNotDocumented } from "./validation";
 
 export const enum PageTypes {
     INDEX,
@@ -249,6 +250,7 @@ export class Generator {
             this.sortArr(classObj.methods, "rawName");
         }
         this.addItemToCategory(classObj);
+        validationNotDocumented(this, classObj);
         this.generatePage(path, "class", classObj.id ? `${classObj.name}_${classObj.id}` : classObj.name,
             this.structure.components.class(classObj), { class: classObj, name: classObj.name, type: PageTypes.CLASS });
     }
@@ -263,6 +265,7 @@ export class Generator {
             });
         }
         this.addItemToCategory(interfaceObj);
+        validationNotDocumented(this, interfaceObj);
         this.generatePage(path, "interface", interfaceObj.id ? `${interfaceObj.name}_${interfaceObj.id}` : interfaceObj.name, this.structure.components.interface(interfaceObj), { interface: interfaceObj, name: interfaceObj.name, type: PageTypes.INTERFACE });
     }
 
@@ -270,24 +273,28 @@ export class Generator {
         if (enumObj.isCached) return;
         this.sortArr(enumObj.members, "name");
         this.addItemToCategory(enumObj);
+        validationNotDocumented(this, enumObj);
         this.generatePage(path, "enum", enumObj.id ? `${enumObj.name}_${enumObj.id}` : enumObj.name, this.structure.components.enum(enumObj), { type: PageTypes.ENUM, enum: enumObj, name: enumObj.name });
     }
 
     generateTypeDecl(path: string, typeObj: TypeDecl): void {
         if (typeObj.isCached) return;
         this.addItemToCategory(typeObj);
+        validationNotDocumented(this, typeObj);
         this.generatePage(path, "type", typeObj.id ? `${typeObj.name}_${typeObj.id}` : typeObj.name, this.structure.components.type(typeObj), { type: PageTypes.TYPE, module: this.currentModule, name: typeObj.name });
     }
 
     generateFunction(path: string, func: FunctionDecl): void {
         if (func.isCached) return;
         this.addItemToCategory(func);
+        validationNotDocumented(this, func);
         this.generatePage(path, "function", func.id ? `${func.name}_${func.id}` : func.name, this.structure.components.function(func), { type: PageTypes.FUNCTION, module: this.currentModule, name: func.name });
     }
 
     generateConstant(path: string, constant: ConstantDecl): void {
         if (constant.isCached) return;
         this.addItemToCategory(constant);
+        validationNotDocumented(this, constant);
         this.generatePage(path, "constant", constant.id ? `${constant.name}_${constant.id}` : constant.name, this.structure.components.constant({
             constant,
             content: constant.content && highlightAndLink(this, constant.content, "ts"),

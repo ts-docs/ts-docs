@@ -4,7 +4,7 @@ import FrontMatter from "front-matter";
 import fs from "fs";
 import path from "path";
 import { BranchSetting } from "./branches";
-import { emitError } from "./utils";
+import { emitError, emitNotification } from "./utils";
 
 export interface LandingPage {
     repository?: string,
@@ -51,31 +51,14 @@ export interface TsDocsOptions {
     stripInternal?: boolean,
     sort?: "source" | "alphabetical",
     docTests?: boolean,
-    test?: string
+    test?: string,
+    logNotDocumented?: Set<string>
 }
 
-export interface OptionSource {
-    entryPoints?: Array<string>,
+export type OptionSource = Omit<Partial<TsDocsOptions>, "customPages"|"logNotDocumented"> & {
     customPages?: string,
-    name?: string,
-    landingPage?: LandingPage|string,
-    out?: string,
-    structure?: string,
-    assets?: string,
-    logo?: string,
-    externals?: Array<ExternalReference>,
-    passthroughModules?: Array<string>,
-    branches?: Array<BranchSetting>,
-    changelog?: boolean,
-    json?: string,
-    tsconfig?: string,
-    forceEmit?: boolean,
-    exportMode?: string,
-    stripInternal?: boolean,
-    sort?: "source" | "alphabetical",
-    docTests?: boolean,
-    test?: string
-}
+    logNotDocumented?: boolean | Array<string>
+};
 
 export const options: TsDocsOptions = {
     out: "./docs",
@@ -103,6 +86,7 @@ export function addOptionSource(source: OptionSource) : void {
     if (source.json && typeof source.json !== "string") return emitError`JSON output path must be a string.`;
     if (source.sort && (source.sort !== "alphabetical" && source.sort !== "source")) return emitError`Sort must be either 'alphabetical' or 'source'.`;
     if (source.test && typeof source.test !== "string") return emitError`Test must be a string.`;
+    if (source.logNotDocumented !== undefined && (typeof source.logNotDocumented !== "boolean" && !Array.isArray(source.logNotDocumented))) return emitError`logNotDocumented option must be either boolean or an array of strings ("class", "interface", "enum", "type", "function", "constant").`;
     Object.assign(options, source);
 } 
 
@@ -136,6 +120,10 @@ export function initOptions(extractorList: Array<Project>) : TsDocsOptions {
         }
         options.customPages = res;
     }
+    if (options.logNotDocumented) {
+        if (Array.isArray(options.logNotDocumented)) options.logNotDocumented = new Set((options.logNotDocumented as Array<string>).map(i => i.toLowerCase()));
+        else options.logNotDocumented = new Set();
+    }
     if (!options.landingPage!.repository) options.changelog = false;
     if (!options.landingPage!.readme) {
         options.landingPage.readme = Utils.getReadme("./");
@@ -149,29 +137,30 @@ export function showHelp() : void {
 Usage: ts-docs [...entryFiles]
 
 
---structure         The documentation structure to use. 
---landingPage       Which module to act as the landing page. 
---name              The name of the page.
---out               Where to emit the documentation files.
---customPages       A folder which contains folders which contain .md files.
---assets            All files and folders inside the folder will be copied to the /assets output directory. In markdown, files in this directory can be linked with "./assets/filename.ext"
---logo              Path to the project's logo.
---changelog         If to add a changelog to the generated output.
---json              Instead of generating documentation, ts-docs will spit all the json data in the path you provide.
---init              Creates a tsdocs.config.js file.
---forceEmit         Skips checking file cache for changes, always produces new documentation.
---tsconfig          Path to tsconfig.json file.
---exportMode        "simple" or "detailed". Simple mode just lists all the exports from the index file, detailed mode lists all exports of all files in the module.
---stripInternal     Removes all items flagged with the internal tag.
---sort              Either "source" or "alphabetical".
---docTests          Runs any typescript code blocks above methods / functions as unit tests.
---test               Run only tests with a specific function / class name.
+--structure             The documentation structure to use. 
+--landingPage           Which module to act as the landing page. 
+--name                  The name of the page.
+--out                   Where to emit the documentation files.
+--customPages           A folder which contains folders which contain .md files.
+--assets                All files and folders inside the folder will be copied to the /assets output directory. In markdown, files in this directory can be linked with "./assets/filename.ext"
+--logo                  Path to the project's logo.
+--changelog             If to add a changelog to the generated output.
+--json                  Instead of generating documentation, ts-docs will spit all the json data in the path you provide.
+--init                  Creates a tsdocs.config.js file.
+--forceEmit             Skips checking file cache for changes, always produces new documentation.
+--tsconfig              Path to tsconfig.json file.
+--exportMode            "simple" or "detailed". Simple mode just lists all the exports from the index file, detailed mode lists all exports of all files in the module.
+--stripInternal         Removes all items flagged with the internal tag.
+--sort                  Either "source" or "alphabetical".
+--docTests              Runs any typescript code blocks above methods / functions as unit tests.
+--test                  Run only tests with a specific function / class name.
+--logNotDocumented      Lists all declarations (class, interface, enum, type, function, constant) without a comment.    
 --help
 `);
 }
 
 export function initConfig() : void {
-    if (fs.existsSync("./tsdocs.config.js")) return console.log("A ts-docs configuration file already exists here.");
+    if (fs.existsSync("./tsdocs.config.js")) return emitError`A ts-docs configuration file already exists here.`;
     fs.writeFileSync("./tsdocs.config.js", `
 module.exports = {
     // See more options at https://tsdocs.xyz/pages/Guides/Options
@@ -182,5 +171,5 @@ module.exports = {
     exportMode: "simple"
 }
     `);
-    console.log("Successfully created a ts-docs configuration file.");
+    emitNotification`Successfully created a ts-docs configuration file.`;
 }

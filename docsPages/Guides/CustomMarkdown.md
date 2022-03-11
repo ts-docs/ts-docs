@@ -102,8 +102,7 @@ You can reference a method by adding a dot (`.`), the method's name, and then `(
 
 `[[Generator.generate()]]` becomes [[Generator.generate()]]
 
-If the method or property is inside the class you're currently writing documentation for, you can just provide their names, and ts-docs will figure out
-if it's a property or a method, and properly link it:
+If the method or property is inside the class/interface/enum you're currently writing documentation for, you can just provide their name, and ts-docs will figure out:
 
 `[[generate]]` becomes [[Generator.generate()]]
 
@@ -209,7 +208,7 @@ Work exactly the same as using the square bracket syntax `[[]]`. Currently, `@li
 
 ### `@returns`, `@throws`
 
-Documents information about the return value of the method, or the ways it can throw an error.
+Documents information about the return value of the method, or what errors it throws.
 
 ### `@since`
 

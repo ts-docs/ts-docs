@@ -120,10 +120,10 @@ export function handleDefaultAPI() : ExternalReference {
             case "Exclude": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#excludetype-excludedunion" };
             case "Extract": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#extracttype-union" };
             case "NonNullable": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#nonnullabletype" };
-            case "Capitalize": return { link: "https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html#capitalizestringtype" };
-            case "Uncapitalize": return { link: "https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html#uncapitalizestringtype" };
-            case "Uppercase": return { link: "https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html#uppercasestringtype" };
-            case "Lowercase": return { link: "https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html#lowercasestringtype" };
+            case "Capitalize": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#capitalizestringtype" };
+            case "Uncapitalize": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#uncapitalizestringtype" };
+            case "Uppercase": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#uppercasestringtype" };
+            case "Lowercase": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#lowercasestringtype" };
             default: return;         
             }
         }
@@ -221,21 +221,24 @@ export function getTag(node: Declaration, tagName: string) : Array<JSDocTag> {
     return tags;
 }
 
-export function emitColoredMessage(pre: string, text: TemplateStringsArray, ...exps: Array<string>) : void {
+export function getColoredMessage(pre: string, text: TemplateStringsArray, ...exps: Array<string>) : string {
     let i = 0;
     let final = "";
     for (const str of text) {
         final += `${str}${exps[i] ? cyan(exps[i++]) : ""}`;
     }
-    console.error(`${pre}: ${final}`);
+    return `${pre}: ${final}`;
 }
 
 export function emitWarning(text: TemplateStringsArray, ...exps: Array<string>) : void {
-    emitColoredMessage(yellow("[Warning]"), text, ...exps);
+    console.warn(getColoredMessage(yellow("[Warning]"), text, ...exps));
 }
 
+export function emitNotification(text: TemplateStringsArray, ...exps: Array<string>) : void {
+    console.log(getColoredMessage(cyan("[Notification]"), text, ...exps));
+}
 
 export function emitError(text: TemplateStringsArray, ...exps: Array<string>) : void {
-    emitColoredMessage(red("[Error]"), text, ...exps);
+    console.error(getColoredMessage(red("[Error]"), text, ...exps));
     process.exit();
 }
