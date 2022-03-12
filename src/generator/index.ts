@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { DocumentStructure, setupDocumentStructure } from "../documentStructure";
 import { parse as markedParse, parseInline as markedParseInline } from "marked";
-import { copyFolder, createFile, createFolder, escapeHTML, fetchChangelog } from "../utils";
-import { Project, TypescriptExtractor, ClassDecl, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, JSDocData, Module, TypeReferenceKinds, InterfaceDecl, EnumDecl, Literal, TypeDecl, FunctionDecl, ConstantDecl, FunctionSignature, ConstructorType, InferType, TypeOperator, Declaration } from "@ts-docs/extractor";
+import { copyFolder, createFile, createFolder, emitWarning, escapeHTML, fetchChangelog, getTag } from "../utils";
+import { Project, TypescriptExtractor, ClassDecl, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, JSDocData, Module, TypeReferenceKinds, InterfaceDecl, EnumDecl, Literal, TypeDecl, FunctionDecl, ConstantDecl, FunctionSignature, ConstructorType, InferType, TypeOperator, Declaration, createRefFromDecl } from "@ts-docs/extractor";
 import path from "path";
 import { LandingPage, PageCategory, TsDocsOptions } from "../options";
 import fs from "fs";
@@ -10,6 +10,8 @@ import { Heading, highlightAndLink, initMarkdown } from "./markdown";
 import { packSearchData } from "./searchData";
 import { FileExports } from "@ts-docs/extractor/dist/extractor/ExportHandler";
 import { TestCollector } from "../tests";
+import { getReadme } from "@ts-docs/extractor/dist/utils";
+import { validationNotDocumented } from "./validation";
 
 export const enum PageTypes {
     INDEX,
@@ -85,10 +87,12 @@ export class Generator {
     currentProject!: Project
     currentItem!: Declaration
     tests?: TestCollector
+    categories: Record<string, Array<Reference>>
     constructor(settings: TsDocsOptions, activeBranch = "main") {
         this.settings = settings;
         this.activeBranch = activeBranch;
         this.landingPage = settings.landingPage as LandingPage;
+        this.categories = {};
         this.structure = setupDocumentStructure(this.settings.structure, this);
         if (settings.docTests) this.tests = new TestCollector();
     }
@@ -134,27 +138,38 @@ export class Generator {
             this.currentProject = pkg;
             this.currentModule = pkg.module;
             this.generateThingsInsideModule(this.settings.out, pkg.module);
-            const exports = this.generateExports(pkg.module);
-            this.generatePage(this.settings.out, "./", "index", this.structure.components.module({
-                module: pkg.module,
-                readme: pkg.readme && markedParse(pkg.readme),
-                exports
-            }), {
-                type: PageTypes.MODULE,
-                module: pkg.module,
-                doNotGivePath: true,
-                exports
-            });
+            this.generateLanding(pkg);
         } else {
             if (this.settings.changelog && this.landingPage.repository) await this.generateChangelog(this.landingPage.repository, this.projects);
-            if (this.landingPage.readme) this.generatePage(this.settings.out, "./", "index", markedParse(this.landingPage.readme), { type: PageTypes.INDEX, projects: this.projects, doNotGivePath: true });
             for (this.currentProject of this.projects) {
                 this.currentGlobalModuleName = this.currentProject.module.name;
                 this.depth++;
                 this.generateModule(this.settings.out, this.currentProject.module, this.currentProject.readme);
                 this.depth--;
             }
+            if (this.landingPage.readme) this.generatePage(this.settings.out, "./", "index", markedParse(this.landingPage.readme), { type: PageTypes.INDEX, projects: this.projects, doNotGivePath: true });
+            else emitWarning`Landing page doesn't have a README.md file.`;
         }
+    }
+
+    /**
+     * Generates a landing page with data taken from a project.
+     * 
+     * |> This method changes the [[depth]] to `0`!
+     */
+    generateLanding(project: Project) : void {
+        this.depth = 0;
+        const exports = this.generateExports(project.module);
+        this.generatePage(this.settings.out, "./", "index", this.structure.components.module({
+            module: project.module,
+            readme: project.readme && markedParse(project.readme),
+            exports
+        }), {
+            type: PageTypes.MODULE,
+            module: project.module,
+            doNotGivePath: true,
+            exports
+        });
     }
 
     async generateChangelog(repo: string, projects?: Array<Project>, module?: Module): Promise<void> {
@@ -207,11 +222,16 @@ export class Generator {
     }
 
     generateModule(p: string, module: Module, readme?: string): void {
-        const exports = this.generateExports(module);
         const folderName = `${p}/m.${module.name}`;
         createFolder(folderName);
         this.currentModule = module;
         this.generateThingsInsideModule(folderName, module);
+        this.generateModuleIndex(p, module, readme);
+    }
+
+    generateModuleIndex(p: string, module: Module, readme?: string) : void {
+        if (!readme) readme = getReadme(path.join(this.currentProject.root, this.currentProject.baseDir, ...module.path));
+        const exports = this.generateExports(module);
         this.generatePage(p, `m.${module.name}`, "index", this.structure.components.module({
             module,
             readme: readme && markedParse(readme),
@@ -227,8 +247,10 @@ export class Generator {
                 if (b.index) return -1;
                 return a.prop!.rawName.localeCompare(b.prop!.rawName);
             });
+            this.sortArr(classObj.methods, "rawName");
         }
-        this.sortArr(classObj.methods, "rawName");
+        this.addItemToCategory(classObj);
+        validationNotDocumented(this, classObj);
         this.generatePage(path, "class", classObj.id ? `${classObj.name}_${classObj.id}` : classObj.name,
             this.structure.components.class(classObj), { class: classObj, name: classObj.name, type: PageTypes.CLASS });
     }
@@ -242,27 +264,37 @@ export class Generator {
                 return a.prop.rawName.localeCompare(b.prop.rawName);
             });
         }
+        this.addItemToCategory(interfaceObj);
+        validationNotDocumented(this, interfaceObj);
         this.generatePage(path, "interface", interfaceObj.id ? `${interfaceObj.name}_${interfaceObj.id}` : interfaceObj.name, this.structure.components.interface(interfaceObj), { interface: interfaceObj, name: interfaceObj.name, type: PageTypes.INTERFACE });
     }
 
     generateEnum(path: string, enumObj: EnumDecl): void {
         if (enumObj.isCached) return;
         this.sortArr(enumObj.members, "name");
+        this.addItemToCategory(enumObj);
+        validationNotDocumented(this, enumObj);
         this.generatePage(path, "enum", enumObj.id ? `${enumObj.name}_${enumObj.id}` : enumObj.name, this.structure.components.enum(enumObj), { type: PageTypes.ENUM, enum: enumObj, name: enumObj.name });
     }
 
     generateTypeDecl(path: string, typeObj: TypeDecl): void {
         if (typeObj.isCached) return;
+        this.addItemToCategory(typeObj);
+        validationNotDocumented(this, typeObj);
         this.generatePage(path, "type", typeObj.id ? `${typeObj.name}_${typeObj.id}` : typeObj.name, this.structure.components.type(typeObj), { type: PageTypes.TYPE, module: this.currentModule, name: typeObj.name });
     }
 
     generateFunction(path: string, func: FunctionDecl): void {
         if (func.isCached) return;
+        this.addItemToCategory(func);
+        validationNotDocumented(this, func);
         this.generatePage(path, "function", func.id ? `${func.name}_${func.id}` : func.name, this.structure.components.function(func), { type: PageTypes.FUNCTION, module: this.currentModule, name: func.name });
     }
 
     generateConstant(path: string, constant: ConstantDecl): void {
         if (constant.isCached) return;
+        this.addItemToCategory(constant);
+        validationNotDocumented(this, constant);
         this.generatePage(path, "constant", constant.id ? `${constant.name}_${constant.id}` : constant.name, this.structure.components.constant({
             constant,
             content: constant.content && highlightAndLink(this, constant.content, "ts"),
@@ -276,7 +308,7 @@ export class Generator {
         });
     }
 
-    generateRef(ref: Reference, other: OtherRefData = {}): string {
+    generateRef(ref: Reference, other: OtherRefData = {}, raw?: boolean): string {
         if (ref.type.link) return this.structure.components.typeReference({ref, other});
         let refType = "";
         switch (ref.type.kind) {
@@ -298,6 +330,7 @@ export class Generator {
         }
         default: refType = "";
         }
+        if (raw) return ref.type.path ? this.generateLink(path.join(...ref.type.path.map(p => `m.${p}`), refType, `${ref.type.name}${ref.type.id ? `_${ref.type.id}` : ""}.html`), ref.type.displayName) : ".";
         return this.structure.components.typeReference({
             ref, other,
             link: ref.type.path && this.generateLink(path.join(...ref.type.path.map(p => `m.${p}`), refType, `${ref.type.name}${ref.type.id ? `_${ref.type.id}` : ""}.html`), ref.type.displayName),
@@ -362,11 +395,10 @@ export class Generator {
 
     generateComment(comments?: Array<JSDocData>, includeTags = false, exclude?: Record<string, boolean>, fnName?: string): [block: string, inline: string] | undefined {
         if (!comments) return undefined;
-        let text = markedParse(comments.map(c => c.comment || "").join("\n"), { fnName });
+        let text = markedParse(comments.map(c => c.comment || "").join("\n"), { fnName, gfm: true });
         let inline = "";
         if (includeTags) {
             for (const comment of comments) {
-                if (!comment.tags) continue;
                 for (const tag of comment.tags) {
                     if (exclude && exclude[tag.name]) continue;
                     const res = this.structure.components.jsdocTags({
@@ -382,6 +414,11 @@ export class Generator {
         }
         return [text, inline];
     }
+
+    generateInlineComment(comments?: Array<JSDocData>) : string | undefined {
+        if (!comments) return undefined;
+        return markedParseInline(comments.map(c => c.comment || "").join("\n"), { gfm: true });
+    } 
 
     generateMarkdownWithHeaders(content: string): [string, Array<Heading>] {
         const headings: Array<Heading> = [];
@@ -439,6 +476,14 @@ export class Generator {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     sortArr(arr: Array<any>, name: "rawName" | "name") : void {
         if (this.settings.sort === "alphabetical") arr.sort((a, b) => (a[name] as string).localeCompare(b[name]!));
+    }
+
+    addItemToCategory(decl: Declaration) : void {
+        for (const tag of getTag(decl, "category")) {
+            if (!tag.comment) continue;
+            if (this.categories[tag.comment as string]) this.categories[tag.comment as string].push(createRefFromDecl(decl, this.currentModule));
+            else this.categories[tag.comment as string] = [createRefFromDecl(decl, this.currentModule)]; 
+        }
     }
 
 }

@@ -1,10 +1,11 @@
 
-import { JSDocData, JSDocTag, ExternalReference } from "@ts-docs/extractor";
+import { JSDocData, JSDocTag, ExternalReference, Declaration, DeclarationTypes } from "@ts-docs/extractor";
 import fs from "fs";
 import path from "path";
 import ts from "typescript";
 import fetch from "got";
 import { OptionSource } from "..";
+import { cyan, red, yellow } from "./formatter";
 
 /**
  * Creates a file with the name `file`, which is located inside `folder`, which gets created if it doesn't
@@ -119,6 +120,10 @@ export function handleDefaultAPI() : ExternalReference {
             case "Exclude": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#excludetype-excludedunion" };
             case "Extract": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#extracttype-union" };
             case "NonNullable": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#nonnullabletype" };
+            case "Capitalize": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#capitalizestringtype" };
+            case "Uncapitalize": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#uncapitalizestringtype" };
+            case "Uppercase": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#uppercasestringtype" };
+            case "Lowercase": return { link: "https://www.typescriptlang.org/docs/handbook/utility-types.html#lowercasestringtype" };
             default: return;         
             }
         }
@@ -204,4 +209,36 @@ export function getComment(node: { jsDoc?: Array<JSDocData> }, limit = 128) : st
         return comment;
     }
     return;
+}
+
+export function getTag(node: Declaration, tagName: string) : Array<JSDocTag> {
+    const tags = node.jsDoc?.[0] ? node.jsDoc[0].tags.filter(t => t.name === tagName) : [];
+    if (node.kind === DeclarationTypes.FUNCTION) {
+        for (const sig of node.signatures) {
+            if (sig.jsDoc?.[0]) tags.push(...sig.jsDoc[0].tags.filter(t => t.name === tagName));
+        }
+    }
+    return tags;
+}
+
+export function getColoredMessage(pre: string, text: TemplateStringsArray, ...exps: Array<string>) : string {
+    let i = 0;
+    let final = "";
+    for (const str of text) {
+        final += `${str}${exps[i] ? cyan(exps[i++]) : ""}`;
+    }
+    return `${pre}: ${final}`;
+}
+
+export function emitWarning(text: TemplateStringsArray, ...exps: Array<string>) : void {
+    console.warn(getColoredMessage(yellow("[Warning]"), text, ...exps));
+}
+
+export function emitNotification(text: TemplateStringsArray, ...exps: Array<string>) : void {
+    console.log(getColoredMessage(cyan("[Notification]"), text, ...exps));
+}
+
+export function emitError(text: TemplateStringsArray, ...exps: Array<string>) : void {
+    console.error(getColoredMessage(red("[Error]"), text, ...exps));
+    process.exit();
 }

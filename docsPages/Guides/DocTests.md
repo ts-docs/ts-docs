@@ -60,7 +60,7 @@ Documentation tests are grouped into **suites**. All documentation tests which b
 
 ## Imports
 
-By default, the class / function that the test is for is automatically imported. If you need anything else in the test, you can import it. If the item being tested is export via `export default`, then you need to import it as well.
+By default, the class / function that the test is for is automatically imported. If you need anything else in the test, you can import it. If the item being tested is exported via `export default`, then you need to import it as well.
 
 |> If you want to import something, you **must** use the `import` syntax. Using `require` won't work.
 
@@ -78,7 +78,7 @@ export function someFn() {
 
 ## Async/await
 
-You **can** use top-level async / await in your examples. 
+You can use top-level async / await in your examples. 
 
 ```ts
 /**
@@ -141,3 +141,7 @@ const code = `
 ## `docTests` with `forceEmit`
 
 If the `forceEmit` option is **not** enabled, ts-docs will not run any doc tests inside unchanged files. This can become a problem if any of your tests uses `import`, so it's a good idea to always run tests with the `forceEmit` option turned on.
+
+## Running untrusted tests
+
+The tests are **not** ran in a VM - they are quite literally `eval`ed, so make sure you trust the library before generating docs for it with the `docTests` option turned on!

@@ -102,6 +102,10 @@ You can reference a method by adding a dot (`.`), the method's name, and then `(
 
 `[[Generator.generate()]]` becomes [[Generator.generate()]]
 
+If the method or property is inside the class/interface/enum you're currently writing documentation for, you can just provide their name, and ts-docs will figure out:
+
+`[[generate]]` becomes [[Generator.generate()]]
+
 ### By path
 
 ts-docs searches each module in order to find the name of the references, this could lead to inaccurate links, so you always can just provide the entire path to the item.
@@ -110,31 +114,29 @@ ts-docs searches each module in order to find the name of the references, this c
 
 ### Name aliases
 
-You can also follow up a normal reference or a reference by path with `as ...` to change the text that gets displayed.
+You can also follow up a normal reference or a reference by path with `as ...` or `| ...` to change the text that gets displayed.
 
 `[[Generator as TsDocsGenerator]]` becomes [[Generator as TsDocsGenerator]]
 
-`[[ts-docs as the documentation generator]]` becomes [[ts-docs as the documentation generator]]
+`[[ts-docs | the documentation generator]]` becomes [[ts-docs | the documentation generator]]
+
+### By type
+
+Let's say you have a class with the name `ABC`, and an interface with the same name, and both of the declarations are inside the same module. If you were to search for it either by name or by path, always the item declared first will show. To prevent this, you can prefix the name with `:<type>` to only search for items of the specified type and name. 
+
+`[[Generator:class]]` becomes [[Generator:class]]
+
+Available types are: `class`, `interface`, `enum`, `function`, `constant`, `type`, `module`.
 
 ## Supported JSDoc tags
 
-### `@link`
+### `@category`
 
-ts-docs supports the `@link` / `@linkplain` JSDoc tag, except it doesn't support properties / methods, name aliases and paths. It's not recommended to use `{@link}` in custom pages and documentation comments, it exists only for compatibility reasons.
+Groups items (class, interface, enum, type alias, function, constant) into categories, which will be shown in the sidebar.
 
-### `@param`
+### `@alpha`, `@beta`, `@deprecated`, `@experimental`
 
-Documents a method / function parameter, the parameter type WILL NOT be used by ts-docs. 
-
-```ts
-/**
- * @param a Parameter description... 
- *
-*/
-function doSomething(a: string) : void {
-    // Code...
-}
-```
+Shows the state of the API being documented.
 
 ### `@example`
 
@@ -159,14 +161,6 @@ class Apple {
 }
 ```
 
-### `@deprecated`
-
-Any property or method with that tag will have a red "deprecated" tag, letting readers know that the method shouldn't be used.
-
-### `@returns`
-
-Documents information about the return value of a method. You can provide a type here, in case ts-docs isn't able to find it. 
-
 ### `@internal`
 
 Omit an item from the documentation. This tag works for the following items:
@@ -185,21 +179,37 @@ Omit an item from the documentation. This tag works for the following items:
 
 You also have to enable the `stripInternal` option.
 
+### `@inheritDoc`
+
+Automatically generates documentation by copying it from the specified item. It copies the following things:
+
+- The item's summary
+- The item's `@remark`s
+- The item's `@param`s
+- The item's `@return`
+
+### `@param`
+
+Documents a method / function parameter, the parameter type WILL NOT be used by ts-docs. 
+
+```ts
+/**
+ * @param a Parameter description... 
+ *
+*/
+function doSomething(a: string) : void {
+    // Code...
+}
+```
+
+### `@link`, `@linkplain`, `@linkcode`
+
+Work exactly the same as using the square bracket syntax `[[]]`. Currently, `@linkplain` and `@linkcode` do **not** change the style of the reference.
+
+### `@returns`, `@throws`
+
+Documents information about the return value of the method, or what errors it throws.
+
 ### `@since`
 
 Adds a `since` tag to the item that has the tag, along with a version name.
-
-Example:
-
-```js
-/**
- * @since 1.0.1 
-*/
-function example() {
-    //...
-} 
-```
-
-### `@beta`
-
-Adds a `beta` tag to the item that has the tag.

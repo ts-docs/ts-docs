@@ -2,6 +2,7 @@
 import { Generator } from "..";
 import path from "path";
 import fs from "fs";
+import { emitError } from "../utils";
 
 export type Components = "class" | "constant" | "enum" | "function" | "functionParameter" | "interface" | "module" | "type" | "typeArray" | "typeFunction" | "typeIntersection" | "typeObject" | "typeParameter" | "typeReference" | "typeTuple" | "typeUnion" | "typePrimitive" | "typeMapped" | "typeConditional" | "typeTemplateLiteral" | "typeIndexAccess" | "typeOperator" | "typePredicate" | "changelog" | "typeConstruct" | "jsdocTags" | "codeTabs" | "index";
 
@@ -50,7 +51,7 @@ export function setupDocumentStructure(structName: string, gen: Generator) : Doc
     try {
         initFn = require(path.join(process.cwd(), `./node_modules/${structName}`));
     } catch {
-        throw new Error(`Couldn't find documentation structure "${structName}"`);
+        throw emitError`Couldn't find documentation structure "${structName}"`;
     }
     const components = initFn.init(gen);
     const baseDir = path.join("./node_modules", structName);
