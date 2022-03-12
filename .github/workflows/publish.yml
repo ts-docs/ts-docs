@@ -1,21 +1,27 @@
-name: Publish package
+name: Deploy packages to npm & documentation
 on:
   workflow_dispatch:
   release:
-    types: [created]
+    branches:
+      - dev
 jobs:
-  build:
-    runs-on: ubuntu-latest 
-    permissions: 
-      contents: read
-      packages: write 
+  # Trigger the workflow for the documentation structure
+  deploy-structure:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.REPO_TOKEN }}
           repository: ts-docs/default-docs-structure
           event-type: publish
+  # Transpile and publish this module
+  publish:
+    runs-on: ubuntu-latest
+    permissions: 
+      contents: read
+      packages: write 
+    steps:
+      - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
           registry-url: 'https://registry.npmjs.org'
@@ -23,3 +29,20 @@ jobs:
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  # Deploys documentation to github pages
+  deploy-docs:
+    runs-on: ubuntu-latest
+    needs: [deploy-structure, publish]
+    steps:
+      - uses: actions/checkout@v2 
+      - uses: actions/setup-node@v2
+      - run: npm i
+      - run: npm i @ts-docs/default-docs-structure
+      - run: tsc
+      - run: git clone https://github.com/ts-docs/ts-extractor.git
+      - run: node dist/cli
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.3
+        with:
+          branch: gh-pages
+          folder: docs
