@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { DocumentStructure, setupDocumentStructure } from "../documentStructure";
 import { parse as markedParse, parseInline as markedParseInline } from "marked";
-import { copyFolder, createFile, createFolder, emitWarning, escapeHTML, fetchChangelog, getTag } from "../utils";
+import { emitWarning, escapeHTML, fetchChangelog, getTag } from "../utils";
 import { Project, TypescriptExtractor, ClassDecl, Reference, Type, TypeKinds, ArrowFunction, TypeParameter, FunctionParameter, JSDocData, Module, TypeReferenceKinds, InterfaceDecl, EnumDecl, Literal, TypeDecl, FunctionDecl, ConstantDecl, FunctionSignature, ConstructorType, InferType, TypeOperator, Declaration, createRefFromDecl } from "@ts-docs/extractor";
 import path from "path";
 import { LandingPage, PageCategory, TsDocsOptions } from "../options";
-import fs from "fs";
 import { Heading, highlightAndLink, initMarkdown } from "./markdown";
 import { packSearchData } from "./searchData";
 import { FileExports } from "@ts-docs/extractor/dist/extractor/ExportHandler";
 import { TestCollector } from "../tests";
 import { getReadme } from "@ts-docs/extractor/dist/utils";
 import { validationNotDocumented } from "./validation";
+import { FileHost, FSFileHost } from "../fileHost";
 
 export const enum PageTypes {
     INDEX,
@@ -88,11 +88,13 @@ export class Generator {
     currentItem!: Declaration
     tests?: TestCollector
     categories: Record<string, Array<Reference>>
-    constructor(settings: TsDocsOptions, activeBranch = "main") {
+    fileHost: FileHost
+    constructor(settings: TsDocsOptions, fileHost = FSFileHost, activeBranch = "main") {
         this.settings = settings;
         this.activeBranch = activeBranch;
         this.landingPage = settings.landingPage as LandingPage;
         this.categories = {};
+        this.fileHost = fileHost;
         this.structure = setupDocumentStructure(this.settings.structure, this);
         if (settings.docTests) this.tests = new TestCollector();
     }
@@ -101,18 +103,13 @@ export class Generator {
         this.extractor = extractor;
         this.projects = projects || extractor.run();
         initMarkdown(this);
-        const out = this.settings.out;
-        createFolder(out);
-        const assetsFolder = path.join(out, "./assets");
-        createFolder(assetsFolder);
-        copyFolder(this.structure.assetsPath, assetsFolder);
-        if (this.settings.assets) copyFolder(this.settings.assets, assetsFolder);
-
-        packSearchData(this.projects, `${assetsFolder}/search.json`);
-
+        const out = this.fileHost.createDir("./", this.settings.out);
+        const assetsFolder = this.fileHost.createDir(out, "./assets");
+        this.fileHost.copyFolder(this.structure.assetsPath, assetsFolder);
+        if (this.settings.assets) this.fileHost.copyFolder(this.settings.assets, assetsFolder);
+        packSearchData(this.fileHost, this.projects, `${assetsFolder}/search.json`);
         if (this.settings.customPages) {
-            const pagesPath = path.join(out, "./pages");
-            createFolder(pagesPath);
+            const pagesPath = this.fileHost.createDir(out, "./pages");
             this.renderingPages = true;
             for (const category of this.settings.customPages) {
                 category.pages.sort((a, b) => +(a.attributes.order || Infinity) - +(b.attributes.order || Infinity));
@@ -222,8 +219,7 @@ export class Generator {
     }
 
     generateModule(p: string, module: Module, readme?: string): void {
-        const folderName = `${p}/m.${module.name}`;
-        createFolder(folderName);
+        const folderName = this.fileHost.createDir(p, `.${module.name}`);
         this.currentModule = module;
         this.generateThingsInsideModule(folderName, module);
         this.generateModuleIndex(p, module, readme);
@@ -456,17 +452,13 @@ export class Generator {
     }
 
     generatePage(p: string, directory: string, file: string, content: string, other: Partial<IndexData & OtherProps> = {}): string {
-        return createFile(p, directory, `${file}.html`, this.structure.components.index({
+        return this.fileHost.createFile(p, directory, `${file}.html`, this.structure.components.index({
             content,
             path: !other.doNotGivePath && [p.slice(this.settings.out.length), directory, file],
             depth: this.depth,
             currentGlobalModuleName: this.currentGlobalModuleName,
             ...other
         }));
-    }
-
-    generateFolder(p: string) : void {
-        if (!fs.existsSync(p)) fs.mkdirSync(p);
     }
 
     generateLink(p: string, hash?: string): string {

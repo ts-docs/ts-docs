@@ -1,5 +1,5 @@
 import { Project } from "@ts-docs/extractor";
-import fs from "fs";
+import { FileHost } from "../fileHost";
 import { getComment } from "../utils";
 
 /**
@@ -39,7 +39,7 @@ export type PackedSearchData = [
      * 
 */
     
-export function packSearchData(extractors: Array<Project>, path: string) : void {
+export function packSearchData(fileHost: FileHost, extractors: Array<Project>, path: string) : void {
     const res = [[], []] as PackedSearchData;
     for (const extractor of extractors) {
         const modObj = [0,[],[],[],[],[],[]] as PackedSearchData[0][0]; 
@@ -58,5 +58,5 @@ export function packSearchData(extractors: Array<Project>, path: string) : void 
         });
         res[0].push(modObj);
     }
-    fs.writeFileSync(path, JSON.stringify(res));
+    fileHost.writeFile(path, JSON.stringify(res));
 }

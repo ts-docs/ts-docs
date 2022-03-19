@@ -6,6 +6,7 @@ import path from "path";
 import { execSync } from "child_process";
 import { emitWarning, handleDefaultAPI, handleNodeAPI } from "../utils";
 import { TsDocsOptions } from "..";
+import { FSFileHost } from "../fileHost";
 
 export interface BranchOption {
     /**
@@ -87,7 +88,7 @@ export function renderBranches(
             out: path.join(options.out, `b.${branchSetting.displayName}`),
             docTests: false,
             changelog: false // Different branches don't have a changelog
-        }, branchSetting.displayName);
+        }, FSFileHost, branchSetting.displayName);
 
         gen.generate(extractor, newProjects);
     }

@@ -8,24 +8,6 @@ import { OptionSource } from "..";
 import { cyan, red, yellow } from "./formatter";
 
 /**
- * Creates a file with the name `file`, which is located inside `folder`, which gets created if it doesn't
- * exist. The `folder` is located in the `basePath`.
- */
-export function createFile(basePath: string, folder: string, file: string, content: string) : string {
-    const folderPath = path.join(basePath, folder);
-    if (!fs.existsSync(folderPath)) fs.mkdirSync(folderPath);
-    fs.writeFileSync(path.join(folderPath, file), content, "utf-8");
-    return folderPath;
-}
-
-/**
- * Creates a folder if it already doesn't exist
- */
-export function createFolder(path: string) : void {
-    if (!fs.existsSync(path)) fs.mkdirSync(path);
-}
-
-/**
  * Finds a `tsconfig.json` file, starting from `basePath` and going up.
  */
 export function findTSConfig(basePath: string) : { compilerOptions: ts.CompilerOptions, tsdocsOptions?: OptionSource } | undefined {
@@ -41,21 +23,6 @@ export function findTsDocsJs<T = string>(basePath: string) : Record<string, T>|u
     if (!fs.existsSync(p)) return undefined;
     return require(p);
 } 
-
-/**
- * Copies an entire folder and everything inside it.
- */
-export function copyFolder(origin: string, destination: string) : void {
-    for (const file of fs.readdirSync(origin, {withFileTypes: true})) {
-        const newOrigin = path.join(origin, file.name);
-        const newDestination = path.join(destination, file.name);
-        if (file.isDirectory()) {
-            if (!fs.existsSync(newDestination)) fs.mkdirSync(newDestination);
-            copyFolder(newOrigin, newDestination);
-        }
-        else fs.copyFileSync(newOrigin, newDestination);
-    }
-}
 
 const ESCAPE_CHARS = {
     "&": "&amp;",
