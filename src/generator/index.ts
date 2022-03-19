@@ -219,7 +219,7 @@ export class Generator {
     }
 
     generateModule(p: string, module: Module, readme?: string): void {
-        const folderName = this.fileHost.createDir(p, `.${module.name}`);
+        const folderName = this.fileHost.createDir(p, `m.${module.name}`);
         this.currentModule = module;
         this.generateThingsInsideModule(folderName, module);
         this.generateModuleIndex(p, module, readme);
