@@ -2,6 +2,9 @@ import fs from "fs";
 import path from "path";
 import { DocumentStructure } from "..";
 
+/**
+ * @since 4.0.1
+ */
 export interface FileHost {
     /**
      * Checks if the provided path exists.
