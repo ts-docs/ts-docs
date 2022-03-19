@@ -47,6 +47,8 @@ export type DocumentStructure = {
 }
 
 export function setupDocumentStructure(structName: string, gen: Generator) : DocumentStructure {
+    const struct = gen.fileHost.getDocumentStructure(structName);
+    if (struct) return struct;
     let initFn;
     try {
         initFn = require(path.join(process.cwd(), `./node_modules/${structName}`));
