@@ -217,3 +217,26 @@ A object for controlling how the generated documentation looks. Available proper
 
 - `forceTheme` - Forces the user to only one theme. By default this can either be `light` or `dark`, but you can provide custom theme names if you're using a custom documentation structure.
 - `dontCollapseCategories` - If the sidebar has **7** or more categories, all of them are going to be collapsed. If this option is set to true, this will be disabled and none of the categories are going to be collapsed.
+
+### plugins
+
+An object which allows you to pass custom ts-docs / markdown plugins. Currently, only markdown plugins are suppored. ts-docs uses the [marked](https://github.com/markedjs/marked) library, so you should follow their [tutorial](https://marked.js.org/using_pro) for creating custom extensions. The `plugins.markdown` function must return an array of extensions. The extensions can access ts-docs' [[Generator]].
+
+```js
+module.exports = {
+    // Other options...
+    plugins: {
+        // The "markdown" function must return an array of extensions.
+        // The extensions can use the ts-docs generator.
+        markdown: (generator) => [
+            {
+                name: "...",
+                level: "...",
+                start: (...) => ...,
+                tokenizer: (...) => ...,
+                renderer: (...) => ...
+            }
+        ]
+    }
+}
+```

@@ -3,6 +3,7 @@ import { Project, ExternalReference, Utils } from "@ts-docs/extractor";
 import FrontMatter from "front-matter";
 import fs from "fs";
 import path from "path";
+import { Generator, SingleMarkedExtension } from ".";
 import { BranchSetting } from "./branches";
 import { emitError, emitNotification } from "./utils";
 
@@ -56,6 +57,9 @@ export interface TsDocsOptions {
     style: {
         forceTheme?: "dark" | "light",
         dontCollapseCategories?: boolean
+    },
+    plugins: {
+        markdown?: (generator: Generator) => Array<SingleMarkedExtension>
     }
 }
 
@@ -70,7 +74,8 @@ export const options: TsDocsOptions = {
     entryPoints: [],
     name: "",
     exportMode: "simple",
-    style: {}
+    style: {},
+    plugins: {}
 };
 
 export function addOptionSource(source: OptionSource) : void {
@@ -93,6 +98,7 @@ export function addOptionSource(source: OptionSource) : void {
     if (source.test && typeof source.test !== "string") return emitError`Test must be a string.`;
     if (source.logNotDocumented !== undefined && (typeof source.logNotDocumented !== "boolean" && !Array.isArray(source.logNotDocumented))) return emitError`logNotDocumented option must be either boolean or an array of strings ("class", "interface", "enum", "type", "function", "constant").`;
     if (source.style && typeof source.style !== "object") return emitError`Style must be an object.`;
+    if (source.plugins && typeof source.plugins !== "object") return emitError`Plugins must be an object.`;
     Object.assign(options, source);
 } 
 
