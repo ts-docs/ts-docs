@@ -20,16 +20,18 @@ export interface CodeTab {
     content: string
 }
 
+export type SingleMarkedExtension = {
+    name: string,
+    level: string,
+    start: (src: string) => number|boolean|undefined,
+    tokenizer: (this: {lexer: marked.Lexer}, src: string, tokens: Array<marked.Token>) => {type: string, raw: string, text?: string, tokens?: Array<marked.Token>, tabs?: Array<CodeTab>}|undefined,
+    renderer: (this: {parser: marked.Parser}, token: {type: string, raw: string, text: string, tokens?: Array<marked.Token>, tabs?: Array<CodeTab>}) => string
+};
+
 declare module "marked" {
 
     export interface MarkedExtension {
-        extensions?: Array<{
-            name: string,
-            level: string,
-            start: (src: string) => number|boolean|undefined,
-            tokenizer: (this: {lexer: marked.Lexer}, src: string, tokens: Array<marked.Token>) => {type: string, raw: string, text?: string, tokens?: Array<marked.Token>, tabs?: Array<CodeTab>}|undefined,
-            renderer: (this: {parser: marked.Parser}, token: {type: string, raw: string, text: string, tokens?: Array<marked.Token>, tabs?: Array<CodeTab>}) => string
-        }>
+        extensions?: Array<SingleMarkedExtension>
     }
 
     export interface MarkedOptions {
@@ -221,7 +223,8 @@ export function initMarkdown(generator: Generator) : void {
                 renderer: function(token) {
                     return generator.structure.components.codeTabs(token.tabs);
                 }
-            }
+            },
+            ...(generator.settings.plugins.markdown ? generator.settings.plugins.markdown(generator) : [] )
         ]
     });
 }

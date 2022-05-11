@@ -16,6 +16,7 @@ ts-docs ./src/index.ts --docTests
 "tsdocsOptions": {
     "entryPoints": ["./entry/point.js"],
     "docTests": true
+}
 ```
 ```js --tsdocs.config.js
 module.exports = {
