@@ -52,7 +52,11 @@ export interface TsDocsOptions {
     sort?: "source" | "alphabetical",
     docTests?: boolean,
     test?: string,
-    logNotDocumented?: Set<string>
+    logNotDocumented?: Set<string>,
+    style: {
+        forceTheme?: "dark" | "light",
+        dontCollapseCategories?: boolean
+    }
 }
 
 export type OptionSource = Omit<Partial<TsDocsOptions>, "customPages"|"logNotDocumented"> & {
@@ -65,7 +69,8 @@ export const options: TsDocsOptions = {
     structure: "@ts-docs/default-docs-structure",
     entryPoints: [],
     name: "",
-    exportMode: "simple"
+    exportMode: "simple",
+    style: {}
 };
 
 export function addOptionSource(source: OptionSource) : void {
@@ -87,6 +92,7 @@ export function addOptionSource(source: OptionSource) : void {
     if (source.sort && (source.sort !== "alphabetical" && source.sort !== "source")) return emitError`Sort must be either 'alphabetical' or 'source'.`;
     if (source.test && typeof source.test !== "string") return emitError`Test must be a string.`;
     if (source.logNotDocumented !== undefined && (typeof source.logNotDocumented !== "boolean" && !Array.isArray(source.logNotDocumented))) return emitError`logNotDocumented option must be either boolean or an array of strings ("class", "interface", "enum", "type", "function", "constant").`;
+    if (source.style && typeof source.style !== "object") return emitError`Style must be an object.`;
     Object.assign(options, source);
 } 
 
@@ -135,6 +141,7 @@ export function showHelp() : void {
     console.log(
         `──── ts-docs help ────
 Usage: ts-docs [...entryFiles]
+See more about each option at https://tsdocs.xyz/pages/Guides/Options
 
 
 --structure             The documentation structure to use. 

@@ -104,6 +104,7 @@ export class Generator {
         this.projects = projects || extractor.run();
         initMarkdown(this);
         const out = this.fileHost.createDir("./", this.settings.out);
+        this.settings.out = out;
         const assetsFolder = this.fileHost.createDir(out, "./assets");
         this.fileHost.copyFolder(this.structure.assetsPath, assetsFolder);
         if (this.settings.assets) this.fileHost.copyFolder(this.settings.assets, assetsFolder);
