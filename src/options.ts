@@ -54,6 +54,7 @@ export interface TsDocsOptions {
     docTests?: boolean,
     test?: string,
     logNotDocumented?: Set<string>,
+    documentImports?: boolean,
     style: {
         forceTheme?: "dark" | "light",
         dontCollapseCategories?: boolean
@@ -168,6 +169,7 @@ See more about each option at https://tsdocs.xyz/pages/Guides/Options
 --docTests              Runs any typescript code blocks above methods / functions as unit tests.
 --test                  Run only tests with a specific function / class name.
 --logNotDocumented      Lists all declarations (class, interface, enum, type, function, constant) without a documentation comment.
+--documentImports       Documents all imported items, even if they aren't exported from the root, or used in an exported item.
 --version, --v    
 --help
 `);
