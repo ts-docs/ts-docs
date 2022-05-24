@@ -211,6 +211,21 @@ You can filter out items by passing an array of strings instead. If you have the
 "logNotDocumented": ["class", "interface"]
 ```
 
+### documentImports
+
+Documents every exported item (class, interface, enum, function, etc.) from the entry points imports. The item(s) don't have to be exported or used in another item in order to be documented. This is especially useful when documenting apps and not libraries. For example:
+
+```ts
+import { ItemA, itemB } from "./a";
+
+(() => {
+    const a = new ItemA();
+    a.run(itemB(123));
+})();
+```
+
+Even though both `ItemA` and `itemB` are used, they aren't exported, and they're also not used in any item declaration, so by default ts-docs will completely ignore them. If you enable this option, ts-docs will instead document them.
+
 ### style
 
 A object for controlling how the generated documentation looks. Available properties:

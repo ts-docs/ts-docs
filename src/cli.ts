@@ -56,6 +56,7 @@ const args = parseArgs(process.argv.slice(2)) as TsDocsCLIArgs;
         passthroughModules: options.passthroughModules,
         tsconfig: options.tsconfig,
         fileCache: options.forceEmit ? undefined : fileCache,
+        documentImports: options.documentImports,
         stripInternal: options.stripInternal
     });
 
