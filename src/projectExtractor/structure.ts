@@ -1,4 +1,5 @@
 import * as ts from "typescript";
+import { BitField } from "./utils";
 
 /**
  * An item path is the module path to which an item definition
@@ -34,6 +35,7 @@ export interface ProjectMetadata {
 export interface Module {
     name: string,
     modules: Map<string, Module>,
+    classes: ClassDeclaration[],
     baseDir: string,
     path: ItemPath,
     ref: TypeReference,
@@ -103,19 +105,28 @@ export enum TypeReferenceKind {
     External
 }
 
+export enum DeclarationKind {
+    Class,
+    Interface,
+    Enum,
+    Function,
+    Constant,
+    TypeAlias
+}
+
+export interface BaseNode {
+    loc: LoC,
+    jsDoc?: JSDocData
+}
+
 /**
  * Nodes are the objects which create types. For example: class declarations,
  * interface declarations, type aliases, etc.
  */
-export interface Node {
+export interface Node extends BaseNode {
     name: string,
-    loc: LoC,
-    jsDoc?: JSDocData,
+    id?: number,
     otherDefs?: LoC[]
-}
-
-export interface BaseType {
-    kind: TypeKind
 }
 
 /**
@@ -134,10 +145,126 @@ export interface TypeReference {
     link?: string
 }
 
-export interface Reference extends BaseType {
+export interface Reference {
+    kind: TypeKind.Reference,
     type: TypeReference,
     typeArguments?: Type[]
 }
+
+export enum PropertyFlags {
+    Optional = 1 << 0,
+    Readonly = 1 << 1,
+    Exclamation = 1 << 2
+}
+
+export interface PropertySignature extends Node {
+    flags: BitField<PropertyFlags>,
+    computed?: Type,
+    type?: Type,
+    initializer?: Type
+}
+
+export interface IndexSignature extends BaseNode {
+    key?: Type,
+    type: Type
+}
+
+export enum FunctionParameterFlags {
+    Optional = 1 << 0,
+    Spread = 1 << 1
+}
+
+export interface FunctionParameter {
+    name: string,
+    flags: FunctionParameterFlags,
+    type?: Type,
+    defaultValue?: Type,
+    description?: string,
+    jsDoc?: JSDocData[]
+}
+
+export interface TypeParameter {
+    name: string,
+    default?: Type,
+    constraint?: Type
+}
+
+export interface MethodSignature extends Node {
+    returnType: Type,
+    parameters: FunctionParameter[],
+    typeParameters: TypeParameter[],
+    isGenerator?: boolean
+}
+
+export interface Signature {
+    property?: PropertySignature,
+    index?: IndexSignature,
+    call?: MethodSignature,
+    constructor?: MethodSignature
+}
+
+export enum ClassMemberFlags {
+    Public = 1 << 0,
+    Private = 1 << 1,
+    Static = 1 << 2,
+    Protected = 1 << 3,
+    Abstract = 1 << 4
+}
+
+export interface ClassMember {
+    classFlags: ClassMemberFlags
+}
+
+export type ClassProperty = PropertySignature & ClassMember;
+export type ClassMethod = ClassMember & { signatures: MethodSignature };
+
+export interface ClassDeclaration extends Node {
+    kind: DeclarationKind.Class,
+    properties: ClassProperty[],
+    methods: ClassMethod[],
+    indexSignature?: IndexSignature,
+    isAbstract?: boolean,
+    extends?: Type,
+    implements?: Type[],
+    _constructor?: MethodSignature
+}
+
+export interface InterfaceDeclaration extends Node {
+    kind: DeclarationKind.Interface,
+    properties: Signature[],
+    typeParameters: TypeParameter[],
+    extends: Type[],
+    implements: Type[]
+}
+
+export interface EnumMember extends Node {
+    name: string,
+    initializer?: Type
+}
+
+export interface EnumDeclaration extends Node {
+    kind: DeclarationKind.Enum,
+    members: EnumMember[],
+    isConst?: boolean
+}
+
+export interface TypeAliasDeclaration extends Node {
+    kind: DeclarationKind.TypeAlias,
+    value: Type,
+    typeParameters: TypeParameter[],
+}
+
+export interface ConstantDeclaration extends Node {
+    kind: DeclarationKind.Constant,
+    type?: Type,
+    content?: string
+}
+
+export interface FunctionDeclaration extends Node {
+    signatures: MethodSignature[]
+}
+
+export type Declaration = ClassDeclaration | InterfaceDeclaration | EnumDeclaration | TypeAliasDeclaration | ConstantDeclaration | FunctionDeclaration;
 
 /**
  * Types are either references to nodes, or use nodes in some way.

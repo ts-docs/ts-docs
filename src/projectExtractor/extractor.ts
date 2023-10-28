@@ -1,6 +1,6 @@
 import * as ts from "typescript";
 import * as path from "path";
-import { ItemPath, LoC, Module, Node, TypeReference, TypeReferenceKind } from "./structure";
+import { ClassDeclaration, ItemPath, LoC, Module, Node, PropertySignature, TypeReference, TypeReferenceKind } from "./structure";
 import { PackageJSON, getPackageJSON, getTsconfig, joinPartOfArray, resolvePackageName } from "./utils";
 
 export interface TypescriptExtractorSettings {
@@ -24,6 +24,7 @@ export class TypescriptExtractor implements Module {
     name: string;
     baseDir: string;
     modules: Map<string, Module>;
+    classes: ClassDeclaration[];
     path: ItemPath;
     ref: TypeReference;
     packageJSON?: PackageJSON;
@@ -32,6 +33,7 @@ export class TypescriptExtractor implements Module {
         this.baseDir = basePath;
         this.shared = shared;
         this.modules = new Map();
+        this.classes = [];
         this.path = [];
         this.packageJSON = getPackageJSON(basePath);
         this.name = this.packageJSON?.name ? resolvePackageName(this.packageJSON.name) : basePath.slice(basePath.lastIndexOf(path.sep) + 1);
@@ -39,8 +41,25 @@ export class TypescriptExtractor implements Module {
 
         for (const fileName of tsConfig.fileNames) {
             //const file = shared.program.getSourceFile(fileName);
+            console.log(fileName);
             this.getOrCreateChildModule(fileName);
         }
+    }
+
+    addSymbol(symbol: ts.Symbol) {
+        
+    }
+
+    addClassDeclaration(symbol: ts.Symbol) : void {
+
+    }
+
+    createSignature(symbol: ts.Symbol) : Signature | undefined {
+        const node = symbol.valueDeclaration;
+        if (!node) return;
+        const type = this.shared.checker.getTypeOfSymbolAtLocation(symbol, node);
+        if (!type) return;
+        
     }
 
     getOrCreateChildModule(source: string) : Module {
@@ -94,6 +113,7 @@ export class TypescriptExtractor implements Module {
             baseDir,
             namespace,
             modules: new Map(),
+            classes: [],
             ref: {
                 name,
                 path,

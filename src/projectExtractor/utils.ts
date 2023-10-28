@@ -76,3 +76,36 @@ export function joinPartOfArray(array: Array<string>, endAt: number, separator: 
     }
     return result;
 }
+
+export class BitField<T extends number> {
+    bits: number;
+    constructor(bits: T) {
+        this.bits = bits;
+    }
+
+    has(bit: number) : boolean {
+        return (this.bits & bit) === bit;
+    }
+
+    set(...bits: T[]) {
+        for (const bit of bits) {
+            this.bits |= bit;
+        }
+    }
+
+    remove(...bits: T[]) {
+        let total = 0;
+        for (const bit of bits) {
+            total |= bit;
+        }
+        this.bits &= ~total;
+    }
+
+    toJSON() : number {
+        return this.bits;
+    }
+
+    static has(bitfield: number, bit: number) : boolean {
+        return (bitfield & bit) === bit;
+    }
+}
