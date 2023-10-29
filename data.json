@@ -27,7 +27,7 @@
                             "line": 18,
                             "character": 1
                         },
-                        "sourceFile": "\\src\\extractor"
+                        "sourceFile": "/src/projectExtractor/extractor.ts"
                     },
                     "properties": [
                         {
@@ -297,7 +297,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 90,
+                                            "line": 85,
                                             "character": 5
                                         }
                                     }
@@ -346,7 +346,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 113,
+                                            "line": 108,
                                             "character": 5
                                         }
                                     }
@@ -407,7 +407,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 123,
+                                            "line": 118,
                                             "character": 5
                                         }
                                     }
@@ -456,7 +456,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 142,
+                                            "line": 137,
                                             "character": 5
                                         }
                                     }
@@ -505,7 +505,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 155,
+                                            "line": 150,
                                             "character": 5
                                         }
                                     }
@@ -542,7 +542,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 166,
+                                            "line": 161,
                                             "character": 5
                                         }
                                     }
@@ -579,7 +579,44 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 174,
+                                            "line": 169,
+                                            "character": 5
+                                        }
+                                    }
+                                }
+                            ],
+                            "flags": 0
+                        },
+                        {
+                            "name": "createType",
+                            "signatures": [
+                                {
+                                    "parameters": [
+                                        {
+                                            "name": "t",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Type",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "unknown",
+                                            "path": [],
+                                            "kind": 10
+                                        }
+                                    },
+                                    "loc": {
+                                        "pos": {
+                                            "line": 181,
                                             "character": 5
                                         }
                                     }
@@ -640,44 +677,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 186,
-                                            "character": 5
-                                        }
-                                    }
-                                }
-                            ],
-                            "flags": 0
-                        },
-                        {
-                            "name": "createType",
-                            "signatures": [
-                                {
-                                    "parameters": [
-                                        {
-                                            "name": "t",
-                                            "flags": 0,
-                                            "type": {
-                                                "kind": 0,
-                                                "type": {
-                                                    "name": "Type",
-                                                    "path": [],
-                                                    "kind": 0
-                                                }
-                                            }
-                                        }
-                                    ],
-                                    "typeParameters": [],
-                                    "returnType": {
-                                        "kind": 0,
-                                        "type": {
-                                            "name": "unknown",
-                                            "path": [],
-                                            "kind": 10
-                                        }
-                                    },
-                                    "loc": {
-                                        "pos": {
-                                            "line": 196,
+                                            "line": 189,
                                             "character": 5
                                         }
                                     }
@@ -714,7 +714,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 204,
+                                            "line": 199,
                                             "character": 5
                                         }
                                     }
@@ -751,7 +751,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 227,
+                                            "line": 222,
                                             "character": 5
                                         }
                                     }
@@ -792,7 +792,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 233,
+                                            "line": 228,
                                             "character": 5
                                         }
                                     }
@@ -829,7 +829,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 240,
+                                            "line": 235,
                                             "character": 5
                                         }
                                     }
@@ -878,7 +878,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 273,
+                                            "line": 268,
                                             "character": 5
                                         }
                                     }
@@ -902,7 +902,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 280,
+                                            "line": 275,
                                             "character": 5
                                         }
                                     }
@@ -924,7 +924,7 @@
                             "line": 90,
                             "character": 1
                         },
-                        "sourceFile": "\\src\\utils"
+                        "sourceFile": "/src/projectExtractor/utils.ts"
                     },
                     "properties": [
                         {
@@ -1100,7 +1100,7 @@
                     "line": 5,
                     "character": 148
                 },
-                "sourceFile": "C:\\Users\\volen\\Desktop\\Projects\\NPM\\ts-docs\\ts-docs\\index"
+                "sourceFile": "/src/index.ts"
             },
             "properties": [],
             "methods": [],

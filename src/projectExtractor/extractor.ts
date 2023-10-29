@@ -58,6 +58,7 @@ export class TypescriptExtractor implements Module {
     registerClassDeclaration(symbol: ts.Symbol, currentModule: Module): void {
         const [type, decl] = this.getSymbolType<ts.ClassDeclaration>(symbol);
         if (!type || !decl) return;
+
         const ref = {
             name: symbol.name,
             path: currentModule.path,
@@ -78,6 +79,8 @@ export class TypescriptExtractor implements Module {
             name: symbol.name,
             implements: implementsClause,
             extends: extendsClause,
+            typeParameters: mapRealValues((type as ts.InterfaceType).typeParameters, (p) => this.createTypeParameter(p)),
+            isAbstract: hasModifier(decl, ts.SyntaxKind.AbstractKeyword),
             loc: this.createLoC(symbol, currentModule, true),
             ...this.createObjectLiteral(symbol, currentModule),
         };
@@ -181,21 +184,21 @@ export class TypescriptExtractor implements Module {
         };
     }
 
+    createType(t: ts.Type): Type {
+        if (!t.symbol) return { kind: TypeKind.Reference, type: { name: "unknown", path: [], kind: TypeReferenceKind.External }};
+        return {
+            kind: TypeKind.Reference,
+            type: { name: t.symbol.name, path: [], kind: TypeReferenceKind.Class }
+        };
+    }
+
     createLoC(symbol: ts.Symbol | ts.Node, currentModule: Module, includeSourceFile?: boolean): LoC {
         const decl = ("name" in symbol && typeof symbol.name === "string") ? symbol.valueDeclaration : (symbol as ts.Node);
         if (!decl) throw "Expected variable declaration.";
         const source = decl.getSourceFile();
         return {
             pos: ts.getLineAndCharacterOfPosition(source, decl.pos),
-            sourceFile: includeSourceFile ? path.join(currentModule.baseDir, path.parse(source.fileName).name) : undefined
-        };
-    }
-
-    createType(t: ts.Type): Type {
-        if (!t.symbol) return { kind: TypeKind.Reference, type: { name: "unknown", path: [], kind: TypeReferenceKind.External }};
-        return {
-            kind: TypeKind.Reference,
-            type: { name: t.symbol.name, path: [], kind: TypeReferenceKind.Class }
+            sourceFile: includeSourceFile ? source.fileName.slice(this.baseDir.length) : undefined
         };
     }
 

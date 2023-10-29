@@ -81,9 +81,9 @@ export function hasModifier(node: ts.HasModifiers, modifier: ts.SyntaxKind) : bo
     return node.modifiers?.some(mod => mod.kind === modifier);
 }
 
-export function mapRealValues<T, K>(array: T[], cb: (item: T) => K | undefined) : K[] {
+export function mapRealValues<T, K>(array: readonly T[] | undefined, cb: (item: T) => K | undefined) : K[] {
     const newArray: K[] = [];
-    for (const value of array) {
+    for (const value of (array || [])) {
         const mapped = cb(value);
         if (mapped) newArray.push(mapped);
     }

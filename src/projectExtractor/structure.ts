@@ -233,9 +233,10 @@ export interface ClassDeclaration extends ObjectLiteral, Node {
     kind: DeclarationKind.Class,
     //properties: ClassProperty[],
     //methods: ClassMethod[],
-    isAbstract?: boolean,
+    typeParameters: TypeParameter[],
     extends: Type[],
-    implements: Type[]
+    implements: Type[],
+    isAbstract?: boolean
 }
 
 export interface InterfaceDeclaration extends ObjectLiteral, Node {
