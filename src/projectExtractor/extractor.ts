@@ -159,7 +159,7 @@ export class TypescriptExtractor implements Module {
         if (!type || !decl) return;
         return {
             name: symbol.name,
-            computed: symbol.name === "__computed" ? this.createType(this.shared.checker.getTypeAtLocation(decl.name)) : undefined,
+            computed: ts.isComputedPropertyName(decl.name) ? this.createType(this.shared.checker.getTypeAtLocation(decl.name.expression)) : undefined,
             type: decl.questionToken ? this.createType(this.shared.checker.getNonNullableType(type)) : this.createType(type),
             flags: new BitField([decl.questionToken && PropertyFlags.Optional, decl.exclamationToken && PropertyFlags.Exclamation, hasModifier(decl, ts.SyntaxKind.ReadonlyKeyword) && PropertyFlags.Readonly]),
             jsDoc: this.getJSDocData(decl),

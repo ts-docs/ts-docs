@@ -297,7 +297,7 @@
                                             }
                                         },
                                         {
-                                            "name": "handleClassFlags1",
+                                            "name": "handleClassFlags",
                                             "flags": 0,
                                             "type": {
                                                 "kind": 0,
@@ -352,7 +352,7 @@
                                             }
                                         },
                                         {
-                                            "name": "handleClassFlags2",
+                                            "name": "handleClassFlags",
                                             "flags": 0,
                                             "type": {
                                                 "kind": 0,
@@ -376,7 +376,7 @@
                                     "loc": {
                                         "pos": {
                                             "line": 90,
-                                            "character": 108
+                                            "character": 107
                                         }
                                     }
                                 }
@@ -1195,7 +1195,11 @@
             "name": "Test",
             "implements": [],
             "extends": [],
-            "typeParameters": [],
+            "typeParameters": [
+                {
+                    "name": "T"
+                }
+            ],
             "isAbstract": false,
             "loc": {
                 "pos": {
@@ -1207,6 +1211,14 @@
             "properties": [
                 {
                     "name": "1",
+                    "computed": {
+                        "kind": 0,
+                        "type": {
+                            "name": "B",
+                            "path": [],
+                            "kind": 0
+                        }
+                    },
                     "type": {
                         "kind": 0,
                         "type": {
@@ -1219,7 +1231,7 @@
                     "loc": {
                         "pos": {
                             "line": 12,
-                            "character": 19
+                            "character": 22
                         }
                     },
                     "classFlags": 0

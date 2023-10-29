@@ -10,7 +10,7 @@ export enum A {
     B
 }
 
-export class Test {
+export class Test<T> {
     //[key: string]: number;
     [A.B]: string = "abc";
     //private someProp: string;
