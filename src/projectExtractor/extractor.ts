@@ -130,6 +130,7 @@ export class TypescriptExtractor implements Module {
         if (!type || !decl) return;
         return {
             name: symbol.name,
+            computed: ts.isComputedPropertyName(decl.name) ? this.createType(this.shared.checker.getTypeAtLocation(decl.name.expression)) : undefined,
             signatures: this.createMethodSignatures(type, decl, currentModule),
             flags: new BitField([decl.asteriskToken && MethodFlags.Generator, hasModifier(decl, ts.SyntaxKind.AsyncKeyword) && MethodFlags.Async])
         };

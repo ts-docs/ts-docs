@@ -203,6 +203,7 @@ export enum MethodFlags {
 
 export interface Method {
     name: string,
+    computed?: Type,
     signatures: MethodSignature[],
     flags: BitField
 }

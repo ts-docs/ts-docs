@@ -13,6 +13,9 @@ export enum A {
 export class Test<T> {
     //[key: string]: number;
     [A.B]: string = "abc";
+    [A.A]() {
+
+    }
     //private someProp: string;
 }
 

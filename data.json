@@ -487,7 +487,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 135,
+                                            "line": 136,
                                             "character": 5
                                         }
                                     }
@@ -537,7 +537,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 154,
+                                            "line": 155,
                                             "character": 5
                                         }
                                     }
@@ -587,7 +587,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 167,
+                                            "line": 168,
                                             "character": 5
                                         }
                                     }
@@ -625,7 +625,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 178,
+                                            "line": 179,
                                             "character": 5
                                         }
                                     }
@@ -663,7 +663,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 186,
+                                            "line": 187,
                                             "character": 5
                                         }
                                     }
@@ -701,7 +701,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 198,
+                                            "line": 199,
                                             "character": 5
                                         }
                                     }
@@ -763,7 +763,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 206,
+                                            "line": 207,
                                             "character": 5
                                         }
                                     }
@@ -801,7 +801,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 216,
+                                            "line": 217,
                                             "character": 5
                                         }
                                     }
@@ -839,7 +839,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 239,
+                                            "line": 240,
                                             "character": 5
                                         }
                                     }
@@ -881,7 +881,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 245,
+                                            "line": 246,
                                             "character": 5
                                         }
                                     }
@@ -919,7 +919,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 253,
+                                            "line": 254,
                                             "character": 5
                                         }
                                     }
@@ -969,7 +969,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 286,
+                                            "line": 287,
                                             "character": 5
                                         }
                                     }
@@ -994,7 +994,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 293,
+                                            "line": 294,
                                             "character": 5
                                         }
                                     }
@@ -1237,7 +1237,41 @@
                     "classFlags": 0
                 }
             ],
-            "methods": [],
+            "methods": [
+                {
+                    "name": "0",
+                    "computed": {
+                        "kind": 0,
+                        "type": {
+                            "name": "A",
+                            "path": [],
+                            "kind": 0
+                        }
+                    },
+                    "signatures": [
+                        {
+                            "parameters": [],
+                            "typeParameters": [],
+                            "returnType": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "unknown",
+                                    "path": [],
+                                    "kind": 10
+                                }
+                            },
+                            "loc": {
+                                "pos": {
+                                    "line": 14,
+                                    "character": 26
+                                }
+                            }
+                        }
+                    ],
+                    "flags": 0,
+                    "classFlags": 0
+                }
+            ],
             "indexes": [],
             "new": []
         }
