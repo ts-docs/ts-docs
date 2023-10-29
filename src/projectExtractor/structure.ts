@@ -1,4 +1,4 @@
-import * as ts from "typescript";
+import ts from "typescript";
 import { BitField } from "./utils";
 
 /**
@@ -38,7 +38,6 @@ export interface Module {
     classes: ClassDeclaration[],
     baseDir: string,
     path: ItemPath,
-    ref: TypeReference,
     namespace?: LoC[]
 }
 
@@ -51,15 +50,16 @@ export interface JSDocTag {
 
 export interface JSDocData {
     tags?: JSDocTag[],
-    comment?: string
+    comment: string[]
 }
 
-export interface LoC {
+export interface LoC{
     pos: ts.LineAndCharacter,
     /**
-     * Does not include the module's baseDir
+     * Does not include the module's baseDir. It only exists
+     * when the LoC is for a type definition (class, interface, etc.)
      */
-    sourceFile: string
+    sourceFile?: string
 }
 
 export enum TypeKind {
@@ -145,7 +145,7 @@ export interface TypeReference {
     link?: string
 }
 
-export interface Reference {
+export interface ReferenceType {
     kind: TypeKind.Reference,
     type: TypeReference,
     typeArguments?: Type[]
@@ -158,14 +158,14 @@ export enum PropertyFlags {
 }
 
 export interface PropertySignature extends Node {
-    flags: BitField<PropertyFlags>,
+    flags: BitField,
     computed?: Type,
     type?: Type,
     initializer?: Type
 }
 
 export interface IndexSignature extends BaseNode {
-    key?: Type,
+    key: Type,
     type: Type
 }
 
@@ -176,11 +176,11 @@ export enum FunctionParameterFlags {
 
 export interface FunctionParameter {
     name: string,
-    flags: FunctionParameterFlags,
+    flags: BitField,
     type?: Type,
     defaultValue?: Type,
     description?: string,
-    jsDoc?: JSDocData[]
+    jsDoc?: JSDocData
 }
 
 export interface TypeParameter {
@@ -189,18 +189,22 @@ export interface TypeParameter {
     constraint?: Type
 }
 
-export interface MethodSignature extends Node {
+export interface MethodSignature extends BaseNode {
     returnType: Type,
     parameters: FunctionParameter[],
     typeParameters: TypeParameter[],
     isGenerator?: boolean
 }
 
-export interface Signature {
-    property?: PropertySignature,
-    index?: IndexSignature,
-    call?: MethodSignature,
-    constructor?: MethodSignature
+export enum MethodFlags {
+    Async = 1 << 0,
+    Generator = 1 << 1
+}
+
+export interface Method {
+    name: string,
+    signatures: MethodSignature[],
+    flags: BitField
 }
 
 export enum ClassMemberFlags {
@@ -216,22 +220,26 @@ export interface ClassMember {
 }
 
 export type ClassProperty = PropertySignature & ClassMember;
-export type ClassMethod = ClassMember & { signatures: MethodSignature };
+export type ClassMethod = Method & ClassMember;
 
-export interface ClassDeclaration extends Node {
-    kind: DeclarationKind.Class,
-    properties: ClassProperty[],
-    methods: ClassMethod[],
-    indexSignature?: IndexSignature,
-    isAbstract?: boolean,
-    extends?: Type,
-    implements?: Type[],
-    _constructor?: MethodSignature
+export interface ObjectLiteral {
+    properties: PropertySignature[],
+    methods: Method[],
+    indexes: IndexSignature[],
+    new: Method[]
 }
 
-export interface InterfaceDeclaration extends Node {
+export interface ClassDeclaration extends ObjectLiteral, Node {
+    kind: DeclarationKind.Class,
+    //properties: ClassProperty[],
+    //methods: ClassMethod[],
+    isAbstract?: boolean,
+    extends: Type[],
+    implements: Type[]
+}
+
+export interface InterfaceDeclaration extends ObjectLiteral, Node {
     kind: DeclarationKind.Interface,
-    properties: Signature[],
     typeParameters: TypeParameter[],
     extends: Type[],
     implements: Type[]
@@ -260,13 +268,14 @@ export interface ConstantDeclaration extends Node {
     content?: string
 }
 
-export interface FunctionDeclaration extends Node {
-    signatures: MethodSignature[]
-}
+export type FunctionDeclaration = Method & Node;
 
 export type Declaration = ClassDeclaration | InterfaceDeclaration | EnumDeclaration | TypeAliasDeclaration | ConstantDeclaration | FunctionDeclaration;
 
+export interface ObjectLiteralType extends ObjectLiteral {
+    kind: TypeKind.ObjectLiteral
+}
 /**
  * Types are either references to nodes, or use nodes in some way.
  */
-export type Type = Reference;
+export type Type = ReferenceType | ObjectLiteralType;

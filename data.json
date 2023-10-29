@@ -1,0 +1,1121 @@
+{
+    "name": "ts-docs",
+    "baseDir": "C:/Users/volen/Desktop/Projects/NPM/ts-docs/ts-docs",
+    "modules": [
+        {
+            "name": "projectExtractor",
+            "path": [],
+            "baseDir": "/src",
+            "modules": {},
+            "classes": [
+                {
+                    "kind": 0,
+                    "name": "TypescriptExtractor",
+                    "implements": [
+                        {
+                            "kind": 0,
+                            "type": {
+                                "name": "Module",
+                                "path": [],
+                                "kind": 0
+                            }
+                        }
+                    ],
+                    "extends": [],
+                    "loc": {
+                        "pos": {
+                            "line": 18,
+                            "character": 1
+                        },
+                        "sourceFile": "\\src\\extractor"
+                    },
+                    "properties": [
+                        {
+                            "name": "name",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "unknown",
+                                    "path": [],
+                                    "kind": 10
+                                }
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 23,
+                                    "character": 52
+                                }
+                            }
+                        },
+                        {
+                            "name": "baseDir",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "unknown",
+                                    "path": [],
+                                    "kind": 10
+                                }
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 24,
+                                    "character": 17
+                                }
+                            }
+                        },
+                        {
+                            "name": "modules",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "Map",
+                                    "path": [],
+                                    "kind": 0
+                                }
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 25,
+                                    "character": 20
+                                }
+                            }
+                        },
+                        {
+                            "name": "classes",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "Array",
+                                    "path": [],
+                                    "kind": 0
+                                }
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 26,
+                                    "character": 33
+                                }
+                            }
+                        },
+                        {
+                            "name": "path",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "Array",
+                                    "path": [],
+                                    "kind": 0
+                                }
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 27,
+                                    "character": 32
+                                }
+                            }
+                        },
+                        {
+                            "name": "packageJSON",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "PackageJSON",
+                                    "path": [],
+                                    "kind": 0
+                                }
+                            },
+                            "flags": 1,
+                            "loc": {
+                                "pos": {
+                                    "line": 28,
+                                    "character": 19
+                                }
+                            }
+                        },
+                        {
+                            "name": "shared",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "Shared",
+                                    "path": [],
+                                    "kind": 0
+                                }
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 29,
+                                    "character": 30
+                                }
+                            }
+                        }
+                    ],
+                    "methods": [
+                        {
+                            "name": "addSymbol",
+                            "signatures": [
+                                {
+                                    "parameters": [
+                                        {
+                                            "name": "symbol",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Symbol",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "name": "currentModule",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Module",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "unknown",
+                                            "path": [],
+                                            "kind": 10
+                                        }
+                                    },
+                                    "loc": {
+                                        "pos": {
+                                            "line": 51,
+                                            "character": 5
+                                        }
+                                    }
+                                }
+                            ],
+                            "flags": 0
+                        },
+                        {
+                            "name": "registerClassDeclaration",
+                            "signatures": [
+                                {
+                                    "parameters": [
+                                        {
+                                            "name": "symbol",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Symbol",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "name": "currentModule",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Module",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "unknown",
+                                            "path": [],
+                                            "kind": 10
+                                        }
+                                    },
+                                    "loc": {
+                                        "pos": {
+                                            "line": 55,
+                                            "character": 5
+                                        }
+                                    }
+                                }
+                            ],
+                            "flags": 0
+                        },
+                        {
+                            "name": "createObjectLiteral",
+                            "signatures": [
+                                {
+                                    "parameters": [
+                                        {
+                                            "name": "type",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Symbol",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "name": "currentModule",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Module",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "ObjectLiteral",
+                                            "path": [],
+                                            "kind": 0
+                                        }
+                                    },
+                                    "loc": {
+                                        "pos": {
+                                            "line": 90,
+                                            "character": 5
+                                        }
+                                    }
+                                }
+                            ],
+                            "flags": 0
+                        },
+                        {
+                            "name": "createMethod",
+                            "signatures": [
+                                {
+                                    "parameters": [
+                                        {
+                                            "name": "symbol",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Symbol",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "name": "currentModule",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Module",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "unknown",
+                                            "path": [],
+                                            "kind": 10
+                                        }
+                                    },
+                                    "loc": {
+                                        "pos": {
+                                            "line": 113,
+                                            "character": 5
+                                        }
+                                    }
+                                }
+                            ],
+                            "flags": 0
+                        },
+                        {
+                            "name": "createMethodSignatures",
+                            "signatures": [
+                                {
+                                    "parameters": [
+                                        {
+                                            "name": "type",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Type",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "name": "decl",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "unknown",
+                                                    "path": [],
+                                                    "kind": 10
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "name": "currentModule",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Module",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "Array",
+                                            "path": [],
+                                            "kind": 0
+                                        }
+                                    },
+                                    "loc": {
+                                        "pos": {
+                                            "line": 123,
+                                            "character": 5
+                                        }
+                                    }
+                                }
+                            ],
+                            "flags": 0
+                        },
+                        {
+                            "name": "createPropertySignature",
+                            "signatures": [
+                                {
+                                    "parameters": [
+                                        {
+                                            "name": "symbol",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Symbol",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "name": "currentModule",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Module",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "unknown",
+                                            "path": [],
+                                            "kind": 10
+                                        }
+                                    },
+                                    "loc": {
+                                        "pos": {
+                                            "line": 142,
+                                            "character": 5
+                                        }
+                                    }
+                                }
+                            ],
+                            "flags": 0
+                        },
+                        {
+                            "name": "createIndexSignature",
+                            "signatures": [
+                                {
+                                    "parameters": [
+                                        {
+                                            "name": "symbol",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Symbol",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "name": "currentModule",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Module",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "unknown",
+                                            "path": [],
+                                            "kind": 10
+                                        }
+                                    },
+                                    "loc": {
+                                        "pos": {
+                                            "line": 155,
+                                            "character": 5
+                                        }
+                                    }
+                                }
+                            ],
+                            "flags": 0
+                        },
+                        {
+                            "name": "createTypeParameter",
+                            "signatures": [
+                                {
+                                    "parameters": [
+                                        {
+                                            "name": "type",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "TypeParameter",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "TypeParameter",
+                                            "path": [],
+                                            "kind": 0
+                                        }
+                                    },
+                                    "loc": {
+                                        "pos": {
+                                            "line": 166,
+                                            "character": 5
+                                        }
+                                    }
+                                }
+                            ],
+                            "flags": 0
+                        },
+                        {
+                            "name": "createParameter",
+                            "signatures": [
+                                {
+                                    "parameters": [
+                                        {
+                                            "name": "symbol",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Symbol",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "unknown",
+                                            "path": [],
+                                            "kind": 10
+                                        }
+                                    },
+                                    "loc": {
+                                        "pos": {
+                                            "line": 174,
+                                            "character": 5
+                                        }
+                                    }
+                                }
+                            ],
+                            "flags": 0
+                        },
+                        {
+                            "name": "createLoC",
+                            "signatures": [
+                                {
+                                    "parameters": [
+                                        {
+                                            "name": "symbol",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "unknown",
+                                                    "path": [],
+                                                    "kind": 10
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "name": "currentModule",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Module",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "name": "includeSourceFile",
+                                            "flags": 1,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "unknown",
+                                                    "path": [],
+                                                    "kind": 10
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "LoC",
+                                            "path": [],
+                                            "kind": 0
+                                        }
+                                    },
+                                    "loc": {
+                                        "pos": {
+                                            "line": 186,
+                                            "character": 5
+                                        }
+                                    }
+                                }
+                            ],
+                            "flags": 0
+                        },
+                        {
+                            "name": "createType",
+                            "signatures": [
+                                {
+                                    "parameters": [
+                                        {
+                                            "name": "t",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Type",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "unknown",
+                                            "path": [],
+                                            "kind": 10
+                                        }
+                                    },
+                                    "loc": {
+                                        "pos": {
+                                            "line": 196,
+                                            "character": 5
+                                        }
+                                    }
+                                }
+                            ],
+                            "flags": 0
+                        },
+                        {
+                            "name": "getJSDocData",
+                            "signatures": [
+                                {
+                                    "parameters": [
+                                        {
+                                            "name": "node",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Node",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "unknown",
+                                            "path": [],
+                                            "kind": 10
+                                        }
+                                    },
+                                    "loc": {
+                                        "pos": {
+                                            "line": 204,
+                                            "character": 5
+                                        }
+                                    }
+                                }
+                            ],
+                            "flags": 0
+                        },
+                        {
+                            "name": "getNodeType",
+                            "signatures": [
+                                {
+                                    "parameters": [
+                                        {
+                                            "name": "node",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Node",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "Type",
+                                            "path": [],
+                                            "kind": 0
+                                        }
+                                    },
+                                    "loc": {
+                                        "pos": {
+                                            "line": 227,
+                                            "character": 5
+                                        }
+                                    }
+                                }
+                            ],
+                            "flags": 0
+                        },
+                        {
+                            "name": "getSymbolType",
+                            "signatures": [
+                                {
+                                    "parameters": [
+                                        {
+                                            "name": "symbol",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Symbol",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [
+                                        {
+                                            "name": "T"
+                                        }
+                                    ],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "unknown",
+                                            "path": [],
+                                            "kind": 10
+                                        }
+                                    },
+                                    "loc": {
+                                        "pos": {
+                                            "line": 233,
+                                            "character": 5
+                                        }
+                                    }
+                                }
+                            ],
+                            "flags": 0
+                        },
+                        {
+                            "name": "getOrCreateChildModule",
+                            "signatures": [
+                                {
+                                    "parameters": [
+                                        {
+                                            "name": "source",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "unknown",
+                                                    "path": [],
+                                                    "kind": 10
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "Module",
+                                            "path": [],
+                                            "kind": 0
+                                        }
+                                    },
+                                    "loc": {
+                                        "pos": {
+                                            "line": 240,
+                                            "character": 5
+                                        }
+                                    }
+                                }
+                            ],
+                            "flags": 0
+                        },
+                        {
+                            "name": "getRepositoryURLForNode",
+                            "signatures": [
+                                {
+                                    "parameters": [
+                                        {
+                                            "name": "node",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "BaseNode",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "name": "parentNode",
+                                            "flags": 1,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "unknown",
+                                                    "path": [],
+                                                    "kind": 10
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "unknown",
+                                            "path": [],
+                                            "kind": 10
+                                        }
+                                    },
+                                    "loc": {
+                                        "pos": {
+                                            "line": 273,
+                                            "character": 5
+                                        }
+                                    }
+                                }
+                            ],
+                            "flags": 0
+                        },
+                        {
+                            "name": "toJSON",
+                            "signatures": [
+                                {
+                                    "parameters": [],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "__type",
+                                            "path": [],
+                                            "kind": 0
+                                        }
+                                    },
+                                    "loc": {
+                                        "pos": {
+                                            "line": 280,
+                                            "character": 5
+                                        }
+                                    }
+                                }
+                            ],
+                            "flags": 0
+                        }
+                    ],
+                    "indexes": [],
+                    "new": []
+                },
+                {
+                    "kind": 0,
+                    "name": "BitField",
+                    "implements": [],
+                    "extends": [],
+                    "loc": {
+                        "pos": {
+                            "line": 90,
+                            "character": 1
+                        },
+                        "sourceFile": "\\src\\utils"
+                    },
+                    "properties": [
+                        {
+                            "name": "bits",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "unknown",
+                                    "path": [],
+                                    "kind": 10
+                                }
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 92,
+                                    "character": 23
+                                }
+                            }
+                        }
+                    ],
+                    "methods": [
+                        {
+                            "name": "has",
+                            "signatures": [
+                                {
+                                    "parameters": [
+                                        {
+                                            "name": "bit",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "unknown",
+                                                    "path": [],
+                                                    "kind": 10
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "unknown",
+                                            "path": [],
+                                            "kind": 10
+                                        }
+                                    },
+                                    "loc": {
+                                        "pos": {
+                                            "line": 97,
+                                            "character": 5
+                                        }
+                                    }
+                                }
+                            ],
+                            "flags": 0
+                        },
+                        {
+                            "name": "set",
+                            "signatures": [
+                                {
+                                    "parameters": [
+                                        {
+                                            "name": "bits",
+                                            "flags": 2,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Array",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "unknown",
+                                            "path": [],
+                                            "kind": 10
+                                        }
+                                    },
+                                    "loc": {
+                                        "pos": {
+                                            "line": 101,
+                                            "character": 5
+                                        }
+                                    }
+                                }
+                            ],
+                            "flags": 0
+                        },
+                        {
+                            "name": "remove",
+                            "signatures": [
+                                {
+                                    "parameters": [
+                                        {
+                                            "name": "bits",
+                                            "flags": 2,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Array",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "unknown",
+                                            "path": [],
+                                            "kind": 10
+                                        }
+                                    },
+                                    "loc": {
+                                        "pos": {
+                                            "line": 107,
+                                            "character": 5
+                                        }
+                                    }
+                                }
+                            ],
+                            "flags": 0
+                        },
+                        {
+                            "name": "toJSON",
+                            "signatures": [
+                                {
+                                    "parameters": [],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "unknown",
+                                            "path": [],
+                                            "kind": 10
+                                        }
+                                    },
+                                    "loc": {
+                                        "pos": {
+                                            "line": 115,
+                                            "character": 5
+                                        }
+                                    }
+                                }
+                            ],
+                            "flags": 0
+                        }
+                    ],
+                    "indexes": [],
+                    "new": []
+                }
+            ]
+        }
+    ],
+    "classes": [
+        {
+            "kind": 0,
+            "name": "Test",
+            "implements": [],
+            "extends": [],
+            "loc": {
+                "pos": {
+                    "line": 5,
+                    "character": 148
+                },
+                "sourceFile": "C:\\Users\\volen\\Desktop\\Projects\\NPM\\ts-docs\\ts-docs\\index"
+            },
+            "properties": [],
+            "methods": [],
+            "indexes": [],
+            "new": []
+        }
+    ],
+    "path": [],
+    "packageJSON": {
+        "path": "C:\\Users\\volen\\Desktop\\Projects\\NPM\\ts-docs\\ts-docs\\package.json",
+        "name": "@ts-docs/ts-docs",
+        "homepage": "https://tsdocs.xyz/",
+        "version": "0.4.2",
+        "description": "A documentation generator for typescript",
+        "repositoryBase": "https://github.com/ts-docs/ts-docs/tree/dev",
+        "readme": "\n<p align=\"center\">\n  <img src=\"https://github.com/ts-docs/ts-docs/blob/main/assets/logo.png?raw=true\" width=\"200px\" />\n</p>\n\n# ts-docs\n\n[![GitHub license](https://img.shields.io/github/license/ts-docs/ts-docs?style=flat-square)](https://github.com/ts-docs/ts-docs/blob/main/LICENSE)\n[![GitHub stars](https://img.shields.io/github/stars/ts-docs/ts-docs?style=flat-square)](https://github.com/ts-docs/ts-docs/stargazers)\n[![GitHub issues](https://img.shields.io/github/issues/ts-docs/ts-docs?style=flat-square)](https://github.com/ts-docs/ts-docs/issues)\n[![Codacy Badge](https://app.codacy.com/project/badge/Grade/639fba225a094e769b4c8976a30bf7c1)](https://www.codacy.com/gh/ts-docs/ts-docs/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ts-docs/ts-docs&amp;utm_campaign=Badge_Grade)\n\nAn opinionated documentation generator for typescript - generate informative and accurate documentation sites with zero setup.\n\nIf you want to check out how a typical ts-docs documentation looks like, head over to the official docs, found [here](https://ts-docs.github.io/ts-docs/index.html).\n\n## Installation\n\n**Important:** You need typescript 4.3+ in order to use ts-docs!\n\n```\nnpm i --save-dev @ts-docs/ts-docs @ts-docs/default-docs-structure \n```\n\n## Usage \n\nIn order for ts-docs to generate proper documentation, you need to give it one or multiple \"project entry points\". **Every entry point should point to a different project**. You can find out more information about all the options ts-docs has [here](https://ts-docs.github.io/ts-docs/pages/Guides/Options.html).\n\nSimple usage which uses the default options:\n```\nts-docs src/index.ts\n```\n\n## Features\n\n- Documentation structure akin to [docs-rs](https://docs.rs/) and rust in general, every folder inside the project is a different module. \n- Document multiple projects, monorepo support out of the box.\n- Slick design, dark/light theme, powerful search and filter function.\n- Link external references to their respective documentation.\n- Out of the box documentation generation for different branches of your repository.\n- Changelog generation, pulled from github releases.\n- Built-in custom pages support. Host your guides and tutorials right inside the documentation.\n- 100% accurate, you won't find missing references unless they're external.\n- Unit tests inside documentation comments.\n\n## Examples\n\n<details>\n<summary>ts-docs</summary>\n<img src=\"https://i.imgur.com/8FpQb1F.png\">\n</details>\n\n<details>\n<summary>detritus</summary>\n<img src=\"https://i.imgur.com/yBtBsg4.png\">\n</details>\n\n\n## Contributing\n\nContributions are appreciated, feel free to open an issue or a pull request [here](https://github.com/ts-docs/ts-docs).\n\nMake sure to read the [contribution guide](https://github.com/ts-docs/ts-docs/blob/main/.github/CONTRIBUTING.md)."
+    }
+}

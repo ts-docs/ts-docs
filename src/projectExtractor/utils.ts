@@ -77,23 +77,37 @@ export function joinPartOfArray(array: Array<string>, endAt: number, separator: 
     return result;
 }
 
-export class BitField<T extends number> {
+export function hasModifier(node: ts.HasModifiers, modifier: ts.SyntaxKind) : boolean | undefined {
+    return node.modifiers?.some(mod => mod.kind === modifier);
+}
+
+export function mapRealValues<T, K>(array: T[], cb: (item: T) => K | undefined) : K[] {
+    const newArray: K[] = [];
+    for (const value of array) {
+        const mapped = cb(value);
+        if (mapped) newArray.push(mapped);
+    }
+    return newArray;
+}
+
+export class BitField {
     bits: number;
-    constructor(bits: T) {
-        this.bits = bits;
+    constructor(bits: Array<number|undefined|false>) {
+        this.bits = 0;
+        this.set(...bits.filter(b => b !== undefined && b !== false) as number[]);
     }
 
     has(bit: number) : boolean {
         return (this.bits & bit) === bit;
     }
 
-    set(...bits: T[]) {
+    set(...bits: number[]) {
         for (const bit of bits) {
             this.bits |= bit;
         }
     }
 
-    remove(...bits: T[]) {
+    remove(...bits: number[]) {
         let total = 0;
         for (const bit of bits) {
             total |= bit;
@@ -106,6 +120,6 @@ export class BitField<T extends number> {
     }
 
     static has(bitfield: number, bit: number) : boolean {
-        return (bitfield & bit) === bit;
+        return (bitfield & bit) !== 0;
     }
 }
