@@ -81,20 +81,20 @@ export class TypescriptExtractor implements Module {
             extends: extendsClause,
             typeParameters: mapRealValues((type as ts.InterfaceType).typeParameters, (p) => this.createTypeParameter(p)),
             isAbstract: hasModifier(decl, ts.SyntaxKind.AbstractKeyword),
-            loc: this.createLoC(symbol, currentModule, true),
-            ...this.createObjectLiteral(type, currentModule, true),
+            loc: this.createLoC(symbol, true),
+            ...this.createObjectLiteral(type, true),
         };
 
         currentModule.classes.push(classDecl);
     }
 
-    createObjectLiteral(type: ts.Type, currentModule: Module, handleClassFlags: true) : ClassObjectLiteral;
-    createObjectLiteral(type: ts.Type, currentModule: Module, handleClassFlags: false) : ObjectLiteral;
-    createObjectLiteral(type: ts.Type, currentModule: Module, handleClassFlags: boolean) : ObjectLiteral | ClassObjectLiteral {
-        const properties = [], methods: Method[] = [], indexes = [], news: Method[] = [];
+    createObjectLiteral(type: ts.Type, handleClassFlags: true) : ClassObjectLiteral;
+    createObjectLiteral(type: ts.Type, handleClassFlags: false) : ObjectLiteral;
+    createObjectLiteral(type: ts.Type, handleClassFlags: boolean) : ObjectLiteral | ClassObjectLiteral {
+        const properties = [], methods: Method[] = [], news: Method[] = [];
         for (const property of type.getProperties()) {
             if (BitField.has(property.flags, ts.SymbolFlags.Property)) {
-                const sig = this.createPropertySignature(property, currentModule);
+                const sig = this.createPropertySignature(property);
                 if (sig) {
                     if (handleClassFlags) {
                         const decl = property.valueDeclaration as ts.PropertyDeclaration;
@@ -103,7 +103,7 @@ export class TypescriptExtractor implements Module {
                     properties.push(sig);
                 }
             } else if (BitField.has(property.flags, ts.SymbolFlags.Method)) {
-                const sig = this.createMethod(property, currentModule);
+                const sig = this.createMethod(property);
                 if (sig) {
                     if (handleClassFlags) {
                         const decl = property.valueDeclaration as ts.PropertyDeclaration;
@@ -111,32 +111,26 @@ export class TypescriptExtractor implements Module {
                     }
                     methods.push(sig);
                 }
-            } else if (BitField.has(property.flags, ts.SymbolFlags.Signature)) {
-                if (property.name === "__index") {
-                    const indSig = this.createIndexSignature(property, currentModule);
-                    if (indSig) indexes.push(indSig);
-                }
-                else if (property.name === "__new") {
-                    const sig = this.createMethod(property, currentModule);
-                    if (sig) news.push(sig);
-                }
+            } else if (BitField.has(property.flags, ts.SymbolFlags.Signature) && property.name === "__new") {
+                const sig = this.createMethod(property);
+                if (sig) news.push(sig);
             }
         }
-        return { properties, methods, indexes, new: news };
+        return { properties, methods, indexes: this.createIndexSignatures(type), new: news };
     }
 
-    createMethod(symbol: ts.Symbol, currentModule: Module) : Method | undefined {
+    createMethod(symbol: ts.Symbol) : Method | undefined {
         const [type, decl] = this.getSymbolType<ts.MethodDeclaration>(symbol);
         if (!type || !decl) return;
         return {
             name: symbol.name,
             computed: ts.isComputedPropertyName(decl.name) ? this.createType(this.shared.checker.getTypeAtLocation(decl.name.expression)) : undefined,
-            signatures: this.createMethodSignatures(type, decl, currentModule),
+            signatures: this.createMethodSignatures(type, decl),
             flags: new BitField([decl.asteriskToken && MethodFlags.Generator, hasModifier(decl, ts.SyntaxKind.AsyncKeyword) && MethodFlags.Async])
         };
     }
 
-    createMethodSignatures(type: ts.Type, decl: ts.SignatureDeclaration, currentModule: Module): MethodSignature[] {
+    createMethodSignatures(type: ts.Type, decl: ts.SignatureDeclaration): MethodSignature[] {
         const result: MethodSignature[] = [];
         const allSignatures = [...type.getCallSignatures()];
         if (!allSignatures.length) {
@@ -149,13 +143,13 @@ export class TypescriptExtractor implements Module {
                 parameters: mapRealValues(signature.getParameters(), p => this.createParameter(p)),
                 typeParameters: (signature.getTypeParameters() || []).map(p => this.createTypeParameter(p)),
                 returnType: this.createType(signature.getReturnType()),
-                loc: this.createLoC(signature.declaration, currentModule, false)
+                loc: this.createLoC(signature.declaration, false)
             });
         }
         return result;
     }
 
-    createPropertySignature(symbol: ts.Symbol, currentModule: Module) : PropertySignature | undefined {
+    createPropertySignature(symbol: ts.Symbol) : PropertySignature | undefined {
         const [type, decl] = this.getSymbolType<ts.PropertyDeclaration>(symbol);
         if (!type || !decl) return;
         return {
@@ -164,19 +158,23 @@ export class TypescriptExtractor implements Module {
             type: decl.questionToken ? this.createType(this.shared.checker.getNonNullableType(type)) : this.createType(type),
             flags: new BitField([decl.questionToken && PropertyFlags.Optional, decl.exclamationToken && PropertyFlags.Exclamation, hasModifier(decl, ts.SyntaxKind.ReadonlyKeyword) && PropertyFlags.Readonly]),
             jsDoc: this.getJSDocData(decl),
-            loc: this.createLoC(symbol, currentModule, false)
+            loc: this.createLoC(symbol, false)
         };
     }
 
-    createIndexSignature(symbol: ts.Symbol, currentModule: Module) : IndexSignature | undefined {
-        const [, decl] = this.getSymbolType<ts.IndexSignatureDeclaration>(symbol);
-        if (!decl) return;
-        return {
-            key: this.createType(this.shared.checker.getTypeAtLocation(decl.parameters[0])),
-            type: this.createType(this.shared.checker.getTypeAtLocation(decl.type)),
-            jsDoc: this.getJSDocData(decl),
-            loc: this.createLoC(symbol, currentModule, false)
-        };
+    createIndexSignatures(type: ts.Type) : IndexSignature[] {
+        const signatures: IndexSignature[] = [];
+        const stringSig = type.getStringIndexType();
+        const numSig = type.getNumberIndexType();
+        if (stringSig) signatures.push({
+            key: "string",
+            type: this.createType(stringSig)
+        });
+        if (numSig) signatures.push({
+            key: "number",
+            type: this.createType(numSig)
+        });
+        return signatures;
     }
 
     createTypeParameter(type: ts.TypeParameter): TypeParameter {
@@ -203,11 +201,15 @@ export class TypescriptExtractor implements Module {
         if (!t.symbol) return { kind: TypeKind.Reference, type: { name: "unknown", path: [], kind: TypeReferenceKind.External }};
         return {
             kind: TypeKind.Reference,
-            type: { name: t.symbol.name, path: [], kind: TypeReferenceKind.Class }
+            type: { 
+                name: t.symbol.name, 
+                path: [], 
+                kind: TypeReferenceKind.Class
+            }
         };
     }
 
-    createLoC(symbol: ts.Symbol | ts.Node, currentModule: Module, includeSourceFile?: boolean): LoC {
+    createLoC(symbol: ts.Symbol | ts.Node, includeSourceFile?: boolean): LoC {
         const decl = ("name" in symbol && typeof symbol.name === "string") ? symbol.valueDeclaration : (symbol as ts.Node);
         if (!decl) throw "Expected variable declaration.";
         const source = decl.getSourceFile();

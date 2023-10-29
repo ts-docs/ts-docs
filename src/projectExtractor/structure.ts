@@ -164,8 +164,8 @@ export interface PropertySignature extends Node {
     initializer?: Type
 }
 
-export interface IndexSignature extends BaseNode {
-    key: Type,
+export interface IndexSignature {
+    key: "string" | "number",
     type: Type
 }
 

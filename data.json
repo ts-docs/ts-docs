@@ -285,18 +285,6 @@
                                             }
                                         },
                                         {
-                                            "name": "currentModule",
-                                            "flags": 0,
-                                            "type": {
-                                                "kind": 0,
-                                                "type": {
-                                                    "name": "Module",
-                                                    "path": [],
-                                                    "kind": 0
-                                                }
-                                            }
-                                        },
-                                        {
                                             "name": "handleClassFlags",
                                             "flags": 0,
                                             "type": {
@@ -340,18 +328,6 @@
                                             }
                                         },
                                         {
-                                            "name": "currentModule",
-                                            "flags": 0,
-                                            "type": {
-                                                "kind": 0,
-                                                "type": {
-                                                    "name": "Module",
-                                                    "path": [],
-                                                    "kind": 0
-                                                }
-                                            }
-                                        },
-                                        {
                                             "name": "handleClassFlags",
                                             "flags": 0,
                                             "type": {
@@ -376,7 +352,7 @@
                                     "loc": {
                                         "pos": {
                                             "line": 90,
-                                            "character": 107
+                                            "character": 84
                                         }
                                     }
                                 }
@@ -400,18 +376,6 @@
                                                     "kind": 0
                                                 }
                                             }
-                                        },
-                                        {
-                                            "name": "currentModule",
-                                            "flags": 0,
-                                            "type": {
-                                                "kind": 0,
-                                                "type": {
-                                                    "name": "Module",
-                                                    "path": [],
-                                                    "kind": 0
-                                                }
-                                            }
                                         }
                                     ],
                                     "typeParameters": [],
@@ -425,7 +389,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 125,
+                                            "line": 119,
                                             "character": 5
                                         }
                                     }
@@ -462,18 +426,6 @@
                                                     "kind": 10
                                                 }
                                             }
-                                        },
-                                        {
-                                            "name": "currentModule",
-                                            "flags": 0,
-                                            "type": {
-                                                "kind": 0,
-                                                "type": {
-                                                    "name": "Module",
-                                                    "path": [],
-                                                    "kind": 0
-                                                }
-                                            }
                                         }
                                     ],
                                     "typeParameters": [],
@@ -487,7 +439,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 136,
+                                            "line": 130,
                                             "character": 5
                                         }
                                     }
@@ -512,18 +464,6 @@
                                                     "kind": 0
                                                 }
                                             }
-                                        },
-                                        {
-                                            "name": "currentModule",
-                                            "flags": 0,
-                                            "type": {
-                                                "kind": 0,
-                                                "type": {
-                                                    "name": "Module",
-                                                    "path": [],
-                                                    "kind": 0
-                                                }
-                                            }
                                         }
                                     ],
                                     "typeParameters": [],
@@ -537,7 +477,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 155,
+                                            "line": 149,
                                             "character": 5
                                         }
                                     }
@@ -547,29 +487,17 @@
                             "classFlags": 0
                         },
                         {
-                            "name": "createIndexSignature",
+                            "name": "createIndexSignatures",
                             "signatures": [
                                 {
                                     "parameters": [
                                         {
-                                            "name": "symbol",
+                                            "name": "type",
                                             "flags": 0,
                                             "type": {
                                                 "kind": 0,
                                                 "type": {
-                                                    "name": "Symbol",
-                                                    "path": [],
-                                                    "kind": 0
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "name": "currentModule",
-                                            "flags": 0,
-                                            "type": {
-                                                "kind": 0,
-                                                "type": {
-                                                    "name": "Module",
+                                                    "name": "Type",
                                                     "path": [],
                                                     "kind": 0
                                                 }
@@ -580,14 +508,14 @@
                                     "returnType": {
                                         "kind": 0,
                                         "type": {
-                                            "name": "unknown",
+                                            "name": "Array",
                                             "path": [],
-                                            "kind": 10
+                                            "kind": 0
                                         }
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 168,
+                                            "line": 162,
                                             "character": 5
                                         }
                                     }
@@ -625,7 +553,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 179,
+                                            "line": 177,
                                             "character": 5
                                         }
                                     }
@@ -663,7 +591,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 187,
+                                            "line": 185,
                                             "character": 5
                                         }
                                     }
@@ -701,7 +629,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 199,
+                                            "line": 197,
                                             "character": 5
                                         }
                                     }
@@ -724,18 +652,6 @@
                                                     "name": "unknown",
                                                     "path": [],
                                                     "kind": 10
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "name": "currentModule",
-                                            "flags": 0,
-                                            "type": {
-                                                "kind": 0,
-                                                "type": {
-                                                    "name": "Module",
-                                                    "path": [],
-                                                    "kind": 0
                                                 }
                                             }
                                         },
@@ -763,7 +679,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 207,
+                                            "line": 209,
                                             "character": 5
                                         }
                                     }
@@ -801,7 +717,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 217,
+                                            "line": 219,
                                             "character": 5
                                         }
                                     }
@@ -839,7 +755,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 240,
+                                            "line": 242,
                                             "character": 5
                                         }
                                     }
@@ -881,7 +797,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 246,
+                                            "line": 248,
                                             "character": 5
                                         }
                                     }
@@ -919,7 +835,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 254,
+                                            "line": 256,
                                             "character": 5
                                         }
                                     }
@@ -969,7 +885,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 287,
+                                            "line": 289,
                                             "character": 5
                                         }
                                     }
@@ -994,7 +910,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 294,
+                                            "line": 296,
                                             "character": 5
                                         }
                                     }
@@ -1208,17 +1124,11 @@
                 },
                 "sourceFile": "/src/index.ts"
             },
-            "properties": [
+            "properties": [],
+            "methods": [],
+            "indexes": [
                 {
-                    "name": "1",
-                    "computed": {
-                        "kind": 0,
-                        "type": {
-                            "name": "B",
-                            "path": [],
-                            "kind": 0
-                        }
-                    },
+                    "key": "string",
                     "type": {
                         "kind": 0,
                         "type": {
@@ -1226,53 +1136,9 @@
                             "path": [],
                             "kind": 10
                         }
-                    },
-                    "flags": 0,
-                    "loc": {
-                        "pos": {
-                            "line": 12,
-                            "character": 22
-                        }
-                    },
-                    "classFlags": 0
+                    }
                 }
             ],
-            "methods": [
-                {
-                    "name": "0",
-                    "computed": {
-                        "kind": 0,
-                        "type": {
-                            "name": "A",
-                            "path": [],
-                            "kind": 0
-                        }
-                    },
-                    "signatures": [
-                        {
-                            "parameters": [],
-                            "typeParameters": [],
-                            "returnType": {
-                                "kind": 0,
-                                "type": {
-                                    "name": "unknown",
-                                    "path": [],
-                                    "kind": 10
-                                }
-                            },
-                            "loc": {
-                                "pos": {
-                                    "line": 14,
-                                    "character": 26
-                                }
-                            }
-                        }
-                    ],
-                    "flags": 0,
-                    "classFlags": 0
-                }
-            ],
-            "indexes": [],
             "new": []
         }
     ],

@@ -11,11 +11,9 @@ export enum A {
 }
 
 export class Test<T> {
-    //[key: string]: number;
-    [A.B]: string = "abc";
-    [A.A]() {
-
-    }
+    [key: string]: number;
+    //test: Map<string, number> = new Map();
+    //[A.B]: string = "abc";
     //private someProp: string;
 }
 
