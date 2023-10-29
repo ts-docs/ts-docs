@@ -5,8 +5,15 @@ import { TypescriptExtractor } from "./projectExtractor/extractor";
 
 const myExtractor = TypescriptExtractor.createStandaloneExtractor(process.cwd().replaceAll(path.sep, "/"), { passthroughModules: ["src", "inner"]});
 
+export enum A {
+    A,
+    B
+}
+
 export class Test {
-    [key: string]: number;
+    //[key: string]: number;
+    [A.B]: string = "abc";
+    //private someProp: string;
 }
 
 if (myExtractor) {

@@ -22,6 +22,8 @@
                         }
                     ],
                     "extends": [],
+                    "typeParameters": [],
+                    "isAbstract": false,
                     "loc": {
                         "pos": {
                             "line": 18,
@@ -46,7 +48,8 @@
                                     "line": 23,
                                     "character": 52
                                 }
-                            }
+                            },
+                            "classFlags": 0
                         },
                         {
                             "name": "baseDir",
@@ -64,7 +67,8 @@
                                     "line": 24,
                                     "character": 17
                                 }
-                            }
+                            },
+                            "classFlags": 0
                         },
                         {
                             "name": "modules",
@@ -82,7 +86,8 @@
                                     "line": 25,
                                     "character": 20
                                 }
-                            }
+                            },
+                            "classFlags": 0
                         },
                         {
                             "name": "classes",
@@ -100,7 +105,8 @@
                                     "line": 26,
                                     "character": 33
                                 }
-                            }
+                            },
+                            "classFlags": 0
                         },
                         {
                             "name": "path",
@@ -118,7 +124,8 @@
                                     "line": 27,
                                     "character": 32
                                 }
-                            }
+                            },
+                            "classFlags": 0
                         },
                         {
                             "name": "packageJSON",
@@ -136,7 +143,8 @@
                                     "line": 28,
                                     "character": 19
                                 }
-                            }
+                            },
+                            "classFlags": 0
                         },
                         {
                             "name": "shared",
@@ -154,7 +162,8 @@
                                     "line": 29,
                                     "character": 30
                                 }
-                            }
+                            },
+                            "classFlags": 0
                         }
                     ],
                     "methods": [
@@ -205,7 +214,8 @@
                                     }
                                 }
                             ],
-                            "flags": 0
+                            "flags": 0,
+                            "classFlags": 0
                         },
                         {
                             "name": "registerClassDeclaration",
@@ -254,7 +264,8 @@
                                     }
                                 }
                             ],
-                            "flags": 0
+                            "flags": 0,
+                            "classFlags": 0
                         },
                         {
                             "name": "createObjectLiteral",
@@ -267,7 +278,7 @@
                                             "type": {
                                                 "kind": 0,
                                                 "type": {
-                                                    "name": "Symbol",
+                                                    "name": "Type",
                                                     "path": [],
                                                     "kind": 0
                                                 }
@@ -284,6 +295,73 @@
                                                     "kind": 0
                                                 }
                                             }
+                                        },
+                                        {
+                                            "name": "handleClassFlags1",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "unknown",
+                                                    "path": [],
+                                                    "kind": 10
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "unknown",
+                                            "path": [],
+                                            "kind": 10
+                                        }
+                                    },
+                                    "loc": {
+                                        "pos": {
+                                            "line": 88,
+                                            "character": 5
+                                        }
+                                    }
+                                },
+                                {
+                                    "parameters": [
+                                        {
+                                            "name": "type",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Type",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "name": "currentModule",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Module",
+                                                    "path": [],
+                                                    "kind": 0
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "name": "handleClassFlags2",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "unknown",
+                                                    "path": [],
+                                                    "kind": 10
+                                                }
+                                            }
                                         }
                                     ],
                                     "typeParameters": [],
@@ -297,13 +375,14 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 85,
-                                            "character": 5
+                                            "line": 90,
+                                            "character": 108
                                         }
                                     }
                                 }
                             ],
-                            "flags": 0
+                            "flags": 0,
+                            "classFlags": 0
                         },
                         {
                             "name": "createMethod",
@@ -346,13 +425,14 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 108,
+                                            "line": 125,
                                             "character": 5
                                         }
                                     }
                                 }
                             ],
-                            "flags": 0
+                            "flags": 0,
+                            "classFlags": 0
                         },
                         {
                             "name": "createMethodSignatures",
@@ -407,13 +487,14 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 118,
+                                            "line": 135,
                                             "character": 5
                                         }
                                     }
                                 }
                             ],
-                            "flags": 0
+                            "flags": 0,
+                            "classFlags": 0
                         },
                         {
                             "name": "createPropertySignature",
@@ -456,13 +537,14 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 137,
+                                            "line": 154,
                                             "character": 5
                                         }
                                     }
                                 }
                             ],
-                            "flags": 0
+                            "flags": 0,
+                            "classFlags": 0
                         },
                         {
                             "name": "createIndexSignature",
@@ -505,13 +587,14 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 150,
+                                            "line": 167,
                                             "character": 5
                                         }
                                     }
                                 }
                             ],
-                            "flags": 0
+                            "flags": 0,
+                            "classFlags": 0
                         },
                         {
                             "name": "createTypeParameter",
@@ -542,13 +625,14 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 161,
+                                            "line": 178,
                                             "character": 5
                                         }
                                     }
                                 }
                             ],
-                            "flags": 0
+                            "flags": 0,
+                            "classFlags": 0
                         },
                         {
                             "name": "createParameter",
@@ -579,13 +663,14 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 169,
+                                            "line": 186,
                                             "character": 5
                                         }
                                     }
                                 }
                             ],
-                            "flags": 0
+                            "flags": 0,
+                            "classFlags": 0
                         },
                         {
                             "name": "createType",
@@ -616,13 +701,14 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 181,
+                                            "line": 198,
                                             "character": 5
                                         }
                                     }
                                 }
                             ],
-                            "flags": 0
+                            "flags": 0,
+                            "classFlags": 0
                         },
                         {
                             "name": "createLoC",
@@ -677,13 +763,14 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 189,
+                                            "line": 206,
                                             "character": 5
                                         }
                                     }
                                 }
                             ],
-                            "flags": 0
+                            "flags": 0,
+                            "classFlags": 0
                         },
                         {
                             "name": "getJSDocData",
@@ -714,13 +801,14 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 199,
+                                            "line": 216,
                                             "character": 5
                                         }
                                     }
                                 }
                             ],
-                            "flags": 0
+                            "flags": 0,
+                            "classFlags": 0
                         },
                         {
                             "name": "getNodeType",
@@ -751,13 +839,14 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 222,
+                                            "line": 239,
                                             "character": 5
                                         }
                                     }
                                 }
                             ],
-                            "flags": 0
+                            "flags": 0,
+                            "classFlags": 0
                         },
                         {
                             "name": "getSymbolType",
@@ -792,13 +881,14 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 228,
+                                            "line": 245,
                                             "character": 5
                                         }
                                     }
                                 }
                             ],
-                            "flags": 0
+                            "flags": 0,
+                            "classFlags": 0
                         },
                         {
                             "name": "getOrCreateChildModule",
@@ -829,13 +919,14 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 235,
+                                            "line": 253,
                                             "character": 5
                                         }
                                     }
                                 }
                             ],
-                            "flags": 0
+                            "flags": 0,
+                            "classFlags": 0
                         },
                         {
                             "name": "getRepositoryURLForNode",
@@ -878,13 +969,14 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 268,
+                                            "line": 286,
                                             "character": 5
                                         }
                                     }
                                 }
                             ],
-                            "flags": 0
+                            "flags": 0,
+                            "classFlags": 0
                         },
                         {
                             "name": "toJSON",
@@ -902,13 +994,14 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 275,
+                                            "line": 293,
                                             "character": 5
                                         }
                                     }
                                 }
                             ],
-                            "flags": 0
+                            "flags": 0,
+                            "classFlags": 0
                         }
                     ],
                     "indexes": [],
@@ -919,6 +1012,8 @@
                     "name": "BitField",
                     "implements": [],
                     "extends": [],
+                    "typeParameters": [],
+                    "isAbstract": false,
                     "loc": {
                         "pos": {
                             "line": 90,
@@ -943,7 +1038,8 @@
                                     "line": 92,
                                     "character": 23
                                 }
-                            }
+                            },
+                            "classFlags": 0
                         }
                     ],
                     "methods": [
@@ -982,7 +1078,8 @@
                                     }
                                 }
                             ],
-                            "flags": 0
+                            "flags": 0,
+                            "classFlags": 0
                         },
                         {
                             "name": "set",
@@ -1019,7 +1116,8 @@
                                     }
                                 }
                             ],
-                            "flags": 0
+                            "flags": 0,
+                            "classFlags": 0
                         },
                         {
                             "name": "remove",
@@ -1056,7 +1154,8 @@
                                     }
                                 }
                             ],
-                            "flags": 0
+                            "flags": 0,
+                            "classFlags": 0
                         },
                         {
                             "name": "toJSON",
@@ -1080,7 +1179,8 @@
                                     }
                                 }
                             ],
-                            "flags": 0
+                            "flags": 0,
+                            "classFlags": 0
                         }
                     ],
                     "indexes": [],
@@ -1095,14 +1195,36 @@
             "name": "Test",
             "implements": [],
             "extends": [],
+            "typeParameters": [],
+            "isAbstract": false,
             "loc": {
                 "pos": {
-                    "line": 5,
-                    "character": 148
+                    "line": 10,
+                    "character": 1
                 },
                 "sourceFile": "/src/index.ts"
             },
-            "properties": [],
+            "properties": [
+                {
+                    "name": "1",
+                    "type": {
+                        "kind": 0,
+                        "type": {
+                            "name": "unknown",
+                            "path": [],
+                            "kind": 10
+                        }
+                    },
+                    "flags": 0,
+                    "loc": {
+                        "pos": {
+                            "line": 12,
+                            "character": 19
+                        }
+                    },
+                    "classFlags": 0
+                }
+            ],
             "methods": [],
             "indexes": [],
             "new": []

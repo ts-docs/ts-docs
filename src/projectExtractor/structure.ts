@@ -208,15 +208,14 @@ export interface Method {
 }
 
 export enum ClassMemberFlags {
-    Public = 1 << 0,
-    Private = 1 << 1,
-    Static = 1 << 2,
-    Protected = 1 << 3,
-    Abstract = 1 << 4
+    Private = 1 << 0,
+    Static = 1 << 1,
+    Protected = 1 << 2,
+    Abstract = 1 << 3
 }
 
 export interface ClassMember {
-    classFlags: ClassMemberFlags
+    classFlags: BitField
 }
 
 export type ClassProperty = PropertySignature & ClassMember;
@@ -229,10 +228,13 @@ export interface ObjectLiteral {
     new: Method[]
 }
 
-export interface ClassDeclaration extends ObjectLiteral, Node {
+export type ClassObjectLiteral = Omit<ObjectLiteral, "properties"|"methods"> & {
+    properties: ClassProperty[],
+    methods: ClassMethod[]
+}
+
+export interface ClassDeclaration extends ClassObjectLiteral, Node {
     kind: DeclarationKind.Class,
-    //properties: ClassProperty[],
-    //methods: ClassMethod[],
     typeParameters: TypeParameter[],
     extends: Type[],
     implements: Type[],

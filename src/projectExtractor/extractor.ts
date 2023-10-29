@@ -1,6 +1,6 @@
 import * as ts from "typescript";
 import * as path from "path";
-import { BaseNode, ClassDeclaration, Declaration, DeclarationKind, FunctionParameter, FunctionParameterFlags, IndexSignature, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeKind, TypeParameter, TypeReference, TypeReferenceKind } from "./structure";
+import { BaseNode, ClassDeclaration, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, FunctionParameterFlags, IndexSignature, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeKind, TypeParameter, TypeReference, TypeReferenceKind } from "./structure";
 import { BitField, PackageJSON, getPackageJSON, getTsconfig, hasModifier, joinPartOfArray, mapRealValues, resolvePackageName } from "./utils";
 
 export interface TypescriptExtractorSettings {
@@ -82,21 +82,35 @@ export class TypescriptExtractor implements Module {
             typeParameters: mapRealValues((type as ts.InterfaceType).typeParameters, (p) => this.createTypeParameter(p)),
             isAbstract: hasModifier(decl, ts.SyntaxKind.AbstractKeyword),
             loc: this.createLoC(symbol, currentModule, true),
-            ...this.createObjectLiteral(symbol, currentModule),
+            ...this.createObjectLiteral(type, currentModule, true),
         };
 
         currentModule.classes.push(classDecl);
     }
 
-    createObjectLiteral(type: ts.Symbol, currentModule: Module) : ObjectLiteral {
+    createObjectLiteral(type: ts.Type, currentModule: Module, handleClassFlags: true) : ClassObjectLiteral;
+    createObjectLiteral(type: ts.Type, currentModule: Module, handleClassFlags: false) : ObjectLiteral;
+    createObjectLiteral(type: ts.Type, currentModule: Module, handleClassFlags: boolean) : ObjectLiteral | ClassObjectLiteral {
         const properties = [], methods: Method[] = [], indexes = [], news: Method[] = [];
-        for (const property of (type.members?.values() || [])) {
+        for (const property of type.getProperties()) {
             if (BitField.has(property.flags, ts.SymbolFlags.Property)) {
                 const sig = this.createPropertySignature(property, currentModule);
-                if (sig) properties.push(sig);
+                if (sig) {
+                    if (handleClassFlags) {
+                        const decl = property.valueDeclaration as ts.PropertyDeclaration;
+                        (sig as ClassProperty).classFlags = new BitField([hasModifier(decl, ts.SyntaxKind.PrivateKeyword) && ClassMemberFlags.Private, hasModifier(decl, ts.SyntaxKind.AbstractKeyword) && ClassMemberFlags.Abstract, hasModifier(decl, ts.SyntaxKind.StaticKeyword) && ClassMemberFlags.Static, hasModifier(decl, ts.SyntaxKind.ProtectedKeyword) && ClassMemberFlags.Protected]);
+                    }
+                    properties.push(sig);
+                }
             } else if (BitField.has(property.flags, ts.SymbolFlags.Method)) {
                 const sig = this.createMethod(property, currentModule);
-                if (sig) methods.push(sig);
+                if (sig) {
+                    if (handleClassFlags) {
+                        const decl = property.valueDeclaration as ts.PropertyDeclaration;
+                        (sig as ClassMethod).classFlags = new BitField([hasModifier(decl, ts.SyntaxKind.PrivateKeyword) && ClassMemberFlags.Private, hasModifier(decl, ts.SyntaxKind.AbstractKeyword) && ClassMemberFlags.Abstract, hasModifier(decl, ts.SyntaxKind.StaticKeyword) && ClassMemberFlags.Static, hasModifier(decl, ts.SyntaxKind.ProtectedKeyword) && ClassMemberFlags.Protected]);
+                    }
+                    methods.push(sig);
+                }
             } else if (BitField.has(property.flags, ts.SymbolFlags.Signature)) {
                 if (property.name === "__index") {
                     const indSig = this.createIndexSignature(property, currentModule);
@@ -234,7 +248,8 @@ export class TypescriptExtractor implements Module {
     getSymbolType<T extends ts.Declaration = ts.Declaration>(symbol: ts.Symbol): [ts.Type | undefined, T | undefined] {
         const node = symbol.valueDeclaration;
         if (!node) return [undefined, undefined];
-        const type = this.shared.checker.getTypeOfSymbol(symbol);
+        let type = this.shared.checker.getDeclaredTypeOfSymbol(symbol);
+        if ((type as ts.IntrinsicType).intrinsicName === "error") type = this.shared.checker.getTypeOfSymbol(symbol); 
         return [type, node as T];
     }
 
