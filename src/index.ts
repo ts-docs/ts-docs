@@ -11,7 +11,8 @@ export enum A {
 }
 
 export class Test<T> {
-    [key: string]: number;
+    baby?: TypescriptExtractor;
+    //[key: string]: number;
     //test: Map<string, number> = new Map();
     //[A.B]: string = "abc";
     //private someProp: string;

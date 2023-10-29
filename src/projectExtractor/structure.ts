@@ -101,7 +101,6 @@ export enum TypeReferenceKind {
     TypeParameter,
     EnumMember,
     Module,
-    Default,
     External
 }
 

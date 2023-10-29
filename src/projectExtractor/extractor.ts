@@ -40,7 +40,7 @@ export class TypescriptExtractor implements Module {
 
         for (const fileName of tsConfig.fileNames) {
             const fileObject = this.shared.program.getSourceFile(fileName);
-            if (!fileObject) continue;
+            if (!fileObject || fileObject.isDeclarationFile) continue;
             const fileSymbol = this.shared.checker.getSymbolAtLocation(fileObject);
             if (!fileSymbol) continue;
             const module = this.getOrCreateChildModule(fileName);
@@ -51,11 +51,20 @@ export class TypescriptExtractor implements Module {
 
     }
 
-    addSymbol(symbol: ts.Symbol, currentModule: Module) {
-        if (BitField.has(symbol.flags, ts.SymbolFlags.Class)) this.registerClassDeclaration(symbol, currentModule);
+    addSymbol(symbol: ts.Symbol, currentModule?: Module) : TypeReference | undefined {
+        if (!currentModule) {
+            if (!symbol.valueDeclaration) return;
+            const file = symbol.valueDeclaration.getSourceFile();
+            if (file.isDeclarationFile) return;
+            currentModule = this.getOrCreateChildModule(file.fileName);
+        }
+
+        if (this.shared.referenceCache.has(symbol)) return this.shared.referenceCache.get(symbol);
+        else if (BitField.has(symbol.flags, ts.SymbolFlags.Class)) return this.registerClassDeclaration(symbol, currentModule);
+        return;
     }
 
-    registerClassDeclaration(symbol: ts.Symbol, currentModule: Module): void {
+    registerClassDeclaration(symbol: ts.Symbol, currentModule: Module): TypeReference | undefined {
         const [type, decl] = this.getSymbolType<ts.ClassDeclaration>(symbol);
         if (!type || !decl) return;
 
@@ -86,6 +95,7 @@ export class TypescriptExtractor implements Module {
         };
 
         currentModule.classes.push(classDecl);
+        return ref;
     }
 
     createObjectLiteral(type: ts.Type, handleClassFlags: true) : ClassObjectLiteral;
@@ -199,13 +209,24 @@ export class TypescriptExtractor implements Module {
 
     createType(t: ts.Type): Type {
         if (!t.symbol) return { kind: TypeKind.Reference, type: { name: "unknown", path: [], kind: TypeReferenceKind.External }};
+        const ref = this.addSymbol(t.symbol);
+
+        console.log(t.symbol.name, ref);
+        
+        if (ref) return {
+            kind: TypeKind.Reference,
+            type: ref,
+            typeArguments: this.shared.checker.getTypeArguments(t as ts.TypeReference).map(arg => this.createType(arg))
+        };
+
         return {
             kind: TypeKind.Reference,
             type: { 
                 name: t.symbol.name, 
                 path: [], 
-                kind: TypeReferenceKind.Class
-            }
+                kind: TypeReferenceKind.External
+            },
+            typeArguments: this.shared.checker.getTypeArguments(t as ts.TypeReference).map(arg => this.createType(arg))
         };
     }
 
@@ -214,7 +235,7 @@ export class TypescriptExtractor implements Module {
         if (!decl) throw "Expected variable declaration.";
         const source = decl.getSourceFile();
         return {
-            pos: ts.getLineAndCharacterOfPosition(source, decl.pos),
+            pos: source.getLineAndCharacterOfPosition(decl.getStart()),
             sourceFile: includeSourceFile ? source.fileName.slice(this.baseDir.length) : undefined
         };
     }
