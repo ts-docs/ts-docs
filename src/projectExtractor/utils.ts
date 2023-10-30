@@ -90,6 +90,10 @@ export function mapRealValues<T, K>(array: readonly T[] | undefined, cb: (item: 
     return newArray;
 }
 
+export function getSymbolDeclaration(sym: ts.Symbol) : ts.Declaration | undefined {
+    return sym.valueDeclaration || sym.declarations?.[0];
+}
+
 export class BitField {
     bits: number;
     constructor(bits: Array<number|undefined|false>) {

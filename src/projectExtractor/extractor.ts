@@ -1,7 +1,7 @@
 import * as ts from "typescript";
 import * as path from "path";
-import { BaseNode, ClassDeclaration, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, FunctionParameterFlags, IndexSignature, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeKind, TypeParameter, TypeReference, TypeReferenceKind } from "./structure";
-import { BitField, PackageJSON, getPackageJSON, getTsconfig, hasModifier, joinPartOfArray, mapRealValues, resolvePackageName } from "./utils";
+import { BaseNode, ClassDeclaration, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, FunctionParameterFlags, IndexSignature, InterfaceDeclaration, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeAliasDeclaration, TypeKind, TypeParameter, TypeReference, TypeReferenceKind } from "./structure";
+import { BitField, PackageJSON, getPackageJSON, getSymbolDeclaration, getTsconfig, hasModifier, joinPartOfArray, mapRealValues, resolvePackageName } from "./utils";
 
 export interface TypescriptExtractorSettings {
     /**
@@ -26,6 +26,8 @@ export class TypescriptExtractor implements Module {
     baseDir: string;
     modules: Map<string, Module>;
     classes: ClassDeclaration[];
+    interfaces: InterfaceDeclaration[];
+    types: TypeAliasDeclaration[];
     path: ItemPath;
     packageJSON?: PackageJSON;
     shared: Shared;
@@ -34,6 +36,8 @@ export class TypescriptExtractor implements Module {
         this.shared = shared;
         this.modules = new Map();
         this.classes = [];
+        this.interfaces = [];
+        this.types = [];
         this.path = [];
         this.packageJSON = getPackageJSON(basePath);
         this.name = this.packageJSON?.name ? resolvePackageName(this.packageJSON.name) : basePath.slice(basePath.lastIndexOf(path.sep) + 1);
@@ -53,15 +57,74 @@ export class TypescriptExtractor implements Module {
 
     addSymbol(symbol: ts.Symbol, currentModule?: Module) : TypeReference | undefined {
         if (!currentModule) {
-            if (!symbol.valueDeclaration) return;
-            const file = symbol.valueDeclaration.getSourceFile();
+            const decl = getSymbolDeclaration(symbol);
+            if (!decl) return;
+            const file = decl.getSourceFile();
             if (file.isDeclarationFile) return;
             currentModule = this.getOrCreateChildModule(file.fileName);
         }
 
         if (this.shared.referenceCache.has(symbol)) return this.shared.referenceCache.get(symbol);
         else if (BitField.has(symbol.flags, ts.SymbolFlags.Class)) return this.registerClassDeclaration(symbol, currentModule);
+        else if (BitField.has(symbol.flags, ts.SymbolFlags.Interface)) return this.registerInterfaceDeclaration(symbol, currentModule);
+        else if (BitField.has(symbol.flags, ts.SymbolFlags.TypeAlias)) return this.registerTypeDeclaraction(symbol, currentModule);
         return;
+    }
+
+    registerTypeDeclaraction(symbol: ts.Symbol, currentModule: Module) : TypeReference | undefined {
+        const [type, decl] = this.getSymbolType<ts.TypeAliasDeclaration>(symbol);
+        if (!type || !decl) return;
+
+        const ref = {
+            name: symbol.name,
+            path: currentModule.path,
+            kind: TypeReferenceKind.TypeAlias
+        };
+
+        this.shared.referenceCache.set(symbol, ref);
+
+        currentModule.types.push({
+            kind: DeclarationKind.TypeAlias,
+            name: symbol.name,
+            typeParameters: mapRealValues((type as ts.InterfaceType).typeParameters, (p) => this.createTypeParameter(p)),
+            loc: this.createLoC(symbol, true),
+            value: this.createType(type, true)
+        });
+
+        return ref;
+    }
+
+    registerInterfaceDeclaration(symbol: ts.Symbol, currentModule: Module) : TypeReference | undefined {
+        const [type, decl] = this.getSymbolType<ts.InterfaceDeclaration>(symbol);
+        if (!type || !decl) return;
+
+        const ref = {
+            name: symbol.name,
+            path: currentModule.path,
+            kind: TypeReferenceKind.Interface
+        };
+
+        this.shared.referenceCache.set(symbol, ref);
+
+        const implementsClause = [], extendsClause = [];
+        
+        for (const clause of (decl.heritageClauses || [])) {
+            if (clause.token === ts.SyntaxKind.ExtendsKeyword) extendsClause.push(...clause.types.map(t => this.createType(this.shared.checker.getTypeAtLocation(t))));
+            else if (clause.token === ts.SyntaxKind.ImplementsKeyword) implementsClause.push(...clause.types.map(t => this.createType(this.shared.checker.getTypeAtLocation(t))));
+        }
+
+        currentModule.interfaces.push({
+            kind: DeclarationKind.Interface,
+            name: symbol.name,
+            implements: implementsClause,
+            extends: extendsClause,
+            typeParameters: mapRealValues((type as ts.InterfaceType).typeParameters, (p) => this.createTypeParameter(p)),
+            loc: this.createLoC(symbol, true),
+            otherDefs: (symbol.declarations as ts.InterfaceDeclaration[]).slice(1).map(decl => this.createLoC(decl)),
+            ...this.createObjectLiteral(type, false)
+        });
+
+        return ref;
     }
 
     registerClassDeclaration(symbol: ts.Symbol, currentModule: Module): TypeReference | undefined {
@@ -83,7 +146,7 @@ export class TypescriptExtractor implements Module {
             else if (clause.token === ts.SyntaxKind.ImplementsKeyword) implementsClause.push(...clause.types.map(t => this.createType(this.shared.checker.getTypeAtLocation(t))));
         }
 
-        const classDecl: ClassDeclaration = {
+        currentModule.classes.push({
             kind: DeclarationKind.Class,
             name: symbol.name,
             implements: implementsClause,
@@ -92,9 +155,7 @@ export class TypescriptExtractor implements Module {
             isAbstract: hasModifier(decl, ts.SyntaxKind.AbstractKeyword),
             loc: this.createLoC(symbol, true),
             ...this.createObjectLiteral(type, true),
-        };
-
-        currentModule.classes.push(classDecl);
+        });
         return ref;
     }
 
@@ -208,7 +269,16 @@ export class TypescriptExtractor implements Module {
         };
     }
 
-    createType(t: ts.Type): Type {
+    createType(t: ts.Type, ignoreAliasSymbol?: boolean): Type {
+        if (t.aliasSymbol && !ignoreAliasSymbol) {
+            const ref = this.addSymbol(t.aliasSymbol);
+            if (ref) return {
+                kind: TypeKind.Reference,
+                type: ref,
+                typeArguments: (t.aliasTypeArguments || []).map(arg => this.createType(arg))
+            };
+        }
+
         if (!t.symbol) {
             if (BitField.has(t.flags, ts.TypeFlags.Unknown)) return { kind: TypeKind.Unknown };
             else if (BitField.has(t.flags, ts.TypeFlags.Any)) return { kind: TypeKind.Any };
@@ -270,7 +340,7 @@ export class TypescriptExtractor implements Module {
     }
 
     createLoC(symbol: ts.Symbol | ts.Node, includeSourceFile?: boolean): LoC {
-        const decl = ("name" in symbol && typeof symbol.name === "string") ? symbol.valueDeclaration : (symbol as ts.Node);
+        const decl = ("name" in symbol && typeof symbol.name === "string") ? getSymbolDeclaration(symbol) : (symbol as ts.Node);
         if (!decl) throw "Expected variable declaration.";
         const source = decl.getSourceFile();
         return {
@@ -309,7 +379,7 @@ export class TypescriptExtractor implements Module {
     }
 
     getSymbolType<T extends ts.Declaration = ts.Declaration>(symbol: ts.Symbol): [ts.Type | undefined, T | undefined] {
-        const node = symbol.valueDeclaration;
+        const node = getSymbolDeclaration(symbol);
         if (!node) return [undefined, undefined];
         let type = this.shared.checker.getDeclaredTypeOfSymbol(symbol);
         if ((type as ts.IntrinsicType).intrinsicName === "error") type = this.shared.checker.getTypeOfSymbol(symbol); 
@@ -380,7 +450,9 @@ export class TypescriptExtractor implements Module {
             baseDir,
             namespace,
             modules: new Map(),
-            classes: []
+            classes: [],
+            interfaces: [],
+            types: []
         };
     }
 

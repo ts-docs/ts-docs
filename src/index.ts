@@ -16,6 +16,7 @@ export class Test<T> {
     b?: number = 123;
     c?: T extends string ? 1 : 2;
     z?: Promise<string>;
+    xxx?: this;
     //[key: string]: number;
     //test: Map<string, number> = new Map();
     //[A.B]: string = "abc";

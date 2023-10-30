@@ -36,6 +36,8 @@ export interface Module {
     name: string,
     modules: Map<string, Module>,
     classes: ClassDeclaration[],
+    interfaces: InterfaceDeclaration[],
+    types: TypeAliasDeclaration[],
     baseDir: string,
     path: ItemPath,
     namespace?: LoC[]
@@ -80,14 +82,7 @@ export enum TypeKind {
     Conditional,
     TemplateLiteral,
     IndexAccess,
-    This,
-    Never,
-    Object,
-    Infer,
-    TypeofOperator,
-    UniqueOperator,
-    ReadonlyOperator,
-    KeyofOperator,
+    Never
 }
 
 export enum TypeReferenceKind {
@@ -279,7 +274,7 @@ export interface ObjectLiteralType extends ObjectLiteral {
 }
 
 export interface PrimitiveType {
-    kind: TypeKind.String | TypeKind.Number | TypeKind.Boolean | TypeKind.Undefined | TypeKind.Null | TypeKind.Never | TypeKind.Any | TypeKind.Void | TypeKind.Unknown | TypeKind.This,
+    kind: TypeKind.String | TypeKind.Number | TypeKind.Boolean | TypeKind.Undefined | TypeKind.Null | TypeKind.Never | TypeKind.Any | TypeKind.Void | TypeKind.Unknown,
     literal?: string
 }
 
