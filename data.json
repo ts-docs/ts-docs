@@ -36,12 +36,7 @@
                         {
                             "name": "name",
                             "type": {
-                                "kind": 0,
-                                "type": {
-                                    "name": "unknown",
-                                    "path": [],
-                                    "kind": 9
-                                }
+                                "kind": 6
                             },
                             "flags": 0,
                             "loc": {
@@ -55,12 +50,7 @@
                         {
                             "name": "baseDir",
                             "type": {
-                                "kind": 0,
-                                "type": {
-                                    "name": "unknown",
-                                    "path": [],
-                                    "kind": 9
-                                }
+                                "kind": 6
                             },
                             "flags": 0,
                             "loc": {
@@ -82,12 +72,7 @@
                                 },
                                 "typeArguments": [
                                     {
-                                        "kind": 0,
-                                        "type": {
-                                            "name": "unknown",
-                                            "path": [],
-                                            "kind": 9
-                                        }
+                                        "kind": 6
                                     },
                                     {
                                         "kind": 0,
@@ -150,12 +135,7 @@
                                 },
                                 "typeArguments": [
                                     {
-                                        "kind": 0,
-                                        "type": {
-                                            "name": "unknown",
-                                            "path": [],
-                                            "kind": 9
-                                        }
+                                        "kind": 6
                                     }
                                 ]
                             },
@@ -244,12 +224,21 @@
                                     ],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 0,
-                                        "type": {
-                                            "name": "unknown",
-                                            "path": [],
-                                            "kind": 9
-                                        }
+                                        "kind": 3,
+                                        "types": [
+                                            {
+                                                "kind": 9
+                                            },
+                                            {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "TypeReference",
+                                                    "path": [],
+                                                    "kind": 9
+                                                },
+                                                "typeArguments": []
+                                            }
+                                        ]
                                     },
                                     "loc": {
                                         "pos": {
@@ -296,12 +285,21 @@
                                     ],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 0,
-                                        "type": {
-                                            "name": "unknown",
-                                            "path": [],
-                                            "kind": 9
-                                        }
+                                        "kind": 3,
+                                        "types": [
+                                            {
+                                                "kind": 9
+                                            },
+                                            {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "TypeReference",
+                                                    "path": [],
+                                                    "kind": 9
+                                                },
+                                                "typeArguments": []
+                                            }
+                                        ]
                                     },
                                     "loc": {
                                         "pos": {
@@ -336,12 +334,8 @@
                                             "name": "handleClassFlags",
                                             "flags": 0,
                                             "type": {
-                                                "kind": 0,
-                                                "type": {
-                                                    "name": "unknown",
-                                                    "path": [],
-                                                    "kind": 9
-                                                }
+                                                "kind": 7,
+                                                "literal": "true"
                                             }
                                         }
                                     ],
@@ -380,12 +374,8 @@
                                             "name": "handleClassFlags",
                                             "flags": 0,
                                             "type": {
-                                                "kind": 0,
-                                                "type": {
-                                                    "name": "unknown",
-                                                    "path": [],
-                                                    "kind": 9
-                                                }
+                                                "kind": 7,
+                                                "literal": "false"
                                             }
                                         }
                                     ],
@@ -431,12 +421,21 @@
                                     ],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 0,
-                                        "type": {
-                                            "name": "unknown",
-                                            "path": [],
-                                            "kind": 9
-                                        }
+                                        "kind": 3,
+                                        "types": [
+                                            {
+                                                "kind": 9
+                                            },
+                                            {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Method",
+                                                    "path": [],
+                                                    "kind": 9
+                                                },
+                                                "typeArguments": []
+                                            }
+                                        ]
                                     },
                                     "loc": {
                                         "pos": {
@@ -471,12 +470,135 @@
                                             "name": "decl",
                                             "flags": 0,
                                             "type": {
-                                                "kind": 0,
-                                                "type": {
-                                                    "name": "unknown",
-                                                    "path": [],
-                                                    "kind": 9
-                                                }
+                                                "kind": 3,
+                                                "types": [
+                                                    {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "name": "CallSignatureDeclaration",
+                                                            "path": [],
+                                                            "kind": 9
+                                                        },
+                                                        "typeArguments": []
+                                                    },
+                                                    {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "name": "ConstructSignatureDeclaration",
+                                                            "path": [],
+                                                            "kind": 9
+                                                        },
+                                                        "typeArguments": []
+                                                    },
+                                                    {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "name": "MethodSignature",
+                                                            "path": [],
+                                                            "kind": 9
+                                                        },
+                                                        "typeArguments": []
+                                                    },
+                                                    {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "name": "IndexSignatureDeclaration",
+                                                            "path": [],
+                                                            "kind": 9
+                                                        },
+                                                        "typeArguments": []
+                                                    },
+                                                    {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "name": "FunctionTypeNode",
+                                                            "path": [],
+                                                            "kind": 9
+                                                        },
+                                                        "typeArguments": []
+                                                    },
+                                                    {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "name": "ConstructorTypeNode",
+                                                            "path": [],
+                                                            "kind": 9
+                                                        },
+                                                        "typeArguments": []
+                                                    },
+                                                    {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "name": "JSDocFunctionType",
+                                                            "path": [],
+                                                            "kind": 9
+                                                        },
+                                                        "typeArguments": []
+                                                    },
+                                                    {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "name": "FunctionDeclaration",
+                                                            "path": [],
+                                                            "kind": 9
+                                                        },
+                                                        "typeArguments": []
+                                                    },
+                                                    {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "name": "MethodDeclaration",
+                                                            "path": [],
+                                                            "kind": 9
+                                                        },
+                                                        "typeArguments": []
+                                                    },
+                                                    {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "name": "ConstructorDeclaration",
+                                                            "path": [],
+                                                            "kind": 9
+                                                        },
+                                                        "typeArguments": []
+                                                    },
+                                                    {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "name": "GetAccessorDeclaration",
+                                                            "path": [],
+                                                            "kind": 9
+                                                        },
+                                                        "typeArguments": []
+                                                    },
+                                                    {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "name": "SetAccessorDeclaration",
+                                                            "path": [],
+                                                            "kind": 9
+                                                        },
+                                                        "typeArguments": []
+                                                    },
+                                                    {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "name": "FunctionExpression",
+                                                            "path": [],
+                                                            "kind": 9
+                                                        },
+                                                        "typeArguments": []
+                                                    },
+                                                    {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "name": "ArrowFunction",
+                                                            "path": [],
+                                                            "kind": 9
+                                                        },
+                                                        "typeArguments": []
+                                                    }
+                                                ]
                                             }
                                         }
                                     ],
@@ -532,12 +654,21 @@
                                     ],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 0,
-                                        "type": {
-                                            "name": "unknown",
-                                            "path": [],
-                                            "kind": 9
-                                        }
+                                        "kind": 3,
+                                        "types": [
+                                            {
+                                                "kind": 9
+                                            },
+                                            {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "PropertySignature",
+                                                    "path": [],
+                                                    "kind": 9
+                                                },
+                                                "typeArguments": []
+                                            }
+                                        ]
                                     },
                                     "loc": {
                                         "pos": {
@@ -591,7 +722,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 174,
+                                            "line": 175,
                                             "character": 4
                                         }
                                     }
@@ -631,7 +762,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 189,
+                                            "line": 190,
                                             "character": 4
                                         }
                                     }
@@ -661,16 +792,25 @@
                                     ],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 0,
-                                        "type": {
-                                            "name": "unknown",
-                                            "path": [],
-                                            "kind": 9
-                                        }
+                                        "kind": 3,
+                                        "types": [
+                                            {
+                                                "kind": 9
+                                            },
+                                            {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "FunctionParameter",
+                                                    "path": [],
+                                                    "kind": 9
+                                                },
+                                                "typeArguments": []
+                                            }
+                                        ]
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 197,
+                                            "line": 198,
                                             "character": 4
                                         }
                                     }
@@ -700,16 +840,49 @@
                                     ],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 0,
-                                        "type": {
-                                            "name": "unknown",
-                                            "path": [],
-                                            "kind": 9
-                                        }
+                                        "kind": 3,
+                                        "types": [
+                                            {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "ReferenceType",
+                                                    "path": [],
+                                                    "kind": 9
+                                                },
+                                                "typeArguments": []
+                                            },
+                                            {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "ObjectLiteralType",
+                                                    "path": [],
+                                                    "kind": 9
+                                                },
+                                                "typeArguments": []
+                                            },
+                                            {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "PrimitiveType",
+                                                    "path": [],
+                                                    "kind": 9
+                                                },
+                                                "typeArguments": []
+                                            },
+                                            {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "UnionType",
+                                                    "path": [],
+                                                    "kind": 9
+                                                },
+                                                "typeArguments": []
+                                            }
+                                        ]
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 209,
+                                            "line": 210,
                                             "character": 4
                                         }
                                     }
@@ -727,24 +900,34 @@
                                             "name": "symbol",
                                             "flags": 0,
                                             "type": {
-                                                "kind": 0,
-                                                "type": {
-                                                    "name": "unknown",
-                                                    "path": [],
-                                                    "kind": 9
-                                                }
+                                                "kind": 3,
+                                                "types": [
+                                                    {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "name": "Symbol",
+                                                            "path": [],
+                                                            "kind": 9
+                                                        },
+                                                        "typeArguments": []
+                                                    },
+                                                    {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "name": "Node",
+                                                            "path": [],
+                                                            "kind": 9
+                                                        },
+                                                        "typeArguments": []
+                                                    }
+                                                ]
                                             }
                                         },
                                         {
                                             "name": "includeSourceFile",
                                             "flags": 1,
                                             "type": {
-                                                "kind": 0,
-                                                "type": {
-                                                    "name": "unknown",
-                                                    "path": [],
-                                                    "kind": 9
-                                                }
+                                                "kind": 7
                                             }
                                         }
                                     ],
@@ -760,7 +943,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 232,
+                                            "line": 261,
                                             "character": 4
                                         }
                                     }
@@ -790,16 +973,25 @@
                                     ],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 0,
-                                        "type": {
-                                            "name": "unknown",
-                                            "path": [],
-                                            "kind": 9
-                                        }
+                                        "kind": 3,
+                                        "types": [
+                                            {
+                                                "kind": 9
+                                            },
+                                            {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "JSDocData",
+                                                    "path": [],
+                                                    "kind": 9
+                                                },
+                                                "typeArguments": []
+                                            }
+                                        ]
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 242,
+                                            "line": 271,
                                             "character": 4
                                         }
                                     }
@@ -839,7 +1031,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 265,
+                                            "line": 294,
                                             "character": 4
                                         }
                                     }
@@ -882,7 +1074,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 271,
+                                            "line": 300,
                                             "character": 4
                                         }
                                     }
@@ -900,12 +1092,7 @@
                                             "name": "source",
                                             "flags": 0,
                                             "type": {
-                                                "kind": 0,
-                                                "type": {
-                                                    "name": "unknown",
-                                                    "path": [],
-                                                    "kind": 9
-                                                }
+                                                "kind": 6
                                             }
                                         }
                                     ],
@@ -921,7 +1108,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 279,
+                                            "line": 308,
                                             "character": 4
                                         }
                                     }
@@ -952,27 +1139,80 @@
                                             "name": "parentNode",
                                             "flags": 1,
                                             "type": {
-                                                "kind": 0,
-                                                "type": {
-                                                    "name": "unknown",
-                                                    "path": [],
-                                                    "kind": 9
-                                                }
+                                                "kind": 3,
+                                                "types": [
+                                                    {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "name": "ClassDeclaration",
+                                                            "path": [],
+                                                            "kind": 9
+                                                        },
+                                                        "typeArguments": []
+                                                    },
+                                                    {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "name": "InterfaceDeclaration",
+                                                            "path": [],
+                                                            "kind": 9
+                                                        },
+                                                        "typeArguments": []
+                                                    },
+                                                    {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "name": "EnumDeclaration",
+                                                            "path": [],
+                                                            "kind": 9
+                                                        },
+                                                        "typeArguments": []
+                                                    },
+                                                    {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "name": "TypeAliasDeclaration",
+                                                            "path": [],
+                                                            "kind": 9
+                                                        },
+                                                        "typeArguments": []
+                                                    },
+                                                    {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "name": "ConstantDeclaration",
+                                                            "path": [],
+                                                            "kind": 9
+                                                        },
+                                                        "typeArguments": []
+                                                    },
+                                                    {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "name": "unknown",
+                                                            "path": [],
+                                                            "kind": 9
+                                                        }
+                                                    }
+                                                ]
                                             }
                                         }
                                     ],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 0,
-                                        "type": {
-                                            "name": "unknown",
-                                            "path": [],
-                                            "kind": 9
-                                        }
+                                        "kind": 3,
+                                        "types": [
+                                            {
+                                                "kind": 9
+                                            },
+                                            {
+                                                "kind": 6
+                                            }
+                                        ]
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 312,
+                                            "line": 341,
                                             "character": 4
                                         }
                                     }
@@ -988,17 +1228,22 @@
                                     "parameters": [],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 0,
-                                        "type": {
-                                            "name": "__type",
-                                            "path": [],
-                                            "kind": 9
-                                        },
-                                        "typeArguments": []
+                                        "kind": 1,
+                                        "properties": [],
+                                        "methods": [],
+                                        "indexes": [
+                                            {
+                                                "key": "string",
+                                                "type": {
+                                                    "kind": 12
+                                                }
+                                            }
+                                        ],
+                                        "new": []
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 319,
+                                            "line": 348,
                                             "character": 4
                                         }
                                     }
@@ -1029,12 +1274,7 @@
                         {
                             "name": "bits",
                             "type": {
-                                "kind": 0,
-                                "type": {
-                                    "name": "unknown",
-                                    "path": [],
-                                    "kind": 9
-                                }
+                                "kind": 5
                             },
                             "flags": 0,
                             "loc": {
@@ -1056,23 +1296,13 @@
                                             "name": "bit",
                                             "flags": 0,
                                             "type": {
-                                                "kind": 0,
-                                                "type": {
-                                                    "name": "unknown",
-                                                    "path": [],
-                                                    "kind": 9
-                                                }
+                                                "kind": 5
                                             }
                                         }
                                     ],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 0,
-                                        "type": {
-                                            "name": "unknown",
-                                            "path": [],
-                                            "kind": 9
-                                        }
+                                        "kind": 7
                                     },
                                     "loc": {
                                         "pos": {
@@ -1102,12 +1332,7 @@
                                                 },
                                                 "typeArguments": [
                                                     {
-                                                        "kind": 0,
-                                                        "type": {
-                                                            "name": "unknown",
-                                                            "path": [],
-                                                            "kind": 9
-                                                        }
+                                                        "kind": 5
                                                     }
                                                 ]
                                             }
@@ -1115,12 +1340,7 @@
                                     ],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 0,
-                                        "type": {
-                                            "name": "unknown",
-                                            "path": [],
-                                            "kind": 9
-                                        }
+                                        "kind": 8
                                     },
                                     "loc": {
                                         "pos": {
@@ -1150,12 +1370,7 @@
                                                 },
                                                 "typeArguments": [
                                                     {
-                                                        "kind": 0,
-                                                        "type": {
-                                                            "name": "unknown",
-                                                            "path": [],
-                                                            "kind": 9
-                                                        }
+                                                        "kind": 5
                                                     }
                                                 ]
                                             }
@@ -1163,12 +1378,7 @@
                                     ],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 0,
-                                        "type": {
-                                            "name": "unknown",
-                                            "path": [],
-                                            "kind": 9
-                                        }
+                                        "kind": 8
                                     },
                                     "loc": {
                                         "pos": {
@@ -1188,12 +1398,7 @@
                                     "parameters": [],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 0,
-                                        "type": {
-                                            "name": "unknown",
-                                            "path": [],
-                                            "kind": 9
-                                        }
+                                        "kind": 5
                                     },
                                     "loc": {
                                         "pos": {
@@ -1236,13 +1441,22 @@
                 {
                     "name": "baby",
                     "type": {
-                        "kind": 0,
-                        "type": {
-                            "name": "TypescriptExtractor",
-                            "path": [],
-                            "kind": 0
-                        },
-                        "typeArguments": []
+                        "kind": 3,
+                        "types": [
+                            {
+                                "kind": 0,
+                                "type": {
+                                    "name": "TypescriptExtractor",
+                                    "path": [],
+                                    "kind": 0
+                                },
+                                "typeArguments": []
+                            },
+                            {
+                                "kind": 5,
+                                "literal": "123"
+                            }
+                        ]
                     },
                     "flags": 1,
                     "loc": {
@@ -1252,9 +1466,92 @@
                         }
                     },
                     "classFlags": 0
+                },
+                {
+                    "name": "a",
+                    "type": {
+                        "kind": 6
+                    },
+                    "initializer": {
+                        "kind": 6,
+                        "literal": "abc"
+                    },
+                    "flags": 0,
+                    "loc": {
+                        "pos": {
+                            "line": 14,
+                            "character": 4
+                        }
+                    },
+                    "classFlags": 0
+                },
+                {
+                    "name": "b",
+                    "type": {
+                        "kind": 5
+                    },
+                    "initializer": {
+                        "kind": 5,
+                        "literal": "123"
+                    },
+                    "flags": 1,
+                    "loc": {
+                        "pos": {
+                            "line": 15,
+                            "character": 4
+                        }
+                    },
+                    "classFlags": 0
                 }
             ],
-            "methods": [],
+            "methods": [
+                {
+                    "name": "test",
+                    "signatures": [
+                        {
+                            "parameters": [
+                                {
+                                    "name": "a",
+                                    "flags": 0,
+                                    "type": {
+                                        "kind": 1,
+                                        "properties": [
+                                            {
+                                                "name": "a",
+                                                "type": {
+                                                    "kind": 6
+                                                },
+                                                "flags": 0,
+                                                "loc": {
+                                                    "pos": {
+                                                        "line": 20,
+                                                        "character": 14
+                                                    }
+                                                }
+                                            }
+                                        ],
+                                        "methods": [],
+                                        "indexes": [],
+                                        "new": []
+                                    }
+                                }
+                            ],
+                            "typeParameters": [],
+                            "returnType": {
+                                "kind": 6
+                            },
+                            "loc": {
+                                "pos": {
+                                    "line": 20,
+                                    "character": 4
+                                }
+                            }
+                        }
+                    ],
+                    "flags": 0,
+                    "classFlags": 0
+                }
+            ],
             "indexes": [],
             "new": []
         }

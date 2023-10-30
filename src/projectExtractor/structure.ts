@@ -72,11 +72,10 @@ export enum TypeKind {
     String,
     Boolean,
     Void,
-    True,
-    False,
-    Undefiend,
+    Undefined,
     Null,
     Any,
+    Unknown,
     Mapped,
     Conditional,
     TemplateLiteral,
@@ -278,7 +277,18 @@ export type Declaration = ClassDeclaration | InterfaceDeclaration | EnumDeclarat
 export interface ObjectLiteralType extends ObjectLiteral {
     kind: TypeKind.ObjectLiteral
 }
+
+export interface PrimitiveType {
+    kind: TypeKind.String | TypeKind.Number | TypeKind.Boolean | TypeKind.Undefined | TypeKind.Null | TypeKind.Never | TypeKind.Any | TypeKind.Void | TypeKind.Unknown | TypeKind.This,
+    literal?: string
+}
+
+export interface UnionType {
+    kind: TypeKind.Union,
+    types: Type[]
+}
+
 /**
  * Types are either references to nodes, or use nodes in some way.
  */
-export type Type = ReferenceType | ObjectLiteralType;
+export type Type = ReferenceType | ObjectLiteralType | PrimitiveType | UnionType;

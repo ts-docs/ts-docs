@@ -164,8 +164,9 @@ export class TypescriptExtractor implements Module {
         if (!type || !decl) return;
         return {
             name: symbol.name,
-            computed: ts.isComputedPropertyName(decl.name) ? this.createType(this.shared.checker.getTypeAtLocation(decl.name.expression)) : undefined,
+            computed: ts.isComputedPropertyName(decl.name) ? this.createType(this.getNodeType(decl.name)) : undefined,
             type: decl.questionToken ? this.createType(this.shared.checker.getNonNullableType(type)) : this.createType(type),
+            initializer: decl.initializer ? this.createType(this.getNodeType(decl.initializer)) : undefined,
             flags: new BitField([decl.questionToken && PropertyFlags.Optional, decl.exclamationToken && PropertyFlags.Exclamation, hasModifier(decl, ts.SyntaxKind.ReadonlyKeyword) && PropertyFlags.Readonly]),
             jsDoc: this.getJSDocData(decl),
             loc: this.createLoC(symbol, false)
@@ -208,15 +209,43 @@ export class TypescriptExtractor implements Module {
     }
 
     createType(t: ts.Type): Type {
-        if (!t.symbol) return { kind: TypeKind.Reference, type: { name: "unknown", path: [], kind: TypeReferenceKind.External }};
+        if (!t.symbol) {
+            if (BitField.has(t.flags, ts.TypeFlags.Unknown)) return { kind: TypeKind.Unknown };
+            else if (BitField.has(t.flags, ts.TypeFlags.Any)) return { kind: TypeKind.Any };
+            else if (BitField.has(t.flags, ts.TypeFlags.Never)) return { kind: TypeKind.Never };
+            else if (BitField.has(t.flags, ts.TypeFlags.Void)) return { kind: TypeKind.Void };
+            else if (BitField.has(t.flags, ts.TypeFlags.Undefined)) return { kind: TypeKind.Undefined };
+            else if (BitField.has(t.flags, ts.TypeFlags.Null)) return { kind: TypeKind.Null };
+            else if (t === this.shared.checker.getStringType()) return { kind: TypeKind.String };
+            else if (t === this.shared.checker.getNumberType()) return { kind: TypeKind.Number };
+            else if (t.isStringLiteral()) return { kind: TypeKind.String, literal: t.value };
+            else if (t.isNumberLiteral()) return { kind: TypeKind.Number, literal: t.value.toString() };
+            else if (t === this.shared.checker.getFalseType()) return { kind: TypeKind.Boolean, literal: "false" };
+            else if (t === this.shared.checker.getTrueType()) return { kind: TypeKind.Boolean, literal: "true" };
+            else if (t === this.shared.checker.getBooleanType()) return { kind: TypeKind.Boolean };
+            else if (t.isUnion()) return { kind: TypeKind.Union, types: t.types.map(t => this.createType(t)) };
+            return { kind: TypeKind.Reference, type: { name: "unknown", path: [], kind: TypeReferenceKind.External }};
+        }
         const ref = this.addSymbol(t.symbol);
-
-        console.log(t.symbol.name, ref);
         
         if (ref) return {
             kind: TypeKind.Reference,
             type: ref,
             typeArguments: this.shared.checker.getTypeArguments(t as ts.TypeReference).map(arg => this.createType(arg))
+        };
+
+        else if (t.isTypeParameter()) return {
+            kind: TypeKind.Reference,
+            type: {
+                kind: TypeReferenceKind.TypeParameter,
+                name: t.symbol.name
+            },
+            typeArguments: this.shared.checker.getTypeArguments(t as ts.TypeReference).map(arg => this.createType(arg))
+        };
+
+        else if (BitField.has(t.symbol.flags, ts.SymbolFlags.TypeLiteral) || BitField.has(t.symbol.flags, ts.SymbolFlags.ObjectLiteral)) return {
+            kind: TypeKind.ObjectLiteral,
+            ...this.createObjectLiteral(t, false)
         };
 
         return {

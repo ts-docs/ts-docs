@@ -11,11 +11,16 @@ export enum A {
 }
 
 export class Test<T> {
-    baby?: TypescriptExtractor;
+    baby?: TypescriptExtractor | 123;
+    a: string = "abc";
+    b?: number = 123;
     //[key: string]: number;
     //test: Map<string, number> = new Map();
     //[A.B]: string = "abc";
     //private someProp: string;
+    test(a: { a: string }) : string {
+        return a.a;
+    }
 }
 
 if (myExtractor) {
