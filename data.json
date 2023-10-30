@@ -1250,7 +1250,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 357,
+                                            "line": 386,
                                             "character": 4
                                         }
                                     },
@@ -1311,7 +1311,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 367,
+                                            "line": 396,
                                             "character": 4
                                         }
                                     },
@@ -1359,7 +1359,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 390,
+                                            "line": 419,
                                             "character": 4
                                         }
                                     },
@@ -1399,7 +1399,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 396,
+                                            "line": 425,
                                             "character": 4
                                         }
                                     },
@@ -1442,7 +1442,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 404,
+                                            "line": 433,
                                             "character": 4
                                         }
                                     },
@@ -1476,7 +1476,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 437,
+                                            "line": 466,
                                             "character": 4
                                         }
                                     },
@@ -1531,25 +1531,32 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 444,
+                                            "line": 473,
                                             "character": 4
                                         }
                                     },
                                     "parameters": [],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 1,
-                                        "properties": [],
-                                        "methods": [],
-                                        "indexes": [
-                                            {
-                                                "key": "string",
-                                                "type": {
-                                                    "kind": 13
-                                                }
-                                            }
-                                        ],
-                                        "new": []
+                                        "kind": 14,
+                                        "readonlyToken": "+",
+                                        "typeParameter": "P",
+                                        "constraintType": {
+                                            "kind": 0,
+                                            "type": {
+                                                "kind": 6,
+                                                "name": "K"
+                                            },
+                                            "typeArguments": []
+                                        },
+                                        "type": {
+                                            "kind": 0,
+                                            "type": {
+                                                "kind": 6,
+                                                "name": "T"
+                                            },
+                                            "typeArguments": []
+                                        }
                                     }
                                 }
                             ],
@@ -1628,7 +1635,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 132,
+                            "line": 133,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -1643,7 +1650,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 133,
+                                    "line": 134,
                                     "character": 4
                                 }
                             }
@@ -1662,7 +1669,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 134,
+                                    "line": 135,
                                     "character": 4
                                 }
                             }
@@ -1675,7 +1682,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 135,
+                                    "line": 136,
                                     "character": 4
                                 }
                             }
@@ -1694,7 +1701,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 136,
+                                    "line": 137,
                                     "character": 4
                                 }
                             }
@@ -1707,7 +1714,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 137,
+                                    "line": 138,
                                     "character": 4
                                 }
                             }
@@ -1720,7 +1727,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 138,
+                                    "line": 139,
                                     "character": 4
                                 }
                             }
@@ -1738,7 +1745,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 141,
+                            "line": 142,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -1759,7 +1766,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 142,
+                                    "line": 143,
                                     "character": 4
                                 }
                             }
@@ -1778,7 +1785,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 143,
+                                    "line": 144,
                                     "character": 4
                                 }
                             }
@@ -1807,7 +1814,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 144,
+                                    "line": 145,
                                     "character": 4
                                 }
                             }
@@ -1826,7 +1833,7 @@
                             },
                             "loc": {
                                 "pos": {
-                                    "line": 149,
+                                    "line": 150,
                                     "character": 4
                                 }
                             }
@@ -1854,7 +1861,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 158,
+                            "line": 159,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -1875,7 +1882,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 159,
+                                    "line": 160,
                                     "character": 4
                                 }
                             }
@@ -1894,7 +1901,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 160,
+                                    "line": 161,
                                     "character": 4
                                 }
                             }
@@ -1913,7 +1920,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 161,
+                                    "line": 162,
                                     "character": 4
                                 }
                             }
@@ -1932,7 +1939,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 162,
+                                    "line": 163,
                                     "character": 4
                                 }
                             }
@@ -1945,7 +1952,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 120,
+                                    "line": 121,
                                     "character": 4
                                 }
                             }
@@ -1958,7 +1965,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 121,
+                                    "line": 122,
                                     "character": 4
                                 }
                             }
@@ -1987,7 +1994,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 122,
+                                    "line": 123,
                                     "character": 4
                                 }
                             }
@@ -2006,7 +2013,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 111,
+                                    "line": 112,
                                     "character": 4
                                 }
                             }
@@ -2025,7 +2032,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 112,
+                                    "line": 113,
                                     "character": 4
                                 }
                             }
@@ -2043,7 +2050,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 175,
+                            "line": 176,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -2058,7 +2065,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 176,
+                                    "line": 177,
                                     "character": 4
                                 }
                             }
@@ -2077,7 +2084,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 177,
+                                    "line": 178,
                                     "character": 4
                                 }
                             }
@@ -2096,7 +2103,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 178,
+                                    "line": 179,
                                     "character": 4
                                 }
                             }
@@ -2115,7 +2122,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 179,
+                                    "line": 180,
                                     "character": 4
                                 }
                             }
@@ -2128,7 +2135,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 180,
+                                    "line": 181,
                                     "character": 4
                                 }
                             }
@@ -2147,7 +2154,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 181,
+                                    "line": 182,
                                     "character": 4
                                 }
                             }
@@ -2165,7 +2172,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 184,
+                            "line": 185,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -2180,7 +2187,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 185,
+                                    "line": 186,
                                     "character": 4
                                 }
                             }
@@ -2199,7 +2206,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 186,
+                                    "line": 187,
                                     "character": 4
                                 }
                             }
@@ -2218,7 +2225,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 187,
+                                    "line": 188,
                                     "character": 4
                                 }
                             }
@@ -2236,7 +2243,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 190,
+                            "line": 191,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -2257,7 +2264,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 191,
+                                    "line": 192,
                                     "character": 4
                                 }
                             }
@@ -2286,7 +2293,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 192,
+                                    "line": 193,
                                     "character": 4
                                 }
                             }
@@ -2315,7 +2322,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 193,
+                                    "line": 194,
                                     "character": 4
                                 }
                             }
@@ -2352,7 +2359,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 196,
+                            "line": 197,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -2367,7 +2374,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 197,
+                                    "line": 198,
                                     "character": 4
                                 }
                             }
@@ -2386,7 +2393,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 191,
+                                    "line": 192,
                                     "character": 4
                                 }
                             }
@@ -2415,7 +2422,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 192,
+                                    "line": 193,
                                     "character": 4
                                 }
                             }
@@ -2444,7 +2451,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 193,
+                                    "line": 194,
                                     "character": 4
                                 }
                             }
@@ -2463,7 +2470,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 111,
+                                    "line": 112,
                                     "character": 4
                                 }
                             }
@@ -2482,7 +2489,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 112,
+                                    "line": 113,
                                     "character": 4
                                 }
                             }
@@ -2500,7 +2507,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 205,
+                            "line": 206,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -2515,7 +2522,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 206,
+                                    "line": 207,
                                     "character": 4
                                 }
                             }
@@ -2534,7 +2541,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 207,
+                                    "line": 208,
                                     "character": 4
                                 }
                             }
@@ -2563,7 +2570,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 208,
+                                    "line": 209,
                                     "character": 4
                                 }
                             }
@@ -2582,7 +2589,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 209,
+                                    "line": 210,
                                     "character": 4
                                 }
                             }
@@ -2600,7 +2607,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 165,
+                            "line": 166,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -2625,7 +2632,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 166,
+                                    "line": 167,
                                     "character": 4
                                 }
                             }
@@ -2644,7 +2651,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 167,
+                                    "line": 168,
                                     "character": 4
                                 }
                             }
@@ -2662,7 +2669,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 226,
+                            "line": 227,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -2693,7 +2700,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 227,
+                                    "line": 228,
                                     "character": 4
                                 }
                             }
@@ -2722,7 +2729,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 228,
+                                    "line": 229,
                                     "character": 4
                                 }
                             }
@@ -2751,7 +2758,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 229,
+                                    "line": 230,
                                     "character": 4
                                 }
                             }
@@ -2780,7 +2787,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 230,
+                                    "line": 231,
                                     "character": 4
                                 }
                             }
@@ -2808,7 +2815,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 280,
+                            "line": 281,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -2829,7 +2836,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 281,
+                                    "line": 282,
                                     "character": 4
                                 }
                             }
@@ -2858,7 +2865,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 227,
+                                    "line": 228,
                                     "character": 4
                                 }
                             }
@@ -2887,7 +2894,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 228,
+                                    "line": 229,
                                     "character": 4
                                 }
                             }
@@ -2916,7 +2923,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 229,
+                                    "line": 230,
                                     "character": 4
                                 }
                             }
@@ -2945,7 +2952,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 230,
+                                    "line": 231,
                                     "character": 4
                                 }
                             }
@@ -2963,7 +2970,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 284,
+                            "line": 285,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -3061,7 +3068,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 285,
+                                    "line": 286,
                                     "character": 4
                                 }
                             }
@@ -3074,7 +3081,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 286,
+                                    "line": 287,
                                     "character": 4
                                 }
                             }
@@ -3092,7 +3099,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 289,
+                            "line": 290,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -3113,7 +3120,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 290,
+                                    "line": 291,
                                     "character": 4
                                 }
                             }
@@ -3142,7 +3149,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 291,
+                                    "line": 292,
                                     "character": 4
                                 }
                             }
@@ -3160,7 +3167,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 294,
+                            "line": 295,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -3181,7 +3188,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 295,
+                                    "line": 296,
                                     "character": 4
                                 }
                             }
@@ -3200,7 +3207,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 296,
+                                    "line": 297,
                                     "character": 4
                                 }
                             }
@@ -3219,7 +3226,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 297,
+                                    "line": 298,
                                     "character": 4
                                 }
                             }
@@ -3238,7 +3245,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 298,
+                                    "line": 299,
                                     "character": 4
                                 }
                             }
@@ -3257,7 +3264,133 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 299,
+                                    "line": 300,
+                                    "character": 4
+                                }
+                            }
+                        }
+                    ],
+                    "methods": [],
+                    "indexes": [],
+                    "new": []
+                },
+                {
+                    "kind": 1,
+                    "name": "ArrowFunctionType",
+                    "implements": [],
+                    "extends": [
+                        {
+                            "kind": 0,
+                            "type": {
+                                "name": "BaseMethodSignature",
+                                "path": [],
+                                "kind": 1
+                            },
+                            "typeArguments": []
+                        }
+                    ],
+                    "typeParameters": [],
+                    "loc": {
+                        "pos": {
+                            "line": 303,
+                            "character": 0
+                        },
+                        "sourceFile": "/src/projectExtractor/structure.ts"
+                    },
+                    "otherDefs": [],
+                    "properties": [
+                        {
+                            "name": "kind",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "ArrowFunction",
+                                    "path": [],
+                                    "kind": 9
+                                },
+                                "typeArguments": []
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 304,
+                                    "character": 4
+                                }
+                            }
+                        },
+                        {
+                            "name": "returnType",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "Type",
+                                    "path": [],
+                                    "kind": 5
+                                },
+                                "typeArguments": []
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 192,
+                                    "character": 4
+                                }
+                            }
+                        },
+                        {
+                            "name": "parameters",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "Array",
+                                    "path": [],
+                                    "kind": 9
+                                },
+                                "typeArguments": [
+                                    {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "FunctionParameter",
+                                            "path": [],
+                                            "kind": 1
+                                        },
+                                        "typeArguments": []
+                                    }
+                                ]
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 193,
+                                    "character": 4
+                                }
+                            }
+                        },
+                        {
+                            "name": "typeParameters",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "Array",
+                                    "path": [],
+                                    "kind": 9
+                                },
+                                "typeArguments": [
+                                    {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "TypeParameter",
+                                            "path": [],
+                                            "kind": 1
+                                        },
+                                        "typeArguments": []
+                                    }
+                                ]
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 194,
                                     "character": 4
                                 }
                             }
@@ -3275,13 +3408,255 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
+                            "line": 316,
+                            "character": 0
+                        },
+                        "sourceFile": "/src/projectExtractor/structure.ts"
+                    },
+                    "otherDefs": [],
+                    "properties": [
+                        {
+                            "name": "kind",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "Mapped",
+                                    "path": [],
+                                    "kind": 9
+                                },
+                                "typeArguments": []
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 317,
+                                    "character": 4
+                                }
+                            }
+                        },
+                        {
+                            "name": "readonlyToken",
+                            "type": {
+                                "kind": 4,
+                                "types": [
+                                    {
+                                        "kind": 7,
+                                        "literal": "+"
+                                    },
+                                    {
+                                        "kind": 7,
+                                        "literal": "-"
+                                    }
+                                ]
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 318,
+                                    "character": 4
+                                }
+                            }
+                        },
+                        {
+                            "name": "typeParameter",
+                            "type": {
+                                "kind": 7
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 319,
+                                    "character": 4
+                                }
+                            }
+                        },
+                        {
+                            "name": "constraintType",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "Type",
+                                    "path": [],
+                                    "kind": 5
+                                },
+                                "typeArguments": []
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 320,
+                                    "character": 4
+                                }
+                            }
+                        },
+                        {
+                            "name": "type",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "Type",
+                                    "path": [],
+                                    "kind": 5
+                                },
+                                "typeArguments": []
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 321,
+                                    "character": 4
+                                }
+                            }
+                        }
+                    ],
+                    "methods": [],
+                    "indexes": [],
+                    "new": []
+                },
+                {
+                    "kind": 1,
+                    "name": "IndexAccessType",
+                    "implements": [],
+                    "extends": [],
+                    "typeParameters": [],
+                    "loc": {
+                        "pos": {
+                            "line": 324,
+                            "character": 0
+                        },
+                        "sourceFile": "/src/projectExtractor/structure.ts"
+                    },
+                    "otherDefs": [],
+                    "properties": [
+                        {
+                            "name": "kind",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "IndexAccess",
+                                    "path": [],
+                                    "kind": 9
+                                },
+                                "typeArguments": []
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 325,
+                                    "character": 4
+                                }
+                            }
+                        },
+                        {
+                            "name": "type",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "Type",
+                                    "path": [],
+                                    "kind": 5
+                                },
+                                "typeArguments": []
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 326,
+                                    "character": 4
+                                }
+                            }
+                        },
+                        {
+                            "name": "index",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "Type",
+                                    "path": [],
+                                    "kind": 5
+                                },
+                                "typeArguments": []
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 327,
+                                    "character": 4
+                                }
+                            }
+                        }
+                    ],
+                    "methods": [],
+                    "indexes": [],
+                    "new": []
+                },
+                {
+                    "kind": 1,
+                    "name": "TypeOperator",
+                    "implements": [],
+                    "extends": [],
+                    "typeParameters": [],
+                    "loc": {
+                        "pos": {
                             "line": 307,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
                     },
                     "otherDefs": [],
-                    "properties": [],
+                    "properties": [
+                        {
+                            "name": "kind",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "TypeOperator",
+                                    "path": [],
+                                    "kind": 9
+                                },
+                                "typeArguments": []
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 308,
+                                    "character": 4
+                                }
+                            }
+                        },
+                        {
+                            "name": "operator",
+                            "type": {
+                                "kind": 7
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 309,
+                                    "character": 4
+                                }
+                            }
+                        },
+                        {
+                            "name": "type",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "Type",
+                                    "path": [],
+                                    "kind": 5
+                                },
+                                "typeArguments": []
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 310,
+                                    "character": 4
+                                }
+                            }
+                        }
+                    ],
                     "methods": [],
                     "indexes": [],
                     "new": []
@@ -3444,7 +3819,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 110,
+                            "line": 111,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -3465,7 +3840,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 111,
+                                    "line": 112,
                                     "character": 4
                                 }
                             }
@@ -3484,7 +3859,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 112,
+                                    "line": 113,
                                     "character": 4
                                 }
                             }
@@ -3512,7 +3887,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 119,
+                            "line": 120,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -3527,7 +3902,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 120,
+                                    "line": 121,
                                     "character": 4
                                 }
                             }
@@ -3540,7 +3915,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 121,
+                                    "line": 122,
                                     "character": 4
                                 }
                             }
@@ -3569,7 +3944,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 122,
+                                    "line": 123,
                                     "character": 4
                                 }
                             }
@@ -3588,7 +3963,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 111,
+                                    "line": 112,
                                     "character": 4
                                 }
                             }
@@ -3607,7 +3982,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 112,
+                                    "line": 113,
                                     "character": 4
                                 }
                             }
@@ -3644,7 +4019,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 238,
+                            "line": 239,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -3665,7 +4040,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 239,
+                                    "line": 240,
                                     "character": 4
                                 }
                             }
@@ -3694,7 +4069,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 240,
+                                    "line": 241,
                                     "character": 4
                                 }
                             }
@@ -3723,7 +4098,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 241,
+                                    "line": 242,
                                     "character": 4
                                 }
                             }
@@ -3752,7 +4127,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 242,
+                                    "line": 243,
                                     "character": 4
                                 }
                             }
@@ -3765,7 +4140,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 243,
+                                    "line": 244,
                                     "character": 4
                                 }
                             }
@@ -3794,7 +4169,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 229,
+                                    "line": 230,
                                     "character": 4
                                 }
                             }
@@ -3823,7 +4198,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 230,
+                                    "line": 231,
                                     "character": 4
                                 }
                             }
@@ -3852,7 +4227,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 234,
+                                    "line": 235,
                                     "character": 4
                                 }
                             }
@@ -3881,7 +4256,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 235,
+                                    "line": 236,
                                     "character": 4
                                 }
                             }
@@ -3894,7 +4269,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 120,
+                                    "line": 121,
                                     "character": 4
                                 }
                             }
@@ -3907,7 +4282,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 121,
+                                    "line": 122,
                                     "character": 4
                                 }
                             }
@@ -3936,7 +4311,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 122,
+                                    "line": 123,
                                     "character": 4
                                 }
                             }
@@ -3955,7 +4330,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 111,
+                                    "line": 112,
                                     "character": 4
                                 }
                             }
@@ -3974,7 +4349,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 112,
+                                    "line": 113,
                                     "character": 4
                                 }
                             }
@@ -4011,7 +4386,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 246,
+                            "line": 247,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -4032,7 +4407,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 247,
+                                    "line": 248,
                                     "character": 4
                                 }
                             }
@@ -4061,7 +4436,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 248,
+                                    "line": 249,
                                     "character": 4
                                 }
                             }
@@ -4090,7 +4465,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 249,
+                                    "line": 250,
                                     "character": 4
                                 }
                             }
@@ -4119,7 +4494,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 250,
+                                    "line": 251,
                                     "character": 4
                                 }
                             }
@@ -4148,7 +4523,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 227,
+                                    "line": 228,
                                     "character": 4
                                 }
                             }
@@ -4177,7 +4552,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 228,
+                                    "line": 229,
                                     "character": 4
                                 }
                             }
@@ -4206,7 +4581,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 229,
+                                    "line": 230,
                                     "character": 4
                                 }
                             }
@@ -4235,7 +4610,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 230,
+                                    "line": 231,
                                     "character": 4
                                 }
                             }
@@ -4248,7 +4623,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 120,
+                                    "line": 121,
                                     "character": 4
                                 }
                             }
@@ -4261,7 +4636,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 121,
+                                    "line": 122,
                                     "character": 4
                                 }
                             }
@@ -4290,7 +4665,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 122,
+                                    "line": 123,
                                     "character": 4
                                 }
                             }
@@ -4309,7 +4684,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 111,
+                                    "line": 112,
                                     "character": 4
                                 }
                             }
@@ -4328,7 +4703,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 112,
+                                    "line": 113,
                                     "character": 4
                                 }
                             }
@@ -4356,7 +4731,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 264,
+                            "line": 265,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -4377,7 +4752,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 265,
+                                    "line": 266,
                                     "character": 4
                                 }
                             }
@@ -4396,7 +4771,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 266,
+                                    "line": 267,
                                     "character": 4
                                 }
                             }
@@ -4425,7 +4800,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 267,
+                                    "line": 268,
                                     "character": 4
                                 }
                             }
@@ -4438,7 +4813,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 120,
+                                    "line": 121,
                                     "character": 4
                                 }
                             }
@@ -4451,7 +4826,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 121,
+                                    "line": 122,
                                     "character": 4
                                 }
                             }
@@ -4480,7 +4855,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 122,
+                                    "line": 123,
                                     "character": 4
                                 }
                             }
@@ -4499,7 +4874,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 111,
+                                    "line": 112,
                                     "character": 4
                                 }
                             }
@@ -4518,7 +4893,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 112,
+                                    "line": 113,
                                     "character": 4
                                 }
                             }
@@ -4837,18 +5212,25 @@
                         {
                             "name": "dependencies",
                             "type": {
-                                "kind": 1,
-                                "properties": [],
-                                "methods": [],
-                                "indexes": [
-                                    {
-                                        "key": "string",
-                                        "type": {
-                                            "kind": 7
-                                        }
-                                    }
-                                ],
-                                "new": []
+                                "kind": 14,
+                                "readonlyToken": "+",
+                                "typeParameter": "P",
+                                "constraintType": {
+                                    "kind": 0,
+                                    "type": {
+                                        "kind": 6,
+                                        "name": "K"
+                                    },
+                                    "typeArguments": []
+                                },
+                                "type": {
+                                    "kind": 0,
+                                    "type": {
+                                        "kind": 6,
+                                        "name": "T"
+                                    },
+                                    "typeArguments": []
+                                }
                             },
                             "flags": 1,
                             "loc": {
@@ -4994,24 +5376,25 @@
                         {
                             "name": "moduleCache",
                             "type": {
-                                "kind": 1,
-                                "properties": [],
-                                "methods": [],
-                                "indexes": [
-                                    {
-                                        "key": "string",
-                                        "type": {
-                                            "kind": 0,
-                                            "type": {
-                                                "name": "Module",
-                                                "path": [],
-                                                "kind": 1
-                                            },
-                                            "typeArguments": []
-                                        }
-                                    }
-                                ],
-                                "new": []
+                                "kind": 14,
+                                "readonlyToken": "+",
+                                "typeParameter": "P",
+                                "constraintType": {
+                                    "kind": 0,
+                                    "type": {
+                                        "kind": 6,
+                                        "name": "K"
+                                    },
+                                    "typeArguments": []
+                                },
+                                "type": {
+                                    "kind": 0,
+                                    "type": {
+                                        "kind": 6,
+                                        "name": "T"
+                                    },
+                                    "typeArguments": []
+                                }
                             },
                             "flags": 0,
                             "loc": {
@@ -5101,7 +5484,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 253,
+                            "line": 254,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -5116,7 +5499,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 254,
+                                    "line": 255,
                                     "character": 4
                                 }
                             }
@@ -5135,7 +5518,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 255,
+                                    "line": 256,
                                     "character": 4
                                 }
                             }
@@ -5148,7 +5531,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 121,
+                                    "line": 122,
                                     "character": 4
                                 }
                             }
@@ -5177,7 +5560,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 122,
+                                    "line": 123,
                                     "character": 4
                                 }
                             }
@@ -5196,7 +5579,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 111,
+                                    "line": 112,
                                     "character": 4
                                 }
                             }
@@ -5215,7 +5598,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 112,
+                                    "line": 113,
                                     "character": 4
                                 }
                             }
@@ -5243,7 +5626,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 258,
+                            "line": 259,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -5264,7 +5647,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 259,
+                                    "line": 260,
                                     "character": 4
                                 }
                             }
@@ -5293,7 +5676,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 260,
+                                    "line": 261,
                                     "character": 4
                                 }
                             }
@@ -5306,7 +5689,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 261,
+                                    "line": 262,
                                     "character": 4
                                 }
                             }
@@ -5319,7 +5702,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 120,
+                                    "line": 121,
                                     "character": 4
                                 }
                             }
@@ -5332,7 +5715,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 121,
+                                    "line": 122,
                                     "character": 4
                                 }
                             }
@@ -5361,7 +5744,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 122,
+                                    "line": 123,
                                     "character": 4
                                 }
                             }
@@ -5380,7 +5763,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 111,
+                                    "line": 112,
                                     "character": 4
                                 }
                             }
@@ -5399,7 +5782,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 112,
+                                    "line": 113,
                                     "character": 4
                                 }
                             }
@@ -5427,7 +5810,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 270,
+                            "line": 271,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -5448,7 +5831,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 271,
+                                    "line": 272,
                                     "character": 4
                                 }
                             }
@@ -5467,7 +5850,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 272,
+                                    "line": 273,
                                     "character": 4
                                 }
                             }
@@ -5480,7 +5863,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 273,
+                                    "line": 274,
                                     "character": 4
                                 }
                             }
@@ -5493,7 +5876,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 120,
+                                    "line": 121,
                                     "character": 4
                                 }
                             }
@@ -5506,7 +5889,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 121,
+                                    "line": 122,
                                     "character": 4
                                 }
                             }
@@ -5535,7 +5918,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 122,
+                                    "line": 123,
                                     "character": 4
                                 }
                             }
@@ -5554,7 +5937,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 111,
+                                    "line": 112,
                                     "character": 4
                                 }
                             }
@@ -5573,7 +5956,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 112,
+                                    "line": 113,
                                     "character": 4
                                 }
                             }
@@ -5601,18 +5984,25 @@
                         {
                             "name": "packageJSON",
                             "type": {
-                                "kind": 1,
-                                "properties": [],
-                                "methods": [],
-                                "indexes": [
-                                    {
-                                        "key": "string",
-                                        "type": {
-                                            "kind": 7
-                                        }
-                                    }
-                                ],
-                                "new": []
+                                "kind": 14,
+                                "readonlyToken": "+",
+                                "typeParameter": "P",
+                                "constraintType": {
+                                    "kind": 0,
+                                    "type": {
+                                        "kind": 6,
+                                        "name": "K"
+                                    },
+                                    "typeArguments": []
+                                },
+                                "type": {
+                                    "kind": 0,
+                                    "type": {
+                                        "kind": 6,
+                                        "name": "T"
+                                    },
+                                    "typeArguments": []
+                                }
                             },
                             "flags": 0,
                             "loc": {
@@ -5654,7 +6044,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 219,
+                            "line": 220,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -5675,7 +6065,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 220,
+                                    "line": 221,
                                     "character": 4
                                 }
                             }
@@ -5693,7 +6083,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 233,
+                            "line": 234,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -5738,7 +6128,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 314,
+                            "line": 333,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -5794,7 +6184,7 @@
                             {
                                 "kind": 0,
                                 "type": {
-                                    "name": "BaseMethodSignature",
+                                    "name": "ArrowFunctionType",
                                     "path": [],
                                     "kind": 1
                                 },
@@ -5808,6 +6198,24 @@
                                     "kind": 1
                                 },
                                 "typeArguments": []
+                            },
+                            {
+                                "kind": 0,
+                                "type": {
+                                    "name": "IndexAccessType",
+                                    "path": [],
+                                    "kind": 1
+                                },
+                                "typeArguments": []
+                            },
+                            {
+                                "kind": 0,
+                                "type": {
+                                    "name": "TypeOperator",
+                                    "path": [],
+                                    "kind": 1
+                                },
+                                "typeArguments": []
                             }
                         ]
                     }
@@ -5815,26 +6223,6 @@
                 {
                     "kind": 5,
                     "name": "ClassProperty",
-                    "typeParameters": [],
-                    "loc": {
-                        "pos": {
-                            "line": 223,
-                            "character": 0
-                        },
-                        "sourceFile": "/src/projectExtractor/structure.ts"
-                    },
-                    "value": {
-                        "kind": 0,
-                        "type": {
-                            "name": "unknown",
-                            "path": [],
-                            "kind": 9
-                        }
-                    }
-                },
-                {
-                    "kind": 5,
-                    "name": "ClassMethod",
                     "typeParameters": [],
                     "loc": {
                         "pos": {
@@ -5854,11 +6242,31 @@
                 },
                 {
                     "kind": 5,
+                    "name": "ClassMethod",
+                    "typeParameters": [],
+                    "loc": {
+                        "pos": {
+                            "line": 225,
+                            "character": 0
+                        },
+                        "sourceFile": "/src/projectExtractor/structure.ts"
+                    },
+                    "value": {
+                        "kind": 0,
+                        "type": {
+                            "name": "unknown",
+                            "path": [],
+                            "kind": 9
+                        }
+                    }
+                },
+                {
+                    "kind": 5,
                     "name": "FunctionDeclaration",
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 276,
+                            "line": 277,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -5878,7 +6286,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 278,
+                            "line": 279,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -5941,27 +6349,6 @@
                                 "typeArguments": []
                             }
                         ]
-                    }
-                },
-                {
-                    "kind": 5,
-                    "name": "ArrowFunctionType",
-                    "typeParameters": [],
-                    "loc": {
-                        "pos": {
-                            "line": 302,
-                            "character": 0
-                        },
-                        "sourceFile": "/src/projectExtractor/structure.ts"
-                    },
-                    "value": {
-                        "kind": 0,
-                        "type": {
-                            "name": "BaseMethodSignature",
-                            "path": [],
-                            "kind": 1
-                        },
-                        "typeArguments": []
                     }
                 }
             ]
@@ -6112,11 +6499,15 @@
                 {
                     "name": "xxx",
                     "type": {
-                        "kind": 0,
+                        "kind": 18,
+                        "operator": "keyof",
                         "type": {
-                            "name": "unknown",
-                            "path": [],
-                            "kind": 9
+                            "kind": 0,
+                            "type": {
+                                "kind": 6,
+                                "name": "T"
+                            },
+                            "typeArguments": []
                         }
                     },
                     "flags": 1,
@@ -6416,6 +6807,58 @@
                             "typeArguments": []
                         }
                     ]
+                }
+            }
+        },
+        {
+            "kind": 5,
+            "name": "CreateMutable",
+            "typeParameters": [
+                {
+                    "name": "Type"
+                }
+            ],
+            "loc": {
+                "pos": {
+                    "line": 44,
+                    "character": 0
+                },
+                "sourceFile": "/src/index.ts"
+            },
+            "value": {
+                "kind": 14,
+                "readonlyToken": "-",
+                "typeParameter": "Property",
+                "constraintType": {
+                    "kind": 18,
+                    "operator": "keyof",
+                    "type": {
+                        "kind": 0,
+                        "type": {
+                            "kind": 6,
+                            "name": "Type"
+                        },
+                        "typeArguments": []
+                    }
+                },
+                "type": {
+                    "kind": 17,
+                    "index": {
+                        "kind": 0,
+                        "type": {
+                            "kind": 6,
+                            "name": "Property"
+                        },
+                        "typeArguments": []
+                    },
+                    "type": {
+                        "kind": 0,
+                        "type": {
+                            "kind": 6,
+                            "name": "Type"
+                        },
+                        "typeArguments": []
+                    }
                 }
             }
         }

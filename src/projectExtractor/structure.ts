@@ -83,6 +83,7 @@ export enum TypeKind {
     Conditional,
     TemplateLiteral,
     IndexAccess,
+    TypeOperator,
     Never
 }
 
@@ -300,16 +301,36 @@ export interface ConditionalType {
     ifFalse: Type
 }
 
-export type ArrowFunctionType = BaseMethodSignature;
+export interface ArrowFunctionType extends BaseMethodSignature {
+    kind: TypeKind.ArrowFunction
+}
+
+export interface TypeOperator {
+    kind: TypeKind.TypeOperator,
+    operator: string,
+    type: Type
+}
 
 /**
  * This type can only be seen on the [[TypeAliasDeclaration]] object.
  */
 export interface MappedType {
+    kind: TypeKind.Mapped,
+    readonlyToken: "+" | "-",
+    typeParameter: string,
+    constraintType: Type,
+    type: Type
+}
 
+export interface IndexAccessType {
+    kind: TypeKind.IndexAccess,
+    type: Type,
+    index: Type
 }
 
 /**
  * Types are either references to nodes, or use nodes in some way.
  */
-export type Type = ReferenceType | ObjectLiteralType | PrimitiveType | UnionType | ConditionalType | ArrowFunctionType | MappedType;
+export type Type = ReferenceType | ObjectLiteralType | PrimitiveType | UnionType | ConditionalType | ArrowFunctionType | MappedType | IndexAccessType | TypeOperator;
+
+export const NEVER_TYPE: Type = { kind: TypeKind.Never };

@@ -41,3 +41,7 @@ if (myExtractor) {
     console.log(myExtractor.toJSON());
     fs.writeFileSync("./data.json", JSON.stringify(myExtractor));
 }
+
+export type CreateMutable<Type> = {
+    -readonly [Property in keyof Type]: Type[Property];
+  };

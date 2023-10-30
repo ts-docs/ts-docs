@@ -1,6 +1,6 @@
 import * as ts from "typescript";
 import * as path from "path";
-import { BaseMethodSignature, BaseNode, ClassDeclaration, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, FunctionParameterFlags, IndexSignature, InterfaceDeclaration, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeAliasDeclaration, TypeKind, TypeParameter, TypeReference, TypeReferenceKind } from "./structure";
+import { BaseMethodSignature, BaseNode, ClassDeclaration, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, FunctionParameterFlags, IndexSignature, InterfaceDeclaration, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, NEVER_TYPE, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeAliasDeclaration, TypeKind, TypeParameter, TypeReference, TypeReferenceKind } from "./structure";
 import { BitField, PackageJSON, getPackageJSON, getSymbolDeclaration, getTsconfig, hasModifier, joinPartOfArray, mapRealValues, resolvePackageName } from "./utils";
 
 export interface TypescriptExtractorSettings {
@@ -288,7 +288,7 @@ export class TypescriptExtractor implements Module {
         if (!t.symbol) {
             if (BitField.has(t.flags, ts.TypeFlags.Unknown)) return { kind: TypeKind.Unknown };
             else if (BitField.has(t.flags, ts.TypeFlags.Any)) return { kind: TypeKind.Any };
-            else if (BitField.has(t.flags, ts.TypeFlags.Never)) return { kind: TypeKind.Never };
+            else if (BitField.has(t.flags, ts.TypeFlags.Never)) return NEVER_TYPE;
             else if (BitField.has(t.flags, ts.TypeFlags.Void)) return { kind: TypeKind.Void };
             else if (BitField.has(t.flags, ts.TypeFlags.Undefined)) return { kind: TypeKind.Undefined };
             else if (BitField.has(t.flags, ts.TypeFlags.Null)) return { kind: TypeKind.Null };
@@ -300,7 +300,7 @@ export class TypescriptExtractor implements Module {
             else if (t === this.shared.checker.getTrueType()) return { kind: TypeKind.Boolean, literal: "true" };
             else if (t === this.shared.checker.getBooleanType()) return { kind: TypeKind.Boolean };
             else if (t.isUnion()) return { kind: TypeKind.Union, types: t.types.map(t => this.createType(t)) };
-            else if ("checkType" in t) {
+            else if (BitField.has(t.flags, ts.TypeFlags.Conditional)) {
                 const condType = t as ts.ConditionalType;
                 return {
                     kind: TypeKind.Conditional,
@@ -310,8 +310,25 @@ export class TypescriptExtractor implements Module {
                     ifFalse: this.createType(this.getNodeType(condType.root.node.falseType)),
                 };
             }
+            else if (BitField.has(t.flags, ts.TypeFlags.IndexedAccess)) {
+                const indexedType = t as ts.IndexedAccessType;
+                return {
+                    kind: TypeKind.IndexAccess,
+                    index: this.createType(indexedType.indexType),
+                    type: this.createType(indexedType.objectType)
+                };
+            }
+            else if (BitField.has(t.flags, ts.TypeFlags.Index)) {
+                const indexType = t as ts.IndexType;
+                return {
+                    kind: TypeKind.TypeOperator,
+                    operator: "keyof",
+                    type: this.createType(indexType.type)
+                };
+            }
             else return { kind: TypeKind.Reference, type: { name: "unknown", path: [], kind: TypeReferenceKind.External }};
         }
+
         const ref = this.addSymbol(t.symbol);
         
         if (ref) return {
@@ -329,6 +346,18 @@ export class TypescriptExtractor implements Module {
                 },
                 typeArguments: this.shared.checker.getTypeArguments(t as ts.TypeReference).map(arg => this.createType(arg)),
                 isInfer: ts.isInferTypeNode(getSymbolDeclaration(t.symbol)!.parent) ? true : undefined
+            };
+        }
+
+        else if (BitField.has((t as ts.IntrinsicType).objectFlags, ts.ObjectFlags.Mapped)) {
+            const mappedType = t as ts.MappedType;
+            if (!mappedType.declaration.typeParameter.constraint || !mappedType.declaration.type) return NEVER_TYPE;
+            return {
+                kind: TypeKind.Mapped,
+                readonlyToken: mappedType.declaration.readonlyToken ? mappedType.declaration.readonlyToken.kind === ts.SyntaxKind.MinusToken ? "-" : "+" : "+",
+                typeParameter: mappedType.declaration.typeParameter.name.text,
+                constraintType: this.createType(this.getNodeType(mappedType.declaration.typeParameter.constraint)),
+                type: this.createType(this.getNodeType(mappedType.declaration.type))
             };
         }
 
