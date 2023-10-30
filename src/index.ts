@@ -18,6 +18,7 @@ export class Test<T> {
     z?: Promise<string>;
     xxx?: keyof T;
     t?: MyInterface;
+    myTuple?: [nameA: string, boolean, nameC?: number, number?];
     //[key: string]: number;
     //test: Map<string, number> = new Map();
     //[A.B]: string = "abc";

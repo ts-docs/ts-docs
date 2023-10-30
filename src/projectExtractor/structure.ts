@@ -159,6 +159,7 @@ export enum PropertyFlags {
 }
 
 export interface PropertySignature extends Node {
+    name: string,
     flags: BitField,
     computed?: Type,
     type?: Type,
@@ -170,7 +171,7 @@ export interface IndexSignature {
     type: Type
 }
 
-export enum FunctionParameterFlags {
+export enum ElementParameterFlags {
     Optional = 1 << 0,
     Spread = 1 << 1
 }
@@ -336,9 +337,20 @@ export interface TemplateLiteralType {
     types: Type[]
 }
 
+export interface TupleElement {
+    type: Type,
+    flags: BitField,
+    name?: string
+}
+
+export interface TupleType {
+    kind: TypeKind.Tuple,
+    types: TupleElement[]
+}
+
 /**
  * Types are either references to nodes, or use nodes in some way.
  */
-export type Type = ReferenceType | ObjectLiteralType | PrimitiveType | UnionOrIntersectionType | ConditionalType | ArrowFunctionType | MappedType | IndexAccessType | TypeOperator | TemplateLiteralType;
+export type Type = ReferenceType | ObjectLiteralType | PrimitiveType | UnionOrIntersectionType | ConditionalType | ArrowFunctionType | MappedType | IndexAccessType | TypeOperator | TemplateLiteralType | TupleType;
 
 export const NEVER_TYPE: Type = { kind: TypeKind.Never };

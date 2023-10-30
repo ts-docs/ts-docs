@@ -1,6 +1,6 @@
 import * as ts from "typescript";
 import * as path from "path";
-import { BaseMethodSignature, BaseNode, ClassDeclaration, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, FunctionParameterFlags, IndexSignature, InterfaceDeclaration, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, NEVER_TYPE, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeAliasDeclaration, TypeKind, TypeParameter, TypeReference, TypeReferenceKind } from "./structure";
+import { BaseMethodSignature, BaseNode, ClassDeclaration, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, ElementParameterFlags, IndexSignature, InterfaceDeclaration, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, NEVER_TYPE, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeAliasDeclaration, TypeKind, TypeParameter, TypeReference, TypeReferenceKind } from "./structure";
 import { BitField, PackageJSON, getPackageJSON, getSymbolDeclaration, getTsconfig, hasModifier, joinPartOfArray, mapRealValues, resolvePackageName } from "./utils";
 
 export interface TypescriptExtractorSettings {
@@ -268,7 +268,7 @@ export class TypescriptExtractor implements Module {
         if (!type || !decl) return;
         return {
             name: symbol.name,
-            flags: new BitField([decl.questionToken && FunctionParameterFlags.Optional, decl.dotDotDotToken && FunctionParameterFlags.Spread]),
+            flags: new BitField([decl.questionToken && ElementParameterFlags.Optional, decl.dotDotDotToken && ElementParameterFlags.Spread]),
             type: decl.questionToken ? this.createType(this.shared.checker.getNonNullableType(type)) : this.createType(type),
             defaultValue: decl.initializer ? this.createType(this.getNodeType(decl.initializer)) : undefined,
             jsDoc: this.getJSDocData(decl)
@@ -301,6 +301,27 @@ export class TypescriptExtractor implements Module {
             else if (t === this.shared.checker.getBooleanType()) return { kind: TypeKind.Boolean };
             else if (t.isUnion()) return { kind: TypeKind.Union, types: t.types.map(t => this.createType(t)) };
             else if (t.isIntersection()) return { kind: TypeKind.Intersection, types: t.types.map(t => this.createType(t)) };
+            else if (this.shared.checker.isTupleType(t)) {
+                const typeArguments = this.shared.checker.getTypeArguments(t as ts.TypeReference);
+                const tupleType = (t as ts.TypeReference).target as ts.TupleType;
+                return {
+                    kind: TypeKind.Tuple,
+                    types: typeArguments.map((arg, ind) => {
+                        const flags = new BitField([]);
+                        let name;
+                        const currentElement = tupleType.labeledElementDeclarations?.[ind];
+                        if (currentElement) {
+                            name = currentElement.name.getText();
+                            flags.set(currentElement.questionToken && ElementParameterFlags.Optional, currentElement.dotDotDotToken && ElementParameterFlags.Spread);
+                        }
+                        return {
+                            name,
+                            flags,
+                            type: this.createType(name && flags.has(ElementParameterFlags.Optional) ? this.shared.checker.getNonNullableType(arg) : arg)
+                        };
+                    })
+                };
+            }
             else if (BitField.has(t.flags, ts.TypeFlags.Conditional)) {
                 const condType = t as ts.ConditionalType;
                 return {
