@@ -3,7 +3,7 @@ import path from "path";
 import fs from "fs";
 import { TypescriptExtractor } from "./projectExtractor/extractor";
 
-const myExtractor = TypescriptExtractor.createStandaloneExtractor(process.cwd().replaceAll(path.sep, "/"), { passthroughModules: ["src", "inner"]});
+const myExtractor = TypescriptExtractor.createStandaloneExtractor(process.cwd().replaceAll(path.sep, "/"), { passthroughModules: ["src", "inner"], hooks: {} });
 
 export enum A {
     A,

@@ -3,11 +3,16 @@ import * as path from "path";
 import { BaseMethodSignature, BaseNode, ClassDeclaration, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, ElementParameterFlags, IndexSignature, InterfaceDeclaration, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, NEVER_TYPE, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeAliasDeclaration, TypeKind, TypeParameter, TypeReference, TypeReferenceKind } from "./structure";
 import { BitField, PackageJSON, getPackageJSON, getSymbolDeclaration, getTsconfig, hasModifier, joinPartOfArray, mapRealValues, resolvePackageName } from "./utils";
 
+export interface TypescriptExtractorHooks {
+    register?(extractor: TypescriptExtractor, decl: Declaration, ref: TypeReference) : void
+}
+
 export interface TypescriptExtractorSettings {
     /**
      * Any provided folder names won't count as modules, items inside will be included in the parent module.
      */
-    passthroughModules?: string[]
+    passthroughModules?: string[],
+    hooks: TypescriptExtractorHooks
 }
 
 export interface Shared {
@@ -29,6 +34,7 @@ export class TypescriptExtractor implements Module {
     interfaces: InterfaceDeclaration[];
     types: TypeAliasDeclaration[];
     path: ItemPath;
+    childrenPath: ItemPath;
     packageJSON?: PackageJSON;
     shared: Shared;
     constructor(basePath: string, tsConfig: ts.ParsedCommandLine, shared: Shared) {
@@ -41,6 +47,7 @@ export class TypescriptExtractor implements Module {
         this.path = [];
         this.packageJSON = getPackageJSON(basePath);
         this.name = this.packageJSON?.name ? resolvePackageName(this.packageJSON.name) : basePath.slice(basePath.lastIndexOf(path.sep) + 1);
+        this.childrenPath = [this.name];
 
         for (const fileName of tsConfig.fileNames) {
             const fileObject = this.shared.program.getSourceFile(fileName);
@@ -77,20 +84,22 @@ export class TypescriptExtractor implements Module {
 
         const ref = {
             name: symbol.name,
-            path: currentModule.path,
+            path: currentModule.childrenPath,
             kind: TypeReferenceKind.TypeAlias
         };
 
         this.shared.referenceCache.set(symbol, ref);
 
-        currentModule.types.push({
+        const typeDecl = {
             kind: DeclarationKind.TypeAlias,
             name: symbol.name,
             typeParameters: mapRealValues((decl.typeParameters || []), (p) => this.createTypeParameter(this.getNodeType(p))),
             loc: this.createLoC(symbol, true),
             value: this.createType(type, true)
-        });
+        } as const;
 
+        currentModule.types.push(typeDecl);
+        this.shared.settings.hooks.register?.(this, typeDecl, ref);
         return ref;
     }
 
@@ -100,7 +109,7 @@ export class TypescriptExtractor implements Module {
 
         const ref = {
             name: symbol.name,
-            path: currentModule.path,
+            path: currentModule.childrenPath,
             kind: TypeReferenceKind.Interface
         };
 
@@ -113,7 +122,7 @@ export class TypescriptExtractor implements Module {
             else if (clause.token === ts.SyntaxKind.ImplementsKeyword) implementsClause.push(...clause.types.map(t => this.createType(this.shared.checker.getTypeAtLocation(t))));
         }
 
-        currentModule.interfaces.push({
+        const interfaceDecl = {
             kind: DeclarationKind.Interface,
             name: symbol.name,
             implements: implementsClause,
@@ -122,8 +131,10 @@ export class TypescriptExtractor implements Module {
             loc: this.createLoC(symbol, true),
             otherDefs: (symbol.declarations as ts.InterfaceDeclaration[]).slice(1).map(decl => this.createLoC(decl)),
             ...this.createObjectLiteral(type, false)
-        });
+        } as const;
 
+        currentModule.interfaces.push(interfaceDecl);
+        this.shared.settings.hooks.register?.(this, interfaceDecl, ref);
         return ref;
     }
 
@@ -133,7 +144,7 @@ export class TypescriptExtractor implements Module {
 
         const ref = {
             name: symbol.name,
-            path: currentModule.path,
+            path: currentModule.childrenPath,
             kind: TypeReferenceKind.Class
         };
 
@@ -146,7 +157,7 @@ export class TypescriptExtractor implements Module {
             else if (clause.token === ts.SyntaxKind.ImplementsKeyword) implementsClause.push(...clause.types.map(t => this.createType(this.shared.checker.getTypeAtLocation(t))));
         }
 
-        currentModule.classes.push({
+        const classDecl = {
             kind: DeclarationKind.Class,
             name: symbol.name,
             implements: implementsClause,
@@ -155,7 +166,10 @@ export class TypescriptExtractor implements Module {
             isAbstract: hasModifier(decl, ts.SyntaxKind.AbstractKeyword),
             loc: this.createLoC(symbol, true),
             ...this.createObjectLiteral(type, true),
-        });
+        } as const;
+
+        currentModule.classes.push(classDecl);
+        this.shared.settings.hooks.register?.(this, classDecl, ref);
         return ref;
     }
 
@@ -487,7 +501,7 @@ export class TypescriptExtractor implements Module {
 
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         let lastModule: Module = this;
-        const newPath = [];
+        const newPath = [this.name];
 
         for (let i = 0; i < pathParts.length; i++) {
             const pathPart = pathParts[i];
@@ -513,6 +527,15 @@ export class TypescriptExtractor implements Module {
         return path.join(this.packageJSON.repositoryBase, `${source}#L${node.loc.pos.line + 1}`);
     }
 
+    addExtra(item: BaseNode, key: string, extra: unknown) : void {
+        if (!item.extras) item.extras = { [key]: extra };
+        else item.extras[key] = extra;
+    }
+
+    getExtra<T>(item: BaseNode, key: string) : T | undefined {
+        return item.extras?.[key] as T;
+    }
+
     toJSON() : Record<string, unknown> {
         return {
             name: this.name,
@@ -536,6 +559,7 @@ export class TypescriptExtractor implements Module {
         return {
             name,
             path,
+            childrenPath: [...path, name],
             baseDir,
             namespace,
             modules: new Map(),
@@ -553,7 +577,7 @@ export class TypescriptExtractor implements Module {
         };
     }
 
-    static createStandaloneExtractor(basePath: string, settings: TypescriptExtractorSettings = {}): TypescriptExtractor | undefined {
+    static createStandaloneExtractor(basePath: string, settings: TypescriptExtractorSettings = { hooks: {} }): TypescriptExtractor | undefined {
         const config = getTsconfig(basePath);
         if (!config) return;
         const program = ts.createProgram({

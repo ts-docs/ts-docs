@@ -40,6 +40,10 @@ export interface Module {
     types: TypeAliasDeclaration[],
     baseDir: string,
     path: ItemPath,
+    /**
+     * The path of every child inside the module.
+     */
+    childrenPath: ItemPath,
     namespace?: LoC[]
 }
 
@@ -55,7 +59,7 @@ export interface JSDocData {
     comment: string[]
 }
 
-export interface LoC{
+export interface LoC {
     pos: ts.LineAndCharacter,
     /**
      * Does not include the module's baseDir. It only exists
@@ -110,9 +114,12 @@ export enum DeclarationKind {
     TypeAlias
 }
 
+export type BaseNodeExtras = Record<string, unknown>;
+
 export interface BaseNode {
     loc: LoC,
-    jsDoc?: JSDocData
+    jsDoc?: JSDocData,
+    extras?: BaseNodeExtras
 }
 
 /**
