@@ -224,7 +224,17 @@ export class TypescriptExtractor implements Module {
             else if (t === this.shared.checker.getTrueType()) return { kind: TypeKind.Boolean, literal: "true" };
             else if (t === this.shared.checker.getBooleanType()) return { kind: TypeKind.Boolean };
             else if (t.isUnion()) return { kind: TypeKind.Union, types: t.types.map(t => this.createType(t)) };
-            return { kind: TypeKind.Reference, type: { name: "unknown", path: [], kind: TypeReferenceKind.External }};
+            else if ("checkType" in t) {
+                const condType = t as ts.ConditionalType;
+                return { 
+                    kind: TypeKind.Conditional, 
+                    checkType: this.createType(condType.checkType), 
+                    extendsType: this.createType(condType.extendsType), 
+                    ifTrue: condType.resolvedTrueType ? this.createType(condType.resolvedTrueType) : { kind: TypeKind.Never },
+                    ifFalse: condType.resolvedFalseType ? this.createType(condType.resolvedFalseType) : { kind: TypeKind.Never },
+                };
+            }
+            else return { kind: TypeKind.Reference, type: { name: "unknown", path: [], kind: TypeReferenceKind.External }};
         }
         const ref = this.addSymbol(t.symbol);
         

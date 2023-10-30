@@ -14,6 +14,8 @@ export class Test<T> {
     baby?: TypescriptExtractor | 123;
     a: string = "abc";
     b?: number = 123;
+    c?: T extends string ? 1 : 2;
+    z?: Promise<string>;
     //[key: string]: number;
     //test: Map<string, number> = new Map();
     //[A.B]: string = "abc";

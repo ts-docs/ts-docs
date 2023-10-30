@@ -877,6 +877,15 @@
                                                     "kind": 9
                                                 },
                                                 "typeArguments": []
+                                            },
+                                            {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "ConditionalType",
+                                                    "path": [],
+                                                    "kind": 9
+                                                },
+                                                "typeArguments": []
                                             }
                                         ]
                                     },
@@ -943,7 +952,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 261,
+                                            "line": 271,
                                             "character": 4
                                         }
                                     }
@@ -991,7 +1000,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 271,
+                                            "line": 281,
                                             "character": 4
                                         }
                                     }
@@ -1031,7 +1040,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 294,
+                                            "line": 304,
                                             "character": 4
                                         }
                                     }
@@ -1074,7 +1083,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 300,
+                                            "line": 310,
                                             "character": 4
                                         }
                                     }
@@ -1108,7 +1117,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 308,
+                                            "line": 318,
                                             "character": 4
                                         }
                                     }
@@ -1212,7 +1221,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 341,
+                                            "line": 351,
                                             "character": 4
                                         }
                                     }
@@ -1243,7 +1252,7 @@
                                     },
                                     "loc": {
                                         "pos": {
-                                            "line": 348,
+                                            "line": 358,
                                             "character": 4
                                         }
                                     }
@@ -1502,6 +1511,63 @@
                         }
                     },
                     "classFlags": 0
+                },
+                {
+                    "name": "c",
+                    "type": {
+                        "kind": 14,
+                        "checkType": {
+                            "kind": 0,
+                            "type": {
+                                "kind": 6,
+                                "name": "T"
+                            },
+                            "typeArguments": []
+                        },
+                        "extendsType": {
+                            "kind": 6
+                        },
+                        "ifTrue": {
+                            "kind": 5,
+                            "literal": "1"
+                        },
+                        "ifFalse": {
+                            "kind": 5,
+                            "literal": "2"
+                        }
+                    },
+                    "flags": 1,
+                    "loc": {
+                        "pos": {
+                            "line": 16,
+                            "character": 4
+                        }
+                    },
+                    "classFlags": 0
+                },
+                {
+                    "name": "z",
+                    "type": {
+                        "kind": 0,
+                        "type": {
+                            "name": "Promise",
+                            "path": [],
+                            "kind": 9
+                        },
+                        "typeArguments": [
+                            {
+                                "kind": 6
+                            }
+                        ]
+                    },
+                    "flags": 1,
+                    "loc": {
+                        "pos": {
+                            "line": 17,
+                            "character": 4
+                        }
+                    },
+                    "classFlags": 0
                 }
             ],
             "methods": [
@@ -1524,7 +1590,7 @@
                                                 "flags": 0,
                                                 "loc": {
                                                     "pos": {
-                                                        "line": 20,
+                                                        "line": 22,
                                                         "character": 14
                                                     }
                                                 }
@@ -1542,7 +1608,7 @@
                             },
                             "loc": {
                                 "pos": {
-                                    "line": 20,
+                                    "line": 22,
                                     "character": 4
                                 }
                             }

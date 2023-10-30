@@ -288,7 +288,15 @@ export interface UnionType {
     types: Type[]
 }
 
+export interface ConditionalType {
+    kind: TypeKind.Conditional,
+    checkType: Type,
+    extendsType: Type,
+    ifTrue: Type,
+    ifFalse: Type
+}
+
 /**
  * Types are either references to nodes, or use nodes in some way.
  */
-export type Type = ReferenceType | ObjectLiteralType | PrimitiveType | UnionType;
+export type Type = ReferenceType | ObjectLiteralType | PrimitiveType | UnionType | ConditionalType;
