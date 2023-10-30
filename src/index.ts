@@ -16,7 +16,8 @@ export class Test<T> {
     b?: number = 123;
     c?: T extends string ? 1 : 2;
     z?: Promise<string>;
-    xxx?: this;
+    xxx?: keyof T;
+    t?: MyInterface;
     //[key: string]: number;
     //test: Map<string, number> = new Map();
     //[A.B]: string = "abc";
@@ -24,9 +25,17 @@ export class Test<T> {
     test(a: { a: string }) : string {
         return a.a;
     }
+    secondParam(a: (val: number) => string) {
+        return a(123);
+    }
+}
+
+export interface MyInterface {
+    a(a: number, b: string) : unknown;
+    b: (a: number, b: string) => unknown;
 }
 
 if (myExtractor) {
-    console.log(myExtractor.modules.values());
+    console.log(myExtractor.toJSON());
     fs.writeFileSync("./data.json", JSON.stringify(myExtractor));
 }

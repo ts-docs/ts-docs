@@ -1,6 +1,6 @@
 import * as ts from "typescript";
 import * as path from "path";
-import { BaseNode, ClassDeclaration, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, FunctionParameterFlags, IndexSignature, InterfaceDeclaration, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeAliasDeclaration, TypeKind, TypeParameter, TypeReference, TypeReferenceKind } from "./structure";
+import { BaseMethodSignature, BaseNode, ClassDeclaration, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, FunctionParameterFlags, IndexSignature, InterfaceDeclaration, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeAliasDeclaration, TypeKind, TypeParameter, TypeReference, TypeReferenceKind } from "./structure";
 import { BitField, PackageJSON, getPackageJSON, getSymbolDeclaration, getTsconfig, hasModifier, joinPartOfArray, mapRealValues, resolvePackageName } from "./utils";
 
 export interface TypescriptExtractorSettings {
@@ -201,6 +201,14 @@ export class TypescriptExtractor implements Module {
         };
     }
 
+    createBaseMethodSignature(signature: ts.Signature) : BaseMethodSignature {
+        return {
+            parameters: mapRealValues(signature.getParameters(), p => this.createParameter(p)),
+            typeParameters: (signature.getTypeParameters() || []).map(p => this.createTypeParameter(p)),
+            returnType: this.createType(signature.getReturnType()),
+        };
+    }
+
     createMethodSignatures(type: ts.Type, decl: ts.SignatureDeclaration): MethodSignature[] {
         const result: MethodSignature[] = [];
         const allSignatures = [...type.getCallSignatures()];
@@ -211,10 +219,8 @@ export class TypescriptExtractor implements Module {
         for (const signature of type.getCallSignatures()) {
             if (!signature.declaration) continue;
             result.push({
-                parameters: mapRealValues(signature.getParameters(), p => this.createParameter(p)),
-                typeParameters: (signature.getTypeParameters() || []).map(p => this.createTypeParameter(p)),
-                returnType: this.createType(signature.getReturnType()),
-                loc: this.createLoC(signature.declaration, false)
+                loc: this.createLoC(signature.declaration, false),
+                ...this.createBaseMethodSignature(signature)
             });
         }
         return result;
@@ -314,19 +320,30 @@ export class TypescriptExtractor implements Module {
             typeArguments: this.shared.checker.getTypeArguments(t as ts.TypeReference).map(arg => this.createType(arg))
         };
 
-        else if (t.isTypeParameter()) return {
-            kind: TypeKind.Reference,
-            type: {
-                kind: TypeReferenceKind.TypeParameter,
-                name: t.symbol.name
-            },
-            typeArguments: this.shared.checker.getTypeArguments(t as ts.TypeReference).map(arg => this.createType(arg))
-        };
+        else if (t.isTypeParameter()) {
+            const typeNode = this.shared.checker.typeToTypeNode(t, undefined, undefined);
+            return {
+                kind: TypeKind.Reference,
+                type: {
+                    kind: TypeReferenceKind.TypeParameter,
+                    name: t.symbol.name
+                },
+                typeArguments: this.shared.checker.getTypeArguments(t as ts.TypeReference).map(arg => this.createType(arg)),
+                isInfer: typeNode && ts.isInferTypeNode(typeNode)
+            };
+        }
 
-        else if (BitField.has(t.symbol.flags, ts.SymbolFlags.TypeLiteral) || BitField.has(t.symbol.flags, ts.SymbolFlags.ObjectLiteral)) return {
-            kind: TypeKind.ObjectLiteral,
-            ...this.createObjectLiteral(t, false)
-        };
+        else if (BitField.has(t.symbol.flags, ts.SymbolFlags.TypeLiteral) || BitField.has(t.symbol.flags, ts.SymbolFlags.ObjectLiteral)) {
+            const signature = t.getCallSignatures()[0];
+            if (signature) return {
+                kind: TypeKind.ArrowFunction,
+                ...this.createBaseMethodSignature(signature)
+            };
+            else return {
+                kind: TypeKind.ObjectLiteral,
+                ...this.createObjectLiteral(t, false)
+            };
+        }
 
         return {
             kind: TypeKind.Reference,
@@ -432,6 +449,8 @@ export class TypescriptExtractor implements Module {
             baseDir: this.baseDir,
             modules: [...this.modules.values()],
             classes: this.classes,
+            interfaces: this.interfaces,
+            types: this.types,
             path: this.path,
             packageJSON: this.packageJSON
         };

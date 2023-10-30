@@ -67,6 +67,7 @@ export interface LoC{
 export enum TypeKind {
     Reference,
     ObjectLiteral,
+    ArrowFunction,
     Tuple,
     Union,
     Array,
@@ -141,7 +142,12 @@ export interface TypeReference {
 export interface ReferenceType {
     kind: TypeKind.Reference,
     type: TypeReference,
-    typeArguments?: Type[]
+    typeArguments?: Type[],
+    /**
+     * Only present if the [[TypeReferenceKind]] is a type parameter. If true, it means that
+     * the type parameter in question comes with the `infer` keyword.
+     */
+    isInfer?: boolean
 }
 
 export enum PropertyFlags {
@@ -182,10 +188,13 @@ export interface TypeParameter {
     constraint?: Type
 }
 
-export interface MethodSignature extends BaseNode {
+export interface BaseMethodSignature {
     returnType: Type,
     parameters: FunctionParameter[],
     typeParameters: TypeParameter[],
+}
+
+export interface MethodSignature extends BaseMethodSignature, BaseNode {
     isGenerator?: boolean
 }
 
@@ -291,7 +300,16 @@ export interface ConditionalType {
     ifFalse: Type
 }
 
+export type ArrowFunctionType = BaseMethodSignature;
+
+/**
+ * This type can only be seen on the [[TypeAliasDeclaration]] object.
+ */
+export interface MappedType {
+
+}
+
 /**
  * Types are either references to nodes, or use nodes in some way.
  */
-export type Type = ReferenceType | ObjectLiteralType | PrimitiveType | UnionType | ConditionalType;
+export type Type = ReferenceType | ObjectLiteralType | PrimitiveType | UnionType | ConditionalType | ArrowFunctionType | MappedType;

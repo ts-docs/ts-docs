@@ -26,7 +26,7 @@
                         {
                             "name": "bits",
                             "type": {
-                                "kind": 5
+                                "kind": 6
                             },
                             "flags": 0,
                             "loc": {
@@ -43,24 +43,24 @@
                             "name": "has",
                             "signatures": [
                                 {
-                                    "parameters": [
-                                        {
-                                            "name": "bit",
-                                            "flags": 0,
-                                            "type": {
-                                                "kind": 5
-                                            }
-                                        }
-                                    ],
-                                    "typeParameters": [],
-                                    "returnType": {
-                                        "kind": 7
-                                    },
                                     "loc": {
                                         "pos": {
                                             "line": 103,
                                             "character": 4
                                         }
+                                    },
+                                    "parameters": [
+                                        {
+                                            "name": "bit",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 6
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 8
                                     }
                                 }
                             ],
@@ -71,6 +71,12 @@
                             "name": "set",
                             "signatures": [
                                 {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 107,
+                                            "character": 4
+                                        }
+                                    },
                                     "parameters": [
                                         {
                                             "name": "bits",
@@ -84,7 +90,7 @@
                                                 },
                                                 "typeArguments": [
                                                     {
-                                                        "kind": 5
+                                                        "kind": 6
                                                     }
                                                 ]
                                             }
@@ -92,13 +98,7 @@
                                     ],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 8
-                                    },
-                                    "loc": {
-                                        "pos": {
-                                            "line": 107,
-                                            "character": 4
-                                        }
+                                        "kind": 9
                                     }
                                 }
                             ],
@@ -109,6 +109,12 @@
                             "name": "remove",
                             "signatures": [
                                 {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 113,
+                                            "character": 4
+                                        }
+                                    },
                                     "parameters": [
                                         {
                                             "name": "bits",
@@ -122,7 +128,7 @@
                                                 },
                                                 "typeArguments": [
                                                     {
-                                                        "kind": 5
+                                                        "kind": 6
                                                     }
                                                 ]
                                             }
@@ -130,13 +136,7 @@
                                     ],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 8
-                                    },
-                                    "loc": {
-                                        "pos": {
-                                            "line": 113,
-                                            "character": 4
-                                        }
+                                        "kind": 9
                                     }
                                 }
                             ],
@@ -147,16 +147,16 @@
                             "name": "toJSON",
                             "signatures": [
                                 {
-                                    "parameters": [],
-                                    "typeParameters": [],
-                                    "returnType": {
-                                        "kind": 5
-                                    },
                                     "loc": {
                                         "pos": {
                                             "line": 121,
                                             "character": 4
                                         }
+                                    },
+                                    "parameters": [],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 6
                                     }
                                 }
                             ],
@@ -195,7 +195,7 @@
                         {
                             "name": "name",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 0,
                             "loc": {
@@ -209,7 +209,7 @@
                         {
                             "name": "baseDir",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 0,
                             "loc": {
@@ -231,7 +231,7 @@
                                 },
                                 "typeArguments": [
                                     {
-                                        "kind": 6
+                                        "kind": 7
                                     },
                                     {
                                         "kind": 0,
@@ -409,6 +409,12 @@
                             "name": "addSymbol",
                             "signatures": [
                                 {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 57,
+                                            "character": 4
+                                        }
+                                    },
                                     "parameters": [
                                         {
                                             "name": "symbol",
@@ -439,10 +445,10 @@
                                     ],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 3,
+                                        "kind": 4,
                                         "types": [
                                             {
-                                                "kind": 9
+                                                "kind": 10
                                             },
                                             {
                                                 "kind": 0,
@@ -454,12 +460,6 @@
                                                 "typeArguments": []
                                             }
                                         ]
-                                    },
-                                    "loc": {
-                                        "pos": {
-                                            "line": 57,
-                                            "character": 4
-                                        }
                                     }
                                 }
                             ],
@@ -470,6 +470,12 @@
                             "name": "registerTypeDeclaraction",
                             "signatures": [
                                 {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 73,
+                                            "character": 4
+                                        }
+                                    },
                                     "parameters": [
                                         {
                                             "name": "symbol",
@@ -500,10 +506,10 @@
                                     ],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 3,
+                                        "kind": 4,
                                         "types": [
                                             {
-                                                "kind": 9
+                                                "kind": 10
                                             },
                                             {
                                                 "kind": 0,
@@ -515,12 +521,6 @@
                                                 "typeArguments": []
                                             }
                                         ]
-                                    },
-                                    "loc": {
-                                        "pos": {
-                                            "line": 73,
-                                            "character": 4
-                                        }
                                     }
                                 }
                             ],
@@ -531,6 +531,12 @@
                             "name": "registerInterfaceDeclaration",
                             "signatures": [
                                 {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 96,
+                                            "character": 4
+                                        }
+                                    },
                                     "parameters": [
                                         {
                                             "name": "symbol",
@@ -561,10 +567,10 @@
                                     ],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 3,
+                                        "kind": 4,
                                         "types": [
                                             {
-                                                "kind": 9
+                                                "kind": 10
                                             },
                                             {
                                                 "kind": 0,
@@ -576,12 +582,6 @@
                                                 "typeArguments": []
                                             }
                                         ]
-                                    },
-                                    "loc": {
-                                        "pos": {
-                                            "line": 96,
-                                            "character": 4
-                                        }
                                     }
                                 }
                             ],
@@ -592,6 +592,12 @@
                             "name": "registerClassDeclaration",
                             "signatures": [
                                 {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 129,
+                                            "character": 4
+                                        }
+                                    },
                                     "parameters": [
                                         {
                                             "name": "symbol",
@@ -622,10 +628,10 @@
                                     ],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 3,
+                                        "kind": 4,
                                         "types": [
                                             {
-                                                "kind": 9
+                                                "kind": 10
                                             },
                                             {
                                                 "kind": 0,
@@ -637,12 +643,6 @@
                                                 "typeArguments": []
                                             }
                                         ]
-                                    },
-                                    "loc": {
-                                        "pos": {
-                                            "line": 129,
-                                            "character": 4
-                                        }
                                     }
                                 }
                             ],
@@ -653,6 +653,12 @@
                             "name": "createObjectLiteral",
                             "signatures": [
                                 {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 161,
+                                            "character": 4
+                                        }
+                                    },
                                     "parameters": [
                                         {
                                             "name": "type",
@@ -671,7 +677,7 @@
                                             "name": "handleClassFlags",
                                             "flags": 0,
                                             "type": {
-                                                "kind": 7,
+                                                "kind": 8,
                                                 "literal": "true"
                                             }
                                         }
@@ -685,15 +691,15 @@
                                             "kind": 5
                                         },
                                         "typeArguments": []
-                                    },
-                                    "loc": {
-                                        "pos": {
-                                            "line": 161,
-                                            "character": 4
-                                        }
                                     }
                                 },
                                 {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 162,
+                                            "character": 4
+                                        }
+                                    },
                                     "parameters": [
                                         {
                                             "name": "type",
@@ -712,7 +718,7 @@
                                             "name": "handleClassFlags",
                                             "flags": 0,
                                             "type": {
-                                                "kind": 7,
+                                                "kind": 8,
                                                 "literal": "false"
                                             }
                                         }
@@ -726,12 +732,6 @@
                                             "kind": 1
                                         },
                                         "typeArguments": []
-                                    },
-                                    "loc": {
-                                        "pos": {
-                                            "line": 162,
-                                            "character": 4
-                                        }
                                     }
                                 }
                             ],
@@ -742,6 +742,12 @@
                             "name": "createMethod",
                             "signatures": [
                                 {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 192,
+                                            "character": 4
+                                        }
+                                    },
                                     "parameters": [
                                         {
                                             "name": "symbol",
@@ -759,10 +765,10 @@
                                     ],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 3,
+                                        "kind": 4,
                                         "types": [
                                             {
-                                                "kind": 9
+                                                "kind": 10
                                             },
                                             {
                                                 "kind": 0,
@@ -774,12 +780,46 @@
                                                 "typeArguments": []
                                             }
                                         ]
-                                    },
+                                    }
+                                }
+                            ],
+                            "flags": 0,
+                            "classFlags": 0
+                        },
+                        {
+                            "name": "createBaseMethodSignature",
+                            "signatures": [
+                                {
                                     "loc": {
                                         "pos": {
-                                            "line": 192,
+                                            "line": 203,
                                             "character": 4
                                         }
+                                    },
+                                    "parameters": [
+                                        {
+                                            "name": "signature",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Signature",
+                                                    "path": [],
+                                                    "kind": 9
+                                                },
+                                                "typeArguments": []
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "BaseMethodSignature",
+                                            "path": [],
+                                            "kind": 1
+                                        },
+                                        "typeArguments": []
                                     }
                                 }
                             ],
@@ -790,6 +830,12 @@
                             "name": "createMethodSignatures",
                             "signatures": [
                                 {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 211,
+                                            "character": 4
+                                        }
+                                    },
                                     "parameters": [
                                         {
                                             "name": "type",
@@ -808,7 +854,7 @@
                                             "name": "decl",
                                             "flags": 0,
                                             "type": {
-                                                "kind": 3,
+                                                "kind": 4,
                                                 "types": [
                                                     {
                                                         "kind": 0,
@@ -959,12 +1005,6 @@
                                                 "typeArguments": []
                                             }
                                         ]
-                                    },
-                                    "loc": {
-                                        "pos": {
-                                            "line": 203,
-                                            "character": 4
-                                        }
                                     }
                                 }
                             ],
@@ -975,6 +1015,12 @@
                             "name": "createPropertySignature",
                             "signatures": [
                                 {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 228,
+                                            "character": 4
+                                        }
+                                    },
                                     "parameters": [
                                         {
                                             "name": "symbol",
@@ -992,10 +1038,10 @@
                                     ],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 3,
+                                        "kind": 4,
                                         "types": [
                                             {
-                                                "kind": 9
+                                                "kind": 10
                                             },
                                             {
                                                 "kind": 0,
@@ -1007,12 +1053,6 @@
                                                 "typeArguments": []
                                             }
                                         ]
-                                    },
-                                    "loc": {
-                                        "pos": {
-                                            "line": 222,
-                                            "character": 4
-                                        }
                                     }
                                 }
                             ],
@@ -1023,6 +1063,12 @@
                             "name": "createIndexSignatures",
                             "signatures": [
                                 {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 242,
+                                            "character": 4
+                                        }
+                                    },
                                     "parameters": [
                                         {
                                             "name": "type",
@@ -1057,12 +1103,6 @@
                                                 "typeArguments": []
                                             }
                                         ]
-                                    },
-                                    "loc": {
-                                        "pos": {
-                                            "line": 236,
-                                            "character": 4
-                                        }
                                     }
                                 }
                             ],
@@ -1073,6 +1113,12 @@
                             "name": "createTypeParameter",
                             "signatures": [
                                 {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 257,
+                                            "character": 4
+                                        }
+                                    },
                                     "parameters": [
                                         {
                                             "name": "type",
@@ -1097,12 +1143,6 @@
                                             "kind": 1
                                         },
                                         "typeArguments": []
-                                    },
-                                    "loc": {
-                                        "pos": {
-                                            "line": 251,
-                                            "character": 4
-                                        }
                                     }
                                 }
                             ],
@@ -1113,6 +1153,12 @@
                             "name": "createParameter",
                             "signatures": [
                                 {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 265,
+                                            "character": 4
+                                        }
+                                    },
                                     "parameters": [
                                         {
                                             "name": "symbol",
@@ -1130,10 +1176,10 @@
                                     ],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 3,
+                                        "kind": 4,
                                         "types": [
                                             {
-                                                "kind": 9
+                                                "kind": 10
                                             },
                                             {
                                                 "kind": 0,
@@ -1145,12 +1191,6 @@
                                                 "typeArguments": []
                                             }
                                         ]
-                                    },
-                                    "loc": {
-                                        "pos": {
-                                            "line": 259,
-                                            "character": 4
-                                        }
                                     }
                                 }
                             ],
@@ -1161,6 +1201,12 @@
                             "name": "createType",
                             "signatures": [
                                 {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 277,
+                                            "character": 4
+                                        }
+                                    },
                                     "parameters": [
                                         {
                                             "name": "t",
@@ -1179,7 +1225,7 @@
                                             "name": "ignoreAliasSymbol",
                                             "flags": 1,
                                             "type": {
-                                                "kind": 7
+                                                "kind": 8
                                             }
                                         }
                                     ],
@@ -1192,12 +1238,6 @@
                                             "kind": 5
                                         },
                                         "typeArguments": []
-                                    },
-                                    "loc": {
-                                        "pos": {
-                                            "line": 271,
-                                            "character": 4
-                                        }
                                     }
                                 }
                             ],
@@ -1208,12 +1248,18 @@
                             "name": "createLoC",
                             "signatures": [
                                 {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 358,
+                                            "character": 4
+                                        }
+                                    },
                                     "parameters": [
                                         {
                                             "name": "symbol",
                                             "flags": 0,
                                             "type": {
-                                                "kind": 3,
+                                                "kind": 4,
                                                 "types": [
                                                     {
                                                         "kind": 0,
@@ -1240,7 +1286,7 @@
                                             "name": "includeSourceFile",
                                             "flags": 1,
                                             "type": {
-                                                "kind": 7
+                                                "kind": 8
                                             }
                                         }
                                     ],
@@ -1253,12 +1299,6 @@
                                             "kind": 1
                                         },
                                         "typeArguments": []
-                                    },
-                                    "loc": {
-                                        "pos": {
-                                            "line": 341,
-                                            "character": 4
-                                        }
                                     }
                                 }
                             ],
@@ -1269,6 +1309,12 @@
                             "name": "getJSDocData",
                             "signatures": [
                                 {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 368,
+                                            "character": 4
+                                        }
+                                    },
                                     "parameters": [
                                         {
                                             "name": "node",
@@ -1286,10 +1332,10 @@
                                     ],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 3,
+                                        "kind": 4,
                                         "types": [
                                             {
-                                                "kind": 9
+                                                "kind": 10
                                             },
                                             {
                                                 "kind": 0,
@@ -1301,12 +1347,6 @@
                                                 "typeArguments": []
                                             }
                                         ]
-                                    },
-                                    "loc": {
-                                        "pos": {
-                                            "line": 351,
-                                            "character": 4
-                                        }
                                     }
                                 }
                             ],
@@ -1317,6 +1357,12 @@
                             "name": "getNodeType",
                             "signatures": [
                                 {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 391,
+                                            "character": 4
+                                        }
+                                    },
                                     "parameters": [
                                         {
                                             "name": "node",
@@ -1341,12 +1387,6 @@
                                             "kind": 9
                                         },
                                         "typeArguments": []
-                                    },
-                                    "loc": {
-                                        "pos": {
-                                            "line": 374,
-                                            "character": 4
-                                        }
                                     }
                                 }
                             ],
@@ -1357,6 +1397,12 @@
                             "name": "getSymbolType",
                             "signatures": [
                                 {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 397,
+                                            "character": 4
+                                        }
+                                    },
                                     "parameters": [
                                         {
                                             "name": "symbol",
@@ -1384,12 +1430,6 @@
                                             "path": [],
                                             "kind": 9
                                         }
-                                    },
-                                    "loc": {
-                                        "pos": {
-                                            "line": 380,
-                                            "character": 4
-                                        }
                                     }
                                 }
                             ],
@@ -1400,12 +1440,18 @@
                             "name": "getOrCreateChildModule",
                             "signatures": [
                                 {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 405,
+                                            "character": 4
+                                        }
+                                    },
                                     "parameters": [
                                         {
                                             "name": "source",
                                             "flags": 0,
                                             "type": {
-                                                "kind": 6
+                                                "kind": 7
                                             }
                                         }
                                     ],
@@ -1418,12 +1464,6 @@
                                             "kind": 1
                                         },
                                         "typeArguments": []
-                                    },
-                                    "loc": {
-                                        "pos": {
-                                            "line": 388,
-                                            "character": 4
-                                        }
                                     }
                                 }
                             ],
@@ -1434,6 +1474,12 @@
                             "name": "getRepositoryURLForNode",
                             "signatures": [
                                 {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 438,
+                                            "character": 4
+                                        }
+                                    },
                                     "parameters": [
                                         {
                                             "name": "node",
@@ -1464,21 +1510,15 @@
                                     ],
                                     "typeParameters": [],
                                     "returnType": {
-                                        "kind": 3,
+                                        "kind": 4,
                                         "types": [
                                             {
-                                                "kind": 9
+                                                "kind": 10
                                             },
                                             {
-                                                "kind": 6
+                                                "kind": 7
                                             }
                                         ]
-                                    },
-                                    "loc": {
-                                        "pos": {
-                                            "line": 421,
-                                            "character": 4
-                                        }
                                     }
                                 }
                             ],
@@ -1489,6 +1529,12 @@
                             "name": "toJSON",
                             "signatures": [
                                 {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 445,
+                                            "character": 4
+                                        }
+                                    },
                                     "parameters": [],
                                     "typeParameters": [],
                                     "returnType": {
@@ -1499,17 +1545,11 @@
                                             {
                                                 "key": "string",
                                                 "type": {
-                                                    "kind": 12
+                                                    "kind": 13
                                                 }
                                             }
                                         ],
                                         "new": []
-                                    },
-                                    "loc": {
-                                        "pos": {
-                                            "line": 428,
-                                            "character": 4
-                                        }
                                     }
                                 }
                             ],
@@ -1559,7 +1599,7 @@
                         {
                             "name": "sourceFile",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 1,
                             "jsDoc": {
@@ -1588,7 +1628,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 131,
+                            "line": 132,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -1598,12 +1638,12 @@
                         {
                             "name": "name",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 132,
+                                    "line": 133,
                                     "character": 4
                                 }
                             }
@@ -1622,7 +1662,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 133,
+                                    "line": 134,
                                     "character": 4
                                 }
                             }
@@ -1630,12 +1670,12 @@
                         {
                             "name": "displayName",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 134,
+                                    "line": 135,
                                     "character": 4
                                 }
                             }
@@ -1654,7 +1694,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 135,
+                                    "line": 136,
                                     "character": 4
                                 }
                             }
@@ -1662,12 +1702,12 @@
                         {
                             "name": "externalLibName",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 136,
+                                    "line": 137,
                                     "character": 4
                                 }
                             }
@@ -1675,12 +1715,12 @@
                         {
                             "name": "link",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 137,
+                                    "line": 138,
                                     "character": 4
                                 }
                             }
@@ -1698,7 +1738,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 140,
+                            "line": 141,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -1719,7 +1759,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 141,
+                                    "line": 142,
                                     "character": 4
                                 }
                             }
@@ -1738,7 +1778,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 142,
+                                    "line": 143,
                                     "character": 4
                                 }
                             }
@@ -1767,7 +1807,26 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 143,
+                                    "line": 144,
+                                    "character": 4
+                                }
+                            }
+                        },
+                        {
+                            "name": "isInfer",
+                            "type": {
+                                "kind": 8
+                            },
+                            "flags": 1,
+                            "jsDoc": {
+                                "tags": [],
+                                "comment": [
+                                    "Only present if the [[TypeReferenceKind]] is a type parameter. If true, it means that\r\nthe type parameter in question comes with the `infer` keyword."
+                                ]
+                            },
+                            "loc": {
+                                "pos": {
+                                    "line": 149,
                                     "character": 4
                                 }
                             }
@@ -1795,7 +1854,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 152,
+                            "line": 158,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -1816,7 +1875,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 153,
+                                    "line": 159,
                                     "character": 4
                                 }
                             }
@@ -1835,7 +1894,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 154,
+                                    "line": 160,
                                     "character": 4
                                 }
                             }
@@ -1854,7 +1913,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 155,
+                                    "line": 161,
                                     "character": 4
                                 }
                             }
@@ -1873,7 +1932,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 156,
+                                    "line": 162,
                                     "character": 4
                                 }
                             }
@@ -1881,12 +1940,12 @@
                         {
                             "name": "name",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 119,
+                                    "line": 120,
                                     "character": 4
                                 }
                             }
@@ -1894,12 +1953,12 @@
                         {
                             "name": "id",
                             "type": {
-                                "kind": 5
+                                "kind": 6
                             },
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 120,
+                                    "line": 121,
                                     "character": 4
                                 }
                             }
@@ -1928,7 +1987,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 121,
+                                    "line": 122,
                                     "character": 4
                                 }
                             }
@@ -1947,7 +2006,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 110,
+                                    "line": 111,
                                     "character": 4
                                 }
                             }
@@ -1966,7 +2025,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 111,
+                                    "line": 112,
                                     "character": 4
                                 }
                             }
@@ -1984,7 +2043,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 169,
+                            "line": 175,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -1994,12 +2053,12 @@
                         {
                             "name": "name",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 170,
+                                    "line": 176,
                                     "character": 4
                                 }
                             }
@@ -2018,7 +2077,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 171,
+                                    "line": 177,
                                     "character": 4
                                 }
                             }
@@ -2037,7 +2096,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 172,
+                                    "line": 178,
                                     "character": 4
                                 }
                             }
@@ -2056,7 +2115,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 173,
+                                    "line": 179,
                                     "character": 4
                                 }
                             }
@@ -2064,12 +2123,12 @@
                         {
                             "name": "description",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 174,
+                                    "line": 180,
                                     "character": 4
                                 }
                             }
@@ -2088,7 +2147,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 175,
+                                    "line": 181,
                                     "character": 4
                                 }
                             }
@@ -2106,7 +2165,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 178,
+                            "line": 184,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -2116,12 +2175,12 @@
                         {
                             "name": "name",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 179,
+                                    "line": 185,
                                     "character": 4
                                 }
                             }
@@ -2140,7 +2199,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 180,
+                                    "line": 186,
                                     "character": 4
                                 }
                             }
@@ -2159,7 +2218,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 181,
+                                    "line": 187,
                                     "character": 4
                                 }
                             }
@@ -2171,23 +2230,13 @@
                 },
                 {
                     "kind": 1,
-                    "name": "MethodSignature",
+                    "name": "BaseMethodSignature",
                     "implements": [],
-                    "extends": [
-                        {
-                            "kind": 0,
-                            "type": {
-                                "name": "BaseNode",
-                                "path": [],
-                                "kind": 1
-                            },
-                            "typeArguments": []
-                        }
-                    ],
+                    "extends": [],
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 184,
+                            "line": 190,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -2208,7 +2257,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 185,
+                                    "line": 191,
                                     "character": 4
                                 }
                             }
@@ -2237,7 +2286,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 186,
+                                    "line": 192,
                                     "character": 4
                                 }
                             }
@@ -2266,20 +2315,136 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 187,
+                                    "line": 193,
+                                    "character": 4
+                                }
+                            }
+                        }
+                    ],
+                    "methods": [],
+                    "indexes": [],
+                    "new": []
+                },
+                {
+                    "kind": 1,
+                    "name": "MethodSignature",
+                    "implements": [],
+                    "extends": [
+                        {
+                            "kind": 0,
+                            "type": {
+                                "name": "BaseMethodSignature",
+                                "path": [],
+                                "kind": 1
+                            },
+                            "typeArguments": []
+                        },
+                        {
+                            "kind": 0,
+                            "type": {
+                                "name": "BaseNode",
+                                "path": [],
+                                "kind": 1
+                            },
+                            "typeArguments": []
+                        }
+                    ],
+                    "typeParameters": [],
+                    "loc": {
+                        "pos": {
+                            "line": 196,
+                            "character": 0
+                        },
+                        "sourceFile": "/src/projectExtractor/structure.ts"
+                    },
+                    "otherDefs": [],
+                    "properties": [
+                        {
+                            "name": "isGenerator",
+                            "type": {
+                                "kind": 8
+                            },
+                            "flags": 1,
+                            "loc": {
+                                "pos": {
+                                    "line": 197,
                                     "character": 4
                                 }
                             }
                         },
                         {
-                            "name": "isGenerator",
+                            "name": "returnType",
                             "type": {
-                                "kind": 7
+                                "kind": 0,
+                                "type": {
+                                    "name": "Type",
+                                    "path": [],
+                                    "kind": 5
+                                },
+                                "typeArguments": []
                             },
-                            "flags": 1,
+                            "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 188,
+                                    "line": 191,
+                                    "character": 4
+                                }
+                            }
+                        },
+                        {
+                            "name": "parameters",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "Array",
+                                    "path": [],
+                                    "kind": 9
+                                },
+                                "typeArguments": [
+                                    {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "FunctionParameter",
+                                            "path": [],
+                                            "kind": 1
+                                        },
+                                        "typeArguments": []
+                                    }
+                                ]
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 192,
+                                    "character": 4
+                                }
+                            }
+                        },
+                        {
+                            "name": "typeParameters",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "Array",
+                                    "path": [],
+                                    "kind": 9
+                                },
+                                "typeArguments": [
+                                    {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "TypeParameter",
+                                            "path": [],
+                                            "kind": 1
+                                        },
+                                        "typeArguments": []
+                                    }
+                                ]
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 193,
                                     "character": 4
                                 }
                             }
@@ -2298,7 +2463,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 110,
+                                    "line": 111,
                                     "character": 4
                                 }
                             }
@@ -2317,7 +2482,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 111,
+                                    "line": 112,
                                     "character": 4
                                 }
                             }
@@ -2335,7 +2500,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 196,
+                            "line": 205,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -2345,12 +2510,12 @@
                         {
                             "name": "name",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 197,
+                                    "line": 206,
                                     "character": 4
                                 }
                             }
@@ -2369,7 +2534,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 198,
+                                    "line": 207,
                                     "character": 4
                                 }
                             }
@@ -2398,7 +2563,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 199,
+                                    "line": 208,
                                     "character": 4
                                 }
                             }
@@ -2417,7 +2582,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 200,
+                                    "line": 209,
                                     "character": 4
                                 }
                             }
@@ -2435,7 +2600,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 159,
+                            "line": 165,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -2445,14 +2610,14 @@
                         {
                             "name": "key",
                             "type": {
-                                "kind": 3,
+                                "kind": 4,
                                 "types": [
                                     {
-                                        "kind": 6,
+                                        "kind": 7,
                                         "literal": "string"
                                     },
                                     {
-                                        "kind": 6,
+                                        "kind": 7,
                                         "literal": "number"
                                     }
                                 ]
@@ -2460,7 +2625,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 160,
+                                    "line": 166,
                                     "character": 4
                                 }
                             }
@@ -2479,7 +2644,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 161,
+                                    "line": 167,
                                     "character": 4
                                 }
                             }
@@ -2497,7 +2662,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 217,
+                            "line": 226,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -2528,7 +2693,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 218,
+                                    "line": 227,
                                     "character": 4
                                 }
                             }
@@ -2557,7 +2722,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 219,
+                                    "line": 228,
                                     "character": 4
                                 }
                             }
@@ -2586,7 +2751,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 220,
+                                    "line": 229,
                                     "character": 4
                                 }
                             }
@@ -2615,7 +2780,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 221,
+                                    "line": 230,
                                     "character": 4
                                 }
                             }
@@ -2643,7 +2808,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 271,
+                            "line": 280,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -2664,7 +2829,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 272,
+                                    "line": 281,
                                     "character": 4
                                 }
                             }
@@ -2693,7 +2858,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 218,
+                                    "line": 227,
                                     "character": 4
                                 }
                             }
@@ -2722,7 +2887,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 219,
+                                    "line": 228,
                                     "character": 4
                                 }
                             }
@@ -2751,7 +2916,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 220,
+                                    "line": 229,
                                     "character": 4
                                 }
                             }
@@ -2780,7 +2945,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 221,
+                                    "line": 230,
                                     "character": 4
                                 }
                             }
@@ -2798,7 +2963,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 275,
+                            "line": 284,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -2808,7 +2973,7 @@
                         {
                             "name": "kind",
                             "type": {
-                                "kind": 3,
+                                "kind": 4,
                                 "types": [
                                     {
                                         "kind": 0,
@@ -2896,7 +3061,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 276,
+                                    "line": 285,
                                     "character": 4
                                 }
                             }
@@ -2904,12 +3069,12 @@
                         {
                             "name": "literal",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 277,
+                                    "line": 286,
                                     "character": 4
                                 }
                             }
@@ -2927,7 +3092,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 280,
+                            "line": 289,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -2948,7 +3113,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 281,
+                                    "line": 290,
                                     "character": 4
                                 }
                             }
@@ -2977,7 +3142,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 282,
+                                    "line": 291,
                                     "character": 4
                                 }
                             }
@@ -2995,7 +3160,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 285,
+                            "line": 294,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -3016,7 +3181,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 286,
+                                    "line": 295,
                                     "character": 4
                                 }
                             }
@@ -3035,7 +3200,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 287,
+                                    "line": 296,
                                     "character": 4
                                 }
                             }
@@ -3054,7 +3219,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 288,
+                                    "line": 297,
                                     "character": 4
                                 }
                             }
@@ -3073,7 +3238,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 289,
+                                    "line": 298,
                                     "character": 4
                                 }
                             }
@@ -3092,12 +3257,31 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 290,
+                                    "line": 299,
                                     "character": 4
                                 }
                             }
                         }
                     ],
+                    "methods": [],
+                    "indexes": [],
+                    "new": []
+                },
+                {
+                    "kind": 1,
+                    "name": "MappedType",
+                    "implements": [],
+                    "extends": [],
+                    "typeParameters": [],
+                    "loc": {
+                        "pos": {
+                            "line": 307,
+                            "character": 0
+                        },
+                        "sourceFile": "/src/projectExtractor/structure.ts"
+                    },
+                    "otherDefs": [],
+                    "properties": [],
                     "methods": [],
                     "indexes": [],
                     "new": []
@@ -3120,7 +3304,7 @@
                         {
                             "name": "name",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 0,
                             "loc": {
@@ -3133,7 +3317,7 @@
                         {
                             "name": "comment",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 1,
                             "loc": {
@@ -3146,7 +3330,7 @@
                         {
                             "name": "arg",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 1,
                             "loc": {
@@ -3235,7 +3419,7 @@
                                 },
                                 "typeArguments": [
                                     {
-                                        "kind": 6
+                                        "kind": 7
                                     }
                                 ]
                             },
@@ -3260,7 +3444,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 109,
+                            "line": 110,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -3281,7 +3465,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 110,
+                                    "line": 111,
                                     "character": 4
                                 }
                             }
@@ -3300,7 +3484,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 111,
+                                    "line": 112,
                                     "character": 4
                                 }
                             }
@@ -3328,7 +3512,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 118,
+                            "line": 119,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -3338,12 +3522,12 @@
                         {
                             "name": "name",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 119,
+                                    "line": 120,
                                     "character": 4
                                 }
                             }
@@ -3351,12 +3535,12 @@
                         {
                             "name": "id",
                             "type": {
-                                "kind": 5
+                                "kind": 6
                             },
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 120,
+                                    "line": 121,
                                     "character": 4
                                 }
                             }
@@ -3385,7 +3569,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 121,
+                                    "line": 122,
                                     "character": 4
                                 }
                             }
@@ -3404,7 +3588,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 110,
+                                    "line": 111,
                                     "character": 4
                                 }
                             }
@@ -3423,7 +3607,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 111,
+                                    "line": 112,
                                     "character": 4
                                 }
                             }
@@ -3460,7 +3644,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 229,
+                            "line": 238,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -3481,7 +3665,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 230,
+                                    "line": 239,
                                     "character": 4
                                 }
                             }
@@ -3510,7 +3694,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 231,
+                                    "line": 240,
                                     "character": 4
                                 }
                             }
@@ -3539,7 +3723,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 232,
+                                    "line": 241,
                                     "character": 4
                                 }
                             }
@@ -3568,7 +3752,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 233,
+                                    "line": 242,
                                     "character": 4
                                 }
                             }
@@ -3576,12 +3760,12 @@
                         {
                             "name": "isAbstract",
                             "type": {
-                                "kind": 7
+                                "kind": 8
                             },
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 234,
+                                    "line": 243,
                                     "character": 4
                                 }
                             }
@@ -3610,7 +3794,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 220,
+                                    "line": 229,
                                     "character": 4
                                 }
                             }
@@ -3639,7 +3823,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 221,
+                                    "line": 230,
                                     "character": 4
                                 }
                             }
@@ -3668,7 +3852,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 225,
+                                    "line": 234,
                                     "character": 4
                                 }
                             }
@@ -3697,7 +3881,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 226,
+                                    "line": 235,
                                     "character": 4
                                 }
                             }
@@ -3705,12 +3889,12 @@
                         {
                             "name": "name",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 119,
+                                    "line": 120,
                                     "character": 4
                                 }
                             }
@@ -3718,12 +3902,12 @@
                         {
                             "name": "id",
                             "type": {
-                                "kind": 5
+                                "kind": 6
                             },
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 120,
+                                    "line": 121,
                                     "character": 4
                                 }
                             }
@@ -3752,7 +3936,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 121,
+                                    "line": 122,
                                     "character": 4
                                 }
                             }
@@ -3771,7 +3955,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 110,
+                                    "line": 111,
                                     "character": 4
                                 }
                             }
@@ -3790,7 +3974,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 111,
+                                    "line": 112,
                                     "character": 4
                                 }
                             }
@@ -3827,7 +4011,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 237,
+                            "line": 246,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -3848,7 +4032,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 238,
+                                    "line": 247,
                                     "character": 4
                                 }
                             }
@@ -3877,7 +4061,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 239,
+                                    "line": 248,
                                     "character": 4
                                 }
                             }
@@ -3906,7 +4090,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 240,
+                                    "line": 249,
                                     "character": 4
                                 }
                             }
@@ -3935,7 +4119,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 241,
+                                    "line": 250,
                                     "character": 4
                                 }
                             }
@@ -3964,7 +4148,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 218,
+                                    "line": 227,
                                     "character": 4
                                 }
                             }
@@ -3993,7 +4177,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 219,
+                                    "line": 228,
                                     "character": 4
                                 }
                             }
@@ -4022,7 +4206,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 220,
+                                    "line": 229,
                                     "character": 4
                                 }
                             }
@@ -4051,7 +4235,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 221,
+                                    "line": 230,
                                     "character": 4
                                 }
                             }
@@ -4059,12 +4243,12 @@
                         {
                             "name": "name",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 119,
+                                    "line": 120,
                                     "character": 4
                                 }
                             }
@@ -4072,12 +4256,12 @@
                         {
                             "name": "id",
                             "type": {
-                                "kind": 5
+                                "kind": 6
                             },
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 120,
+                                    "line": 121,
                                     "character": 4
                                 }
                             }
@@ -4106,7 +4290,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 121,
+                                    "line": 122,
                                     "character": 4
                                 }
                             }
@@ -4125,7 +4309,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 110,
+                                    "line": 111,
                                     "character": 4
                                 }
                             }
@@ -4144,7 +4328,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 111,
+                                    "line": 112,
                                     "character": 4
                                 }
                             }
@@ -4172,7 +4356,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 255,
+                            "line": 264,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -4193,7 +4377,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 256,
+                                    "line": 265,
                                     "character": 4
                                 }
                             }
@@ -4212,7 +4396,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 257,
+                                    "line": 266,
                                     "character": 4
                                 }
                             }
@@ -4241,7 +4425,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 258,
+                                    "line": 267,
                                     "character": 4
                                 }
                             }
@@ -4249,12 +4433,12 @@
                         {
                             "name": "name",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 119,
+                                    "line": 120,
                                     "character": 4
                                 }
                             }
@@ -4262,12 +4446,12 @@
                         {
                             "name": "id",
                             "type": {
-                                "kind": 5
+                                "kind": 6
                             },
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 120,
+                                    "line": 121,
                                     "character": 4
                                 }
                             }
@@ -4296,7 +4480,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 121,
+                                    "line": 122,
                                     "character": 4
                                 }
                             }
@@ -4315,7 +4499,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 110,
+                                    "line": 111,
                                     "character": 4
                                 }
                             }
@@ -4334,7 +4518,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 111,
+                                    "line": 112,
                                     "character": 4
                                 }
                             }
@@ -4362,7 +4546,7 @@
                         {
                             "name": "name",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 0,
                             "loc": {
@@ -4383,7 +4567,7 @@
                                 },
                                 "typeArguments": [
                                     {
-                                        "kind": 6
+                                        "kind": 7
                                     },
                                     {
                                         "kind": 0,
@@ -4494,7 +4678,7 @@
                         {
                             "name": "baseDir",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 0,
                             "loc": {
@@ -4575,7 +4759,7 @@
                         {
                             "name": "path",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 0,
                             "loc": {
@@ -4588,7 +4772,7 @@
                         {
                             "name": "name",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 1,
                             "loc": {
@@ -4601,7 +4785,7 @@
                         {
                             "name": "version",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 1,
                             "loc": {
@@ -4614,7 +4798,7 @@
                         {
                             "name": "homepage",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 1,
                             "loc": {
@@ -4627,7 +4811,7 @@
                         {
                             "name": "repositoryBase",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 1,
                             "loc": {
@@ -4640,7 +4824,7 @@
                         {
                             "name": "description",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 1,
                             "loc": {
@@ -4660,7 +4844,7 @@
                                     {
                                         "key": "string",
                                         "type": {
-                                            "kind": 6
+                                            "kind": 7
                                         }
                                     }
                                 ],
@@ -4677,7 +4861,7 @@
                         {
                             "name": "readme",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 1,
                             "loc": {
@@ -4690,7 +4874,7 @@
                         {
                             "name": "liscense",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 1,
                             "loc": {
@@ -4731,7 +4915,7 @@
                                 },
                                 "typeArguments": [
                                     {
-                                        "kind": 6
+                                        "kind": 7
                                     }
                                 ]
                             },
@@ -4917,7 +5101,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 244,
+                            "line": 253,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -4927,12 +5111,12 @@
                         {
                             "name": "name",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 245,
+                                    "line": 254,
                                     "character": 4
                                 }
                             }
@@ -4951,7 +5135,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 246,
+                                    "line": 255,
                                     "character": 4
                                 }
                             }
@@ -4959,12 +5143,12 @@
                         {
                             "name": "id",
                             "type": {
-                                "kind": 5
+                                "kind": 6
                             },
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 120,
+                                    "line": 121,
                                     "character": 4
                                 }
                             }
@@ -4993,7 +5177,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 121,
+                                    "line": 122,
                                     "character": 4
                                 }
                             }
@@ -5012,7 +5196,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 110,
+                                    "line": 111,
                                     "character": 4
                                 }
                             }
@@ -5031,7 +5215,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 111,
+                                    "line": 112,
                                     "character": 4
                                 }
                             }
@@ -5059,7 +5243,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 249,
+                            "line": 258,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -5080,7 +5264,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 250,
+                                    "line": 259,
                                     "character": 4
                                 }
                             }
@@ -5109,7 +5293,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 251,
+                                    "line": 260,
                                     "character": 4
                                 }
                             }
@@ -5117,12 +5301,12 @@
                         {
                             "name": "isConst",
                             "type": {
-                                "kind": 7
+                                "kind": 8
                             },
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 252,
+                                    "line": 261,
                                     "character": 4
                                 }
                             }
@@ -5130,12 +5314,12 @@
                         {
                             "name": "name",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 119,
+                                    "line": 120,
                                     "character": 4
                                 }
                             }
@@ -5143,12 +5327,12 @@
                         {
                             "name": "id",
                             "type": {
-                                "kind": 5
+                                "kind": 6
                             },
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 120,
+                                    "line": 121,
                                     "character": 4
                                 }
                             }
@@ -5177,7 +5361,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 121,
+                                    "line": 122,
                                     "character": 4
                                 }
                             }
@@ -5196,7 +5380,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 110,
+                                    "line": 111,
                                     "character": 4
                                 }
                             }
@@ -5215,7 +5399,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 111,
+                                    "line": 112,
                                     "character": 4
                                 }
                             }
@@ -5243,7 +5427,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 261,
+                            "line": 270,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -5264,7 +5448,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 262,
+                                    "line": 271,
                                     "character": 4
                                 }
                             }
@@ -5283,7 +5467,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 263,
+                                    "line": 272,
                                     "character": 4
                                 }
                             }
@@ -5291,12 +5475,12 @@
                         {
                             "name": "content",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 264,
+                                    "line": 273,
                                     "character": 4
                                 }
                             }
@@ -5304,12 +5488,12 @@
                         {
                             "name": "name",
                             "type": {
-                                "kind": 6
+                                "kind": 7
                             },
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 119,
+                                    "line": 120,
                                     "character": 4
                                 }
                             }
@@ -5317,12 +5501,12 @@
                         {
                             "name": "id",
                             "type": {
-                                "kind": 5
+                                "kind": 6
                             },
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 120,
+                                    "line": 121,
                                     "character": 4
                                 }
                             }
@@ -5351,7 +5535,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 121,
+                                    "line": 122,
                                     "character": 4
                                 }
                             }
@@ -5370,7 +5554,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 110,
+                                    "line": 111,
                                     "character": 4
                                 }
                             }
@@ -5389,7 +5573,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 111,
+                                    "line": 112,
                                     "character": 4
                                 }
                             }
@@ -5424,7 +5608,7 @@
                                     {
                                         "key": "string",
                                         "type": {
-                                            "kind": 6
+                                            "kind": 7
                                         }
                                     }
                                 ],
@@ -5470,7 +5654,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 210,
+                            "line": 219,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -5491,7 +5675,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 211,
+                                    "line": 220,
                                     "character": 4
                                 }
                             }
@@ -5509,7 +5693,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 224,
+                            "line": 233,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -5543,7 +5727,7 @@
                         },
                         "typeArguments": [
                             {
-                                "kind": 6
+                                "kind": 7
                             }
                         ]
                     }
@@ -5554,13 +5738,13 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 296,
+                            "line": 314,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
                     },
                     "value": {
-                        "kind": 3,
+                        "kind": 4,
                         "types": [
                             {
                                 "kind": 0,
@@ -5606,6 +5790,24 @@
                                     "kind": 1
                                 },
                                 "typeArguments": []
+                            },
+                            {
+                                "kind": 0,
+                                "type": {
+                                    "name": "BaseMethodSignature",
+                                    "path": [],
+                                    "kind": 1
+                                },
+                                "typeArguments": []
+                            },
+                            {
+                                "kind": 0,
+                                "type": {
+                                    "name": "MappedType",
+                                    "path": [],
+                                    "kind": 1
+                                },
+                                "typeArguments": []
                             }
                         ]
                     }
@@ -5616,7 +5818,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 214,
+                            "line": 223,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -5636,7 +5838,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 215,
+                            "line": 224,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -5656,7 +5858,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 267,
+                            "line": 276,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
@@ -5676,13 +5878,13 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 269,
+                            "line": 278,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/structure.ts"
                     },
                     "value": {
-                        "kind": 3,
+                        "kind": 4,
                         "types": [
                             {
                                 "kind": 0,
@@ -5740,6 +5942,27 @@
                             }
                         ]
                     }
+                },
+                {
+                    "kind": 5,
+                    "name": "ArrowFunctionType",
+                    "typeParameters": [],
+                    "loc": {
+                        "pos": {
+                            "line": 302,
+                            "character": 0
+                        },
+                        "sourceFile": "/src/projectExtractor/structure.ts"
+                    },
+                    "value": {
+                        "kind": 0,
+                        "type": {
+                            "name": "BaseMethodSignature",
+                            "path": [],
+                            "kind": 1
+                        },
+                        "typeArguments": []
+                    }
                 }
             ]
         }
@@ -5767,7 +5990,7 @@
                 {
                     "name": "baby",
                     "type": {
-                        "kind": 3,
+                        "kind": 4,
                         "types": [
                             {
                                 "kind": 0,
@@ -5779,7 +6002,7 @@
                                 "typeArguments": []
                             },
                             {
-                                "kind": 5,
+                                "kind": 6,
                                 "literal": "123"
                             }
                         ]
@@ -5796,10 +6019,10 @@
                 {
                     "name": "a",
                     "type": {
-                        "kind": 6
+                        "kind": 7
                     },
                     "initializer": {
-                        "kind": 6,
+                        "kind": 7,
                         "literal": "abc"
                     },
                     "flags": 0,
@@ -5814,10 +6037,10 @@
                 {
                     "name": "b",
                     "type": {
-                        "kind": 5
+                        "kind": 6
                     },
                     "initializer": {
-                        "kind": 5,
+                        "kind": 6,
                         "literal": "123"
                     },
                     "flags": 1,
@@ -5832,24 +6055,25 @@
                 {
                     "name": "c",
                     "type": {
-                        "kind": 14,
+                        "kind": 15,
                         "checkType": {
                             "kind": 0,
                             "type": {
                                 "kind": 6,
                                 "name": "T"
                             },
-                            "typeArguments": []
+                            "typeArguments": [],
+                            "isInfer": false
                         },
                         "extendsType": {
-                            "kind": 6
+                            "kind": 7
                         },
                         "ifTrue": {
-                            "kind": 5,
+                            "kind": 6,
                             "literal": "1"
                         },
                         "ifFalse": {
-                            "kind": 5,
+                            "kind": 6,
                             "literal": "2"
                         }
                     },
@@ -5873,7 +6097,7 @@
                         },
                         "typeArguments": [
                             {
-                                "kind": 6
+                                "kind": 7
                             }
                         ]
                     },
@@ -5891,25 +6115,35 @@
                     "type": {
                         "kind": 0,
                         "type": {
-                            "name": "Test",
+                            "name": "unknown",
                             "path": [],
-                            "kind": 0
-                        },
-                        "typeArguments": [
-                            {
-                                "kind": 0,
-                                "type": {
-                                    "kind": 6,
-                                    "name": "T"
-                                },
-                                "typeArguments": []
-                            }
-                        ]
+                            "kind": 9
+                        }
                     },
                     "flags": 1,
                     "loc": {
                         "pos": {
                             "line": 18,
+                            "character": 4
+                        }
+                    },
+                    "classFlags": 0
+                },
+                {
+                    "name": "t",
+                    "type": {
+                        "kind": 0,
+                        "type": {
+                            "name": "MyInterface",
+                            "path": [],
+                            "kind": 1
+                        },
+                        "typeArguments": []
+                    },
+                    "flags": 1,
+                    "loc": {
+                        "pos": {
+                            "line": 19,
                             "character": 4
                         }
                     },
@@ -5921,6 +6155,12 @@
                     "name": "test",
                     "signatures": [
                         {
+                            "loc": {
+                                "pos": {
+                                    "line": 24,
+                                    "character": 4
+                                }
+                            },
                             "parameters": [
                                 {
                                     "name": "a",
@@ -5931,12 +6171,12 @@
                                             {
                                                 "name": "a",
                                                 "type": {
-                                                    "kind": 6
+                                                    "kind": 7
                                                 },
                                                 "flags": 0,
                                                 "loc": {
                                                     "pos": {
-                                                        "line": 23,
+                                                        "line": 24,
                                                         "character": 14
                                                     }
                                                 }
@@ -5950,13 +6190,48 @@
                             ],
                             "typeParameters": [],
                             "returnType": {
-                                "kind": 6
-                            },
+                                "kind": 7
+                            }
+                        }
+                    ],
+                    "flags": 0,
+                    "classFlags": 0
+                },
+                {
+                    "name": "secondParam",
+                    "signatures": [
+                        {
                             "loc": {
                                 "pos": {
-                                    "line": 23,
+                                    "line": 27,
                                     "character": 4
                                 }
+                            },
+                            "parameters": [
+                                {
+                                    "name": "a",
+                                    "flags": 0,
+                                    "type": {
+                                        "kind": 2,
+                                        "parameters": [
+                                            {
+                                                "name": "val",
+                                                "flags": 0,
+                                                "type": {
+                                                    "kind": 6
+                                                }
+                                            }
+                                        ],
+                                        "typeParameters": [],
+                                        "returnType": {
+                                            "kind": 7
+                                        }
+                                    }
+                                }
+                            ],
+                            "typeParameters": [],
+                            "returnType": {
+                                "kind": 7
                             }
                         }
                     ],
@@ -5968,6 +6243,97 @@
             "new": []
         }
     ],
+    "interfaces": [
+        {
+            "kind": 1,
+            "name": "MyInterface",
+            "implements": [],
+            "extends": [],
+            "typeParameters": [],
+            "loc": {
+                "pos": {
+                    "line": 32,
+                    "character": 0
+                },
+                "sourceFile": "/src/index.ts"
+            },
+            "otherDefs": [],
+            "properties": [
+                {
+                    "name": "b",
+                    "type": {
+                        "kind": 2,
+                        "parameters": [
+                            {
+                                "name": "a",
+                                "flags": 0,
+                                "type": {
+                                    "kind": 6
+                                }
+                            },
+                            {
+                                "name": "b",
+                                "flags": 0,
+                                "type": {
+                                    "kind": 7
+                                }
+                            }
+                        ],
+                        "typeParameters": [],
+                        "returnType": {
+                            "kind": 13
+                        }
+                    },
+                    "flags": 0,
+                    "loc": {
+                        "pos": {
+                            "line": 34,
+                            "character": 4
+                        }
+                    }
+                }
+            ],
+            "methods": [
+                {
+                    "name": "a",
+                    "signatures": [
+                        {
+                            "loc": {
+                                "pos": {
+                                    "line": 33,
+                                    "character": 4
+                                }
+                            },
+                            "parameters": [
+                                {
+                                    "name": "a",
+                                    "flags": 0,
+                                    "type": {
+                                        "kind": 6
+                                    }
+                                },
+                                {
+                                    "name": "b",
+                                    "flags": 0,
+                                    "type": {
+                                        "kind": 7
+                                    }
+                                }
+                            ],
+                            "typeParameters": [],
+                            "returnType": {
+                                "kind": 13
+                            }
+                        }
+                    ],
+                    "flags": 0
+                }
+            ],
+            "indexes": [],
+            "new": []
+        }
+    ],
+    "types": [],
     "path": [],
     "packageJSON": {
         "path": "C:\\Users\\volen\\Desktop\\Projects\\NPM\\ts-docs\\ts-docs\\package.json",
