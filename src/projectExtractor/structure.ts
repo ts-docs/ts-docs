@@ -70,6 +70,7 @@ export enum TypeKind {
     ArrowFunction,
     Tuple,
     Union,
+    Intersection,
     Array,
     Number,
     String,
@@ -284,12 +285,12 @@ export interface ObjectLiteralType extends ObjectLiteral {
 }
 
 export interface PrimitiveType {
-    kind: TypeKind.String | TypeKind.Number | TypeKind.Boolean | TypeKind.Undefined | TypeKind.Null | TypeKind.Never | TypeKind.Any | TypeKind.Void | TypeKind.Unknown,
+    kind: TypeKind.String | TypeKind.Number | TypeKind.Boolean | TypeKind.Undefined | TypeKind.Null | TypeKind.Never | TypeKind.Any | TypeKind.Void | TypeKind.Unknown | TypeKind.Array,
     literal?: string
 }
 
-export interface UnionType {
-    kind: TypeKind.Union,
+export interface UnionOrIntersectionType {
+    kind: TypeKind.Union | TypeKind.Intersection,
     types: Type[]
 }
 
@@ -319,7 +320,8 @@ export interface MappedType {
     readonlyToken: "+" | "-",
     typeParameter: string,
     constraintType: Type,
-    type: Type
+    type: Type,
+    nameType?: Type
 }
 
 export interface IndexAccessType {
@@ -328,9 +330,15 @@ export interface IndexAccessType {
     index: Type
 }
 
+export interface TemplateLiteralType {
+    kind: TypeKind.TemplateLiteral,
+    text: string[],
+    types: Type[]
+}
+
 /**
  * Types are either references to nodes, or use nodes in some way.
  */
-export type Type = ReferenceType | ObjectLiteralType | PrimitiveType | UnionType | ConditionalType | ArrowFunctionType | MappedType | IndexAccessType | TypeOperator;
+export type Type = ReferenceType | ObjectLiteralType | PrimitiveType | UnionOrIntersectionType | ConditionalType | ArrowFunctionType | MappedType | IndexAccessType | TypeOperator | TemplateLiteralType;
 
 export const NEVER_TYPE: Type = { kind: TypeKind.Never };

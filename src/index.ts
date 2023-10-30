@@ -42,6 +42,6 @@ if (myExtractor) {
     fs.writeFileSync("./data.json", JSON.stringify(myExtractor));
 }
 
-export type CreateMutable<Type> = {
-    -readonly [Property in keyof Type]: Type[Property];
-  };
+export type Getters<Type> = {
+    [Property in keyof Type as `get${Capitalize<string & Property>}`]: () => Type[Property]
+};

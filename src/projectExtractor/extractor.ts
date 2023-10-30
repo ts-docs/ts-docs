@@ -300,6 +300,7 @@ export class TypescriptExtractor implements Module {
             else if (t === this.shared.checker.getTrueType()) return { kind: TypeKind.Boolean, literal: "true" };
             else if (t === this.shared.checker.getBooleanType()) return { kind: TypeKind.Boolean };
             else if (t.isUnion()) return { kind: TypeKind.Union, types: t.types.map(t => this.createType(t)) };
+            else if (t.isIntersection()) return { kind: TypeKind.Intersection, types: t.types.map(t => this.createType(t)) };
             else if (BitField.has(t.flags, ts.TypeFlags.Conditional)) {
                 const condType = t as ts.ConditionalType;
                 return {
@@ -326,6 +327,14 @@ export class TypescriptExtractor implements Module {
                     type: this.createType(indexType.type)
                 };
             }
+            else if (BitField.has(t.flags, ts.TypeFlags.TemplateLiteral)) {
+                const litType = t as ts.TemplateLiteralType;
+                return {
+                    kind: TypeKind.TemplateLiteral,
+                    text: [...litType.texts],
+                    types: litType.types.map(t => this.createType(t))
+                };
+            }
             else return { kind: TypeKind.Reference, type: { name: "unknown", path: [], kind: TypeReferenceKind.External }};
         }
 
@@ -349,6 +358,17 @@ export class TypescriptExtractor implements Module {
             };
         }
 
+        else if (BitField.has(t.flags, ts.TypeFlags.StringMapping)) {
+            return {
+                kind: TypeKind.Reference,
+                type: {
+                    kind: TypeReferenceKind.External,
+                    name: t.symbol.name
+                },
+                typeArguments: [this.createType((t as ts.StringMappingType).type)]
+            };
+        }
+
         else if (BitField.has((t as ts.IntrinsicType).objectFlags, ts.ObjectFlags.Mapped)) {
             const mappedType = t as ts.MappedType;
             if (!mappedType.declaration.typeParameter.constraint || !mappedType.declaration.type) return NEVER_TYPE;
@@ -357,6 +377,7 @@ export class TypescriptExtractor implements Module {
                 readonlyToken: mappedType.declaration.readonlyToken ? mappedType.declaration.readonlyToken.kind === ts.SyntaxKind.MinusToken ? "-" : "+" : "+",
                 typeParameter: mappedType.declaration.typeParameter.name.text,
                 constraintType: this.createType(this.getNodeType(mappedType.declaration.typeParameter.constraint)),
+                nameType: mappedType.declaration.nameType && this.createType(this.getNodeType(mappedType.declaration.nameType)),
                 type: this.createType(this.getNodeType(mappedType.declaration.type))
             };
         }
