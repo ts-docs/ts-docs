@@ -86,7 +86,7 @@ export class TypescriptExtractor implements Module {
         currentModule.types.push({
             kind: DeclarationKind.TypeAlias,
             name: symbol.name,
-            typeParameters: mapRealValues((type as ts.InterfaceType).typeParameters, (p) => this.createTypeParameter(p)),
+            typeParameters: mapRealValues((decl.typeParameters || []), (p) => this.createTypeParameter(this.getNodeType(p))),
             loc: this.createLoC(symbol, true),
             value: this.createType(type, true)
         });
@@ -302,12 +302,12 @@ export class TypescriptExtractor implements Module {
             else if (t.isUnion()) return { kind: TypeKind.Union, types: t.types.map(t => this.createType(t)) };
             else if ("checkType" in t) {
                 const condType = t as ts.ConditionalType;
-                return { 
-                    kind: TypeKind.Conditional, 
-                    checkType: this.createType(condType.checkType), 
+                return {
+                    kind: TypeKind.Conditional,
+                    checkType: this.createType(condType.checkType),
                     extendsType: this.createType(condType.extendsType), 
-                    ifTrue: condType.resolvedTrueType ? this.createType(condType.resolvedTrueType) : { kind: TypeKind.Never },
-                    ifFalse: condType.resolvedFalseType ? this.createType(condType.resolvedFalseType) : { kind: TypeKind.Never },
+                    ifTrue: this.createType(this.getNodeType(condType.root.node.trueType)),
+                    ifFalse: this.createType(this.getNodeType(condType.root.node.falseType)),
                 };
             }
             else return { kind: TypeKind.Reference, type: { name: "unknown", path: [], kind: TypeReferenceKind.External }};
@@ -321,7 +321,6 @@ export class TypescriptExtractor implements Module {
         };
 
         else if (t.isTypeParameter()) {
-            const typeNode = this.shared.checker.typeToTypeNode(t, undefined, undefined);
             return {
                 kind: TypeKind.Reference,
                 type: {
@@ -329,7 +328,7 @@ export class TypescriptExtractor implements Module {
                     name: t.symbol.name
                 },
                 typeArguments: this.shared.checker.getTypeArguments(t as ts.TypeReference).map(arg => this.createType(arg)),
-                isInfer: typeNode && ts.isInferTypeNode(typeNode)
+                isInfer: ts.isInferTypeNode(getSymbolDeclaration(t.symbol)!.parent) ? true : undefined
             };
         }
 

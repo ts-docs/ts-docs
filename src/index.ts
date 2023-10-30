@@ -35,6 +35,8 @@ export interface MyInterface {
     b: (a: number, b: string) => unknown;
 }
 
+export type ReturnType1<T> = T extends (...args: unknown[]) => infer R ? R : ReturnType1<T>;
+
 if (myExtractor) {
     console.log(myExtractor.toJSON());
     fs.writeFileSync("./data.json", JSON.stringify(myExtractor));

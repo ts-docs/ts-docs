@@ -1,6 +1,6 @@
 {
     "name": "ts-docs",
-    "baseDir": "C:/Users/volen/Desktop/Projects/NPM/ts-docs/ts-docs",
+    "baseDir": "D:/Programs/----------Node Modules------------/ts-docs/ts-docs",
     "modules": [
         {
             "name": "projectExtractor",
@@ -1250,7 +1250,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 358,
+                                            "line": 357,
                                             "character": 4
                                         }
                                     },
@@ -1311,7 +1311,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 368,
+                                            "line": 367,
                                             "character": 4
                                         }
                                     },
@@ -1359,7 +1359,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 391,
+                                            "line": 390,
                                             "character": 4
                                         }
                                     },
@@ -1399,7 +1399,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 397,
+                                            "line": 396,
                                             "character": 4
                                         }
                                     },
@@ -1442,7 +1442,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 405,
+                                            "line": 404,
                                             "character": 4
                                         }
                                     },
@@ -1476,7 +1476,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 438,
+                                            "line": 437,
                                             "character": 4
                                         }
                                     },
@@ -1531,7 +1531,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 445,
+                                            "line": 444,
                                             "character": 4
                                         }
                                     },
@@ -6062,8 +6062,7 @@
                                 "kind": 6,
                                 "name": "T"
                             },
-                            "typeArguments": [],
-                            "isInfer": false
+                            "typeArguments": []
                         },
                         "extendsType": {
                             "kind": 7
@@ -6333,15 +6332,102 @@
             "new": []
         }
     ],
-    "types": [],
+    "types": [
+        {
+            "kind": 5,
+            "name": "ReturnType1",
+            "typeParameters": [
+                {
+                    "name": "T"
+                }
+            ],
+            "loc": {
+                "pos": {
+                    "line": 37,
+                    "character": 0
+                },
+                "sourceFile": "/src/index.ts"
+            },
+            "value": {
+                "kind": 15,
+                "checkType": {
+                    "kind": 0,
+                    "type": {
+                        "kind": 6,
+                        "name": "T"
+                    },
+                    "typeArguments": []
+                },
+                "extendsType": {
+                    "kind": 2,
+                    "parameters": [
+                        {
+                            "name": "args",
+                            "flags": 2,
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "Array",
+                                    "path": [],
+                                    "kind": 9
+                                },
+                                "typeArguments": [
+                                    {
+                                        "kind": 13
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "typeParameters": [],
+                    "returnType": {
+                        "kind": 0,
+                        "type": {
+                            "kind": 6,
+                            "name": "R"
+                        },
+                        "typeArguments": [],
+                        "isInfer": true
+                    }
+                },
+                "ifTrue": {
+                    "kind": 0,
+                    "type": {
+                        "kind": 6,
+                        "name": "R"
+                    },
+                    "typeArguments": [],
+                    "isInfer": true
+                },
+                "ifFalse": {
+                    "kind": 0,
+                    "type": {
+                        "name": "ReturnType1",
+                        "path": [],
+                        "kind": 5
+                    },
+                    "typeArguments": [
+                        {
+                            "kind": 0,
+                            "type": {
+                                "kind": 6,
+                                "name": "T"
+                            },
+                            "typeArguments": []
+                        }
+                    ]
+                }
+            }
+        }
+    ],
     "path": [],
     "packageJSON": {
-        "path": "C:\\Users\\volen\\Desktop\\Projects\\NPM\\ts-docs\\ts-docs\\package.json",
+        "path": "D:\\Programs\\----------Node Modules------------\\ts-docs\\ts-docs\\package.json",
         "name": "@ts-docs/ts-docs",
         "homepage": "https://tsdocs.xyz/",
         "version": "0.4.2",
         "description": "A documentation generator for typescript",
         "repositoryBase": "https://github.com/ts-docs/ts-docs/tree/dev",
-        "readme": "\n<p align=\"center\">\n  <img src=\"https://github.com/ts-docs/ts-docs/blob/main/assets/logo.png?raw=true\" width=\"200px\" />\n</p>\n\n# ts-docs\n\n[![GitHub license](https://img.shields.io/github/license/ts-docs/ts-docs?style=flat-square)](https://github.com/ts-docs/ts-docs/blob/main/LICENSE)\n[![GitHub stars](https://img.shields.io/github/stars/ts-docs/ts-docs?style=flat-square)](https://github.com/ts-docs/ts-docs/stargazers)\n[![GitHub issues](https://img.shields.io/github/issues/ts-docs/ts-docs?style=flat-square)](https://github.com/ts-docs/ts-docs/issues)\n[![Codacy Badge](https://app.codacy.com/project/badge/Grade/639fba225a094e769b4c8976a30bf7c1)](https://www.codacy.com/gh/ts-docs/ts-docs/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ts-docs/ts-docs&amp;utm_campaign=Badge_Grade)\n\nAn opinionated documentation generator for typescript - generate informative and accurate documentation sites with zero setup.\n\nIf you want to check out how a typical ts-docs documentation looks like, head over to the official docs, found [here](https://ts-docs.github.io/ts-docs/index.html).\n\n## Installation\n\n**Important:** You need typescript 4.3+ in order to use ts-docs!\n\n```\nnpm i --save-dev @ts-docs/ts-docs @ts-docs/default-docs-structure \n```\n\n## Usage \n\nIn order for ts-docs to generate proper documentation, you need to give it one or multiple \"project entry points\". **Every entry point should point to a different project**. You can find out more information about all the options ts-docs has [here](https://ts-docs.github.io/ts-docs/pages/Guides/Options.html).\n\nSimple usage which uses the default options:\n```\nts-docs src/index.ts\n```\n\n## Features\n\n- Documentation structure akin to [docs-rs](https://docs.rs/) and rust in general, every folder inside the project is a different module. \n- Document multiple projects, monorepo support out of the box.\n- Slick design, dark/light theme, powerful search and filter function.\n- Link external references to their respective documentation.\n- Out of the box documentation generation for different branches of your repository.\n- Changelog generation, pulled from github releases.\n- Built-in custom pages support. Host your guides and tutorials right inside the documentation.\n- 100% accurate, you won't find missing references unless they're external.\n- Unit tests inside documentation comments.\n\n## Examples\n\n<details>\n<summary>ts-docs</summary>\n<img src=\"https://i.imgur.com/8FpQb1F.png\">\n</details>\n\n<details>\n<summary>detritus</summary>\n<img src=\"https://i.imgur.com/yBtBsg4.png\">\n</details>\n\n\n## Contributing\n\nContributions are appreciated, feel free to open an issue or a pull request [here](https://github.com/ts-docs/ts-docs).\n\nMake sure to read the [contribution guide](https://github.com/ts-docs/ts-docs/blob/main/.github/CONTRIBUTING.md)."
+        "readme": "\r\n<p align=\"center\">\r\n  <img src=\"https://github.com/ts-docs/ts-docs/blob/main/assets/logo.png?raw=true\" width=\"200px\" />\r\n</p>\r\n\r\n# ts-docs\r\n\r\n[![GitHub license](https://img.shields.io/github/license/ts-docs/ts-docs?style=flat-square)](https://github.com/ts-docs/ts-docs/blob/main/LICENSE)\r\n[![GitHub stars](https://img.shields.io/github/stars/ts-docs/ts-docs?style=flat-square)](https://github.com/ts-docs/ts-docs/stargazers)\r\n[![GitHub issues](https://img.shields.io/github/issues/ts-docs/ts-docs?style=flat-square)](https://github.com/ts-docs/ts-docs/issues)\r\n[![Codacy Badge](https://app.codacy.com/project/badge/Grade/639fba225a094e769b4c8976a30bf7c1)](https://www.codacy.com/gh/ts-docs/ts-docs/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ts-docs/ts-docs&amp;utm_campaign=Badge_Grade)\r\n\r\nAn opinionated documentation generator for typescript - generate informative and accurate documentation sites with zero setup.\r\n\r\nIf you want to check out how a typical ts-docs documentation looks like, head over to the official docs, found [here](https://ts-docs.github.io/ts-docs/index.html).\r\n\r\n## Installation\r\n\r\n**Important:** You need typescript 4.3+ in order to use ts-docs!\r\n\r\n```\r\nnpm i --save-dev @ts-docs/ts-docs @ts-docs/default-docs-structure \r\n```\r\n\r\n## Usage \r\n\r\nIn order for ts-docs to generate proper documentation, you need to give it one or multiple \"project entry points\". **Every entry point should point to a different project**. You can find out more information about all the options ts-docs has [here](https://ts-docs.github.io/ts-docs/pages/Guides/Options.html).\r\n\r\nSimple usage which uses the default options:\r\n```\r\nts-docs src/index.ts\r\n```\r\n\r\n## Features\r\n\r\n- Documentation structure akin to [docs-rs](https://docs.rs/) and rust in general, every folder inside the project is a different module. \r\n- Document multiple projects, monorepo support out of the box.\r\n- Slick design, dark/light theme, powerful search and filter function.\r\n- Link external references to their respective documentation.\r\n- Out of the box documentation generation for different branches of your repository.\r\n- Changelog generation, pulled from github releases.\r\n- Built-in custom pages support. Host your guides and tutorials right inside the documentation.\r\n- 100% accurate, you won't find missing references unless they're external.\r\n- Unit tests inside documentation comments.\r\n\r\n## Examples\r\n\r\n<details>\r\n<summary>ts-docs</summary>\r\n<img src=\"https://i.imgur.com/8FpQb1F.png\">\r\n</details>\r\n\r\n<details>\r\n<summary>detritus</summary>\r\n<img src=\"https://i.imgur.com/yBtBsg4.png\">\r\n</details>\r\n\r\n\r\n## Contributing\r\n\r\nContributions are appreciated, feel free to open an issue or a pull request [here](https://github.com/ts-docs/ts-docs).\r\n\r\nMake sure to read the [contribution guide](https://github.com/ts-docs/ts-docs/blob/main/.github/CONTRIBUTING.md)."
     }
 }
