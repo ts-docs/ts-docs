@@ -11,9 +11,14 @@ export type TypescriptExtractorHooks = {
 
 export interface TypescriptExtractorSettings {
     /**
-     * Any provided folder names won't count as modules, items inside will be included in the parent module.
+     * Where to look for dependencies. For example, if you're using node, it would be "node_modules".
      */
-    passthroughModules?: string[]
+    moduleStorage: string,
+    /**
+    * Any provided folder names won't count as modules, items inside will be included in the parent module.
+    */
+    passthroughModules?: string[],
+    gitBranch?: string
 }
 
 export interface Shared {
@@ -21,7 +26,6 @@ export interface Shared {
     checker: ts.TypeChecker,
     moduleCache: Record<string, Module>,
     referenceCache: Map<ts.Symbol, TypeReference>,
-    settings: TypescriptExtractorSettings,
     hooks: HookManager<TypescriptExtractorHooks>
 }
 
@@ -39,7 +43,8 @@ export class TypescriptExtractor implements Module {
     childrenPath: ItemPath;
     packageJSON?: PackageJSON;
     shared: Shared;
-    constructor(basePath: string, tsConfig: ts.ParsedCommandLine, shared: Shared) {
+    settings: TypescriptExtractorSettings;
+    constructor(basePath: string, tsConfig: ts.ParsedCommandLine, settings: TypescriptExtractorSettings, shared: Shared) {
         this.baseDir = basePath;
         this.shared = shared;
         this.modules = new Map();
@@ -47,7 +52,8 @@ export class TypescriptExtractor implements Module {
         this.interfaces = [];
         this.types = [];
         this.path = [];
-        this.packageJSON = getPackageJSON(basePath);
+        this.settings = settings;
+        this.packageJSON = getPackageJSON(basePath, this.settings.gitBranch);
         this.name = this.packageJSON?.name ? resolvePackageName(this.packageJSON.name) : basePath.slice(basePath.lastIndexOf(path.sep) + 1);
         this.childrenPath = [this.name];
 
@@ -454,7 +460,7 @@ export class TypescriptExtractor implements Module {
             return { kind: TypeKind.Reference, type: { name: typeSymbol.name, kind: TypeReferenceKind.Unknown, link: this.shared.hooks.trigger("resolveExternalLink", this, typeSymbol, TypeReferenceKind.Unknown, libName, rest) }, typeArguments };
         }
         else {
-            const path = declSource.fileName.slice(declSource.fileName.indexOf("node_modules/") + 13).split("/");
+            const path = declSource.fileName.slice(declSource.fileName.indexOf(this.settings.moduleStorage + "/") + this.settings.moduleStorage.length + 1).split("/");
             const [libName, rest] = path[0][0] === "@" ? [path[0] + "/" + path[1], path.slice(2)] : [path[0], path.slice(1)];
             return { kind: TypeKind.Reference, type: { name: typeSymbol.name, kind: TypeReferenceKind.Unknown, link: this.shared.hooks.trigger("resolveExternalLink", this, typeSymbol, getSymbolTypeKind(typeSymbol), libName, rest) }, typeArguments };
         }
@@ -525,7 +531,7 @@ export class TypescriptExtractor implements Module {
 
         for (let i = 0; i < pathParts.length; i++) {
             const pathPart = pathParts[i];
-            if (pathPart === "" || this.shared.settings.passthroughModules?.includes(pathPart)) continue;
+            if (pathPart === "" || this.settings.passthroughModules?.includes(pathPart)) continue;
             const currentModule = lastModule.modules.get(pathPart);
             if (!currentModule) {
                 const newModule = TypescriptExtractor.createModule(pathPart, joinPartOfArray(pathParts, i, "/"), [...this.path, ...newPath]);
@@ -569,10 +575,10 @@ export class TypescriptExtractor implements Module {
         };
     }
 
-    static createExtractor(basePath: string, shared: Shared): TypescriptExtractor | undefined {
+    static createExtractor(basePath: string, settings: TypescriptExtractorSettings, shared: Shared): TypescriptExtractor | undefined {
         const config = getTsconfig(basePath);
         if (!config) return;
-        return new TypescriptExtractor(basePath, config, shared);
+        return new TypescriptExtractor(basePath, config, settings, shared);
     }
 
     static createModule(name: string, baseDir: string, path: ItemPath, namespace?: LoC[]): Module {
@@ -597,7 +603,14 @@ export class TypescriptExtractor implements Module {
         };
     }
 
-    static createStandaloneExtractor(basePath: string, settings?: TypescriptExtractorSettings, hooks?: HookManager<TypescriptExtractorHooks>): TypescriptExtractor | undefined {
+    static createSettings(settings: Partial<TypescriptExtractorSettings>) : TypescriptExtractorSettings {
+        return {
+            passthroughModules: settings.passthroughModules,
+            moduleStorage: settings.moduleStorage || "node_modules"
+        };
+    }
+
+    static createStandaloneExtractor(basePath: string, settings: Partial<TypescriptExtractorSettings>, hooks?: HookManager<TypescriptExtractorHooks>): TypescriptExtractor | undefined {
         const config = getTsconfig(basePath);
         if (!config) return;
         const program = ts.createProgram({
@@ -606,7 +619,7 @@ export class TypescriptExtractor implements Module {
             configFileParsingDiagnostics: config.errors
         });
         const checker = program.getTypeChecker();
-        return new TypescriptExtractor(basePath, config, { program, checker, settings: settings || {}, moduleCache: {}, referenceCache: new Map(), hooks: hooks || new HookManager() });
+        return new TypescriptExtractor(basePath, config, this.createSettings(settings), { program, checker, moduleCache: {}, referenceCache: new Map(), hooks: hooks || new HookManager() });
     }
 
 }
