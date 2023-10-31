@@ -1,6 +1,6 @@
 import * as ts from "typescript";
 import * as path from "path";
-import { BaseMethodSignature, BaseNode, ClassDeclaration, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, ElementParameterFlags, IndexSignature, InterfaceDeclaration, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, NEVER_TYPE, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeAliasDeclaration, TypeKind, TypeParameter, TypeReference, TypeReferenceKind, EnumDeclaration, EnumMember } from "./structure";
+import { BaseMethodSignature, BaseNode, ClassDeclaration, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, ElementParameterFlags, IndexSignature, InterfaceDeclaration, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, NEVER_TYPE, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeAliasDeclaration, TypeKind, TypeParameter, TypeReference, TypeReferenceKind, EnumDeclaration, EnumMember, FunctionDeclaration } from "./structure";
 import { BitField, PackageJSON, getPackageJSON, getSymbolDeclaration, getSymbolTypeKind, getTsconfig, hasModifier, joinPartOfArray, mapRealValues, resolvePackageName } from "./utils";
 import { HookManager } from "./hookManager";
 
@@ -40,6 +40,7 @@ export class TypescriptExtractor implements Module {
     interfaces: InterfaceDeclaration[];
     types: TypeAliasDeclaration[];
     enums: EnumDeclaration[];
+    functions: FunctionDeclaration[];
     path: ItemPath;
     childrenPath: ItemPath;
     packageJSON?: PackageJSON;
@@ -53,6 +54,7 @@ export class TypescriptExtractor implements Module {
         this.interfaces = [];
         this.types = [];
         this.enums = [];
+        this.functions = [];
         this.path = [];
         this.settings = settings;
         this.packageJSON = getPackageJSON(basePath, this.settings.gitBranch);
@@ -90,7 +92,34 @@ export class TypescriptExtractor implements Module {
             this.addSymbol(symbol.parent!);
             return this.shared.referenceCache.get(symbol);
         }
+        else if (BitField.has(symbol.flags, ts.SymbolFlags.Function)) return this.registerFunctionDeclaration(symbol, currentModule);
         return;
+    }
+
+    registerFunctionDeclaration(symbol: ts.Symbol, currentModule: Module) : TypeReference | undefined {
+        const [type, decl] = this.getSymbolType<ts.FunctionDeclaration>(symbol);
+        if (!type || !decl) return;
+        
+        const ref = {
+            name: symbol.name,
+            path: currentModule.childrenPath,
+            kind: TypeReferenceKind.Function
+        };
+
+        this.shared.referenceCache.set(symbol, ref);
+
+        const method = this.createMethod(symbol, [type, decl]) as Method;
+        const fnDecl = {
+            kind: DeclarationKind.Function,
+            name: symbol.name,
+            signatures: method.signatures,
+            flags: method.flags,
+            loc: this.createLoC(symbol, true),
+            jsDoc: this.getJSDocData(decl)
+        } satisfies FunctionDeclaration;
+        currentModule.functions.push(fnDecl);
+        this.shared.hooks.trigger("registerItem", this, fnDecl, ref);
+        return ref;
     }
 
     registerEnumDeclaration(symbol: ts.Symbol, currentModule: Module) : TypeReference | undefined {
@@ -131,7 +160,7 @@ export class TypescriptExtractor implements Module {
             members,
             isConst: hasModifier(decl, ts.SyntaxKind.ConstKeyword),
             jsDoc: this.getJSDocData(decl),
-            loc: this.createLoC(decl)
+            loc: this.createLoC(decl, true)
         } as EnumDeclaration;
 
         currentModule.enums.push(enumDecl);
@@ -265,12 +294,12 @@ export class TypescriptExtractor implements Module {
         return { properties, methods, indexes: this.createIndexSignatures(type), new: news };
     }
 
-    createMethod(symbol: ts.Symbol) : Method | undefined {
-        const [type, decl] = this.getSymbolType<ts.MethodDeclaration>(symbol);
+    createMethod(symbol: ts.Symbol, values?: [ts.Type, ts.FunctionDeclaration]) : Method | undefined {
+        const [type, decl] = values || this.getSymbolType<ts.MethodDeclaration>(symbol);
         if (!type || !decl) return;
         return {
             name: symbol.name,
-            computed: ts.isComputedPropertyName(decl.name) ? this.createType(this.shared.checker.getTypeAtLocation(decl.name.expression)) : undefined,
+            computed: decl.name && ts.isComputedPropertyName(decl.name) ? this.createType(this.shared.checker.getTypeAtLocation(decl.name.expression)) : undefined,
             signatures: this.createMethodSignatures(type, decl),
             flags: new BitField([decl.asteriskToken && MethodFlags.Generator, hasModifier(decl, ts.SyntaxKind.AsyncKeyword) && MethodFlags.Async])
         };
@@ -626,6 +655,7 @@ export class TypescriptExtractor implements Module {
             interfaces: this.interfaces,
             types: this.types,
             enums: this.enums,
+            functions: this.functions,
             path: this.path,
             packageJSON: this.packageJSON
         };
@@ -648,7 +678,8 @@ export class TypescriptExtractor implements Module {
             classes: [],
             interfaces: [],
             types: [],
-            enums: []
+            enums: [],
+            functions: []
         };
     }
 

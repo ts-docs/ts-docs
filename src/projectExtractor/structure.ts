@@ -39,6 +39,7 @@ export interface Module {
     interfaces: InterfaceDeclaration[],
     types: TypeAliasDeclaration[],
     enums: EnumDeclaration[],
+    functions: FunctionDeclaration[],
     baseDir: string,
     path: ItemPath,
     /**
@@ -289,7 +290,9 @@ export interface ConstantDeclaration extends Node {
     content?: string
 }
 
-export type FunctionDeclaration = Method & Node;
+export interface FunctionDeclaration extends Method, Node {
+    kind: DeclarationKind.Function
+}
 
 export type Declaration = ClassDeclaration | InterfaceDeclaration | EnumDeclaration | TypeAliasDeclaration | ConstantDeclaration | FunctionDeclaration;
 

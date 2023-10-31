@@ -103,6 +103,7 @@ export function getSymbolTypeKind(symbol: ts.Symbol) : TypeReferenceKind {
     else if (BitField.has(symbol.flags, ts.SymbolFlags.TypeAlias)) return TypeReferenceKind.TypeAlias;
     else if (BitField.has(symbol.flags, ts.SymbolFlags.ConstEnum) || BitField.has(symbol.flags, ts.SymbolFlags.RegularEnum)) return TypeReferenceKind.Enum;
     else if (BitField.has(symbol.flags, ts.SymbolFlags.EnumMember)) return TypeReferenceKind.EnumMember;
+    else if (BitField.has(symbol.flags, ts.SymbolFlags.Function)) return TypeReferenceKind.Function;
     else return TypeReferenceKind.Unknown;
 }
 
