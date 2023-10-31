@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 //import * as ts from "typescript";
 import path from "path";
 import fs from "fs";
@@ -60,4 +61,14 @@ if (myExtractor) {
 
 export type Getters<Type> = {
     [Property in keyof Type as `get${Capitalize<string & Property>}`]: () => Type[Property]
+};
+
+export const NUM_CONST = 123;
+
+export const myFunction123 = (a: number, b: MyEnum) => {
+    return 123;
+};
+
+export const myFunction456 = function*(a: number, b: MyEnum) {
+    yield 123;
 };

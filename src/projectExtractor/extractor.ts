@@ -1,6 +1,6 @@
 import * as ts from "typescript";
 import * as path from "path";
-import { BaseMethodSignature, BaseNode, ClassDeclaration, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, ElementParameterFlags, IndexSignature, InterfaceDeclaration, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, NEVER_TYPE, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeAliasDeclaration, TypeKind, TypeParameter, TypeReference, TypeReferenceKind, EnumDeclaration, EnumMember, FunctionDeclaration, ConstantDeclaration } from "./structure";
+import { BaseMethodSignature, BaseNode, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, ElementParameterFlags, IndexSignature, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, NEVER_TYPE, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeKind, TypeParameter, TypeReference, TypeReferenceKind, EnumDeclaration, EnumMember, FunctionDeclaration, ConstantDeclaration } from "./structure";
 import { BitField, PackageJSON, getPackageJSON, getSymbolDeclaration, getSymbolTypeKind, getTsconfig, hasModifier, joinPartOfArray, mapRealValues, resolvePackageName } from "./utils";
 import { HookManager } from "./hookManager";
 
@@ -33,36 +33,20 @@ export interface Shared {
 /**
  * Extracts modules from a single typescript project.
  */
-export class TypescriptExtractor implements Module {
-    name: string;
-    baseDir: string;
-    modules: Map<string, Module>;
-    classes: ClassDeclaration[];
-    interfaces: InterfaceDeclaration[];
-    types: TypeAliasDeclaration[];
-    enums: EnumDeclaration[];
-    functions: FunctionDeclaration[];
-    constants: ConstantDeclaration[];
-    path: ItemPath;
-    childrenPath: ItemPath;
+export class TypescriptExtractor {
+    module: Module;
     packageJSON?: PackageJSON;
     shared: Shared;
     settings: TypescriptExtractorSettings;
     constructor(basePath: string, tsConfig: ts.ParsedCommandLine, settings: TypescriptExtractorSettings, shared: Shared) {
-        this.baseDir = basePath;
         this.shared = shared;
-        this.modules = new Map();
-        this.classes = [];
-        this.interfaces = [];
-        this.types = [];
-        this.enums = [];
-        this.functions = [];
-        this.constants = [];
-        this.path = [];
         this.settings = settings;
         this.packageJSON = getPackageJSON(basePath, this.settings.gitBranch);
-        this.name = this.packageJSON?.name ? resolvePackageName(this.packageJSON.name) : basePath.slice(basePath.lastIndexOf(path.sep) + 1);
-        this.childrenPath = [this.name];
+        this.module = TypescriptExtractor.createModule(
+            this.packageJSON?.name ? resolvePackageName(this.packageJSON.name) : basePath.slice(basePath.lastIndexOf(path.sep) + 1),
+            basePath,
+            []
+        );
 
         for (const fileName of tsConfig.fileNames) {
             const fileObject = this.shared.program.getSourceFile(fileName);
@@ -104,6 +88,8 @@ export class TypescriptExtractor implements Module {
         const [type, decl] = this.getSymbolType<ts.VariableDeclaration>(symbol);
         if (!type || !decl) return;
 
+        if (decl.initializer && type.getCallSignatures().length) return this.registerFunctionDeclaration(symbol, currentModule, [type, decl.initializer as ts.FunctionLikeDeclaration]);
+
         const ref = {
             name: symbol.name,
             path: currentModule.childrenPath,
@@ -121,13 +107,13 @@ export class TypescriptExtractor implements Module {
             jsDoc: this.getJSDocData(decl)
         } satisfies ConstantDeclaration;
 
-        this.constants.push(constDecl);
+        currentModule.constants.push(constDecl);
         this.shared.hooks.trigger("registerItem", this, constDecl, ref, currentModule);
         return ref;
     }
 
-    registerFunctionDeclaration(symbol: ts.Symbol, currentModule: Module) : TypeReference | undefined {
-        const [type, decl] = this.getSymbolType<ts.FunctionDeclaration>(symbol);
+    registerFunctionDeclaration(symbol: ts.Symbol, currentModule: Module, values?: [ts.Type, ts.FunctionLikeDeclaration]) : TypeReference | undefined {
+        const [type, decl] = values || this.getSymbolType<ts.FunctionDeclaration>(symbol);
         if (!type || !decl) return;
         
         const ref = {
@@ -324,8 +310,8 @@ export class TypescriptExtractor implements Module {
         return { properties, methods, indexes: this.createIndexSignatures(type), new: news };
     }
 
-    createMethod(symbol: ts.Symbol, values?: [ts.Type, ts.FunctionDeclaration]) : Method | undefined {
-        const [type, decl] = values || this.getSymbolType<ts.MethodDeclaration>(symbol);
+    createMethod(symbol: ts.Symbol, values?: [ts.Type, ts.FunctionLikeDeclaration]) : Method | undefined {
+        const [type, decl] = values || this.getSymbolType<ts.FunctionLikeDeclaration>(symbol);
         if (!type || !decl) return;
         return {
             name: symbol.name,
@@ -586,7 +572,7 @@ export class TypescriptExtractor implements Module {
         const source = decl.getSourceFile();
         return {
             pos: source.getLineAndCharacterOfPosition(decl.getStart()),
-            sourceFile: includeSourceFile ? source.fileName.slice(this.baseDir.length) : undefined
+            sourceFile: includeSourceFile ? source.fileName.slice(this.module.baseDir.length) : undefined
         };
     }
 
@@ -630,25 +616,25 @@ export class TypescriptExtractor implements Module {
     getOrCreateChildModule(source: string): Module {
         const { dir } = path.parse(source);
         if (this.shared.moduleCache[dir]) return this.shared.moduleCache[dir];
-        const baseDirIndex = dir.indexOf(this.baseDir);
-        if (baseDirIndex !== 0 || dir.length === this.baseDir.length) {
-            this.shared.moduleCache[source] = this;
-            return this;
+        const baseDirIndex = dir.indexOf(this.module.baseDir);
+        if (baseDirIndex !== 0 || dir.length === this.module.baseDir.length) {
+            this.shared.moduleCache[source] = this.module;
+            return this.module;
         }
 
-        const realPath = dir.slice(this.baseDir.length);
+        const realPath = dir.slice(this.module.baseDir.length);
         const pathParts = realPath.split("/");
 
         // eslint-disable-next-line @typescript-eslint/no-this-alias
-        let lastModule: Module = this;
-        const newPath = [this.name];
+        let lastModule: Module = this.module;
+        const newPath = [this.module.name];
 
         for (let i = 0; i < pathParts.length; i++) {
             const pathPart = pathParts[i];
             if (pathPart === "" || this.settings.passthroughModules?.includes(pathPart)) continue;
             const currentModule = lastModule.modules.get(pathPart);
             if (!currentModule) {
-                const newModule = TypescriptExtractor.createModule(pathPart, joinPartOfArray(pathParts, i, "/"), [...this.path, ...newPath]);
+                const newModule = TypescriptExtractor.createModule(pathPart, joinPartOfArray(pathParts, i, "/"), [...newPath]);
                 lastModule.modules.set(pathPart, newModule);
                 lastModule = newModule;
             }
@@ -678,16 +664,7 @@ export class TypescriptExtractor implements Module {
 
     toJSON() : Record<string, unknown> {
         return {
-            name: this.name,
-            baseDir: this.baseDir,
-            modules: [...this.modules.values()],
-            classes: this.classes,
-            interfaces: this.interfaces,
-            types: this.types,
-            enums: this.enums,
-            functions: this.functions,
-            constants: this.constants,
-            path: this.path,
+            module: this.module,
             packageJSON: this.packageJSON
         };
     }
