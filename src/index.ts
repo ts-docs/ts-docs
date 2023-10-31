@@ -39,6 +39,13 @@ export class Test<T> {
     }
 }
 
+export const enum MyEnum {
+    b,
+    c,
+    e,
+    a = "abc"
+}
+
 export interface MyInterface {
     a(a: number, b: string) : unknown;
     b: (a: number, b: string) => unknown;

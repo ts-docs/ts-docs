@@ -264,7 +264,10 @@ export interface InterfaceDeclaration extends ObjectLiteral, Node {
 }
 
 export interface EnumMember extends Node {
-    type: Type,
+    /**
+     * Type will only be present if [[initializer]] isn't.
+     */
+    type?: Type,
     initializer?: Type
 }
 

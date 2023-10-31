@@ -119,7 +119,7 @@ export class TypescriptExtractor implements Module {
             this.shared.referenceCache.set(exportedItem, itemRef);
             members.push({
                 name: exportedItem.name,
-                type: this.createLiteralType(itemType),
+                type: itemDecl.initializer ? undefined : this.createLiteralType(itemType),
                 initializer: itemDecl.initializer && this.createType(this.getNodeType(itemDecl.initializer)),
                 jsDoc: this.getJSDocData(itemDecl),
                 loc: this.createLoC(itemDecl)
