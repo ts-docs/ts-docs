@@ -40,6 +40,7 @@ export interface Module {
     types: TypeAliasDeclaration[],
     enums: EnumDeclaration[],
     functions: FunctionDeclaration[],
+    constants: ConstantDeclaration[],
     baseDir: string,
     path: ItemPath,
     /**
@@ -286,8 +287,8 @@ export interface TypeAliasDeclaration extends Node {
 
 export interface ConstantDeclaration extends Node {
     kind: DeclarationKind.Constant,
-    type?: Type,
-    content?: string
+    type: Type,
+    content: string
 }
 
 export interface FunctionDeclaration extends Method, Node {

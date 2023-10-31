@@ -1,11 +1,11 @@
 import * as ts from "typescript";
 import * as path from "path";
-import { BaseMethodSignature, BaseNode, ClassDeclaration, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, ElementParameterFlags, IndexSignature, InterfaceDeclaration, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, NEVER_TYPE, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeAliasDeclaration, TypeKind, TypeParameter, TypeReference, TypeReferenceKind, EnumDeclaration, EnumMember, FunctionDeclaration } from "./structure";
+import { BaseMethodSignature, BaseNode, ClassDeclaration, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, ElementParameterFlags, IndexSignature, InterfaceDeclaration, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, NEVER_TYPE, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeAliasDeclaration, TypeKind, TypeParameter, TypeReference, TypeReferenceKind, EnumDeclaration, EnumMember, FunctionDeclaration, ConstantDeclaration } from "./structure";
 import { BitField, PackageJSON, getPackageJSON, getSymbolDeclaration, getSymbolTypeKind, getTsconfig, hasModifier, joinPartOfArray, mapRealValues, resolvePackageName } from "./utils";
 import { HookManager } from "./hookManager";
 
 export type TypescriptExtractorHooks = {
-    registerItem: (extractor: TypescriptExtractor, decl: Declaration, ref: TypeReference) => void,
+    registerItem: (extractor: TypescriptExtractor, decl: Declaration, ref: TypeReference, currentModule: Module) => void,
     resolveExternalLink: (extractor: TypescriptExtractor, typeName: ts.Symbol, typeKind: TypeReferenceKind, lib: string, extraPath: string[]) => string | undefined;
 }
 
@@ -14,6 +14,7 @@ export interface TypescriptExtractorSettings {
      * Where to look for dependencies. For example, if you're using node, it would be "node_modules".
      */
     moduleStorage: string,
+    maxConstContentLen: number,
     /**
     * Any provided folder names won't count as modules, items inside will be included in the parent module.
     */
@@ -41,6 +42,7 @@ export class TypescriptExtractor implements Module {
     types: TypeAliasDeclaration[];
     enums: EnumDeclaration[];
     functions: FunctionDeclaration[];
+    constants: ConstantDeclaration[];
     path: ItemPath;
     childrenPath: ItemPath;
     packageJSON?: PackageJSON;
@@ -55,6 +57,7 @@ export class TypescriptExtractor implements Module {
         this.types = [];
         this.enums = [];
         this.functions = [];
+        this.constants = [];
         this.path = [];
         this.settings = settings;
         this.packageJSON = getPackageJSON(basePath, this.settings.gitBranch);
@@ -93,7 +96,34 @@ export class TypescriptExtractor implements Module {
             return this.shared.referenceCache.get(symbol);
         }
         else if (BitField.has(symbol.flags, ts.SymbolFlags.Function)) return this.registerFunctionDeclaration(symbol, currentModule);
+        else if (BitField.has(symbol.flags, ts.SymbolFlags.Variable) && !BitField.has(symbol.flags, ts.SymbolFlags.FunctionScopedVariable)) return this.registerConstantDeclaration(symbol, currentModule);
         return;
+    }
+
+    registerConstantDeclaration(symbol: ts.Symbol, currentModule: Module) : TypeReference | undefined {
+        const [type, decl] = this.getSymbolType<ts.VariableDeclaration>(symbol);
+        if (!type || !decl) return;
+
+        const ref = {
+            name: symbol.name,
+            path: currentModule.childrenPath,
+            kind: TypeReferenceKind.Constant
+        };
+
+        this.shared.referenceCache.set(symbol, ref);
+
+        const constDecl = {
+            kind: DeclarationKind.Constant,
+            name: symbol.name,
+            type: this.createType(type),
+            content: decl.initializer ? decl.initializer.getText().slice(0, this.settings.maxConstContentLen) : "",
+            loc: this.createLoC(symbol, true),
+            jsDoc: this.getJSDocData(decl)
+        } satisfies ConstantDeclaration;
+
+        this.constants.push(constDecl);
+        this.shared.hooks.trigger("registerItem", this, constDecl, ref, currentModule);
+        return ref;
     }
 
     registerFunctionDeclaration(symbol: ts.Symbol, currentModule: Module) : TypeReference | undefined {
@@ -118,7 +148,7 @@ export class TypescriptExtractor implements Module {
             jsDoc: this.getJSDocData(decl)
         } satisfies FunctionDeclaration;
         currentModule.functions.push(fnDecl);
-        this.shared.hooks.trigger("registerItem", this, fnDecl, ref);
+        this.shared.hooks.trigger("registerItem", this, fnDecl, ref, currentModule);
         return ref;
     }
 
@@ -164,7 +194,7 @@ export class TypescriptExtractor implements Module {
         } as EnumDeclaration;
 
         currentModule.enums.push(enumDecl);
-        this.shared.hooks.trigger("registerItem", this, enumDecl, ref);
+        this.shared.hooks.trigger("registerItem", this, enumDecl, ref, currentModule);
         return ref;
     }
 
@@ -189,7 +219,7 @@ export class TypescriptExtractor implements Module {
         } as const;
 
         currentModule.types.push(typeDecl);
-        this.shared.hooks.trigger("registerItem", this, typeDecl, ref);
+        this.shared.hooks.trigger("registerItem", this, typeDecl, ref, currentModule);
         return ref;
     }
 
@@ -224,7 +254,7 @@ export class TypescriptExtractor implements Module {
         } as const;
 
         currentModule.interfaces.push(interfaceDecl);
-        this.shared.hooks.trigger("registerItem", this, interfaceDecl, ref);
+        this.shared.hooks.trigger("registerItem", this, interfaceDecl, ref, currentModule);
         return ref;
     }
 
@@ -259,7 +289,7 @@ export class TypescriptExtractor implements Module {
         } as const;
 
         currentModule.classes.push(classDecl);
-        this.shared.hooks.trigger("registerItem", this, classDecl, ref);
+        this.shared.hooks.trigger("registerItem", this, classDecl, ref, currentModule);
         return ref;
     }
 
@@ -656,6 +686,7 @@ export class TypescriptExtractor implements Module {
             types: this.types,
             enums: this.enums,
             functions: this.functions,
+            constants: this.constants,
             path: this.path,
             packageJSON: this.packageJSON
         };
@@ -679,7 +710,8 @@ export class TypescriptExtractor implements Module {
             interfaces: [],
             types: [],
             enums: [],
-            functions: []
+            functions: [],
+            constants: []
         };
     }
 
@@ -694,7 +726,8 @@ export class TypescriptExtractor implements Module {
     static createSettings(settings: Partial<TypescriptExtractorSettings>) : TypescriptExtractorSettings {
         return {
             passthroughModules: settings.passthroughModules,
-            moduleStorage: settings.moduleStorage || "node_modules"
+            moduleStorage: settings.moduleStorage || "node_modules",
+            maxConstContentLen: settings.maxConstContentLen || 512
         };
     }
 
