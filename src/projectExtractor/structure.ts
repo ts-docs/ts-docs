@@ -38,6 +38,7 @@ export interface Module {
     classes: ClassDeclaration[],
     interfaces: InterfaceDeclaration[],
     types: TypeAliasDeclaration[],
+    enums: EnumDeclaration[],
     baseDir: string,
     path: ItemPath,
     /**
@@ -134,16 +135,16 @@ export interface Node extends BaseNode {
 }
 
 /**
- * If the object's [[ReferenceType.link]] property is not undefined, then that means it's an **external**
- * object. The [[ReferenceType.external]] property will be set to the external library's name.
+ * If the object's [[link]] property is not undefined, then that means it's an **external**
+ * object. The [[externalLibName]] property will be set to the external library's name.
  * 
- * [[ReferenceType.displayName]] is only present when the referenced item is an **enum member**. The
- * property will be set to the member's name, while the **name** property will be set to the enum name.
+ * The [[parent]] property is only present when the referenced item is an **enum member**. The
+ * property will be set to a reference to the enum itself.
  */
 export interface TypeReference {
     name: string,
     kind: TypeReferenceKind,
-    displayName?: string,
+    parent?: TypeReference,
     path?: ItemPath,
     externalLibName?: string,
     link?: string
@@ -263,7 +264,7 @@ export interface InterfaceDeclaration extends ObjectLiteral, Node {
 }
 
 export interface EnumMember extends Node {
-    name: string,
+    type: Type,
     initializer?: Type
 }
 

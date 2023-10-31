@@ -1,6 +1,6 @@
 import * as ts from "typescript";
 import * as path from "path";
-import { BaseMethodSignature, BaseNode, ClassDeclaration, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, ElementParameterFlags, IndexSignature, InterfaceDeclaration, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, NEVER_TYPE, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeAliasDeclaration, TypeKind, TypeParameter, TypeReference, TypeReferenceKind } from "./structure";
+import { BaseMethodSignature, BaseNode, ClassDeclaration, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, ElementParameterFlags, IndexSignature, InterfaceDeclaration, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, NEVER_TYPE, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeAliasDeclaration, TypeKind, TypeParameter, TypeReference, TypeReferenceKind, EnumDeclaration, EnumMember } from "./structure";
 import { BitField, PackageJSON, getPackageJSON, getSymbolDeclaration, getSymbolTypeKind, getTsconfig, hasModifier, joinPartOfArray, mapRealValues, resolvePackageName } from "./utils";
 import { HookManager } from "./hookManager";
 
@@ -39,6 +39,7 @@ export class TypescriptExtractor implements Module {
     classes: ClassDeclaration[];
     interfaces: InterfaceDeclaration[];
     types: TypeAliasDeclaration[];
+    enums: EnumDeclaration[];
     path: ItemPath;
     childrenPath: ItemPath;
     packageJSON?: PackageJSON;
@@ -51,6 +52,7 @@ export class TypescriptExtractor implements Module {
         this.classes = [];
         this.interfaces = [];
         this.types = [];
+        this.enums = [];
         this.path = [];
         this.settings = settings;
         this.packageJSON = getPackageJSON(basePath, this.settings.gitBranch);
@@ -83,7 +85,58 @@ export class TypescriptExtractor implements Module {
         else if (BitField.has(symbol.flags, ts.SymbolFlags.Class)) return this.registerClassDeclaration(symbol, currentModule);
         else if (BitField.has(symbol.flags, ts.SymbolFlags.Interface)) return this.registerInterfaceDeclaration(symbol, currentModule);
         else if (BitField.has(symbol.flags, ts.SymbolFlags.TypeAlias)) return this.registerTypeDeclaraction(symbol, currentModule);
+        else if (BitField.has(symbol.flags, ts.SymbolFlags.ConstEnum) || BitField.has(symbol.flags, ts.SymbolFlags.RegularEnum)) return this.registerEnumDeclaration(symbol, currentModule);
+        else if (BitField.has(symbol.flags, ts.SymbolFlags.EnumMember)) {
+            this.addSymbol(symbol.parent!);
+            return this.shared.referenceCache.get(symbol);
+        }
         return;
+    }
+
+    registerEnumDeclaration(symbol: ts.Symbol, currentModule: Module) : TypeReference | undefined {
+        const [type, decl] = this.getSymbolType<ts.EnumDeclaration>(symbol);
+        if (!type || !decl) return;
+
+        const ref = {
+            name: symbol.name,
+            path: currentModule.childrenPath,
+            kind: TypeReferenceKind.Enum
+        };
+
+        this.shared.referenceCache.set(symbol, ref);
+
+        const members: EnumMember[] = [];
+
+        for (const exportedItem of (symbol.exports?.values() || [])) {
+            const [itemType, itemDecl] = this.getSymbolType<ts.EnumMember>(exportedItem);
+            if (!itemType || !itemDecl) continue;
+            const itemRef = {
+                name: exportedItem.name,
+                path: currentModule.childrenPath,
+                kind: TypeReferenceKind.EnumMember,
+                parent: ref
+            };
+            this.shared.referenceCache.set(exportedItem, itemRef);
+            members.push({
+                name: exportedItem.name,
+                type: this.createLiteralType(itemType),
+                initializer: itemDecl.initializer && this.createType(this.getNodeType(itemDecl.initializer)),
+                jsDoc: this.getJSDocData(itemDecl),
+                loc: this.createLoC(itemDecl)
+            });
+        }
+
+        const enumDecl = {
+            name: symbol.name,
+            members,
+            isConst: hasModifier(decl, ts.SyntaxKind.ConstKeyword),
+            jsDoc: this.getJSDocData(decl),
+            loc: this.createLoC(decl)
+        } as EnumDeclaration;
+
+        currentModule.enums.push(enumDecl);
+        this.shared.hooks.trigger("registerItem", this, enumDecl, ref);
+        return ref;
     }
 
     registerTypeDeclaraction(symbol: ts.Symbol, currentModule: Module) : TypeReference | undefined {
@@ -307,79 +360,7 @@ export class TypescriptExtractor implements Module {
             };
         }
 
-        if (!t.symbol) {
-            if (BitField.has(t.flags, ts.TypeFlags.Unknown)) return { kind: TypeKind.Unknown };
-            else if (BitField.has(t.flags, ts.TypeFlags.Any)) return { kind: TypeKind.Any };
-            else if (BitField.has(t.flags, ts.TypeFlags.Never)) return NEVER_TYPE;
-            else if (BitField.has(t.flags, ts.TypeFlags.Void)) return { kind: TypeKind.Void };
-            else if (BitField.has(t.flags, ts.TypeFlags.Undefined)) return { kind: TypeKind.Undefined };
-            else if (BitField.has(t.flags, ts.TypeFlags.Null)) return { kind: TypeKind.Null };
-            else if (t === this.shared.checker.getStringType()) return { kind: TypeKind.String };
-            else if (t === this.shared.checker.getNumberType()) return { kind: TypeKind.Number };
-            else if (t.isStringLiteral()) return { kind: TypeKind.String, literal: t.value };
-            else if (t.isNumberLiteral()) return { kind: TypeKind.Number, literal: t.value.toString() };
-            else if (t === this.shared.checker.getFalseType()) return { kind: TypeKind.Boolean, literal: "false" };
-            else if (t === this.shared.checker.getTrueType()) return { kind: TypeKind.Boolean, literal: "true" };
-            else if (t === this.shared.checker.getBooleanType()) return { kind: TypeKind.Boolean };
-            else if (t.isUnion()) return { kind: TypeKind.Union, types: t.types.map(t => this.createType(t)) };
-            else if (t.isIntersection()) return { kind: TypeKind.Intersection, types: t.types.map(t => this.createType(t)) };
-            else if (this.shared.checker.isTupleType(t)) {
-                const typeArguments = this.shared.checker.getTypeArguments(t as ts.TypeReference);
-                const tupleType = (t as ts.TypeReference).target as ts.TupleType;
-                return {
-                    kind: TypeKind.Tuple,
-                    types: typeArguments.map((arg, ind) => {
-                        const flags = new BitField([]);
-                        let name;
-                        const currentElement = tupleType.labeledElementDeclarations?.[ind];
-                        if (currentElement) {
-                            name = currentElement.name.getText();
-                            flags.set(currentElement.questionToken && ElementParameterFlags.Optional, currentElement.dotDotDotToken && ElementParameterFlags.Spread);
-                        }
-                        return {
-                            name,
-                            flags,
-                            type: this.createType(name && flags.has(ElementParameterFlags.Optional) ? this.shared.checker.getNonNullableType(arg) : arg)
-                        };
-                    })
-                };
-            }
-            else if (BitField.has(t.flags, ts.TypeFlags.Conditional)) {
-                const condType = t as ts.ConditionalType;
-                return {
-                    kind: TypeKind.Conditional,
-                    checkType: this.createType(condType.checkType),
-                    extendsType: this.createType(condType.extendsType), 
-                    ifTrue: this.createType(this.getNodeType(condType.root.node.trueType)),
-                    ifFalse: this.createType(this.getNodeType(condType.root.node.falseType)),
-                };
-            }
-            else if (BitField.has(t.flags, ts.TypeFlags.IndexedAccess)) {
-                const indexedType = t as ts.IndexedAccessType;
-                return {
-                    kind: TypeKind.IndexAccess,
-                    index: this.createType(indexedType.indexType),
-                    type: this.createType(indexedType.objectType)
-                };
-            }
-            else if (BitField.has(t.flags, ts.TypeFlags.Index)) {
-                const indexType = t as ts.IndexType;
-                return {
-                    kind: TypeKind.TypeOperator,
-                    operator: "keyof",
-                    type: this.createType(indexType.type)
-                };
-            }
-            else if (BitField.has(t.flags, ts.TypeFlags.TemplateLiteral)) {
-                const litType = t as ts.TemplateLiteralType;
-                return {
-                    kind: TypeKind.TemplateLiteral,
-                    text: [...litType.texts],
-                    types: litType.types.map(t => this.createType(t))
-                };
-            }
-            else return this.createExternalType(t);
-        }
+        if (!t.symbol) return this.createLiteralType(t);
 
         const ref = this.addSymbol(t.symbol);
         
@@ -464,6 +445,80 @@ export class TypescriptExtractor implements Module {
             const [libName, rest] = path[0][0] === "@" ? [path[0] + "/" + path[1], path.slice(2)] : [path[0], path.slice(1)];
             return { kind: TypeKind.Reference, type: { name: typeSymbol.name, kind: TypeReferenceKind.Unknown, link: this.shared.hooks.trigger("resolveExternalLink", this, typeSymbol, getSymbolTypeKind(typeSymbol), libName, rest) }, typeArguments };
         }
+    }
+
+    createLiteralType(t: ts.Type) : Type {
+        if (BitField.has(t.flags, ts.TypeFlags.Unknown)) return { kind: TypeKind.Unknown };
+        else if (BitField.has(t.flags, ts.TypeFlags.Any)) return { kind: TypeKind.Any };
+        else if (BitField.has(t.flags, ts.TypeFlags.Never)) return NEVER_TYPE;
+        else if (BitField.has(t.flags, ts.TypeFlags.Void)) return { kind: TypeKind.Void };
+        else if (BitField.has(t.flags, ts.TypeFlags.Undefined)) return { kind: TypeKind.Undefined };
+        else if (BitField.has(t.flags, ts.TypeFlags.Null)) return { kind: TypeKind.Null };
+        else if (t === this.shared.checker.getStringType()) return { kind: TypeKind.String };
+        else if (t === this.shared.checker.getNumberType()) return { kind: TypeKind.Number };
+        else if (t.isStringLiteral()) return { kind: TypeKind.String, literal: t.value };
+        else if (t.isNumberLiteral()) return { kind: TypeKind.Number, literal: t.value.toString() };
+        else if (t === this.shared.checker.getFalseType()) return { kind: TypeKind.Boolean, literal: "false" };
+        else if (t === this.shared.checker.getTrueType()) return { kind: TypeKind.Boolean, literal: "true" };
+        else if (t === this.shared.checker.getBooleanType()) return { kind: TypeKind.Boolean };
+        else if (t.isUnion()) return { kind: TypeKind.Union, types: t.types.map(t => this.createType(t)) };
+        else if (t.isIntersection()) return { kind: TypeKind.Intersection, types: t.types.map(t => this.createType(t)) };
+        else if (this.shared.checker.isTupleType(t)) {
+            const typeArguments = this.shared.checker.getTypeArguments(t as ts.TypeReference);
+            const tupleType = (t as ts.TypeReference).target as ts.TupleType;
+            return {
+                kind: TypeKind.Tuple,
+                types: typeArguments.map((arg, ind) => {
+                    const flags = new BitField([]);
+                    let name;
+                    const currentElement = tupleType.labeledElementDeclarations?.[ind];
+                    if (currentElement) {
+                        name = currentElement.name.getText();
+                        flags.set(currentElement.questionToken && ElementParameterFlags.Optional, currentElement.dotDotDotToken && ElementParameterFlags.Spread);
+                    }
+                    return {
+                        name,
+                        flags,
+                        type: this.createType(name && flags.has(ElementParameterFlags.Optional) ? this.shared.checker.getNonNullableType(arg) : arg)
+                    };
+                })
+            };
+        }
+        else if (BitField.has(t.flags, ts.TypeFlags.Conditional)) {
+            const condType = t as ts.ConditionalType;
+            return {
+                kind: TypeKind.Conditional,
+                checkType: this.createType(condType.checkType),
+                extendsType: this.createType(condType.extendsType), 
+                ifTrue: this.createType(this.getNodeType(condType.root.node.trueType)),
+                ifFalse: this.createType(this.getNodeType(condType.root.node.falseType)),
+            };
+        }
+        else if (BitField.has(t.flags, ts.TypeFlags.IndexedAccess)) {
+            const indexedType = t as ts.IndexedAccessType;
+            return {
+                kind: TypeKind.IndexAccess,
+                index: this.createType(indexedType.indexType),
+                type: this.createType(indexedType.objectType)
+            };
+        }
+        else if (BitField.has(t.flags, ts.TypeFlags.Index)) {
+            const indexType = t as ts.IndexType;
+            return {
+                kind: TypeKind.TypeOperator,
+                operator: "keyof",
+                type: this.createType(indexType.type)
+            };
+        }
+        else if (BitField.has(t.flags, ts.TypeFlags.TemplateLiteral)) {
+            const litType = t as ts.TemplateLiteralType;
+            return {
+                kind: TypeKind.TemplateLiteral,
+                text: [...litType.texts],
+                types: litType.types.map(t => this.createType(t))
+            };
+        }
+        else return this.createExternalType(t);
     }
 
     createLoC(symbol: ts.Symbol | ts.Node, includeSourceFile?: boolean): LoC {
@@ -570,6 +625,7 @@ export class TypescriptExtractor implements Module {
             classes: this.classes,
             interfaces: this.interfaces,
             types: this.types,
+            enums: this.enums,
             path: this.path,
             packageJSON: this.packageJSON
         };
@@ -591,7 +647,8 @@ export class TypescriptExtractor implements Module {
             modules: new Map(),
             classes: [],
             interfaces: [],
-            types: []
+            types: [],
+            enums: []
         };
     }
 
