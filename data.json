@@ -23,7 +23,7 @@
                     "isAbstract": false,
                     "loc": {
                         "pos": {
-                            "line": 96,
+                            "line": 106,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/utils.ts"
@@ -37,7 +37,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 97,
+                                    "line": 107,
                                     "character": 4
                                 }
                             },
@@ -51,7 +51,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 103,
+                                            "line": 113,
                                             "character": 4
                                         }
                                     },
@@ -79,7 +79,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 107,
+                                            "line": 117,
                                             "character": 4
                                         }
                                     },
@@ -91,7 +91,6 @@
                                                 "kind": 0,
                                                 "type": {
                                                     "name": "Array",
-                                                    "path": [],
                                                     "kind": 9
                                                 },
                                                 "typeArguments": [
@@ -129,7 +128,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 113,
+                                            "line": 123,
                                             "character": 4
                                         }
                                     },
@@ -141,7 +140,6 @@
                                                 "kind": 0,
                                                 "type": {
                                                     "name": "Array",
-                                                    "path": [],
                                                     "kind": 9
                                                 },
                                                 "typeArguments": [
@@ -179,7 +177,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 121,
+                                            "line": 131,
                                             "character": 4
                                         }
                                     },
@@ -187,6 +185,318 @@
                                     "typeParameters": [],
                                     "returnType": {
                                         "kind": 7
+                                    }
+                                }
+                            ],
+                            "flags": 0,
+                            "classFlags": 0
+                        }
+                    ],
+                    "indexes": [],
+                    "new": []
+                },
+                {
+                    "kind": 0,
+                    "name": "HookManager",
+                    "implements": [],
+                    "extends": [],
+                    "typeParameters": [
+                        {
+                            "name": "H"
+                        }
+                    ],
+                    "isAbstract": false,
+                    "loc": {
+                        "pos": {
+                            "line": 6,
+                            "character": 0
+                        },
+                        "sourceFile": "/src/projectExtractor/hookManager.ts"
+                    },
+                    "properties": [
+                        {
+                            "name": "hooks",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "ReMapHooks",
+                                    "path": [
+                                        "ts-docs",
+                                        "projectExtractor"
+                                    ],
+                                    "kind": 5
+                                },
+                                "typeArguments": [
+                                    {
+                                        "kind": 0,
+                                        "type": {
+                                            "kind": 6,
+                                            "name": "H"
+                                        },
+                                        "typeArguments": []
+                                    }
+                                ]
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 7,
+                                    "character": 4
+                                }
+                            },
+                            "classFlags": 1
+                        }
+                    ],
+                    "methods": [
+                        {
+                            "name": "has",
+                            "signatures": [
+                                {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 12,
+                                            "character": 4
+                                        }
+                                    },
+                                    "parameters": [
+                                        {
+                                            "name": "hookName",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 19,
+                                                "operator": "keyof",
+                                                "type": {
+                                                    "kind": 0,
+                                                    "type": {
+                                                        "kind": 6,
+                                                        "name": "H"
+                                                    },
+                                                    "typeArguments": []
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 9
+                                    }
+                                }
+                            ],
+                            "flags": 0,
+                            "classFlags": 0
+                        },
+                        {
+                            "name": "attach",
+                            "signatures": [
+                                {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 16,
+                                            "character": 4
+                                        }
+                                    },
+                                    "parameters": [
+                                        {
+                                            "name": "hookName",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "kind": 6,
+                                                    "name": "T"
+                                                },
+                                                "typeArguments": []
+                                            }
+                                        },
+                                        {
+                                            "name": "call",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 18,
+                                                "index": {
+                                                    "kind": 0,
+                                                    "type": {
+                                                        "kind": 6,
+                                                        "name": "T"
+                                                    },
+                                                    "typeArguments": []
+                                                },
+                                                "type": {
+                                                    "kind": 0,
+                                                    "type": {
+                                                        "kind": 6,
+                                                        "name": "H"
+                                                    },
+                                                    "typeArguments": []
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [
+                                        {
+                                            "name": "T"
+                                        }
+                                    ],
+                                    "returnType": {
+                                        "kind": 10
+                                    }
+                                }
+                            ],
+                            "flags": 0,
+                            "classFlags": 0
+                        },
+                        {
+                            "name": "trigger",
+                            "signatures": [
+                                {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 21,
+                                            "character": 4
+                                        }
+                                    },
+                                    "parameters": [
+                                        {
+                                            "name": "hookName",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "kind": 6,
+                                                    "name": "T"
+                                                },
+                                                "typeArguments": []
+                                            }
+                                        },
+                                        {
+                                            "name": "params",
+                                            "flags": 2,
+                                            "type": {
+                                                "kind": 16,
+                                                "checkType": {
+                                                    "kind": 18,
+                                                    "index": {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "kind": 6,
+                                                            "name": "T"
+                                                        },
+                                                        "typeArguments": []
+                                                    },
+                                                    "type": {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "kind": 6,
+                                                            "name": "H"
+                                                        },
+                                                        "typeArguments": []
+                                                    }
+                                                },
+                                                "extendsType": {
+                                                    "kind": 2,
+                                                    "parameters": [
+                                                        {
+                                                            "name": "args",
+                                                            "flags": 2,
+                                                            "type": {
+                                                                "kind": 0,
+                                                                "type": {
+                                                                    "kind": 6,
+                                                                    "name": "P"
+                                                                },
+                                                                "typeArguments": [],
+                                                                "isInfer": true
+                                                            }
+                                                        }
+                                                    ],
+                                                    "typeParameters": [],
+                                                    "returnType": {
+                                                        "kind": 13
+                                                    }
+                                                },
+                                                "ifTrue": {
+                                                    "kind": 0,
+                                                    "type": {
+                                                        "kind": 6,
+                                                        "name": "P"
+                                                    },
+                                                    "typeArguments": [],
+                                                    "isInfer": true
+                                                },
+                                                "ifFalse": {
+                                                    "kind": 20
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [
+                                        {
+                                            "name": "T"
+                                        }
+                                    ],
+                                    "returnType": {
+                                        "kind": 4,
+                                        "types": [
+                                            {
+                                                "kind": 11
+                                            },
+                                            {
+                                                "kind": 16,
+                                                "checkType": {
+                                                    "kind": 18,
+                                                    "index": {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "kind": 6,
+                                                            "name": "T"
+                                                        },
+                                                        "typeArguments": []
+                                                    },
+                                                    "type": {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "kind": 6,
+                                                            "name": "H"
+                                                        },
+                                                        "typeArguments": []
+                                                    }
+                                                },
+                                                "extendsType": {
+                                                    "kind": 2,
+                                                    "parameters": [
+                                                        {
+                                                            "name": "args",
+                                                            "flags": 2,
+                                                            "type": {
+                                                                "kind": 13
+                                                            }
+                                                        }
+                                                    ],
+                                                    "typeParameters": [],
+                                                    "returnType": {
+                                                        "kind": 0,
+                                                        "type": {
+                                                            "kind": 6,
+                                                            "name": "R"
+                                                        },
+                                                        "typeArguments": [],
+                                                        "isInfer": true
+                                                    }
+                                                },
+                                                "ifTrue": {
+                                                    "kind": 0,
+                                                    "type": {
+                                                        "kind": 6,
+                                                        "name": "R"
+                                                    },
+                                                    "typeArguments": [],
+                                                    "isInfer": true
+                                                },
+                                                "ifFalse": {
+                                                    "kind": 13
+                                                }
+                                            }
+                                        ]
                                     }
                                 }
                             ],
@@ -219,7 +529,7 @@
                     "isAbstract": false,
                     "loc": {
                         "pos": {
-                            "line": 28,
+                            "line": 30,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/extractor.ts"
@@ -233,7 +543,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 29,
+                                    "line": 31,
                                     "character": 4
                                 }
                             },
@@ -247,7 +557,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 30,
+                                    "line": 32,
                                     "character": 4
                                 }
                             },
@@ -259,7 +569,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Map",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -283,7 +592,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 31,
+                                    "line": 33,
                                     "character": 4
                                 }
                             },
@@ -295,7 +604,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -316,7 +624,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 32,
+                                    "line": 34,
                                     "character": 4
                                 }
                             },
@@ -328,7 +636,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -349,7 +656,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 33,
+                                    "line": 35,
                                     "character": 4
                                 }
                             },
@@ -361,7 +668,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -382,7 +688,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 34,
+                                    "line": 36,
                                     "character": 4
                                 }
                             },
@@ -405,7 +711,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 35,
+                                    "line": 37,
                                     "character": 4
                                 }
                             },
@@ -428,7 +734,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 36,
+                                    "line": 38,
                                     "character": 4
                                 }
                             },
@@ -451,7 +757,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 37,
+                                    "line": 39,
                                     "character": 4
                                 }
                             },
@@ -474,7 +780,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 38,
+                                    "line": 40,
                                     "character": 4
                                 }
                             },
@@ -488,7 +794,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 64,
+                                            "line": 66,
                                             "character": 4
                                         }
                                     },
@@ -500,7 +806,6 @@
                                                 "kind": 0,
                                                 "type": {
                                                     "name": "Symbol",
-                                                    "path": [],
                                                     "kind": 9
                                                 },
                                                 "typeArguments": []
@@ -555,7 +860,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 80,
+                                            "line": 82,
                                             "character": 4
                                         }
                                     },
@@ -567,7 +872,6 @@
                                                 "kind": 0,
                                                 "type": {
                                                     "name": "Symbol",
-                                                    "path": [],
                                                     "kind": 9
                                                 },
                                                 "typeArguments": []
@@ -622,7 +926,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 105,
+                                            "line": 107,
                                             "character": 4
                                         }
                                     },
@@ -634,7 +938,6 @@
                                                 "kind": 0,
                                                 "type": {
                                                     "name": "Symbol",
-                                                    "path": [],
                                                     "kind": 9
                                                 },
                                                 "typeArguments": []
@@ -689,7 +992,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 140,
+                                            "line": 142,
                                             "character": 4
                                         }
                                     },
@@ -701,7 +1004,6 @@
                                                 "kind": 0,
                                                 "type": {
                                                     "name": "Symbol",
-                                                    "path": [],
                                                     "kind": 9
                                                 },
                                                 "typeArguments": []
@@ -756,7 +1058,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 175,
+                                            "line": 177,
                                             "character": 4
                                         }
                                     },
@@ -768,7 +1070,6 @@
                                                 "kind": 0,
                                                 "type": {
                                                     "name": "Type",
-                                                    "path": [],
                                                     "kind": 9
                                                 },
                                                 "typeArguments": []
@@ -800,7 +1101,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 176,
+                                            "line": 178,
                                             "character": 4
                                         }
                                     },
@@ -812,7 +1113,6 @@
                                                 "kind": 0,
                                                 "type": {
                                                     "name": "Type",
-                                                    "path": [],
                                                     "kind": 9
                                                 },
                                                 "typeArguments": []
@@ -851,7 +1151,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 206,
+                                            "line": 208,
                                             "character": 4
                                         }
                                     },
@@ -863,7 +1163,6 @@
                                                 "kind": 0,
                                                 "type": {
                                                     "name": "Symbol",
-                                                    "path": [],
                                                     "kind": 9
                                                 },
                                                 "typeArguments": []
@@ -902,7 +1201,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 217,
+                                            "line": 219,
                                             "character": 4
                                         }
                                     },
@@ -914,7 +1213,6 @@
                                                 "kind": 0,
                                                 "type": {
                                                     "name": "Signature",
-                                                    "path": [],
                                                     "kind": 9
                                                 },
                                                 "typeArguments": []
@@ -945,7 +1243,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 225,
+                                            "line": 227,
                                             "character": 4
                                         }
                                     },
@@ -957,7 +1255,6 @@
                                                 "kind": 0,
                                                 "type": {
                                                     "name": "Type",
-                                                    "path": [],
                                                     "kind": 9
                                                 },
                                                 "typeArguments": []
@@ -973,7 +1270,6 @@
                                                         "kind": 0,
                                                         "type": {
                                                             "name": "CallSignatureDeclaration",
-                                                            "path": [],
                                                             "kind": 9
                                                         },
                                                         "typeArguments": []
@@ -982,7 +1278,6 @@
                                                         "kind": 0,
                                                         "type": {
                                                             "name": "ConstructSignatureDeclaration",
-                                                            "path": [],
                                                             "kind": 9
                                                         },
                                                         "typeArguments": []
@@ -991,7 +1286,6 @@
                                                         "kind": 0,
                                                         "type": {
                                                             "name": "MethodSignature",
-                                                            "path": [],
                                                             "kind": 9
                                                         },
                                                         "typeArguments": []
@@ -1000,7 +1294,6 @@
                                                         "kind": 0,
                                                         "type": {
                                                             "name": "IndexSignatureDeclaration",
-                                                            "path": [],
                                                             "kind": 9
                                                         },
                                                         "typeArguments": []
@@ -1009,7 +1302,6 @@
                                                         "kind": 0,
                                                         "type": {
                                                             "name": "FunctionTypeNode",
-                                                            "path": [],
                                                             "kind": 9
                                                         },
                                                         "typeArguments": []
@@ -1018,7 +1310,6 @@
                                                         "kind": 0,
                                                         "type": {
                                                             "name": "ConstructorTypeNode",
-                                                            "path": [],
                                                             "kind": 9
                                                         },
                                                         "typeArguments": []
@@ -1027,7 +1318,6 @@
                                                         "kind": 0,
                                                         "type": {
                                                             "name": "JSDocFunctionType",
-                                                            "path": [],
                                                             "kind": 9
                                                         },
                                                         "typeArguments": []
@@ -1036,7 +1326,6 @@
                                                         "kind": 0,
                                                         "type": {
                                                             "name": "FunctionDeclaration",
-                                                            "path": [],
                                                             "kind": 9
                                                         },
                                                         "typeArguments": []
@@ -1045,7 +1334,6 @@
                                                         "kind": 0,
                                                         "type": {
                                                             "name": "MethodDeclaration",
-                                                            "path": [],
                                                             "kind": 9
                                                         },
                                                         "typeArguments": []
@@ -1054,7 +1342,6 @@
                                                         "kind": 0,
                                                         "type": {
                                                             "name": "ConstructorDeclaration",
-                                                            "path": [],
                                                             "kind": 9
                                                         },
                                                         "typeArguments": []
@@ -1063,7 +1350,6 @@
                                                         "kind": 0,
                                                         "type": {
                                                             "name": "GetAccessorDeclaration",
-                                                            "path": [],
                                                             "kind": 9
                                                         },
                                                         "typeArguments": []
@@ -1072,7 +1358,6 @@
                                                         "kind": 0,
                                                         "type": {
                                                             "name": "SetAccessorDeclaration",
-                                                            "path": [],
                                                             "kind": 9
                                                         },
                                                         "typeArguments": []
@@ -1081,7 +1366,6 @@
                                                         "kind": 0,
                                                         "type": {
                                                             "name": "FunctionExpression",
-                                                            "path": [],
                                                             "kind": 9
                                                         },
                                                         "typeArguments": []
@@ -1090,7 +1374,6 @@
                                                         "kind": 0,
                                                         "type": {
                                                             "name": "ArrowFunction",
-                                                            "path": [],
                                                             "kind": 9
                                                         },
                                                         "typeArguments": []
@@ -1104,7 +1387,6 @@
                                         "kind": 0,
                                         "type": {
                                             "name": "Array",
-                                            "path": [],
                                             "kind": 9
                                         },
                                         "typeArguments": [
@@ -1133,7 +1415,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 242,
+                                            "line": 244,
                                             "character": 4
                                         }
                                     },
@@ -1145,7 +1427,6 @@
                                                 "kind": 0,
                                                 "type": {
                                                     "name": "Symbol",
-                                                    "path": [],
                                                     "kind": 9
                                                 },
                                                 "typeArguments": []
@@ -1184,7 +1465,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 256,
+                                            "line": 258,
                                             "character": 4
                                         }
                                     },
@@ -1196,7 +1477,6 @@
                                                 "kind": 0,
                                                 "type": {
                                                     "name": "Type",
-                                                    "path": [],
                                                     "kind": 9
                                                 },
                                                 "typeArguments": []
@@ -1208,7 +1488,6 @@
                                         "kind": 0,
                                         "type": {
                                             "name": "Array",
-                                            "path": [],
                                             "kind": 9
                                         },
                                         "typeArguments": [
@@ -1237,7 +1516,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 271,
+                                            "line": 273,
                                             "character": 4
                                         }
                                     },
@@ -1249,7 +1528,6 @@
                                                 "kind": 0,
                                                 "type": {
                                                     "name": "TypeParameter",
-                                                    "path": [],
                                                     "kind": 9
                                                 },
                                                 "typeArguments": []
@@ -1280,7 +1558,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 279,
+                                            "line": 281,
                                             "character": 4
                                         }
                                     },
@@ -1292,7 +1570,6 @@
                                                 "kind": 0,
                                                 "type": {
                                                     "name": "Symbol",
-                                                    "path": [],
                                                     "kind": 9
                                                 },
                                                 "typeArguments": []
@@ -1331,7 +1608,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 291,
+                                            "line": 293,
                                             "character": 4
                                         }
                                     },
@@ -1343,7 +1620,6 @@
                                                 "kind": 0,
                                                 "type": {
                                                     "name": "Type",
-                                                    "path": [],
                                                     "kind": 9
                                                 },
                                                 "typeArguments": []
@@ -1376,12 +1652,66 @@
                             "classFlags": 0
                         },
                         {
+                            "name": "createExternalType",
+                            "signatures": [
+                                {
+                                    "loc": {
+                                        "pos": {
+                                            "line": 436,
+                                            "character": 4
+                                        }
+                                    },
+                                    "parameters": [
+                                        {
+                                            "name": "type",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Type",
+                                                    "kind": 9
+                                                },
+                                                "typeArguments": []
+                                            }
+                                        },
+                                        {
+                                            "name": "typeSymbol",
+                                            "flags": 1,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Symbol",
+                                                    "kind": 9
+                                                },
+                                                "typeArguments": []
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "Type",
+                                            "path": [
+                                                "ts-docs",
+                                                "projectExtractor"
+                                            ],
+                                            "kind": 5
+                                        },
+                                        "typeArguments": []
+                                    }
+                                }
+                            ],
+                            "flags": 0,
+                            "classFlags": 0
+                        },
+                        {
                             "name": "createLoC",
                             "signatures": [
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 442,
+                                            "line": 462,
                                             "character": 4
                                         }
                                     },
@@ -1396,7 +1726,6 @@
                                                         "kind": 0,
                                                         "type": {
                                                             "name": "Symbol",
-                                                            "path": [],
                                                             "kind": 9
                                                         },
                                                         "typeArguments": []
@@ -1405,7 +1734,6 @@
                                                         "kind": 0,
                                                         "type": {
                                                             "name": "Node",
-                                                            "path": [],
                                                             "kind": 9
                                                         },
                                                         "typeArguments": []
@@ -1445,7 +1773,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 452,
+                                            "line": 472,
                                             "character": 4
                                         }
                                     },
@@ -1457,7 +1785,6 @@
                                                 "kind": 0,
                                                 "type": {
                                                     "name": "Node",
-                                                    "path": [],
                                                     "kind": 9
                                                 },
                                                 "typeArguments": []
@@ -1496,7 +1823,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 475,
+                                            "line": 495,
                                             "character": 4
                                         }
                                     },
@@ -1508,7 +1835,6 @@
                                                 "kind": 0,
                                                 "type": {
                                                     "name": "Node",
-                                                    "path": [],
                                                     "kind": 9
                                                 },
                                                 "typeArguments": []
@@ -1520,7 +1846,6 @@
                                         "kind": 0,
                                         "type": {
                                             "name": "Type",
-                                            "path": [],
                                             "kind": 9
                                         },
                                         "typeArguments": []
@@ -1536,7 +1861,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 481,
+                                            "line": 501,
                                             "character": 4
                                         }
                                     },
@@ -1548,7 +1873,6 @@
                                                 "kind": 0,
                                                 "type": {
                                                     "name": "Symbol",
-                                                    "path": [],
                                                     "kind": 9
                                                 },
                                                 "typeArguments": []
@@ -1575,7 +1899,6 @@
                                                             "kind": 0,
                                                             "type": {
                                                                 "name": "Type",
-                                                                "path": [],
                                                                 "kind": 9
                                                             },
                                                             "typeArguments": []
@@ -1615,7 +1938,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 489,
+                                            "line": 509,
                                             "character": 4
                                         }
                                     },
@@ -1652,7 +1975,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 522,
+                                            "line": 542,
                                             "character": 4
                                         }
                                     },
@@ -1713,7 +2036,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 529,
+                                            "line": 549,
                                             "character": 4
                                         }
                                     },
@@ -1764,7 +2087,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 534,
+                                            "line": 554,
                                             "character": 4
                                         }
                                     },
@@ -1825,7 +2148,7 @@
                                 {
                                     "loc": {
                                         "pos": {
-                                            "line": 538,
+                                            "line": 558,
                                             "character": 4
                                         }
                                     },
@@ -1884,7 +2207,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "LineAndCharacter",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": []
@@ -1955,7 +2277,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "TypeReferenceKind",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": []
@@ -2055,7 +2376,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Reference",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": []
@@ -2096,7 +2416,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -2400,7 +2719,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -2432,7 +2750,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -2544,7 +2861,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -2576,7 +2892,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -2729,7 +3044,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -2868,7 +3182,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -2900,7 +3213,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -2932,7 +3244,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -2964,7 +3275,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -3029,7 +3339,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "ObjectLiteral",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": []
@@ -3048,7 +3357,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -3080,7 +3388,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -3112,7 +3419,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -3144,7 +3450,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -3199,7 +3504,6 @@
                                         "kind": 0,
                                         "type": {
                                             "name": "Array",
-                                            "path": [],
                                             "kind": 9
                                         },
                                         "typeArguments": []
@@ -3208,7 +3512,6 @@
                                         "kind": 0,
                                         "type": {
                                             "name": "Number",
-                                            "path": [],
                                             "kind": 9
                                         },
                                         "typeArguments": []
@@ -3217,7 +3520,6 @@
                                         "kind": 0,
                                         "type": {
                                             "name": "String",
-                                            "path": [],
                                             "kind": 9
                                         },
                                         "typeArguments": []
@@ -3226,7 +3528,6 @@
                                         "kind": 0,
                                         "type": {
                                             "name": "Boolean",
-                                            "path": [],
                                             "kind": 9
                                         },
                                         "typeArguments": []
@@ -3235,7 +3536,6 @@
                                         "kind": 0,
                                         "type": {
                                             "name": "Void",
-                                            "path": [],
                                             "kind": 9
                                         },
                                         "typeArguments": []
@@ -3244,7 +3544,6 @@
                                         "kind": 0,
                                         "type": {
                                             "name": "Undefined",
-                                            "path": [],
                                             "kind": 9
                                         },
                                         "typeArguments": []
@@ -3253,7 +3552,6 @@
                                         "kind": 0,
                                         "type": {
                                             "name": "Null",
-                                            "path": [],
                                             "kind": 9
                                         },
                                         "typeArguments": []
@@ -3262,7 +3560,6 @@
                                         "kind": 0,
                                         "type": {
                                             "name": "Any",
-                                            "path": [],
                                             "kind": 9
                                         },
                                         "typeArguments": []
@@ -3271,7 +3568,6 @@
                                         "kind": 0,
                                         "type": {
                                             "name": "Unknown",
-                                            "path": [],
                                             "kind": 9
                                         },
                                         "typeArguments": []
@@ -3280,7 +3576,6 @@
                                         "kind": 0,
                                         "type": {
                                             "name": "Never",
-                                            "path": [],
                                             "kind": 9
                                         },
                                         "typeArguments": []
@@ -3337,7 +3632,6 @@
                                         "kind": 0,
                                         "type": {
                                             "name": "Union",
-                                            "path": [],
                                             "kind": 9
                                         },
                                         "typeArguments": []
@@ -3346,7 +3640,6 @@
                                         "kind": 0,
                                         "type": {
                                             "name": "Intersection",
-                                            "path": [],
                                             "kind": 9
                                         },
                                         "typeArguments": []
@@ -3367,7 +3660,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -3419,7 +3711,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Conditional",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": []
@@ -3559,7 +3850,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "ArrowFunction",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": []
@@ -3600,7 +3890,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -3632,7 +3921,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -3684,7 +3972,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Mapped",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": []
@@ -3825,7 +4112,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "IndexAccess",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": []
@@ -3908,7 +4194,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "TypeOperator",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": []
@@ -3982,7 +4267,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "TemplateLiteral",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": []
@@ -4001,7 +4285,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -4024,7 +4307,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -4153,7 +4435,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Tuple",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": []
@@ -4172,7 +4453,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -4305,7 +4585,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -4337,7 +4616,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -4505,7 +4783,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -4750,7 +5027,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -4935,7 +5211,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Class",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": []
@@ -4954,7 +5229,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -4986,7 +5260,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -5018,7 +5291,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -5063,7 +5335,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -5095,7 +5366,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -5127,7 +5397,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -5159,7 +5428,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -5217,7 +5485,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -5360,7 +5627,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Interface",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": []
@@ -5379,7 +5645,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -5411,7 +5676,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -5443,7 +5707,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -5475,7 +5738,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -5507,7 +5769,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -5539,7 +5800,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -5571,7 +5831,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -5629,7 +5888,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -5760,7 +6018,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "TypeAlias",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": []
@@ -5801,7 +6058,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -5859,7 +6115,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -5990,7 +6245,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Map",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -6025,7 +6279,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -6057,7 +6310,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -6089,7 +6341,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -6184,7 +6435,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -6223,7 +6473,7 @@
                     "typeParameters": [],
                     "loc": {
                         "pos": {
-                            "line": 5,
+                            "line": 6,
                             "character": 0
                         },
                         "sourceFile": "/src/projectExtractor/utils.ts"
@@ -6238,7 +6488,7 @@
                             "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 6,
+                                    "line": 7,
                                     "character": 4
                                 }
                             }
@@ -6251,7 +6501,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 7,
+                                    "line": 8,
                                     "character": 4
                                 }
                             }
@@ -6264,7 +6514,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 8,
+                                    "line": 9,
                                     "character": 4
                                 }
                             }
@@ -6277,7 +6527,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 9,
+                                    "line": 10,
                                     "character": 4
                                 }
                             }
@@ -6290,7 +6540,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 10,
+                                    "line": 11,
                                     "character": 4
                                 }
                             }
@@ -6303,7 +6553,7 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 11,
+                                    "line": 12,
                                     "character": 4
                                 }
                             }
@@ -6334,193 +6584,13 @@
                             "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 12,
-                                    "character": 4
-                                }
-                            }
-                        },
-                        {
-                            "name": "readme",
-                            "type": {
-                                "kind": 8
-                            },
-                            "flags": 1,
-                            "loc": {
-                                "pos": {
                                     "line": 13,
                                     "character": 4
                                 }
                             }
                         },
                         {
-                            "name": "liscense",
-                            "type": {
-                                "kind": 8
-                            },
-                            "flags": 1,
-                            "loc": {
-                                "pos": {
-                                    "line": 14,
-                                    "character": 4
-                                }
-                            }
-                        }
-                    ],
-                    "methods": [],
-                    "indexes": [],
-                    "new": []
-                },
-                {
-                    "kind": 1,
-                    "name": "TypescriptExtractorHooks",
-                    "implements": [],
-                    "extends": [],
-                    "typeParameters": [],
-                    "loc": {
-                        "pos": {
-                            "line": 5,
-                            "character": 0
-                        },
-                        "sourceFile": "/src/projectExtractor/extractor.ts"
-                    },
-                    "otherDefs": [],
-                    "properties": [],
-                    "methods": [
-                        {
-                            "name": "register",
-                            "signatures": [],
-                            "flags": 0
-                        }
-                    ],
-                    "indexes": [],
-                    "new": []
-                },
-                {
-                    "kind": 1,
-                    "name": "TypescriptExtractorSettings",
-                    "implements": [],
-                    "extends": [],
-                    "typeParameters": [],
-                    "loc": {
-                        "pos": {
-                            "line": 9,
-                            "character": 0
-                        },
-                        "sourceFile": "/src/projectExtractor/extractor.ts"
-                    },
-                    "otherDefs": [],
-                    "properties": [
-                        {
-                            "name": "passthroughModules",
-                            "type": {
-                                "kind": 0,
-                                "type": {
-                                    "name": "Array",
-                                    "path": [],
-                                    "kind": 9
-                                },
-                                "typeArguments": [
-                                    {
-                                        "kind": 8
-                                    }
-                                ]
-                            },
-                            "flags": 1,
-                            "jsDoc": {
-                                "tags": [],
-                                "comment": [
-                                    "Any provided folder names won't count as modules, items inside will be included in the parent module."
-                                ]
-                            },
-                            "loc": {
-                                "pos": {
-                                    "line": 13,
-                                    "character": 4
-                                }
-                            }
-                        },
-                        {
-                            "name": "hooks",
-                            "type": {
-                                "kind": 0,
-                                "type": {
-                                    "name": "TypescriptExtractorHooks",
-                                    "path": [
-                                        "ts-docs",
-                                        "projectExtractor"
-                                    ],
-                                    "kind": 1
-                                },
-                                "typeArguments": []
-                            },
-                            "flags": 0,
-                            "loc": {
-                                "pos": {
-                                    "line": 14,
-                                    "character": 4
-                                }
-                            }
-                        }
-                    ],
-                    "methods": [],
-                    "indexes": [],
-                    "new": []
-                },
-                {
-                    "kind": 1,
-                    "name": "Shared",
-                    "implements": [],
-                    "extends": [],
-                    "typeParameters": [],
-                    "loc": {
-                        "pos": {
-                            "line": 17,
-                            "character": 0
-                        },
-                        "sourceFile": "/src/projectExtractor/extractor.ts"
-                    },
-                    "otherDefs": [],
-                    "properties": [
-                        {
-                            "name": "program",
-                            "type": {
-                                "kind": 0,
-                                "type": {
-                                    "name": "Program",
-                                    "path": [],
-                                    "kind": 9
-                                },
-                                "typeArguments": []
-                            },
-                            "flags": 0,
-                            "loc": {
-                                "pos": {
-                                    "line": 18,
-                                    "character": 4
-                                }
-                            }
-                        },
-                        {
-                            "name": "checker",
-                            "type": {
-                                "kind": 0,
-                                "type": {
-                                    "name": "TypeChecker",
-                                    "path": [],
-                                    "kind": 9
-                                },
-                                "typeArguments": []
-                            },
-                            "flags": 0,
-                            "loc": {
-                                "pos": {
-                                    "line": 19,
-                                    "character": 4
-                                }
-                            }
-                        },
-                        {
-                            "name": "moduleCache",
+                            "name": "devDependencies",
                             "type": {
                                 "kind": 15,
                                 "readonlyToken": "+",
@@ -6542,73 +6612,84 @@
                                     "typeArguments": []
                                 }
                             },
-                            "flags": 0,
+                            "flags": 1,
                             "loc": {
                                 "pos": {
-                                    "line": 20,
+                                    "line": 14,
                                     "character": 4
                                 }
                             }
                         },
                         {
-                            "name": "referenceCache",
+                            "name": "readme",
+                            "type": {
+                                "kind": 8
+                            },
+                            "flags": 1,
+                            "loc": {
+                                "pos": {
+                                    "line": 15,
+                                    "character": 4
+                                }
+                            }
+                        },
+                        {
+                            "name": "liscense",
+                            "type": {
+                                "kind": 8
+                            },
+                            "flags": 1,
+                            "loc": {
+                                "pos": {
+                                    "line": 16,
+                                    "character": 4
+                                }
+                            }
+                        }
+                    ],
+                    "methods": [],
+                    "indexes": [],
+                    "new": []
+                },
+                {
+                    "kind": 1,
+                    "name": "TypescriptExtractorSettings",
+                    "implements": [],
+                    "extends": [],
+                    "typeParameters": [],
+                    "loc": {
+                        "pos": {
+                            "line": 11,
+                            "character": 0
+                        },
+                        "sourceFile": "/src/projectExtractor/extractor.ts"
+                    },
+                    "otherDefs": [],
+                    "properties": [
+                        {
+                            "name": "passthroughModules",
                             "type": {
                                 "kind": 0,
                                 "type": {
-                                    "name": "Map",
-                                    "path": [],
+                                    "name": "Array",
                                     "kind": 9
                                 },
                                 "typeArguments": [
                                     {
-                                        "kind": 0,
-                                        "type": {
-                                            "name": "Symbol",
-                                            "path": [],
-                                            "kind": 9
-                                        },
-                                        "typeArguments": []
-                                    },
-                                    {
-                                        "kind": 0,
-                                        "type": {
-                                            "name": "TypeReference",
-                                            "path": [
-                                                "ts-docs",
-                                                "projectExtractor"
-                                            ],
-                                            "kind": 1
-                                        },
-                                        "typeArguments": []
+                                        "kind": 8
                                     }
                                 ]
                             },
-                            "flags": 0,
-                            "loc": {
-                                "pos": {
-                                    "line": 21,
-                                    "character": 4
-                                }
-                            }
-                        },
-                        {
-                            "name": "settings",
-                            "type": {
-                                "kind": 0,
-                                "type": {
-                                    "name": "TypescriptExtractorSettings",
-                                    "path": [
-                                        "ts-docs",
-                                        "projectExtractor"
-                                    ],
-                                    "kind": 1
-                                },
-                                "typeArguments": []
+                            "flags": 1,
+                            "jsDoc": {
+                                "tags": [],
+                                "comment": [
+                                    "Any provided folder names won't count as modules, items inside will be included in the parent module."
+                                ]
                             },
-                            "flags": 0,
                             "loc": {
                                 "pos": {
-                                    "line": 22,
+                                    "line": 15,
                                     "character": 4
                                 }
                             }
@@ -6700,7 +6781,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -6831,7 +6911,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Enum",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": []
@@ -6850,7 +6929,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -6921,7 +6999,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -7052,7 +7129,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Constant",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": []
@@ -7132,7 +7208,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -7231,6 +7306,189 @@
                 },
                 {
                     "kind": 1,
+                    "name": "Shared",
+                    "implements": [],
+                    "extends": [],
+                    "typeParameters": [],
+                    "loc": {
+                        "pos": {
+                            "line": 18,
+                            "character": 0
+                        },
+                        "sourceFile": "/src/projectExtractor/extractor.ts"
+                    },
+                    "otherDefs": [],
+                    "properties": [
+                        {
+                            "name": "program",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "Program",
+                                    "kind": 9
+                                },
+                                "typeArguments": []
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 19,
+                                    "character": 4
+                                }
+                            }
+                        },
+                        {
+                            "name": "checker",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "TypeChecker",
+                                    "kind": 9
+                                },
+                                "typeArguments": []
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 20,
+                                    "character": 4
+                                }
+                            }
+                        },
+                        {
+                            "name": "moduleCache",
+                            "type": {
+                                "kind": 15,
+                                "readonlyToken": "+",
+                                "typeParameter": "P",
+                                "constraintType": {
+                                    "kind": 0,
+                                    "type": {
+                                        "kind": 6,
+                                        "name": "K"
+                                    },
+                                    "typeArguments": []
+                                },
+                                "type": {
+                                    "kind": 0,
+                                    "type": {
+                                        "kind": 6,
+                                        "name": "T"
+                                    },
+                                    "typeArguments": []
+                                }
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 21,
+                                    "character": 4
+                                }
+                            }
+                        },
+                        {
+                            "name": "referenceCache",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "Map",
+                                    "kind": 9
+                                },
+                                "typeArguments": [
+                                    {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "Symbol",
+                                            "kind": 9
+                                        },
+                                        "typeArguments": []
+                                    },
+                                    {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "TypeReference",
+                                            "path": [
+                                                "ts-docs",
+                                                "projectExtractor"
+                                            ],
+                                            "kind": 1
+                                        },
+                                        "typeArguments": []
+                                    }
+                                ]
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 22,
+                                    "character": 4
+                                }
+                            }
+                        },
+                        {
+                            "name": "settings",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "TypescriptExtractorSettings",
+                                    "path": [
+                                        "ts-docs",
+                                        "projectExtractor"
+                                    ],
+                                    "kind": 1
+                                },
+                                "typeArguments": []
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 23,
+                                    "character": 4
+                                }
+                            }
+                        },
+                        {
+                            "name": "hooks",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "name": "HookManager",
+                                    "path": [
+                                        "ts-docs",
+                                        "projectExtractor"
+                                    ],
+                                    "kind": 0
+                                },
+                                "typeArguments": [
+                                    {
+                                        "kind": 0,
+                                        "type": {
+                                            "name": "TypescriptExtractorHooks",
+                                            "path": [
+                                                "ts-docs",
+                                                "projectExtractor"
+                                            ],
+                                            "kind": 5
+                                        },
+                                        "typeArguments": []
+                                    }
+                                ]
+                            },
+                            "flags": 0,
+                            "loc": {
+                                "pos": {
+                                    "line": 24,
+                                    "character": 4
+                                }
+                            }
+                        }
+                    ],
+                    "methods": [],
+                    "indexes": [],
+                    "new": []
+                },
+                {
+                    "kind": 1,
                     "name": "ProjectMetadata",
                     "implements": [],
                     "extends": [],
@@ -7281,7 +7539,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "CompilerOptions",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": []
@@ -7316,7 +7573,6 @@
                         "kind": 0,
                         "type": {
                             "name": "Array",
-                            "path": [],
                             "kind": 9
                         },
                         "typeArguments": [
@@ -7645,7 +7901,6 @@
                                             "kind": 0,
                                             "type": {
                                                 "name": "Array",
-                                                "path": [],
                                                 "kind": 9
                                             },
                                             "typeArguments": [
@@ -7677,7 +7932,6 @@
                                             "kind": 0,
                                             "type": {
                                                 "name": "Array",
-                                                "path": [],
                                                 "kind": 9
                                             },
                                             "typeArguments": [
@@ -7709,6 +7963,67 @@
                                 "new": []
                             }
                         ]
+                    }
+                },
+                {
+                    "kind": 5,
+                    "name": "ReMapHooks",
+                    "typeParameters": [
+                        {
+                            "name": "H"
+                        }
+                    ],
+                    "loc": {
+                        "pos": {
+                            "line": 1,
+                            "character": 0
+                        },
+                        "sourceFile": "/src/projectExtractor/hookManager.ts"
+                    },
+                    "value": {
+                        "kind": 15,
+                        "readonlyToken": "+",
+                        "typeParameter": "Property",
+                        "constraintType": {
+                            "kind": 19,
+                            "operator": "keyof",
+                            "type": {
+                                "kind": 0,
+                                "type": {
+                                    "kind": 6,
+                                    "name": "H"
+                                },
+                                "typeArguments": []
+                            }
+                        },
+                        "type": {
+                            "kind": 0,
+                            "type": {
+                                "name": "Array",
+                                "kind": 9
+                            },
+                            "typeArguments": [
+                                {
+                                    "kind": 18,
+                                    "index": {
+                                        "kind": 0,
+                                        "type": {
+                                            "kind": 6,
+                                            "name": "Property"
+                                        },
+                                        "typeArguments": []
+                                    },
+                                    "type": {
+                                        "kind": 0,
+                                        "type": {
+                                            "kind": 6,
+                                            "name": "H"
+                                        },
+                                        "typeArguments": []
+                                    }
+                                }
+                            ]
+                        }
                     }
                 },
                 {
@@ -7840,6 +8155,183 @@
                             }
                         ]
                     }
+                },
+                {
+                    "kind": 5,
+                    "name": "TypescriptExtractorHooks",
+                    "typeParameters": [],
+                    "loc": {
+                        "pos": {
+                            "line": 6,
+                            "character": 0
+                        },
+                        "sourceFile": "/src/projectExtractor/extractor.ts"
+                    },
+                    "value": {
+                        "kind": 1,
+                        "properties": [
+                            {
+                                "name": "registerItem",
+                                "type": {
+                                    "kind": 2,
+                                    "parameters": [
+                                        {
+                                            "name": "extractor",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "TypescriptExtractor",
+                                                    "path": [
+                                                        "ts-docs",
+                                                        "projectExtractor"
+                                                    ],
+                                                    "kind": 0
+                                                },
+                                                "typeArguments": []
+                                            }
+                                        },
+                                        {
+                                            "name": "decl",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Declaration",
+                                                    "path": [
+                                                        "ts-docs",
+                                                        "projectExtractor"
+                                                    ],
+                                                    "kind": 5
+                                                },
+                                                "typeArguments": []
+                                            }
+                                        },
+                                        {
+                                            "name": "ref",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "TypeReference",
+                                                    "path": [
+                                                        "ts-docs",
+                                                        "projectExtractor"
+                                                    ],
+                                                    "kind": 1
+                                                },
+                                                "typeArguments": []
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 10
+                                    }
+                                },
+                                "flags": 0,
+                                "loc": {
+                                    "pos": {
+                                        "line": 7,
+                                        "character": 4
+                                    }
+                                }
+                            },
+                            {
+                                "name": "resolveExternalLink",
+                                "type": {
+                                    "kind": 2,
+                                    "parameters": [
+                                        {
+                                            "name": "extractor",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "TypescriptExtractor",
+                                                    "path": [
+                                                        "ts-docs",
+                                                        "projectExtractor"
+                                                    ],
+                                                    "kind": 0
+                                                },
+                                                "typeArguments": []
+                                            }
+                                        },
+                                        {
+                                            "name": "typeName",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Symbol",
+                                                    "kind": 9
+                                                },
+                                                "typeArguments": []
+                                            }
+                                        },
+                                        {
+                                            "name": "typeKind",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "TypeReferenceKind",
+                                                    "kind": 9
+                                                },
+                                                "typeArguments": []
+                                            }
+                                        },
+                                        {
+                                            "name": "lib",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 8
+                                            }
+                                        },
+                                        {
+                                            "name": "extraPath",
+                                            "flags": 0,
+                                            "type": {
+                                                "kind": 0,
+                                                "type": {
+                                                    "name": "Array",
+                                                    "kind": 9
+                                                },
+                                                "typeArguments": [
+                                                    {
+                                                        "kind": 8
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ],
+                                    "typeParameters": [],
+                                    "returnType": {
+                                        "kind": 4,
+                                        "types": [
+                                            {
+                                                "kind": 11
+                                            },
+                                            {
+                                                "kind": 8
+                                            }
+                                        ]
+                                    }
+                                },
+                                "flags": 0,
+                                "loc": {
+                                    "pos": {
+                                        "line": 8,
+                                        "character": 4
+                                    }
+                                }
+                            }
+                        ],
+                        "methods": [],
+                        "indexes": [],
+                        "new": []
+                    }
                 }
             ]
         }
@@ -7858,7 +8350,7 @@
             "isAbstract": false,
             "loc": {
                 "pos": {
-                    "line": 12,
+                    "line": 20,
                     "character": 0
                 },
                 "sourceFile": "/src/index.ts"
@@ -7890,7 +8382,7 @@
                     "flags": 1,
                     "loc": {
                         "pos": {
-                            "line": 13,
+                            "line": 21,
                             "character": 4
                         }
                     },
@@ -7908,7 +8400,7 @@
                     "flags": 0,
                     "loc": {
                         "pos": {
-                            "line": 14,
+                            "line": 22,
                             "character": 4
                         }
                     },
@@ -7926,7 +8418,7 @@
                     "flags": 1,
                     "loc": {
                         "pos": {
-                            "line": 15,
+                            "line": 23,
                             "character": 4
                         }
                     },
@@ -7959,7 +8451,7 @@
                     "flags": 1,
                     "loc": {
                         "pos": {
-                            "line": 16,
+                            "line": 24,
                             "character": 4
                         }
                     },
@@ -7971,7 +8463,6 @@
                         "kind": 0,
                         "type": {
                             "name": "Promise",
-                            "path": [],
                             "kind": 9
                         },
                         "typeArguments": [
@@ -7983,7 +8474,7 @@
                     "flags": 1,
                     "loc": {
                         "pos": {
-                            "line": 17,
+                            "line": 25,
                             "character": 4
                         }
                     },
@@ -8006,7 +8497,7 @@
                     "flags": 1,
                     "loc": {
                         "pos": {
-                            "line": 18,
+                            "line": 26,
                             "character": 4
                         }
                     },
@@ -8028,7 +8519,7 @@
                     "flags": 1,
                     "loc": {
                         "pos": {
-                            "line": 19,
+                            "line": 27,
                             "character": 4
                         }
                     },
@@ -8078,7 +8569,7 @@
                     "flags": 1,
                     "loc": {
                         "pos": {
-                            "line": 20,
+                            "line": 28,
                             "character": 4
                         }
                     },
@@ -8092,7 +8583,7 @@
                         {
                             "loc": {
                                 "pos": {
-                                    "line": 25,
+                                    "line": 33,
                                     "character": 4
                                 }
                             },
@@ -8111,7 +8602,7 @@
                                                 "flags": 0,
                                                 "loc": {
                                                     "pos": {
-                                                        "line": 25,
+                                                        "line": 33,
                                                         "character": 14
                                                     }
                                                 }
@@ -8138,7 +8629,7 @@
                         {
                             "loc": {
                                 "pos": {
-                                    "line": 28,
+                                    "line": 36,
                                     "character": 4
                                 }
                             },
@@ -8187,7 +8678,7 @@
             "typeParameters": [],
             "loc": {
                 "pos": {
-                    "line": 33,
+                    "line": 41,
                     "character": 0
                 },
                 "sourceFile": "/src/index.ts"
@@ -8222,7 +8713,7 @@
                     "flags": 0,
                     "loc": {
                         "pos": {
-                            "line": 35,
+                            "line": 43,
                             "character": 4
                         }
                     }
@@ -8235,7 +8726,7 @@
                         {
                             "loc": {
                                 "pos": {
-                                    "line": 34,
+                                    "line": 42,
                                     "character": 4
                                 }
                             },
@@ -8279,7 +8770,7 @@
             ],
             "loc": {
                 "pos": {
-                    "line": 38,
+                    "line": 46,
                     "character": 0
                 },
                 "sourceFile": "/src/index.ts"
@@ -8304,7 +8795,6 @@
                                 "kind": 0,
                                 "type": {
                                     "name": "Array",
-                                    "path": [],
                                     "kind": 9
                                 },
                                 "typeArguments": [
@@ -8367,7 +8857,7 @@
             ],
             "loc": {
                 "pos": {
-                    "line": 45,
+                    "line": 53,
                     "character": 0
                 },
                 "sourceFile": "/src/index.ts"
@@ -8456,6 +8946,14 @@
         "homepage": "https://tsdocs.xyz/",
         "version": "0.4.2",
         "description": "A documentation generator for typescript",
+        "devDependencies": {
+            "@types/node": "^20.8.9",
+            "@types/ts-expose-internals": "npm:ts-expose-internals@^5.2.2",
+            "@typescript-eslint/eslint-plugin": "^6.9.0",
+            "@typescript-eslint/parser": "^6.9.0",
+            "eslint": "^8.52.0",
+            "typescript": "^5.2.2"
+        },
         "repositoryBase": "https://github.com/ts-docs/ts-docs/tree/dev",
         "readme": "\r\n<p align=\"center\">\r\n  <img src=\"https://github.com/ts-docs/ts-docs/blob/main/assets/logo.png?raw=true\" width=\"200px\" />\r\n</p>\r\n\r\n# ts-docs\r\n\r\n[![GitHub license](https://img.shields.io/github/license/ts-docs/ts-docs?style=flat-square)](https://github.com/ts-docs/ts-docs/blob/main/LICENSE)\r\n[![GitHub stars](https://img.shields.io/github/stars/ts-docs/ts-docs?style=flat-square)](https://github.com/ts-docs/ts-docs/stargazers)\r\n[![GitHub issues](https://img.shields.io/github/issues/ts-docs/ts-docs?style=flat-square)](https://github.com/ts-docs/ts-docs/issues)\r\n[![Codacy Badge](https://app.codacy.com/project/badge/Grade/639fba225a094e769b4c8976a30bf7c1)](https://www.codacy.com/gh/ts-docs/ts-docs/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ts-docs/ts-docs&amp;utm_campaign=Badge_Grade)\r\n\r\nAn opinionated documentation generator for typescript - generate informative and accurate documentation sites with zero setup.\r\n\r\nIf you want to check out how a typical ts-docs documentation looks like, head over to the official docs, found [here](https://ts-docs.github.io/ts-docs/index.html).\r\n\r\n## Installation\r\n\r\n**Important:** You need typescript 4.3+ in order to use ts-docs!\r\n\r\n```\r\nnpm i --save-dev @ts-docs/ts-docs @ts-docs/default-docs-structure \r\n```\r\n\r\n## Usage \r\n\r\nIn order for ts-docs to generate proper documentation, you need to give it one or multiple \"project entry points\". **Every entry point should point to a different project**. You can find out more information about all the options ts-docs has [here](https://ts-docs.github.io/ts-docs/pages/Guides/Options.html).\r\n\r\nSimple usage which uses the default options:\r\n```\r\nts-docs src/index.ts\r\n```\r\n\r\n## Features\r\n\r\n- Documentation structure akin to [docs-rs](https://docs.rs/) and rust in general, every folder inside the project is a different module. \r\n- Document multiple projects, monorepo support out of the box.\r\n- Slick design, dark/light theme, powerful search and filter function.\r\n- Link external references to their respective documentation.\r\n- Out of the box documentation generation for different branches of your repository.\r\n- Changelog generation, pulled from github releases.\r\n- Built-in custom pages support. Host your guides and tutorials right inside the documentation.\r\n- 100% accurate, you won't find missing references unless they're external.\r\n- Unit tests inside documentation comments.\r\n\r\n## Examples\r\n\r\n<details>\r\n<summary>ts-docs</summary>\r\n<img src=\"https://i.imgur.com/8FpQb1F.png\">\r\n</details>\r\n\r\n<details>\r\n<summary>detritus</summary>\r\n<img src=\"https://i.imgur.com/yBtBsg4.png\">\r\n</details>\r\n\r\n\r\n## Contributing\r\n\r\nContributions are appreciated, feel free to open an issue or a pull request [here](https://github.com/ts-docs/ts-docs).\r\n\r\nMake sure to read the [contribution guide](https://github.com/ts-docs/ts-docs/blob/main/.github/CONTRIBUTING.md)."
     }

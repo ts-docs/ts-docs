@@ -1,9 +1,17 @@
 //import * as ts from "typescript";
 import path from "path";
 import fs from "fs";
-import { TypescriptExtractor } from "./projectExtractor/extractor";
+import { TypescriptExtractor, TypescriptExtractorHooks } from "./projectExtractor/extractor";
+import { HookManager } from "./projectExtractor/hookManager";
 
-const myExtractor = TypescriptExtractor.createStandaloneExtractor(process.cwd().replaceAll(path.sep, "/"), { passthroughModules: ["src", "inner"], hooks: {} });
+const myHooks = new HookManager<TypescriptExtractorHooks>();
+
+myHooks.attach("resolveExternalLink", (extractor, typeName, typeKind, typeLib, typeExtra) => {
+    console.log(typeName.name, typeKind, typeLib, typeExtra);
+    return undefined;
+});
+
+const myExtractor = TypescriptExtractor.createStandaloneExtractor(process.cwd().replaceAll(path.sep, "/"), { passthroughModules: ["src", "inner"] }, myHooks);
 
 export enum A {
     A,

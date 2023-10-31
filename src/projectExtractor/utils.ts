@@ -2,6 +2,7 @@ import * as path from "path";
 import * as cp from "child_process";
 import * as fs from "fs";
 import ts from "typescript";
+import { TypeReferenceKind } from "./structure";
 
 export interface PackageJSON {
     path: string,
@@ -11,6 +12,7 @@ export interface PackageJSON {
     repositoryBase?: string,
     description?: string,
     dependencies?: Record<string, string>,
+    devDependencies?: Record<string, string>,
     readme?: string,
     liscense?: string
 }
@@ -27,6 +29,7 @@ export function getPackageJSON(basePath: string, gitBranch?: string) : PackageJS
         version: packageJSON.version,
         description: packageJSON.description,
         dependencies: packageJSON.dependencies,
+        devDependencies: packageJSON.devDependencies,
         repositoryBase: getRepository(packageJSON.repository, basePath, gitBranch),
         readme: fs.existsSync(readmePath) ? fs.readFileSync(readmePath, { encoding: "utf8" }) : undefined,
         liscense: packageJSON.liscense
@@ -92,6 +95,13 @@ export function mapRealValues<T, K>(array: readonly T[] | undefined, cb: (item: 
 
 export function getSymbolDeclaration(sym: ts.Symbol) : ts.Declaration | undefined {
     return sym.valueDeclaration || sym.declarations?.[0];
+}
+
+export function getSymbolTypeKind(symbol: ts.Symbol) : TypeReferenceKind {
+    if (BitField.has(symbol.flags, ts.SymbolFlags.Class)) return TypeReferenceKind.Class;
+    else if (BitField.has(symbol.flags, ts.SymbolFlags.Interface)) return TypeReferenceKind.Interface;
+    else if (BitField.has(symbol.flags, ts.SymbolFlags.TypeAlias)) return TypeReferenceKind.TypeAlias;
+    else return TypeReferenceKind.Unknown;
 }
 
 export class BitField {

@@ -1,18 +1,19 @@
 import * as ts from "typescript";
 import * as path from "path";
 import { BaseMethodSignature, BaseNode, ClassDeclaration, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, ElementParameterFlags, IndexSignature, InterfaceDeclaration, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, NEVER_TYPE, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeAliasDeclaration, TypeKind, TypeParameter, TypeReference, TypeReferenceKind } from "./structure";
-import { BitField, PackageJSON, getPackageJSON, getSymbolDeclaration, getTsconfig, hasModifier, joinPartOfArray, mapRealValues, resolvePackageName } from "./utils";
+import { BitField, PackageJSON, getPackageJSON, getSymbolDeclaration, getSymbolTypeKind, getTsconfig, hasModifier, joinPartOfArray, mapRealValues, resolvePackageName } from "./utils";
+import { HookManager } from "./hookManager";
 
-export interface TypescriptExtractorHooks {
-    register?(extractor: TypescriptExtractor, decl: Declaration, ref: TypeReference) : void
+export type TypescriptExtractorHooks = {
+    registerItem: (extractor: TypescriptExtractor, decl: Declaration, ref: TypeReference) => void,
+    resolveExternalLink: (extractor: TypescriptExtractor, typeName: ts.Symbol, typeKind: TypeReferenceKind, lib: string, extraPath: string[]) => string | undefined;
 }
 
 export interface TypescriptExtractorSettings {
     /**
      * Any provided folder names won't count as modules, items inside will be included in the parent module.
      */
-    passthroughModules?: string[],
-    hooks: TypescriptExtractorHooks
+    passthroughModules?: string[]
 }
 
 export interface Shared {
@@ -20,7 +21,8 @@ export interface Shared {
     checker: ts.TypeChecker,
     moduleCache: Record<string, Module>,
     referenceCache: Map<ts.Symbol, TypeReference>,
-    settings: TypescriptExtractorSettings
+    settings: TypescriptExtractorSettings,
+    hooks: HookManager<TypescriptExtractorHooks>
 }
 
 /**
@@ -99,7 +101,7 @@ export class TypescriptExtractor implements Module {
         } as const;
 
         currentModule.types.push(typeDecl);
-        this.shared.settings.hooks.register?.(this, typeDecl, ref);
+        this.shared.hooks.trigger("registerItem", this, typeDecl, ref);
         return ref;
     }
 
@@ -134,7 +136,7 @@ export class TypescriptExtractor implements Module {
         } as const;
 
         currentModule.interfaces.push(interfaceDecl);
-        this.shared.settings.hooks.register?.(this, interfaceDecl, ref);
+        this.shared.hooks.trigger("registerItem", this, interfaceDecl, ref);
         return ref;
     }
 
@@ -169,7 +171,7 @@ export class TypescriptExtractor implements Module {
         } as const;
 
         currentModule.classes.push(classDecl);
-        this.shared.settings.hooks.register?.(this, classDecl, ref);
+        this.shared.hooks.trigger("registerItem", this, classDecl, ref);
         return ref;
     }
 
@@ -370,7 +372,7 @@ export class TypescriptExtractor implements Module {
                     types: litType.types.map(t => this.createType(t))
                 };
             }
-            else return { kind: TypeKind.Reference, type: { name: "unknown", path: [], kind: TypeReferenceKind.External }};
+            else return this.createExternalType(t);
         }
 
         const ref = this.addSymbol(t.symbol);
@@ -397,7 +399,7 @@ export class TypescriptExtractor implements Module {
             return {
                 kind: TypeKind.Reference,
                 type: {
-                    kind: TypeReferenceKind.External,
+                    kind: TypeReferenceKind.StringUtility,
                     name: t.symbol.name
                 },
                 typeArguments: [this.createType((t as ts.StringMappingType).type)]
@@ -429,15 +431,33 @@ export class TypescriptExtractor implements Module {
             };
         }
 
-        return {
-            kind: TypeKind.Reference,
-            type: { 
-                name: t.symbol.name, 
-                path: [], 
-                kind: TypeReferenceKind.External
-            },
-            typeArguments: this.shared.checker.getTypeArguments(t as ts.TypeReference).map(arg => this.createType(arg))
-        };
+        return this.createExternalType(t, t.symbol);
+    }
+
+    createExternalType(type: ts.Type, typeSymbol?: ts.Symbol) : Type {
+        const typeArguments = this.shared.checker.getTypeArguments(type as ts.TypeReference).map(arg => this.createType(arg));
+        if (!this.shared.hooks.has("resolveExternalLink") || !typeSymbol) return { kind: TypeKind.Reference, type: { name: typeSymbol?.name || "Unknown", kind: TypeReferenceKind.Unknown }, typeArguments };
+
+        const decl = getSymbolDeclaration(typeSymbol);
+        if (!decl) return { kind: TypeKind.Reference, type: { name: typeSymbol.name, kind: TypeReferenceKind.Unknown, link: this.shared.hooks.trigger("resolveExternalLink", this, typeSymbol, TypeReferenceKind.Unknown, "", []) }, typeArguments };
+
+        const declSource = decl.getSourceFile();
+        if (!declSource.isDeclarationFile) {
+            let importSpecifier;
+            if (ts.isNamespaceImport(decl)) importSpecifier = (decl.parent.parent.moduleSpecifier as ts.StringLiteral).text;
+            else if (ts.isImportClause(decl)) importSpecifier = (decl.parent.moduleSpecifier as ts.StringLiteral).text;
+            else if (ts.isImportSpecifier(decl)) importSpecifier = (decl.parent.parent.parent.moduleSpecifier as ts.StringLiteral).text;
+            else return { kind: TypeKind.Reference, type: { name: typeSymbol.name, kind: TypeReferenceKind.Unknown, link: this.shared.hooks.trigger("resolveExternalLink", this, typeSymbol, TypeReferenceKind.Unknown, "", []) }, typeArguments };
+
+            const splitPath = importSpecifier.split("/");
+            const [libName, rest] = splitPath[0][0] === "@" ? [splitPath[0] + "/" + splitPath[1], splitPath.slice(2)] : [splitPath[0], splitPath.slice(1)];
+            return { kind: TypeKind.Reference, type: { name: typeSymbol.name, kind: TypeReferenceKind.Unknown, link: this.shared.hooks.trigger("resolveExternalLink", this, typeSymbol, TypeReferenceKind.Unknown, libName, rest) }, typeArguments };
+        }
+        else {
+            const path = declSource.fileName.slice(declSource.fileName.indexOf("node_modules/") + 13).split("/");
+            const [libName, rest] = path[0][0] === "@" ? [path[0] + "/" + path[1], path.slice(2)] : [path[0], path.slice(1)];
+            return { kind: TypeKind.Reference, type: { name: typeSymbol.name, kind: TypeReferenceKind.Unknown, link: this.shared.hooks.trigger("resolveExternalLink", this, typeSymbol, getSymbolTypeKind(typeSymbol), libName, rest) }, typeArguments };
+        }
     }
 
     createLoC(symbol: ts.Symbol | ts.Node, includeSourceFile?: boolean): LoC {
@@ -577,7 +597,7 @@ export class TypescriptExtractor implements Module {
         };
     }
 
-    static createStandaloneExtractor(basePath: string, settings: TypescriptExtractorSettings = { hooks: {} }): TypescriptExtractor | undefined {
+    static createStandaloneExtractor(basePath: string, settings?: TypescriptExtractorSettings, hooks?: HookManager<TypescriptExtractorHooks>): TypescriptExtractor | undefined {
         const config = getTsconfig(basePath);
         if (!config) return;
         const program = ts.createProgram({
@@ -586,7 +606,7 @@ export class TypescriptExtractor implements Module {
             configFileParsingDiagnostics: config.errors
         });
         const checker = program.getTypeChecker();
-        return new TypescriptExtractor(basePath, config, { program, checker, settings, moduleCache: {}, referenceCache: new Map() });
+        return new TypescriptExtractor(basePath, config, { program, checker, settings: settings || {}, moduleCache: {}, referenceCache: new Map(), hooks: hooks || new HookManager() });
     }
 
 }

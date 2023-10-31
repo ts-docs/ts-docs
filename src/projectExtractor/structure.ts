@@ -102,7 +102,8 @@ export enum TypeReferenceKind {
     TypeParameter,
     EnumMember,
     Module,
-    External
+    StringUtility,
+    Unknown
 }
 
 export enum DeclarationKind {
