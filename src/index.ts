@@ -50,7 +50,7 @@ export const enum MyEnum {
     a = "abc"
 }
 
-export interface MyInterface {
+export interface ReferenceType {
     a(a: number, b: string) : unknown;
     b: (a: number, b: string) => unknown;
 }

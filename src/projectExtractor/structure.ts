@@ -132,12 +132,7 @@ export interface BaseNode {
  */
 export interface Node extends BaseNode {
     name: string,
-    otherDefs?: LoC[],
-    /**
-     * Only true if there are other items in the same category AND in the same module present.
-     * If this is true, the type's [[TypeReference.repeatFileName]] will be present.
-     */
-    repeat?: boolean
+    otherDefs?: LoC[]
 }
 
 /**
@@ -154,8 +149,7 @@ export interface TypeReference {
     parent?: TypeReference,
     path?: ItemPath,
     externalLibName?: string,
-    link?: string,
-    repeatFileName?: string
+    link?: string
 }
 
 export interface ReferenceType {

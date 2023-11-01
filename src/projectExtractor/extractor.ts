@@ -1,6 +1,6 @@
 import * as ts from "typescript";
 import * as path from "path";
-import { BaseMethodSignature, BaseNode, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, ElementParameterFlags, IndexSignature, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, NEVER_TYPE, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeKind, TypeParameter, TypeReference, TypeReferenceKind, EnumDeclaration, EnumMember, FunctionDeclaration, ConstantDeclaration } from "./structure";
+import { BaseMethodSignature, BaseNode, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, ElementParameterFlags, IndexSignature, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, NEVER_TYPE, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeKind, TypeParameter, TypeReference, TypeReferenceKind, EnumDeclaration, EnumMember, FunctionDeclaration, ConstantDeclaration, TypeAliasDeclaration, InterfaceDeclaration, ClassDeclaration } from "./structure";
 import { BitField, PackageJSON, getAbsolutePath, getPackageJSON, getSymbolDeclaration, getSymbolTypeKind, getTsconfig, hasModifier, isNamespaceSymbol, joinPartOfArray, mapRealValues, resolvePackageName } from "./utils";
 import { HookManager } from "./hookManager";
 
@@ -78,32 +78,33 @@ export class TypescriptExtractor {
             currentModule = module;
         }
         if (this.shared.referenceCache.has(symbol)) return this.shared.referenceCache.get(symbol);
-        else if (BitField.has(symbol.flags, ts.SymbolFlags.Class)) return this.registerClassDeclaration(symbol, currentModule);
-        else if (BitField.has(symbol.flags, ts.SymbolFlags.Interface)) return this.registerInterfaceDeclaration(symbol, currentModule);
-        else if (BitField.has(symbol.flags, ts.SymbolFlags.TypeAlias)) return this.registerTypeDeclaraction(symbol, currentModule);
-        else if (BitField.has(symbol.flags, ts.SymbolFlags.ConstEnum) || BitField.has(symbol.flags, ts.SymbolFlags.RegularEnum)) return this.registerEnumDeclaration(symbol, currentModule);
+        const [type, decl] = this.getSymbolType(symbol);
+        if (!type || !decl) return;
+        let ref: TypeReference|undefined, declaration: Declaration|undefined;
+        if (BitField.has(symbol.flags, ts.SymbolFlags.Class)) [ref, declaration] = this.registerClassDeclaration(symbol, type, decl as ts.ClassDeclaration, currentModule);
+        else if (BitField.has(symbol.flags, ts.SymbolFlags.Interface)) [ref, declaration] =  this.registerInterfaceDeclaration(symbol, type, decl as ts.InterfaceDeclaration, currentModule);
+        else if (BitField.has(symbol.flags, ts.SymbolFlags.TypeAlias)) [ref, declaration] =  this.registerTypeDeclaraction(symbol, type, decl as ts.TypeAliasDeclaration, currentModule);
+        else if (BitField.has(symbol.flags, ts.SymbolFlags.ConstEnum) || BitField.has(symbol.flags, ts.SymbolFlags.RegularEnum)) [ref, declaration] =  this.registerEnumDeclaration(symbol, type, decl as ts.EnumDeclaration, currentModule);
         else if (BitField.has(symbol.flags, ts.SymbolFlags.EnumMember)) {
             this.addSymbol(symbol.parent!);
             return this.shared.referenceCache.get(symbol);
         }
-        else if (BitField.has(symbol.flags, ts.SymbolFlags.Function)) return this.registerFunctionDeclaration(symbol, currentModule);
-        else if (BitField.has(symbol.flags, ts.SymbolFlags.Variable) && !BitField.has(symbol.flags, ts.SymbolFlags.FunctionScopedVariable)) return this.registerConstantDeclaration(symbol, currentModule);
+        else if (BitField.has(symbol.flags, ts.SymbolFlags.Function)) [ref, declaration] =  this.registerFunctionDeclaration(symbol, type, decl as ts.FunctionDeclaration, currentModule);
+        else if (BitField.has(symbol.flags, ts.SymbolFlags.Variable) && !BitField.has(symbol.flags, ts.SymbolFlags.FunctionScopedVariable)) [ref, declaration] =  this.registerConstantDeclaration(symbol, type, decl as ts.VariableDeclaration, currentModule);
         else if (BitField.has(symbol.flags, ts.SymbolFlags.Module)) return this.registerNamespace(symbol, currentModule)?.[0];
-        return;
+        this.shared.hooks.trigger("registerItem", this, declaration!, ref!, currentModule);
+        return ref;
     }
 
     registerNamespace(symbol: ts.Symbol, currentModule: Module) : [TypeReference, Module] | undefined {
         const [type, decl] = this.getSymbolType<ts.ModuleDeclaration>(symbol);
         if (!type || !decl) return;
-
         const ref = {
             name: symbol.name,
             path: currentModule.childrenPath,
             kind: TypeReferenceKind.Module
         };
-
         this.shared.referenceCache.set(symbol, ref);
-
         // Make sure the parent namespace is registered
         if (!currentModule.namespace && symbol.parent && isNamespaceSymbol(symbol.parent)) {
             const namespaceModule = this.getModuleOfSymbol(symbol.parent);
@@ -112,9 +113,7 @@ export class TypescriptExtractor {
                 if (parentNamespace) currentModule = parentNamespace[1];
             }
         } 
-        
         const newModule = TypescriptExtractor.createModule(symbol.name, currentModule.baseDir, currentModule.childrenPath, symbol.declarations?.map(decl => this.createLoC(decl, true)));
-
         for (const exported of (symbol.exports?.values() || [])) {
             this.addSymbol(exported, newModule);
         }
@@ -122,20 +121,14 @@ export class TypescriptExtractor {
         return [ref, newModule];
     }
 
-    registerConstantDeclaration(symbol: ts.Symbol, currentModule: Module) : TypeReference | undefined {
-        const [type, decl] = this.getSymbolType<ts.VariableDeclaration>(symbol);
-        if (!type || !decl) return;
-
-        if (decl.initializer && type.getCallSignatures().length) return this.registerFunctionDeclaration(symbol, currentModule, [type, decl.initializer as ts.FunctionLikeDeclaration]);
-
+    registerConstantDeclaration(symbol: ts.Symbol, type: ts.Type, decl: ts.VariableDeclaration, currentModule: Module) : [TypeReference, Declaration] {
+        if (decl.initializer && type.getCallSignatures().length) return this.registerFunctionDeclaration(symbol, type, decl.initializer as ts.FunctionLikeDeclaration, currentModule);
         const ref = {
             name: symbol.name,
             path: currentModule.childrenPath,
             kind: TypeReferenceKind.Constant
         };
-
         this.shared.referenceCache.set(symbol, ref);
-
         const constDecl = {
             kind: DeclarationKind.Constant,
             name: symbol.name,
@@ -144,24 +137,17 @@ export class TypescriptExtractor {
             loc: this.createLoC(symbol, true),
             jsDoc: this.getJSDocData(decl)
         } satisfies ConstantDeclaration;
-
         currentModule.constants.push(constDecl);
-        this.shared.hooks.trigger("registerItem", this, constDecl, ref, currentModule);
-        return ref;
+        return [ref, constDecl];
     }
 
-    registerFunctionDeclaration(symbol: ts.Symbol, currentModule: Module, values?: [ts.Type, ts.FunctionLikeDeclaration]) : TypeReference | undefined {
-        const [type, decl] = values || this.getSymbolType<ts.FunctionDeclaration>(symbol);
-        if (!type || !decl) return;
-        
+    registerFunctionDeclaration(symbol: ts.Symbol, type: ts.Type, decl: ts.FunctionLikeDeclaration, currentModule: Module) : [TypeReference, Declaration] {
         const ref = {
             name: symbol.name,
             path: currentModule.childrenPath,
-            kind: TypeReferenceKind.Function
+            kind: TypeReferenceKind.Function,
         };
-
         this.shared.referenceCache.set(symbol, ref);
-
         const method = this.createMethod(symbol, [type, decl]) as Method;
         const fnDecl = {
             kind: DeclarationKind.Function,
@@ -169,27 +155,20 @@ export class TypescriptExtractor {
             signatures: method.signatures,
             flags: method.flags,
             loc: this.createLoC(symbol, true),
-            jsDoc: this.getJSDocData(decl)
+            jsDoc: this.getJSDocData(decl),
         } satisfies FunctionDeclaration;
         currentModule.functions.push(fnDecl);
-        this.shared.hooks.trigger("registerItem", this, fnDecl, ref, currentModule);
-        return ref;
+        return [ref, fnDecl];
     }
 
-    registerEnumDeclaration(symbol: ts.Symbol, currentModule: Module) : TypeReference | undefined {
-        const [type, decl] = this.getSymbolType<ts.EnumDeclaration>(symbol);
-        if (!type || !decl) return;
-
+    registerEnumDeclaration(symbol: ts.Symbol, type: ts.Type, decl: ts.EnumDeclaration, currentModule: Module) : [TypeReference, Declaration] {
         const ref = {
             name: symbol.name,
             path: currentModule.childrenPath,
             kind: TypeReferenceKind.Enum
         };
-
         this.shared.referenceCache.set(symbol, ref);
-
         const members: EnumMember[] = [];
-
         for (const exportedItem of (symbol.exports?.values() || [])) {
             const [itemType, itemDecl] = this.getSymbolType<ts.EnumMember>(exportedItem);
             if (!itemType || !itemDecl) continue;
@@ -208,66 +187,48 @@ export class TypescriptExtractor {
                 loc: this.createLoC(itemDecl)
             });
         }
-
         const enumDecl = {
+            kind: DeclarationKind.Enum,
             name: symbol.name,
             members,
             isConst: hasModifier(decl, ts.SyntaxKind.ConstKeyword),
             jsDoc: this.getJSDocData(decl),
             loc: this.createLoC(decl, true)
-        } as EnumDeclaration;
-
+        } satisfies EnumDeclaration;
         currentModule.enums.push(enumDecl);
-        this.shared.hooks.trigger("registerItem", this, enumDecl, ref, currentModule);
-        return ref;
+        return [ref, enumDecl];
     }
 
-    registerTypeDeclaraction(symbol: ts.Symbol, currentModule: Module) : TypeReference | undefined {
-        const [type, decl] = this.getSymbolType<ts.TypeAliasDeclaration>(symbol);
-        if (!type || !decl) return;
-
-        console.log(currentModule);
-
+    registerTypeDeclaraction(symbol: ts.Symbol, type: ts.Type, decl: ts.TypeAliasDeclaration, currentModule: Module) : [TypeReference, Declaration] {
         const ref = {
             name: symbol.name,
             path: currentModule.childrenPath,
             kind: TypeReferenceKind.TypeAlias
         };
-
         this.shared.referenceCache.set(symbol, ref);
-
         const typeDecl = {
             kind: DeclarationKind.TypeAlias,
             name: symbol.name,
             typeParameters: mapRealValues((decl.typeParameters || []), (p) => this.createTypeParameter(this.getNodeType(p))),
             loc: this.createLoC(symbol, true),
             value: this.createType(type, true)
-        } as const;
-
+        } satisfies TypeAliasDeclaration;
         currentModule.types.push(typeDecl);
-        this.shared.hooks.trigger("registerItem", this, typeDecl, ref, currentModule);
-        return ref;
+        return [ref, typeDecl];
     }
 
-    registerInterfaceDeclaration(symbol: ts.Symbol, currentModule: Module) : TypeReference | undefined {
-        const [type, decl] = this.getSymbolType<ts.InterfaceDeclaration>(symbol);
-        if (!type || !decl) return;
-
+    registerInterfaceDeclaration(symbol: ts.Symbol, type: ts.Type, decl: ts.InterfaceDeclaration, currentModule: Module) : [TypeReference, Declaration] {
         const ref = {
             name: symbol.name,
             path: currentModule.childrenPath,
             kind: TypeReferenceKind.Interface
         };
-
         this.shared.referenceCache.set(symbol, ref);
-
         const implementsClause = [], extendsClause = [];
-        
         for (const clause of (decl.heritageClauses || [])) {
             if (clause.token === ts.SyntaxKind.ExtendsKeyword) extendsClause.push(...clause.types.map(t => this.createType(this.shared.checker.getTypeAtLocation(t))));
             else if (clause.token === ts.SyntaxKind.ImplementsKeyword) implementsClause.push(...clause.types.map(t => this.createType(this.shared.checker.getTypeAtLocation(t))));
         }
-
         const interfaceDecl = {
             kind: DeclarationKind.Interface,
             name: symbol.name,
@@ -277,32 +238,24 @@ export class TypescriptExtractor {
             loc: this.createLoC(symbol, true),
             otherDefs: (symbol.declarations as ts.InterfaceDeclaration[]).slice(1).map(decl => this.createLoC(decl)),
             ...this.createObjectLiteral(type, false)
-        } as const;
-
+        } satisfies InterfaceDeclaration;
         currentModule.interfaces.push(interfaceDecl);
-        this.shared.hooks.trigger("registerItem", this, interfaceDecl, ref, currentModule);
-        return ref;
+        return [ref, interfaceDecl];
     }
 
-    registerClassDeclaration(symbol: ts.Symbol, currentModule: Module): TypeReference | undefined {
-        const [type, decl] = this.getSymbolType<ts.ClassDeclaration>(symbol);
-        if (!type || !decl) return;
-
+    registerClassDeclaration(symbol: ts.Symbol, type: ts.Type, decl: ts.ClassDeclaration, currentModule: Module): [TypeReference, Declaration] {
         const ref = {
             name: symbol.name,
             path: currentModule.childrenPath,
             kind: TypeReferenceKind.Class
         };
-
         this.shared.referenceCache.set(symbol, ref);
-
         const implementsClause = [], extendsClause = [];
         
         for (const clause of (decl.heritageClauses || [])) {
             if (clause.token === ts.SyntaxKind.ExtendsKeyword) extendsClause.push(...clause.types.map(t => this.createType(this.shared.checker.getTypeAtLocation(t))));
             else if (clause.token === ts.SyntaxKind.ImplementsKeyword) implementsClause.push(...clause.types.map(t => this.createType(this.shared.checker.getTypeAtLocation(t))));
         }
-
         const classDecl = {
             kind: DeclarationKind.Class,
             name: symbol.name,
@@ -312,11 +265,10 @@ export class TypescriptExtractor {
             isAbstract: hasModifier(decl, ts.SyntaxKind.AbstractKeyword),
             loc: this.createLoC(symbol, true),
             ...this.createObjectLiteral(type, true),
-        } as const;
+        } satisfies ClassDeclaration;
 
         currentModule.classes.push(classDecl);
-        this.shared.hooks.trigger("registerItem", this, classDecl, ref, currentModule);
-        return ref;
+        return [ref, classDecl];
     }
 
     createObjectLiteral(type: ts.Type, handleClassFlags: true) : ClassObjectLiteral;
