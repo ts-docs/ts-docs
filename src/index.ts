@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 //import * as ts from "typescript";
 import fs from "fs";
-import { TypescriptExtractor, TypescriptExtractorHooks } from "./projectExtractor/extractor";
-import { HookManager } from "./projectExtractor/hookManager";
+import { TypescriptExtractor, TypescriptExtractorHooks } from "./typescriptExtractor/extractor";
+import { HookManager } from "./typescriptExtractor/hookManager";
 import perf from "perf_hooks";
 
 const myHooks = new HookManager<TypescriptExtractorHooks>();
