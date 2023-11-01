@@ -132,24 +132,30 @@ export interface BaseNode {
  */
 export interface Node extends BaseNode {
     name: string,
-    id?: number,
-    otherDefs?: LoC[]
+    otherDefs?: LoC[],
+    /**
+     * Only true if there are other items in the same category AND in the same module present.
+     * If this is true, the type's [[TypeReference.repeatFileName]] will be present.
+     */
+    repeat?: boolean
 }
 
 /**
  * If the object's [[link]] property is not undefined, then that means it's an **external**
  * object. The [[externalLibName]] property will be set to the external library's name.
- * 
- * The [[parent]] property is only present when the referenced item is an **enum member**. The
- * property will be set to a reference to the enum itself.
  */
 export interface TypeReference {
     name: string,
     kind: TypeReferenceKind,
+    /**
+     * Only present when the referenced item is an **enum member**. The
+     * property will be set to a reference to the enum itself.
+     */
     parent?: TypeReference,
     path?: ItemPath,
     externalLibName?: string,
-    link?: string
+    link?: string,
+    repeatFileName?: string
 }
 
 export interface ReferenceType {

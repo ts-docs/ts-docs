@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 //import * as ts from "typescript";
-import path from "path";
 import fs from "fs";
 import { TypescriptExtractor, TypescriptExtractorHooks } from "./projectExtractor/extractor";
 import { HookManager } from "./projectExtractor/hookManager";
+import perf from "perf_hooks";
 
 const myHooks = new HookManager<TypescriptExtractorHooks>();
 
@@ -13,7 +13,9 @@ myHooks.attach("resolveExternalLink", (extractor, typeName, typeKind, typeLib, t
     return undefined;
 });
 
+const before = perf.performance.now();
 const myExtractor = TypescriptExtractor.createStandaloneExtractor("./", { passthroughModules: ["src", "inner"] }, myHooks);
+console.log(`Extraction took ${perf.performance.now() - before}ms`);
 
 export enum A {
     A,
