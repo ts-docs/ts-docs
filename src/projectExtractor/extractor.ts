@@ -1,7 +1,7 @@
 import * as ts from "typescript";
 import * as path from "path";
 import { BaseMethodSignature, BaseNode, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, ElementParameterFlags, IndexSignature, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, NEVER_TYPE, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeKind, TypeParameter, TypeReference, TypeReferenceKind, EnumDeclaration, EnumMember, FunctionDeclaration, ConstantDeclaration } from "./structure";
-import { BitField, PackageJSON, getPackageJSON, getSymbolDeclaration, getSymbolTypeKind, getTsconfig, hasModifier, joinPartOfArray, mapRealValues, resolvePackageName } from "./utils";
+import { BitField, PackageJSON, getAbsolutePath, getPackageJSON, getSymbolDeclaration, getSymbolTypeKind, getTsconfig, hasModifier, isNamespaceSymbol, joinPartOfArray, mapRealValues, resolvePackageName } from "./utils";
 import { HookManager } from "./hookManager";
 
 export type TypescriptExtractorHooks = {
@@ -31,7 +31,8 @@ export interface Shared {
 }
 
 /**
- * Extracts modules from a single typescript project.
+ * Extracts modules from a single typescript project. The `basePath` constructor
+ * parameter **needs** to be an absolute path.
  */
 export class TypescriptExtractor {
     module: Module;
@@ -41,10 +42,11 @@ export class TypescriptExtractor {
     constructor(basePath: string, tsConfig: ts.ParsedCommandLine, settings: TypescriptExtractorSettings, shared: Shared) {
         this.shared = shared;
         this.settings = settings;
-        this.packageJSON = getPackageJSON(basePath, this.settings.gitBranch);
+        const absolutePath = getAbsolutePath(basePath);
+        this.packageJSON = getPackageJSON(absolutePath, this.settings.gitBranch);
         this.module = TypescriptExtractor.createModule(
-            this.packageJSON?.name ? resolvePackageName(this.packageJSON.name) : basePath.slice(basePath.lastIndexOf(path.sep) + 1),
-            basePath,
+            this.packageJSON?.name ? resolvePackageName(this.packageJSON.name) : absolutePath.slice(absolutePath.lastIndexOf("/") + 1),
+            absolutePath,
             []
         );
 
@@ -61,15 +63,20 @@ export class TypescriptExtractor {
 
     }
 
+    getModuleOfSymbol(symbol: ts.Symbol) : Module | undefined {
+        const decl = getSymbolDeclaration(symbol);
+        if (!decl) return;
+        const file = decl.getSourceFile();
+        if (file.isDeclarationFile) return;
+        return this.getOrCreateChildModule(file.fileName);
+    }
+
     addSymbol(symbol: ts.Symbol, currentModule?: Module) : TypeReference | undefined {
         if (!currentModule) {
-            const decl = getSymbolDeclaration(symbol);
-            if (!decl) return;
-            const file = decl.getSourceFile();
-            if (file.isDeclarationFile) return;
-            currentModule = this.getOrCreateChildModule(file.fileName);
+            const module = this.getModuleOfSymbol(symbol);
+            if (!module) return;
+            currentModule = module;
         }
-
         if (this.shared.referenceCache.has(symbol)) return this.shared.referenceCache.get(symbol);
         else if (BitField.has(symbol.flags, ts.SymbolFlags.Class)) return this.registerClassDeclaration(symbol, currentModule);
         else if (BitField.has(symbol.flags, ts.SymbolFlags.Interface)) return this.registerInterfaceDeclaration(symbol, currentModule);
@@ -81,7 +88,38 @@ export class TypescriptExtractor {
         }
         else if (BitField.has(symbol.flags, ts.SymbolFlags.Function)) return this.registerFunctionDeclaration(symbol, currentModule);
         else if (BitField.has(symbol.flags, ts.SymbolFlags.Variable) && !BitField.has(symbol.flags, ts.SymbolFlags.FunctionScopedVariable)) return this.registerConstantDeclaration(symbol, currentModule);
+        else if (BitField.has(symbol.flags, ts.SymbolFlags.Module)) return this.registerNamespace(symbol, currentModule)?.[0];
         return;
+    }
+
+    registerNamespace(symbol: ts.Symbol, currentModule: Module) : [TypeReference, Module] | undefined {
+        const [type, decl] = this.getSymbolType<ts.ModuleDeclaration>(symbol);
+        if (!type || !decl) return;
+
+        const ref = {
+            name: symbol.name,
+            path: currentModule.childrenPath,
+            kind: TypeReferenceKind.Module
+        };
+
+        this.shared.referenceCache.set(symbol, ref);
+
+        // Make sure the parent namespace is registered
+        if (!currentModule.namespace && symbol.parent && isNamespaceSymbol(symbol.parent)) {
+            const namespaceModule = this.getModuleOfSymbol(symbol.parent);
+            if (namespaceModule) {
+                const parentNamespace = this.registerNamespace(symbol.parent, namespaceModule);
+                if (parentNamespace) currentModule = parentNamespace[1];
+            }
+        } 
+        
+        const newModule = TypescriptExtractor.createModule(symbol.name, currentModule.baseDir, currentModule.childrenPath, symbol.declarations?.map(decl => this.createLoC(decl, true)));
+
+        for (const exported of (symbol.exports?.values() || [])) {
+            this.addSymbol(exported, newModule);
+        }
+        currentModule.modules[symbol.name] = newModule;
+        return [ref, newModule];
     }
 
     registerConstantDeclaration(symbol: ts.Symbol, currentModule: Module) : TypeReference | undefined {
@@ -187,6 +225,8 @@ export class TypescriptExtractor {
     registerTypeDeclaraction(symbol: ts.Symbol, currentModule: Module) : TypeReference | undefined {
         const [type, decl] = this.getSymbolType<ts.TypeAliasDeclaration>(symbol);
         if (!type || !decl) return;
+
+        console.log(currentModule);
 
         const ref = {
             name: symbol.name,
@@ -397,6 +437,11 @@ export class TypescriptExtractor {
 
     createType(t: ts.Type, ignoreAliasSymbol?: boolean): Type {
         if (t.aliasSymbol && !ignoreAliasSymbol) {
+
+            if (t.aliasSymbol.parent && isNamespaceSymbol(t.aliasSymbol.parent)) {
+                this.addSymbol(t.aliasSymbol.parent);
+            }
+
             const ref = this.addSymbol(t.aliasSymbol);
             if (ref) return {
                 kind: TypeKind.Reference,
@@ -632,10 +677,10 @@ export class TypescriptExtractor {
         for (let i = 0; i < pathParts.length; i++) {
             const pathPart = pathParts[i];
             if (pathPart === "" || this.settings.passthroughModules?.includes(pathPart)) continue;
-            const currentModule = lastModule.modules.get(pathPart);
+            const currentModule = lastModule.modules[pathPart];
             if (!currentModule) {
                 const newModule = TypescriptExtractor.createModule(pathPart, joinPartOfArray(pathParts, i, "/"), [...newPath]);
-                lastModule.modules.set(pathPart, newModule);
+                lastModule.modules[pathPart] = newModule;
                 lastModule = newModule;
             }
             else lastModule = currentModule;
@@ -682,7 +727,7 @@ export class TypescriptExtractor {
             childrenPath: [...path, name],
             baseDir,
             namespace,
-            modules: new Map(),
+            modules: {},
             classes: [],
             interfaces: [],
             types: [],

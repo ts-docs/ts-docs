@@ -55,6 +55,10 @@ export function getBranchName(path: string) : string|undefined {
     return cp.execSync(`cd ${path} && git rev-parse --abbrev-ref HEAD`).slice(0, -1).toString("utf-8");
 }
 
+export function getAbsolutePath(relativePath: string) : string {
+    return path.isAbsolute(relativePath) ? relativePath.replaceAll(path.sep, "/") : path.join(process.cwd(), relativePath).replaceAll(path.sep, "/");
+}
+
 /**
  * Resolves a name from "package.json" to the real name of the package. Example:
  * 
@@ -106,6 +110,10 @@ export function getSymbolTypeKind(symbol: ts.Symbol) : TypeReferenceKind {
     else if (BitField.has(symbol.flags, ts.SymbolFlags.Function)) return TypeReferenceKind.Function;
     else if (BitField.has(symbol.flags, ts.SymbolFlags.Variable) && !BitField.has(symbol.flags, ts.SymbolFlags.FunctionScopedVariable)) return TypeReferenceKind.Constant;
     else return TypeReferenceKind.Unknown;
+}
+
+export function isNamespaceSymbol(symbol: ts.Symbol) : boolean {
+    return symbol.declarations?.length === 1 && symbol.declarations[0].kind === ts.SyntaxKind.ModuleDeclaration;
 }
 
 export class BitField {

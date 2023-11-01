@@ -28,4 +28,5 @@
     "customPages": "./docsPages",
     "changelog": true
   },
+  "exclude": ["./test", "./node_modules", "./dist"]
 }

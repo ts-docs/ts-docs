@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 //import * as ts from "typescript";
 import path from "path";
@@ -8,11 +9,11 @@ import { HookManager } from "./projectExtractor/hookManager";
 const myHooks = new HookManager<TypescriptExtractorHooks>();
 
 myHooks.attach("resolveExternalLink", (extractor, typeName, typeKind, typeLib, typeExtra) => {
-    console.log(typeName.name, typeKind, typeLib, typeExtra);
+    //console.log(typeName.name, typeKind, typeLib, typeExtra);
     return undefined;
 });
 
-const myExtractor = TypescriptExtractor.createStandaloneExtractor(process.cwd().replaceAll(path.sep, "/"), { passthroughModules: ["src", "inner"] }, myHooks);
+const myExtractor = TypescriptExtractor.createStandaloneExtractor("./", { passthroughModules: ["src", "inner"] }, myHooks);
 
 export enum A {
     A,
@@ -26,7 +27,7 @@ export class Test<T> {
     c?: T extends string ? 1 : 2;
     z?: Promise<string>;
     xxx?: keyof T;
-    t?: MyInterface;
+    t?: MyNamespace.NestedNamespace.Getters<T>;
     myTuple?: [nameA: string, boolean, nameC?: number, number?];
     //[key: string]: number;
     //test: Map<string, number> = new Map();
@@ -52,23 +53,37 @@ export interface MyInterface {
     b: (a: number, b: string) => unknown;
 }
 
-export type ReturnType1<T> = T extends (...args: unknown[]) => infer R ? R : ReturnType1<T>;
 
 if (myExtractor) {
     console.log(myExtractor.toJSON());
     fs.writeFileSync("./data.json", JSON.stringify(myExtractor));
 }
 
-export type Getters<Type> = {
-    [Property in keyof Type as `get${Capitalize<string & Property>}`]: () => Type[Property]
-};
 
 export const NUM_CONST = 123;
 
-export const myFunction123 = (a: number, b: MyEnum) => {
-    return 123;
-};
+export namespace MyNamespace {
 
-export const myFunction456 = function*(a: number, b: MyEnum) {
-    yield 123;
-};
+    export const myFunction123 = (a: number, b: MyEnum) => {
+        return 123;
+    };
+    
+    export const myFunction456 = function*(a: number, b: MyEnum) {
+        yield 123;
+    };
+    
+}
+
+export namespace MyNamespace {
+
+
+    export type ReturnType1<T> = T extends (...args: unknown[]) => infer R ? R : ReturnType1<T>;
+
+    export namespace NestedNamespace {
+
+        export type Getters<Type> = {
+            [Property in keyof Type as `get${Capitalize<string & Property>}`]: () => Type[Property]
+        };
+    }
+    
+}

@@ -34,7 +34,7 @@ export interface ProjectMetadata {
  */
 export interface Module {
     name: string,
-    modules: Map<string, Module>,
+    modules: Record<string, Module>,
     classes: ClassDeclaration[],
     interfaces: InterfaceDeclaration[],
     types: TypeAliasDeclaration[],
