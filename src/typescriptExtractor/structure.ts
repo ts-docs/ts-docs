@@ -41,13 +41,43 @@ export interface Module {
     enums: EnumDeclaration[],
     functions: FunctionDeclaration[],
     constants: ConstantDeclaration[],
+    exports: Record<string, FileExports>,
     baseDir: string,
     path: ItemPath,
     /**
      * The path of every child inside the module.
      */
     childrenPath: ItemPath,
+    reference: TypeReference,
     namespace?: LoC[]
+}
+
+export interface FileExports {
+    references: ExportedTypeReference[],
+    reExports: ReExportedItem[]
+}
+
+export interface ReExportedItem {
+    /**
+     * The module the items are being re-exported from.
+     */
+    targetModule: TypeReference,
+    fileName: string,
+    /**
+     * This array will be empty if **everything** is exported from the module's file.
+     * Otherwise, it will be filled up with the exported items.
+     */
+    references: ExportedTypeReference[],
+    /**
+     * If the re-exported items are put in a namespace, this will
+     * be set to the name of the namespace.
+     */
+    namespace?: string,
+    /**
+     * Whether the [[targetModule]] and the module this object is attached to
+     * are equal.
+     */
+    sameModule?: boolean
 }
 
 export interface JSDocTag {
@@ -150,6 +180,11 @@ export interface TypeReference {
     path?: ItemPath,
     externalLibName?: string,
     link?: string
+}
+
+export interface ExportedTypeReference {
+    reference: TypeReference,
+    alias?: string
 }
 
 export interface ReferenceType {

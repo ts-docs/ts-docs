@@ -15,6 +15,7 @@ myHooks.attach("resolveExternalLink", (extractor, typeName, typeKind, typeLib, t
 
 const before = perf.performance.now();
 const myExtractor = TypescriptExtractor.createStandaloneExtractor("./", { passthroughModules: ["src", "inner"] }, myHooks);
+myExtractor?.collect();
 console.log(`Extraction took ${perf.performance.now() - before}ms`);
 
 export enum A {
@@ -22,7 +23,7 @@ export enum A {
     B
 }
 
-export class Test<T> {
+class Test<T> {
     baby?: TypescriptExtractor | 123;
     a: string = "abc";
     b?: number = 123;
@@ -42,6 +43,8 @@ export class Test<T> {
         return a(123);
     }
 }
+
+export { Test };
 
 export const enum MyEnum {
     b,

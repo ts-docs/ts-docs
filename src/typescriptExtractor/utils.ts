@@ -59,6 +59,10 @@ export function getAbsolutePath(relativePath: string) : string {
     return path.isAbsolute(relativePath) ? relativePath.replaceAll(path.sep, "/") : path.join(process.cwd(), relativePath).replaceAll(path.sep, "/");
 }
 
+export function getFileNameFromPath(path: string, separator = "/") : string {
+    return path.slice(path.lastIndexOf(separator) + separator.length);
+}
+
 /**
  * Resolves a name from "package.json" to the real name of the package. Example:
  * 

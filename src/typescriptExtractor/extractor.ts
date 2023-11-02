@@ -1,7 +1,7 @@
 import * as ts from "typescript";
 import * as path from "path";
-import { BaseMethodSignature, BaseNode, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, ElementParameterFlags, IndexSignature, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, NEVER_TYPE, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeKind, TypeParameter, TypeReference, TypeReferenceKind, EnumDeclaration, EnumMember, FunctionDeclaration, ConstantDeclaration, TypeAliasDeclaration, InterfaceDeclaration, ClassDeclaration } from "./structure";
-import { BitField, PackageJSON, getAbsolutePath, getPackageJSON, getSymbolDeclaration, getSymbolTypeKind, getTsconfig, hasModifier, isNamespaceSymbol, joinPartOfArray, mapRealValues, resolvePackageName } from "./utils";
+import { BaseMethodSignature, BaseNode, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, ElementParameterFlags, IndexSignature, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, NEVER_TYPE, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeKind, TypeParameter, TypeReference, TypeReferenceKind, EnumDeclaration, EnumMember, FunctionDeclaration, ConstantDeclaration, TypeAliasDeclaration, InterfaceDeclaration, ClassDeclaration, FileExports, ExportedTypeReference, ReExportedItem } from "./structure";
+import { BitField, PackageJSON, getAbsolutePath, getFileNameFromPath, getPackageJSON, getSymbolDeclaration, getSymbolTypeKind, getTsconfig, hasModifier, isNamespaceSymbol, joinPartOfArray, mapRealValues, resolvePackageName } from "./utils";
 import { HookManager } from "./hookManager";
 
 export type TypescriptExtractorHooks = {
@@ -39,9 +39,11 @@ export class TypescriptExtractor {
     packageJSON?: PackageJSON;
     shared: Shared;
     settings: TypescriptExtractorSettings;
+    tsConfig: ts.ParsedCommandLine;
     constructor(basePath: string, tsConfig: ts.ParsedCommandLine, settings: TypescriptExtractorSettings, shared: Shared) {
         this.shared = shared;
         this.settings = settings;
+        this.tsConfig = tsConfig;
         const absolutePath = getAbsolutePath(basePath);
         this.packageJSON = getPackageJSON(absolutePath, this.settings.gitBranch);
         this.module = TypescriptExtractor.createModule(
@@ -49,18 +51,104 @@ export class TypescriptExtractor {
             absolutePath,
             []
         );
+    }
 
-        for (const fileName of tsConfig.fileNames) {
+    collect() : void {
+        for (const fileName of this.tsConfig.fileNames) {
             const fileObject = this.shared.program.getSourceFile(fileName);
             if (!fileObject || fileObject.isDeclarationFile) continue;
-            const fileSymbol = this.shared.checker.getSymbolAtLocation(fileObject);
-            if (!fileSymbol) continue;
-            const module = this.getOrCreateChildModule(fileName);
-            for (const exportedSym of (fileSymbol.exports?.values() || [])) {
-                this.addSymbol(exportedSym, module);
+            const fileSym = this.shared.checker.getSymbolAtLocation(fileObject);
+            if (!fileSym) continue;
+            const currentModule = this.getOrCreateChildModule(fileObject.fileName);
+            currentModule.exports[getFileNameFromPath(fileObject.fileName)] = this.registerExports(fileObject, fileSym, currentModule);
+        }
+    }
+
+    registerExports(fileObj: ts.SourceFile, fileSym: ts.Symbol, currentModule: Module) : FileExports {
+        const exports: ExportedTypeReference[] = [];
+        const reExports: ReExportedItem[] = [];
+        const notDirectReExportsByFile: Record<string, ReExportedItem> = {};
+
+        for (const sym of (fileSym.exports?.values() || [])) {
+            const symDeclaration = getSymbolDeclaration(sym);
+            if (!symDeclaration) continue;
+
+            const isNamespaceExport = ts.isNamespaceExport(symDeclaration);
+
+            // export * from "./file";
+            // export * as Thing from "./file";
+            if (BitField.has(sym.flags, ts.SymbolFlags.ExportStar) || isNamespaceExport) {
+                const moduleSpecifier = isNamespaceExport ? symDeclaration.parent.moduleSpecifier : (symDeclaration as ts.ExportDeclaration).moduleSpecifier;
+                if (!moduleSpecifier) continue;
+                const targetModuleSymbol = this.shared.checker.getSymbolAtLocation(moduleSpecifier);
+                if (!targetModuleSymbol) continue;
+                const targetModuleFileName = getSymbolDeclaration(targetModuleSymbol) as ts.SourceFile;
+                const targetModule = this.getOrCreateChildModule(targetModuleFileName.fileName);
+                reExports.push({
+                    targetModule: targetModule.reference, 
+                    references: [], 
+                    fileName: getFileNameFromPath(targetModuleFileName.fileName),
+                    namespace: isNamespaceExport ? sym.name : undefined,
+                    sameModule: currentModule === targetModule
+                });
+                continue;
+            }
+
+            const resolvedSym = this.resolveAliasSymbol(sym);
+            const resolvedSymDecl = getSymbolDeclaration(resolvedSym);
+
+            if (!resolvedSymDecl) continue;
+
+            // Handles cases like this:
+            // fileA:
+            // export * as Thing from "./fileC";
+            // fileB:
+            // import { Thing } from "./fileA";
+            // export { Thing as Thing2 };
+            if (ts.isSourceFile(resolvedSymDecl)) {
+                const targetModule = this.getOrCreateChildModule(resolvedSymDecl.fileName);
+                reExports.push({
+                    fileName: getFileNameFromPath(resolvedSymDecl.fileName),
+                    targetModule: targetModule.reference,
+                    references: [],
+                    namespace: sym.name,
+                    sameModule: currentModule === targetModule
+                });
+            }
+
+            // export { A, B, C }
+            // some exports might be from the same file
+            else if (BitField.has(sym.flags, ts.SymbolFlags.Alias)) {
+                const targetSourceFile = getSymbolDeclaration(resolvedSym)?.getSourceFile();
+                if (!targetSourceFile) continue;
+                const targetModule = this.getOrCreateChildModule(targetSourceFile.fileName);
+                const typeRef = this.addSymbol(resolvedSym, targetModule);
+                if (!typeRef) continue;
+                const alias = sym.name !== resolvedSym.name ? sym.name : undefined;
+                if (fileObj === targetSourceFile) exports.push({ reference: typeRef, alias });
+                else {
+                    if (notDirectReExportsByFile[targetSourceFile.fileName]) notDirectReExportsByFile[targetSourceFile.fileName].references.push({
+                        reference: typeRef,
+                        alias
+                    });
+                    else notDirectReExportsByFile[targetSourceFile.fileName] = {
+                        targetModule: targetModule.reference,
+                        fileName: getFileNameFromPath(targetSourceFile.fileName),
+                        sameModule: currentModule === targetModule,
+                        references: [{ reference: typeRef, alias }]
+                    };
+                }
+            // Direct exports
+            } else {
+                const typeRef = this.addSymbol(resolvedSym, currentModule);
+                if (typeRef) exports.push({ reference: typeRef });
             }
         }
 
+        return {
+            references: exports,
+            reExports: [...reExports, ...Object.values(notDirectReExportsByFile)]
+        };
     }
 
     getModuleOfSymbol(symbol: ts.Symbol) : Module | undefined {
@@ -610,6 +698,15 @@ export class TypescriptExtractor {
         return [type, node as T];
     }
 
+    resolveAliasSymbol(symbol: ts.Symbol) : ts.Symbol {
+        while (BitField.has(symbol.flags, ts.SymbolFlags.Alias)) {
+            const newSym = this.shared.checker.getAliasedSymbol(symbol);
+            if (newSym.name === "unknown") return symbol;
+            symbol = newSym;
+        }
+        return symbol;
+    }
+
     getOrCreateChildModule(source: string): Module {
         const { dir } = path.parse(source);
         if (this.shared.moduleCache[dir]) return this.shared.moduleCache[dir];
@@ -685,15 +782,13 @@ export class TypescriptExtractor {
             types: [],
             enums: [],
             functions: [],
-            constants: []
-        };
-    }
-
-    static createModuleReference(module: Module): TypeReference {
-        return {
-            name: module.name,
-            path: module.path,
-            kind: TypeReferenceKind.Module
+            constants: [],
+            exports: {},
+            reference: {
+                name,
+                path,
+                kind: TypeReferenceKind.Module
+            }
         };
     }
 
