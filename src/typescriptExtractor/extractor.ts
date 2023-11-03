@@ -1,7 +1,7 @@
 import * as ts from "typescript";
 import * as path from "path";
-import { BaseMethodSignature, BaseNode, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, ElementParameterFlags, IndexSignature, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, NEVER_TYPE, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeKind, TypeParameter, TypeReference, TypeReferenceKind, EnumDeclaration, EnumMember, FunctionDeclaration, ConstantDeclaration, TypeAliasDeclaration, InterfaceDeclaration, ClassDeclaration, FileExports, ExportedTypeReference, ReExportedItem } from "./structure";
-import { BitField, PackageJSON, getAbsolutePath, getFileNameFromPath, getPackageJSON, getSymbolDeclaration, getSymbolTypeKind, getTsconfig, hasModifier, isNamespaceSymbol, joinPartOfArray, mapRealValues, resolvePackageName } from "./utils";
+import { BaseMethodSignature, BaseNode, ClassMemberFlags, ClassMethod, ClassObjectLiteral, ClassProperty, Declaration, DeclarationKind, FunctionParameter, ElementParameterFlags, IndexSignature, ItemPath, JSDocData, JSDocTag, LoC, Method, MethodFlags, MethodSignature, Module, NEVER_TYPE, ObjectLiteral, PropertyFlags, PropertySignature, Type, TypeKind, TypeParameter, TypeReference, TypeReferenceKind, EnumDeclaration, EnumMember, FunctionDeclaration, ConstantDeclaration, TypeAliasDeclaration, InterfaceDeclaration, ClassDeclaration, FileExports, ExportedTypeReference, ReExportedItem, ReferenceType } from "./structure";
+import { BitField, PackageJSON, getFileNameFromPath, getSymbolDeclaration, getSymbolTypeKind, hasModifier, isNamespaceSymbol, joinPartOfArray, mapRealValues } from "./utils";
 import { HookManager } from "./hookManager";
 
 export type TypescriptExtractorHooks = {
@@ -30,6 +30,15 @@ export interface Shared {
     hooks: HookManager<TypescriptExtractorHooks>
 }
 
+export interface TypescriptProjectDetails {
+    name: string,
+    basePath: string,
+    absolutePath: string,
+    tsconfig: ts.ParsedCommandLine,
+    packageJSON?: PackageJSON,
+    settings: TypescriptExtractorSettings
+}
+
 /**
  * Extracts modules from a single typescript project. The `basePath` constructor
  * parameter **needs** to be an absolute path.
@@ -39,26 +48,26 @@ export class TypescriptExtractor {
     packageJSON?: PackageJSON;
     shared: Shared;
     settings: TypescriptExtractorSettings;
-    tsConfig: ts.ParsedCommandLine;
-    constructor(basePath: string, tsConfig: ts.ParsedCommandLine, settings: TypescriptExtractorSettings, shared: Shared) {
+    tsconfig: ts.ParsedCommandLine;
+    constructor(details: TypescriptProjectDetails, shared: Shared) {
         this.shared = shared;
-        this.settings = settings;
-        this.tsConfig = tsConfig;
-        const absolutePath = getAbsolutePath(basePath);
-        this.packageJSON = getPackageJSON(absolutePath, this.settings.gitBranch);
+        this.settings = details.settings;
+        this.tsconfig = details.tsconfig;
+        this.packageJSON = details.packageJSON;
         this.module = TypescriptExtractor.createModule(
-            this.packageJSON?.name ? resolvePackageName(this.packageJSON.name) : absolutePath.slice(absolutePath.lastIndexOf("/") + 1),
-            absolutePath,
+            details.name,
+            details.absolutePath,
             []
         );
     }
 
     collect() : void {
-        for (const fileName of this.tsConfig.fileNames) {
+        for (const fileName of this.tsconfig.fileNames) {
             const fileObject = this.shared.program.getSourceFile(fileName);
             if (!fileObject || fileObject.isDeclarationFile) continue;
             const fileSym = this.shared.checker.getSymbolAtLocation(fileObject);
             if (!fileSym) continue;
+
             const currentModule = this.getOrCreateChildModule(fileObject.fileName);
             currentModule.exports[getFileNameFromPath(fileObject.fileName)] = this.registerExports(fileObject, fileSym, currentModule);
         }
@@ -551,12 +560,18 @@ export class TypescriptExtractor {
         return this.createExternalType(t, t.symbol);
     }
 
-    createExternalType(type: ts.Type, typeSymbol?: ts.Symbol) : Type {
-        const typeArguments = this.shared.checker.getTypeArguments(type as ts.TypeReference).map(arg => this.createType(arg));
-        if (!this.shared.hooks.has("resolveExternalLink") || !typeSymbol) return { kind: TypeKind.Reference, type: { name: typeSymbol?.name || "Unknown", kind: TypeReferenceKind.Unknown }, typeArguments };
+    createExternalType(type: ts.Type, typeSymbol: ts.Symbol) : Type {
+        const createRef = (libName: string, rest: string[]): ReferenceType => {
+            const ref = { name: typeSymbol.name, kind: TypeReferenceKind.Unknown, link: this.shared.hooks.trigger("resolveExternalLink", this, typeSymbol, getSymbolTypeKind(typeSymbol), libName, rest) };
+            this.shared.referenceCache.set(typeSymbol, ref);
+            const typeArguments = this.shared.checker.getTypeArguments(type as ts.TypeReference).map(arg => this.createType(arg));
+            return { kind: TypeKind.Reference, typeArguments, type: ref };
+        };
+
+        if (!this.shared.hooks.has("resolveExternalLink")) return createRef("", []);
 
         const decl = getSymbolDeclaration(typeSymbol);
-        if (!decl) return { kind: TypeKind.Reference, type: { name: typeSymbol.name, kind: TypeReferenceKind.Unknown, link: this.shared.hooks.trigger("resolveExternalLink", this, typeSymbol, TypeReferenceKind.Unknown, "", []) }, typeArguments };
+        if (!decl) return createRef("", []);
 
         const declSource = decl.getSourceFile();
         if (!declSource.isDeclarationFile) {
@@ -564,16 +579,16 @@ export class TypescriptExtractor {
             if (ts.isNamespaceImport(decl)) importSpecifier = (decl.parent.parent.moduleSpecifier as ts.StringLiteral).text;
             else if (ts.isImportClause(decl)) importSpecifier = (decl.parent.moduleSpecifier as ts.StringLiteral).text;
             else if (ts.isImportSpecifier(decl)) importSpecifier = (decl.parent.parent.parent.moduleSpecifier as ts.StringLiteral).text;
-            else return { kind: TypeKind.Reference, type: { name: typeSymbol.name, kind: TypeReferenceKind.Unknown, link: this.shared.hooks.trigger("resolveExternalLink", this, typeSymbol, TypeReferenceKind.Unknown, "", []) }, typeArguments };
+            else return createRef("", []);
 
             const splitPath = importSpecifier.split("/");
             const [libName, rest] = splitPath[0][0] === "@" ? [splitPath[0] + "/" + splitPath[1], splitPath.slice(2)] : [splitPath[0], splitPath.slice(1)];
-            return { kind: TypeKind.Reference, type: { name: typeSymbol.name, kind: TypeReferenceKind.Unknown, link: this.shared.hooks.trigger("resolveExternalLink", this, typeSymbol, TypeReferenceKind.Unknown, libName, rest) }, typeArguments };
+            return createRef(libName, rest);
         }
         else {
             const path = declSource.fileName.slice(declSource.fileName.indexOf(this.settings.moduleStorage + "/") + this.settings.moduleStorage.length + 1).split("/");
             const [libName, rest] = path[0][0] === "@" ? [path[0] + "/" + path[1], path.slice(2)] : [path[0], path.slice(1)];
-            return { kind: TypeKind.Reference, type: { name: typeSymbol.name, kind: TypeReferenceKind.Unknown, link: this.shared.hooks.trigger("resolveExternalLink", this, typeSymbol, getSymbolTypeKind(typeSymbol), libName, rest) }, typeArguments };
+            return createRef(libName, rest);
         }
     }
 
@@ -648,7 +663,7 @@ export class TypescriptExtractor {
                 types: litType.types.map(t => this.createType(t))
             };
         }
-        else return this.createExternalType(t);
+        else return { kind: TypeKind.Reference, type: { name: this.shared.checker.typeToString(t), kind: TypeReferenceKind.Unknown }};
     }
 
     createLoC(symbol: ts.Symbol | ts.Node, includeSourceFile?: boolean): LoC {
@@ -763,12 +778,6 @@ export class TypescriptExtractor {
         };
     }
 
-    static createExtractor(basePath: string, settings: TypescriptExtractorSettings, shared: Shared): TypescriptExtractor | undefined {
-        const config = getTsconfig(basePath);
-        if (!config) return;
-        return new TypescriptExtractor(basePath, config, settings, shared);
-    }
-
     static createModule(name: string, baseDir: string, path: ItemPath, namespace?: LoC[]): Module {
         return {
             name,
@@ -798,18 +807,6 @@ export class TypescriptExtractor {
             moduleStorage: settings.moduleStorage || "node_modules",
             maxConstContentLen: settings.maxConstContentLen || 512
         };
-    }
-
-    static createStandaloneExtractor(basePath: string, settings: Partial<TypescriptExtractorSettings>, hooks?: HookManager<TypescriptExtractorHooks>): TypescriptExtractor | undefined {
-        const config = getTsconfig(basePath);
-        if (!config) return;
-        const program = ts.createProgram({
-            rootNames: config.fileNames,
-            options: config.options,
-            configFileParsingDiagnostics: config.errors
-        });
-        const checker = program.getTypeChecker();
-        return new TypescriptExtractor(basePath, config, this.createSettings(settings), { program, checker, moduleCache: {}, referenceCache: new Map(), hooks: hooks || new HookManager() });
     }
 
 }

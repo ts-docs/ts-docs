@@ -55,8 +55,14 @@ export function getBranchName(path: string) : string|undefined {
     return cp.execSync(`cd ${path} && git rev-parse --abbrev-ref HEAD`).slice(0, -1).toString("utf-8");
 }
 
-export function getAbsolutePath(relativePath: string) : string {
-    return path.isAbsolute(relativePath) ? relativePath.replaceAll(path.sep, "/") : path.join(process.cwd(), relativePath).replaceAll(path.sep, "/");
+/**
+ * Returns the absolute path and normalizes it.
+ * - Separator gets set to "/"
+ * - If the path ends with a "/", it gets omitted
+ */
+export function getAbsolutePath(relativePath: string, cwd?: string) : string {
+    const absPath = path.isAbsolute(relativePath) ? relativePath.replaceAll(path.sep, "/") : path.join(cwd || process.cwd(), relativePath).replaceAll(path.sep, "/");
+    return absPath.endsWith("/") ? absPath.slice(0, -1) : absPath;
 }
 
 export function getFileNameFromPath(path: string, separator = "/") : string {
