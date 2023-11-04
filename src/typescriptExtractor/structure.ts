@@ -117,6 +117,7 @@ export enum TypeKind {
     Null,
     Any,
     Unknown,
+    Stringified,
     Mapped,
     Conditional,
     TemplateLiteral,
@@ -337,7 +338,7 @@ export interface ObjectLiteralType extends ObjectLiteral {
 }
 
 export interface PrimitiveType {
-    kind: TypeKind.String | TypeKind.Number | TypeKind.Boolean | TypeKind.Undefined | TypeKind.Null | TypeKind.Never | TypeKind.Any | TypeKind.Void | TypeKind.Unknown | TypeKind.Array,
+    kind: TypeKind.String | TypeKind.Number | TypeKind.Boolean | TypeKind.Undefined | TypeKind.Null | TypeKind.Never | TypeKind.Any | TypeKind.Void | TypeKind.Unknown | TypeKind.Array | TypeKind.Stringified,
     literal?: string
 }
 

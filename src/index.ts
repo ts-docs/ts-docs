@@ -18,8 +18,8 @@ const before = perf.performance.now();
 const result = createExtractorGroup({
     cwd: "./test",
     passthroughModules: ["src"],
-    //entries: [{path: "./utils"}, {path: "./rest"}, {path: "./client-socket"}, {path: "./client-rest"}, {path: "./client"}],
-    entries: [{path: "./"}]
+    entries: [{path: "./utils"}, {path: "./rest"}, {path: "./client-socket"}, {path: "./client-rest"}, {path: "./client"}],
+    //entries: [{path: "./"}]
     //hooks: myHooks
 });
 console.log(`Extraction took ${perf.performance.now() - before}ms`);

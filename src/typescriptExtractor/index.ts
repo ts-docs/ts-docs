@@ -24,7 +24,7 @@ export interface TypescriptExtractorGroupResult {
 }
 
 export function getExtractorDetails(groupSettings: TypescriptExtractorGroupSettings, entry: TypescriptExtractorEntry) : TypescriptProjectDetails | undefined {
-    const realPath = groupSettings.cwd ? path.join(groupSettings.cwd, entry.path) : entry.path;
+    const realPath = groupSettings.cwd ? path.join(groupSettings.cwd, entry.path).replace(path.sep, "/") : entry.path;
     const tsconfig = getTsconfig(realPath);
     if (!tsconfig) return;
     const packageJSON = getPackageJSON(realPath);
@@ -45,14 +45,16 @@ export function createExtractorGroup(settings: TypescriptExtractorGroupSettings)
         else {
             extractorDetails.push(details);
             extractorFiles.push(...details.tsconfig.fileNames);
-            extractorRemaps[`${details.name}/*`] = [`${details.basePath}/*`];
+            extractorRemaps[`${details.name}/*`] = [`./${details.basePath}/*`];
         }
     }
 
     const program = ts.createProgram({
         rootNames: extractorFiles,
-        options: { ...ts.getDefaultCompilerOptions(), paths: extractorRemaps, baseUrl: settings.cwd || "./" }
+        options: { ...ts.getDefaultCompilerOptions(), paths: extractorRemaps, baseUrl: "./" }
     });
+
+    console.log({ ...ts.getDefaultCompilerOptions(), paths: extractorRemaps, baseUrl: settings.cwd || "./" });
 
     const shared: Shared = {
         program,

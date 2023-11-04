@@ -308,7 +308,7 @@ export class TypescriptExtractor {
             name: symbol.name,
             typeParameters: mapRealValues((decl.typeParameters || []), (p) => this.createTypeParameter(this.getNodeType(p))),
             loc: this.createLoC(symbol, true),
-            value: this.createType(type, true)
+            value: this.createType(type, undefined, true)
         } satisfies TypeAliasDeclaration;
         currentModule.types.push(typeDecl);
         return [ref, typeDecl];
@@ -323,8 +323,8 @@ export class TypescriptExtractor {
         this.shared.referenceCache.set(symbol, ref);
         const implementsClause = [], extendsClause = [];
         for (const clause of (decl.heritageClauses || [])) {
-            if (clause.token === ts.SyntaxKind.ExtendsKeyword) extendsClause.push(...clause.types.map(t => this.createType(this.shared.checker.getTypeAtLocation(t))));
-            else if (clause.token === ts.SyntaxKind.ImplementsKeyword) implementsClause.push(...clause.types.map(t => this.createType(this.shared.checker.getTypeAtLocation(t))));
+            if (clause.token === ts.SyntaxKind.ExtendsKeyword) extendsClause.push(...clause.types.map(t => this.createType(this.shared.checker.getTypeAtLocation(t), t)));
+            else if (clause.token === ts.SyntaxKind.ImplementsKeyword) implementsClause.push(...clause.types.map(t => this.createType(this.shared.checker.getTypeAtLocation(t), t)));
         }
         const interfaceDecl = {
             kind: DeclarationKind.Interface,
@@ -350,8 +350,8 @@ export class TypescriptExtractor {
         const implementsClause = [], extendsClause = [];
         
         for (const clause of (decl.heritageClauses || [])) {
-            if (clause.token === ts.SyntaxKind.ExtendsKeyword) extendsClause.push(...clause.types.map(t => this.createType(this.shared.checker.getTypeAtLocation(t))));
-            else if (clause.token === ts.SyntaxKind.ImplementsKeyword) implementsClause.push(...clause.types.map(t => this.createType(this.shared.checker.getTypeAtLocation(t))));
+            if (clause.token === ts.SyntaxKind.ExtendsKeyword) extendsClause.push(...clause.types.map(t => this.createType(this.getNodeType(t), t)));
+            else if (clause.token === ts.SyntaxKind.ImplementsKeyword) implementsClause.push(...clause.types.map(t => this.createType(this.getNodeType(t), t)));
         }
         const classDecl = {
             kind: DeclarationKind.Class,
@@ -404,7 +404,7 @@ export class TypescriptExtractor {
         if (!type || !decl) return;
         return {
             name: symbol.name,
-            computed: decl.name && ts.isComputedPropertyName(decl.name) ? this.createType(this.shared.checker.getTypeAtLocation(decl.name.expression)) : undefined,
+            computed: decl.name && ts.isComputedPropertyName(decl.name) ? this.createType(this.shared.checker.getTypeAtLocation(decl.name.expression), decl.name.expression) : undefined,
             signatures: this.createMethodSignatures(type, decl),
             flags: new BitField([decl.asteriskToken && MethodFlags.Generator, hasModifier(decl, ts.SyntaxKind.AsyncKeyword) && MethodFlags.Async])
         };
@@ -414,7 +414,7 @@ export class TypescriptExtractor {
         return {
             parameters: mapRealValues(signature.getParameters(), p => this.createParameter(p)),
             typeParameters: (signature.getTypeParameters() || []).map(p => this.createTypeParameter(p)),
-            returnType: this.createType(signature.getReturnType()),
+            returnType: this.createType(signature.getReturnType(), signature.declaration?.type),
         };
     }
 
@@ -440,9 +440,9 @@ export class TypescriptExtractor {
         if (!type || !decl) return;
         return {
             name: symbol.name,
-            computed: ts.isComputedPropertyName(decl.name) ? this.createType(this.getNodeType(decl.name)) : undefined,
-            type: decl.questionToken ? this.createType(this.shared.checker.getNonNullableType(type)) : this.createType(type),
-            initializer: decl.initializer ? this.createType(this.getNodeType(decl.initializer)) : undefined,
+            computed: ts.isComputedPropertyName(decl.name) ? this.createType(this.getNodeType(decl.name), decl.name) : undefined,
+            type: decl.questionToken ? this.createType(this.shared.checker.getNonNullableType(type), decl.type) : this.createType(type, decl.type),
+            initializer: decl.initializer ? this.createType(this.getNodeType(decl.initializer), decl.initializer) : undefined,
             flags: new BitField([decl.questionToken && PropertyFlags.Optional, decl.exclamationToken && PropertyFlags.Exclamation, hasModifier(decl, ts.SyntaxKind.ReadonlyKeyword) && PropertyFlags.Readonly]),
             jsDoc: this.getJSDocData(decl),
             loc: this.createLoC(symbol, false)
@@ -478,13 +478,13 @@ export class TypescriptExtractor {
         return {
             name: symbol.name,
             flags: new BitField([decl.questionToken && ElementParameterFlags.Optional, decl.dotDotDotToken && ElementParameterFlags.Spread]),
-            type: decl.questionToken ? this.createType(this.shared.checker.getNonNullableType(type)) : this.createType(type),
-            defaultValue: decl.initializer ? this.createType(this.getNodeType(decl.initializer)) : undefined,
+            type: decl.questionToken ? this.createType(this.shared.checker.getNonNullableType(type), decl.type) : this.createType(type, decl.type),
+            defaultValue: decl.initializer ? this.createType(this.getNodeType(decl.initializer), decl.initializer) : undefined,
             jsDoc: this.getJSDocData(decl)
         };
     }
 
-    createType(t: ts.Type, ignoreAliasSymbol?: boolean): Type {
+    createType(t: ts.Type, node?: ts.Node, ignoreAliasSymbol?: boolean): Type {
         if (t.aliasSymbol && !ignoreAliasSymbol) {
 
             if (t.aliasSymbol.parent && isNamespaceSymbol(t.aliasSymbol.parent)) {
@@ -497,9 +497,23 @@ export class TypescriptExtractor {
                 type: ref,
                 typeArguments: (t.aliasTypeArguments || []).map(arg => this.createType(arg))
             };
+            else return this.createExternalType(t, t.aliasSymbol);
         }
 
-        if (!t.symbol) return this.createLiteralType(t);
+        if (!t.symbol) {
+            if (node && ts.isTypeReferenceNode(node)) {
+                const nameSym = this.shared.checker.getSymbolAtLocation(node.typeName);
+                if (!nameSym) return { kind: TypeKind.Stringified, literal: node.getText() };
+                const ref = this.addSymbol(nameSym);
+                if (ref) return {
+                    kind: TypeKind.Reference,
+                    type: ref,
+                    typeArguments: (node.typeArguments || []).map(arg => this.createType(this.getNodeType(arg), arg))
+                };
+                else return this.createExternalType(t, nameSym);
+            }
+            return this.createLiteralType(t);
+        }
 
         const ref = this.addSymbol(t.symbol);
         
@@ -686,7 +700,7 @@ export class TypescriptExtractor {
                 let arg, type;
                 if (ts.isJSDocParameterTag(tag) && ts.isIdentifier(tag.name)) {
                     arg = tag.name.text;
-                    type = tag.typeExpression ? this.createType(this.getNodeType(tag.typeExpression)) : undefined;
+                    type = tag.typeExpression ? this.createType(this.getNodeType(tag.typeExpression), tag.typeExpression) : undefined;
                 }
                 result.tags.push({
                     name: tag.tagName.text,
