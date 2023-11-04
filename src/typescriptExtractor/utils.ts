@@ -14,7 +14,8 @@ export interface PackageJSON {
     dependencies?: Record<string, string>,
     devDependencies?: Record<string, string>,
     readme?: string,
-    liscense?: string
+    license?: string,
+    main?: string
 }
 
 export function getPackageJSON(basePath: string, gitBranch?: string) : PackageJSON | undefined {
@@ -32,7 +33,8 @@ export function getPackageJSON(basePath: string, gitBranch?: string) : PackageJS
         devDependencies: packageJSON.devDependencies,
         repositoryBase: getRepository(packageJSON.repository, basePath, gitBranch),
         readme: fs.existsSync(readmePath) ? fs.readFileSync(readmePath, { encoding: "utf8" }) : undefined,
-        liscense: packageJSON.liscense
+        main: packageJSON.main,
+        license: packageJSON.license
     };
 }
 
@@ -61,7 +63,7 @@ export function getBranchName(path: string) : string|undefined {
  * - If the path ends with a "/", it gets omitted
  */
 export function getAbsolutePath(relativePath: string, cwd?: string) : string {
-    const absPath = path.isAbsolute(relativePath) ? relativePath.replaceAll(path.sep, "/") : path.join(cwd || process.cwd(), relativePath).replaceAll(path.sep, "/");
+    const absPath = ts.normalizeSlashes(path.isAbsolute(relativePath) ? relativePath : path.join(cwd || process.cwd(), relativePath));
     return absPath.endsWith("/") ? absPath.slice(0, -1) : absPath;
 }
 
@@ -78,6 +80,38 @@ export function getFileNameFromPath(path: string, separator = "/") : string {
 export function resolvePackageName(name: string) : string {
     if (name[0] === "@") return name.split("/")[1];
     else return name;
+}
+
+/**
+ * Attempts to resolve the main file of a project. The name of the file
+ * is taken from the "main" property in the `package.json` file, while the
+ * path to it is taken from `tsconfig`'s `rootDir` property.
+ * 
+ * If the "main" property is missing, the function will assume the main file's name
+ * is "index.ts".
+ * 
+ * If the "rootDir" property is missing, the function will check the root directory (`./`),
+ * `./src` and `./lib` for the file.
+ */
+export function tryGetMainFile(basePath: string, tsconfig: ts.CompilerOptions, packageJSON?: PackageJSON) : string | undefined {
+    let name = "index.ts";
+    if (packageJSON && packageJSON.main) {
+        const fileName = packageJSON.main.slice(packageJSON.main.lastIndexOf("/") + 1);
+        name = fileName.includes(".") ? fileName.split(".")[0] + ".ts" : fileName;
+    }
+    
+    if (tsconfig.rootDir) {
+        const fullPath = ts.normalizeSlashes(path.join(basePath, tsconfig.rootDir, name));
+        if (fs.existsSync(fullPath)) return fullPath;
+    }
+
+    const attemptOne = ts.normalizeSlashes(path.join(basePath, "./", name));
+    if (fs.existsSync(attemptOne)) return attemptOne;
+    const attemptTwo = ts.normalizeSlashes(path.join(basePath, "./src", name));
+    if (fs.existsSync(attemptTwo)) return attemptTwo;
+    const attemptThree = ts.normalizeSlashes(path.join(basePath, "./lib", name));
+    if (fs.existsSync(attemptThree)) return attemptTwo;
+    return undefined;
 }
 
 export function getTsconfig(basePath: string) : ts.ParsedCommandLine | undefined {

@@ -10,7 +10,7 @@ import { createExtractorGroup } from "./typescriptExtractor";
 const myHooks = new HookManager<TypescriptExtractorHooks>();
 
 myHooks.attach("resolveExternalLink", (extractor, typeName, typeKind, typeLib, typeExtra) => {
-    //console.log(typeName.name, typeKind, typeLib, typeExtra);
+    console.log(typeName.name, typeKind, typeLib, typeExtra);
     return undefined;
 });
 
@@ -20,8 +20,8 @@ const result = createExtractorGroup({
     passthroughModules: ["src"],
     entries: [{path: "./utils"}, {path: "./rest"}, {path: "./client-socket"}, {path: "./client-rest"}, {path: "./client"}],
     //entries: [{path: "./"}]
-    //hooks: myHooks
 });
 console.log(`Extraction took ${perf.performance.now() - before}ms`);
+console.log(result.notFound);
 
 fs.writeFileSync("./data.json", JSON.stringify(result.extractors.map(ext => ext.module)));

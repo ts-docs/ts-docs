@@ -35,6 +35,7 @@ export interface TypescriptProjectDetails {
     basePath: string,
     absolutePath: string,
     tsconfig: ts.ParsedCommandLine,
+    mainFile: string,
     packageJSON?: PackageJSON,
     settings: TypescriptExtractorSettings
 }
