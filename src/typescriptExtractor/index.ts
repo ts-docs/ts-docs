@@ -58,6 +58,7 @@ export function getExtractorDetails(groupSettings: TypescriptExtractorGroupSetti
 
 export function createExtractorGroupHost(extractors: Record<string, TypescriptProjectDetails>, options: ts.CompilerOptions) : ts.CompilerHost {
     const defaultHost = ts.createCompilerHost(options, true);
+    defaultHost.jsDocParsingMode = ts.JSDocParsingMode.ParseAll;
     defaultHost.resolveModuleNameLiterals = (moduleLiterals, containingFile) => {
         const res: ts.ResolvedModuleWithFailedLookupLocations[] = [];
         for (const lit of moduleLiterals) {
