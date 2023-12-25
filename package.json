@@ -6,11 +6,11 @@
   "bin": "dist/cli.js",
   "devDependencies": {
     "@types/node": "^20.8.9",
-    "@types/ts-expose-internals": "npm:ts-expose-internals@^5.3.2",
+    "@types/ts-expose-internals": "npm:ts-expose-internals@^5.3.3",
     "@typescript-eslint/eslint-plugin": "^6.9.0",
     "@typescript-eslint/parser": "^6.9.0",
     "eslint": "^8.52.0",
-    "typescript": "^5.3.2"
+    "typescript": "^5.3.3"
   },
   "peerDependencies": {
     "typescript": "5.1.x | 5.2.x | 5.3.x"

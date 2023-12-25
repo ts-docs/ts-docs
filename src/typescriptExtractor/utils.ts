@@ -54,7 +54,7 @@ export function getRepository(repositoryField: string | { type: string, url: str
 }
 
 export function getBranchName(path: string) : string|undefined {
-    return cp.execSync(`cd ${path} && git rev-parse --abbrev-ref HEAD`).slice(0, -1).toString("utf-8");
+    return cp.execSync(`cd ${path} && git rev-parse --abbrev-ref HEAD`).subarray(0, -1).toString("utf-8");
 }
 
 /**
