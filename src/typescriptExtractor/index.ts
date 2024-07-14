@@ -1,8 +1,9 @@
 import ts from "typescript";
-import { TypescriptExtractorSettings, TypescriptExtractor, Shared, TypescriptProjectDetails, TypescriptExtractorHooks } from "./extractor";
-import { getAbsolutePath, getFileNameFromPath, getPackageJSON, getTsconfig, resolvePackageName, tryGetMainFile } from "./utils";
-import { HookManager } from "./hookManager";
+import {TypescriptExtractorSettings, TypescriptExtractor, Shared, TypescriptProjectDetails, TypescriptExtractorHooks} from "./extractor";
+import {getAbsolutePath, getFileNameFromPath, getPackageJSON, getTsconfig, resolvePackageName, tryGetMainFile} from "./utils";
+import {HookManager} from "../bases/hookManager";
 import path from "path";
+import { Logger, TsDiagnosticMessage } from "../bases/logger";
 
 export interface TypescriptExtractorEntry {
     /**
@@ -10,40 +11,41 @@ export interface TypescriptExtractorEntry {
      * directory which contains the project's `package.json` and
      * `tsconfig.json` files.
      */
-    path: string,
+    path: string;
     /**
      * The main file of the project. The main file of a project is the
      * file that gets loaded automatically when you import your project
      * without any extra paths:
-     * 
+     *
      * ```ts
      * import Stuff from "my-project";
      * ```
-     * 
+     *
      * If not provided, the extractor will attempt to find it based on
      * the `main` property in the `package.json` file and the `rootDir`
      * property from the `tsconfig.json` file. To learn more about this,
      * check out the [[tryGetMainFile]] function.
      */
-    mainFile?: string,
-    settings?: TypescriptExtractorSettings
+    mainFile?: string;
+    settings?: TypescriptExtractorSettings;
 }
 
 export interface TypescriptExtractorGroupSettings {
-    entries: TypescriptExtractorEntry[],
-    hooks?: HookManager<TypescriptExtractorHooks>,
-    passthroughModules?: string[],
-    gitBranch?: string,
-    cwd?: string
+    entries: TypescriptExtractorEntry[];
+    hooks?: HookManager<TypescriptExtractorHooks>;
+    passthroughModules?: string[];
+    gitBranch?: string;
+    cwd?: string;
+    logger: Logger<TsDiagnosticMessage>;
 }
 
 export interface TypescriptExtractorGroupResult {
-    extractors: TypescriptExtractor[],
-    shared: Shared,
-    notFound: string[]
+    extractors: TypescriptExtractor[];
+    shared: Shared;
+    notFound: string[];
 }
 
-export function getExtractorDetails(groupSettings: TypescriptExtractorGroupSettings, entry: TypescriptExtractorEntry) : TypescriptProjectDetails | undefined {
+export function getExtractorDetails(groupSettings: TypescriptExtractorGroupSettings, entry: TypescriptExtractorEntry): TypescriptProjectDetails | undefined {
     const realPath = groupSettings.cwd ? ts.normalizeSlashes(path.join(groupSettings.cwd, entry.path)) : entry.path;
     const tsconfig = getTsconfig(realPath);
     if (!tsconfig) return;
@@ -53,10 +55,10 @@ export function getExtractorDetails(groupSettings: TypescriptExtractorGroupSetti
     const mainFile = entry.mainFile ? ts.normalizeSlashes(path.join(absolutePath, entry.mainFile)) : tryGetMainFile(absolutePath, tsconfig.options, packageJSON);
     if (!mainFile) return;
     const settings = TypescriptExtractor.createSettings({...groupSettings, ...(entry.settings || {})});
-    return { tsconfig, packageJSON, name, settings, absolutePath, basePath: realPath, mainFile };
+    return {tsconfig, packageJSON, name, settings, absolutePath, basePath: realPath, mainFile};
 }
 
-export function createExtractorGroupHost(extractors: Record<string, TypescriptProjectDetails>, options: ts.CompilerOptions) : ts.CompilerHost {
+export function createExtractorGroupHost(extractors: Record<string, TypescriptProjectDetails>, options: ts.CompilerOptions): ts.CompilerHost {
     const defaultHost = ts.createCompilerHost(options, true);
     defaultHost.jsDocParsingMode = ts.JSDocParsingMode.ParseAll;
     defaultHost.resolveModuleNameLiterals = (moduleLiterals, containingFile) => {
@@ -65,7 +67,8 @@ export function createExtractorGroupHost(extractors: Record<string, TypescriptPr
             if (lit.text[0] === "." || lit.text[1] === "/") res.push(ts.resolveModuleName(lit.text, containingFile, options, {fileExists: defaultHost.fileExists, readFile: defaultHost.readFile}));
             else {
                 const nameWithPossiblyPath = resolvePackageName(lit.text);
-                let name = "", pathToFile = "";
+                let name = "",
+                    pathToFile = "";
                 const maybeSlash = nameWithPossiblyPath.indexOf("/");
                 if (maybeSlash !== -1) {
                     name = nameWithPossiblyPath.slice(0, maybeSlash);
@@ -83,8 +86,7 @@ export function createExtractorGroupHost(extractors: Record<string, TypescriptPr
                             isExternalLibraryImport: false
                         }
                     });
-                }
-                else res.push(ts.resolveModuleName(lit.text, containingFile, options, {fileExists: defaultHost.fileExists, readFile: defaultHost.readFile}));
+                } else res.push(ts.resolveModuleName(lit.text, containingFile, options, {fileExists: defaultHost.fileExists, readFile: defaultHost.readFile}));
             }
         }
         return res;
@@ -92,7 +94,7 @@ export function createExtractorGroupHost(extractors: Record<string, TypescriptPr
     return defaultHost;
 }
 
-export function createExtractorGroup(settings: TypescriptExtractorGroupSettings) : TypescriptExtractorGroupResult {
+export function createExtractorGroup(settings: TypescriptExtractorGroupSettings): TypescriptExtractorGroupResult {
     const notFound = [];
     const extractorDetails: Record<string, TypescriptProjectDetails> = {};
     const extractorFiles = [];
@@ -118,7 +120,8 @@ export function createExtractorGroup(settings: TypescriptExtractorGroupSettings)
         checker: program.getTypeChecker(),
         referenceCache: new Map(),
         moduleCache: {},
-        hooks: settings.hooks || new HookManager<TypescriptExtractorHooks>()
+        hooks: settings.hooks || new HookManager<TypescriptExtractorHooks>(),
+        logger: settings.logger
     };
 
     const extractors = [];
