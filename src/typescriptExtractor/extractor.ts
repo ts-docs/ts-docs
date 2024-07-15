@@ -39,7 +39,8 @@ import {
     FileExports,
     ExportedTypeReference,
     ReExportedItem,
-    ReferenceType
+    ReferenceType,
+    ConstructorMethod
 } from "./structure";
 import {PackageJSON, getFileNameFromPath, getSymbolDeclaration, getSymbolTypeKind, getTypeArguments, hasModifier, isNamespaceSymbol, joinPartOfArray, mapRealValues} from "./utils";
 import {HookManager} from "../bases/hookManager";
@@ -410,7 +411,7 @@ export class TypescriptExtractor {
             typeParameters: mapRealValues((type as ts.InterfaceType).typeParameters, p => this.createTypeParameter(p)),
             loc: this.createLoC(symbol, true),
             otherDefs: (symbol.declarations as ts.InterfaceDeclaration[]).slice(1).map(decl => this.createLoC(decl)),
-            ...this.createObjectLiteral(type, false)
+            ...this.createObjectLiteral(type, undefined)
         } satisfies InterfaceDeclaration;
         currentModule.interfaces.push(interfaceDecl);
         return [ref, interfaceDecl];
@@ -438,19 +439,18 @@ export class TypescriptExtractor {
             typeParameters: mapRealValues((type as ts.InterfaceType).typeParameters, p => this.createTypeParameter(p)),
             isAbstract: hasModifier(decl, ts.SyntaxKind.AbstractKeyword),
             loc: this.createLoC(symbol, true),
-            ...this.createObjectLiteral(type, true)
+            ...this.createObjectLiteral(type, symbol)
         } satisfies ClassDeclaration;
 
         currentModule.classes.push(classDecl);
         return [ref, classDecl];
     }
 
-    createObjectLiteral(type: ts.Type, handleClassFlags: true): ClassObjectLiteral;
-    createObjectLiteral(type: ts.Type, handleClassFlags: false): ObjectLiteral;
-    createObjectLiteral(type: ts.Type, handleClassFlags: boolean): ObjectLiteral | ClassObjectLiteral {
+    createObjectLiteral(type: ts.Type, handleClassFlags: ts.Symbol): ClassObjectLiteral;
+    createObjectLiteral(type: ts.Type, handleClassFlags: undefined): ObjectLiteral;
+    createObjectLiteral(type: ts.Type, handleClassFlags?: ts.Symbol): ObjectLiteral | ClassObjectLiteral {
         const properties = [],
-            methods: Method[] = [],
-            news: Method[] = [];
+            methods: Method[] = []
         for (const property of type.getProperties()) {
             if (BitField.has(property.flags, ts.SymbolFlags.Property)) {
                 const sig = this.createPropertySignature(property);
@@ -467,11 +467,6 @@ export class TypescriptExtractor {
                     properties.push(sig);
                 }
             } else if (BitField.has(property.flags, ts.SymbolFlags.Method)) {
-                if (property.name === "trigger") {
-                    this.logger.debug({message: "TRIGGER", node: property.valueDeclaration });
-                    const propType = this.shared.checker.getTypeOfSymbol(property);
-                    console.log(this.shared.checker.typeToString(propType.getCallSignatures()[0].getReturnType()), propType.getCallSignatures()[0].getReturnType().isUnion());
-                }
                 const sig = this.createMethod(property);
                 if (sig) {
                     if (handleClassFlags) {
@@ -485,16 +480,20 @@ export class TypescriptExtractor {
                     }
                     methods.push(sig);
                 }
-            } else if (BitField.has(property.flags, ts.SymbolFlags.Signature) && property.name === "__new") {
-                const sig = this.createMethod(property);
-                if (sig) news.push(sig);
             }
         }
+
+        // TODO: Call signatures?
+
+        let typeWithConstruct = type;
+        // Only static class types have construct signatures
+        if (handleClassFlags) typeWithConstruct = this.shared.checker.getTypeOfSymbol(handleClassFlags);
+
         return {
             properties,
             methods,
             indexes: this.createIndexSignatures(type),
-            new: news
+            constructs: this.createConstructSignatures(typeWithConstruct)
         };
     }
 
@@ -510,11 +509,24 @@ export class TypescriptExtractor {
     }
 
     createBaseMethodSignature(signature: ts.Signature): BaseMethodSignature {
+        if (signature.declaration && (signature.declaration as ts.SignatureDeclaration).name?.getText() === "trigger2") console.log(signature.getReturnType());
         return {
             parameters: mapRealValues(signature.getParameters(), p => this.createParameter(p)),
             typeParameters: (signature.getTypeParameters() || []).map(p => this.createTypeParameter(p)),
             returnType: this.createType(signature.getReturnType(), signature.declaration?.type)
         };
+    }
+
+    createConstructSignatures(type: ts.Type) : ConstructorMethod {
+        // TODO: If it's coming from a class, the type parameters are repeated
+        return {
+            signatures: type.getConstructSignatures().filter(sig => sig.declaration).map(sig => {
+                return {
+                    ...this.createBaseMethodSignature(sig),
+                    loc: this.createLoC(sig.getDeclaration())
+                };
+            })
+        }
     }
 
     createMethodSignatures(type: ts.Type, decl: ts.SignatureDeclaration): MethodSignature[] {
@@ -524,7 +536,7 @@ export class TypescriptExtractor {
             const sig = this.shared.checker.getSignatureFromDeclaration(decl);
             if (sig) allSignatures.push(sig);
         }
-        for (const signature of type.getCallSignatures()) {
+        for (const signature of allSignatures) {
             if (!signature.declaration) continue;
             result.push({
                 loc: this.createLoC(signature.declaration, false),
@@ -593,6 +605,7 @@ export class TypescriptExtractor {
 
     createType(t: ts.Type, node?: ts.Node, ignoreAliasSymbol?: boolean): Type {
         if (t.aliasSymbol && !ignoreAliasSymbol) {
+            console.log("TEST", this.shared.checker.typeToString(t))
             if (t.aliasSymbol.parent && isNamespaceSymbol(t.aliasSymbol.parent)) {
                 this.addSymbol(t.aliasSymbol.parent);
             }
@@ -664,6 +677,7 @@ export class TypescriptExtractor {
                 type: this.createType(this.getNodeType(mappedType.declaration.type))
             };
         } else if (BitField.has(t.symbol.flags, ts.SymbolFlags.TypeLiteral) || BitField.has(t.symbol.flags, ts.SymbolFlags.ObjectLiteral)) {
+            // TODO: Object literals can have call signatures AND properties
             const signature = t.getCallSignatures()[0];
             if (signature)
                 return {
@@ -673,7 +687,7 @@ export class TypescriptExtractor {
             else
                 return {
                     kind: TypeKind.ObjectLiteral,
-                    ...this.createObjectLiteral(t, false)
+                    ...this.createObjectLiteral(t, undefined)
                 };
         }
 

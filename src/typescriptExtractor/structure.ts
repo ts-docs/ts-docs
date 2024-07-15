@@ -263,6 +263,8 @@ export interface Method {
   flags: BitField;
 }
 
+export type ConstructorMethod = Omit<Method, "name"|"computed"|"flags">
+
 export enum ClassMemberFlags {
   Private = 1 << 0,
   Static = 1 << 1,
@@ -278,10 +280,10 @@ export type ClassProperty = PropertySignature & ClassMember;
 export type ClassMethod = Method & ClassMember;
 
 export interface ObjectLiteral {
-  properties: PropertySignature[];
-  methods: Method[];
-  indexes: IndexSignature[];
-  new: Method[];
+    properties: PropertySignature[];
+    methods: Method[];
+    indexes: IndexSignature[];
+    constructs: ConstructorMethod;
 }
 
 export type ClassObjectLiteral = Omit<

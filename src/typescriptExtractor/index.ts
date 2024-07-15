@@ -108,6 +108,7 @@ export function createExtractorGroup(settings: TypescriptExtractorGroupSettings)
     }
 
     const compilerOptions = ts.getDefaultCompilerOptions();
+    compilerOptions.strictNullChecks = true;
 
     const program = ts.createProgram({
         rootNames: extractorFiles,

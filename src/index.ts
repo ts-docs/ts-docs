@@ -6,7 +6,7 @@ import {TypescriptExtractorHooks} from "./typescriptExtractor/extractor";
 import {HookManager} from "./bases/hookManager";
 import perf from "perf_hooks";
 import {createExtractorGroup} from "./typescriptExtractor";
-import { createBaseLogger, tsFormatter } from "./bases/logger";
+import { createBaseLogger, createTsFormatter } from "./bases/logger";
 
 const myHooks = new HookManager<TypescriptExtractorHooks>();
 
@@ -22,9 +22,9 @@ const result = createExtractorGroup({
     //cwd: "./test",
     passthroughModules: ["src"],
     //entries: [{path: "./utils"}, {path: "./rest"}, {path: "./client-socket"}, {path: "./client-rest"}, {path: "./client"}],
-    logger: logger.withFormatter(tsFormatter),
+    logger: logger.withFormatter(createTsFormatter(true)),
     hooks: myHooks,
-    entries: [{path: "./"}]
+    entries: [{path: "./test"}]
 });
 console.log(`Extraction took ${perf.performance.now() - before}ms`);
 console.log(result.notFound);

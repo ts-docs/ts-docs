@@ -73,29 +73,31 @@ export interface TsDiagnosticMessage {
     node?: ts.Node;
 }
 
-export function tsFormatter(loggerLevel: LoggerLevel, source: string, message: TsDiagnosticMessage): string {
-    let tsCategory;
-    switch (loggerLevel) {
-        case LoggerLevel.DEBUG:
-        case LoggerLevel.INFO:
-            tsCategory = ts.DiagnosticCategory.Message;
-            break;
-        case LoggerLevel.WARNING:
-            tsCategory = ts.DiagnosticCategory.Warning;
-            break;
-        case LoggerLevel.ERROR:
-        case LoggerLevel.CRITICAL:
-            tsCategory = ts.DiagnosticCategory.Error;
-            break;
-    }
 
-    let start, length;
-    if (message.node && !ts.isSourceFile(message.node)) {
-        start = message.node.pos + 2;
-        length = message.node.end - start;
-    }
-    return ts.formatDiagnosticsWithColorAndContext(
-        [
+export function createTsFormatter(color?: boolean) : LoggerFormatter<TsDiagnosticMessage> {
+    return (loggerLevel: LoggerLevel, source: string, message: TsDiagnosticMessage) => {
+        let tsCategory;
+        switch (loggerLevel) {
+            case LoggerLevel.DEBUG:
+            case LoggerLevel.INFO:
+                tsCategory = ts.DiagnosticCategory.Message;
+                break;
+            case LoggerLevel.WARNING:
+                tsCategory = ts.DiagnosticCategory.Warning;
+                break;
+            case LoggerLevel.ERROR:
+            case LoggerLevel.CRITICAL:
+                tsCategory = ts.DiagnosticCategory.Error;
+                break;
+        }
+
+        let start, length;
+        if (message.node && !ts.isSourceFile(message.node)) {
+            start = message.node.pos + 2;
+            length = message.node.end - start;
+        }
+
+        const diagnostics = [
             {
                 category: tsCategory,
                 start,
@@ -104,11 +106,16 @@ export function tsFormatter(loggerLevel: LoggerLevel, source: string, message: T
                 file: message.node?.getSourceFile(),
                 messageText: `[${source}] ${message.message}`
             }
-        ],
-        {
+        ];
+
+        const formatCtx = {
             getNewLine: () => "\r\n",
             getCurrentDirectory: () => "unknown directory",
-            getCanonicalFileName: fileName => fileName
-        }
-    );
+            getCanonicalFileName: (fileName: string) => fileName
+        };
+
+        if (color) return ts.formatDiagnosticsWithColorAndContext(diagnostics, formatCtx);
+        else return ts.formatDiagnostics(diagnostics, formatCtx);
+    };
+
 }
