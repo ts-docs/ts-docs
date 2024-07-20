@@ -64,8 +64,10 @@ export function createExtractorGroupHost(extractors: Record<string, TypescriptPr
     defaultHost.resolveModuleNameLiterals = (moduleLiterals, containingFile) => {
         const res: ts.ResolvedModuleWithFailedLookupLocations[] = [];
         for (const lit of moduleLiterals) {
+            // Local file - we don't care about it - bail
             if (lit.text[0] === "." || lit.text[1] === "/") res.push(ts.resolveModuleName(lit.text, containingFile, options, {fileExists: defaultHost.fileExists, readFile: defaultHost.readFile}));
             else {
+                // Possibly an extractor entry
                 const nameWithPossiblyPath = resolvePackageName(lit.text);
                 let name = "",
                     pathToFile = "";

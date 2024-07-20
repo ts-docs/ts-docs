@@ -1,4 +1,4 @@
-import ts from "typescript";
+import ts, { StringLiteral } from "typescript";
 import { BitField } from "../bases/bitfield";
 
 /**
@@ -48,6 +48,7 @@ export interface Module {
    * The path of every child inside the module.
    */
   childrenPath: ItemPath;
+  readme?: string;
   reference: TypeReference;
   namespace?: LoC[];
 }
@@ -284,6 +285,7 @@ export interface ObjectLiteral {
     methods: Method[];
     indexes: IndexSignature[];
     constructs: ConstructorMethod;
+    calls: MethodSignature[];
 }
 
 export type ClassObjectLiteral = Omit<

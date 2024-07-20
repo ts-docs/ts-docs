@@ -42,7 +42,7 @@ import {
     ReferenceType,
     ConstructorMethod
 } from "./structure";
-import {PackageJSON, getFileNameFromPath, getSymbolDeclaration, getSymbolTypeKind, getTypeArguments, hasModifier, isNamespaceSymbol, joinPartOfArray, mapRealValues} from "./utils";
+import {PackageJSON, getFileNameFromPath, getNonNullableType, getSymbolDeclaration, getSymbolTypeKind, getTypeArguments, hasModifier, isNamespaceSymbol, joinPartOfArray, mapRealValues} from "./utils";
 import {HookManager} from "../bases/hookManager";
 import {BitField} from "../bases/bitfield";
 import {Logger, TsDiagnosticMessage} from "../bases/logger";
@@ -68,6 +68,13 @@ export type TypescriptExtractorHooks = {
      * @returns The link of the type, or undefined
      */
     resolveExternalLink: (extractor: TypescriptExtractor, typeName: ts.Symbol, typeKind: TypeReferenceKind, lib: string, extraPath: string[]) => string | undefined;
+    /**
+     * Called whenever a new module is found and created. You can use this hook to extract extra information about the
+     * module.
+     * 
+     * @param isTopLevel If true, [[extractor.module]] will be undefined.
+     */
+    createModule: (extractor: TypescriptExtractor, module: Module, isTopLevel?: boolean) => void;
 };
 
 export interface TypescriptExtractorSettings {
@@ -118,7 +125,7 @@ export class TypescriptExtractor {
         this.settings = details.settings;
         this.tsconfig = details.tsconfig;
         this.packageJSON = details.packageJSON;
-        this.module = TypescriptExtractor.createModule(details.name, details.absolutePath, []);
+        this.module = this.createModule(details.name, details.absolutePath, []);
         this.logger = shared.logger.withSource("TypescriptExtractor");
     }
 
@@ -281,7 +288,7 @@ export class TypescriptExtractor {
                 if (parentNamespace) currentModule = parentNamespace[1];
             }
         }
-        const newModule = TypescriptExtractor.createModule(
+        const newModule = this.createModule(
             symbol.name,
             currentModule.baseDir,
             currentModule.childrenPath,
@@ -450,7 +457,7 @@ export class TypescriptExtractor {
     createObjectLiteral(type: ts.Type, handleClassFlags: undefined): ObjectLiteral;
     createObjectLiteral(type: ts.Type, handleClassFlags?: ts.Symbol): ObjectLiteral | ClassObjectLiteral {
         const properties = [],
-            methods: Method[] = []
+            methods: Method[] = [];
         for (const property of type.getProperties()) {
             if (BitField.has(property.flags, ts.SymbolFlags.Property)) {
                 const sig = this.createPropertySignature(property);
@@ -482,9 +489,6 @@ export class TypescriptExtractor {
                 }
             }
         }
-
-        // TODO: Call signatures?
-
         let typeWithConstruct = type;
         // Only static class types have construct signatures
         if (handleClassFlags) typeWithConstruct = this.shared.checker.getTypeOfSymbol(handleClassFlags);
@@ -493,7 +497,8 @@ export class TypescriptExtractor {
             properties,
             methods,
             indexes: this.createIndexSignatures(type),
-            constructs: this.createConstructSignatures(typeWithConstruct)
+            constructs: this.createConstructSignatures(typeWithConstruct),
+            calls: this.createMethodSignatures(type)
         };
     }
 
@@ -509,7 +514,6 @@ export class TypescriptExtractor {
     }
 
     createBaseMethodSignature(signature: ts.Signature): BaseMethodSignature {
-        if (signature.declaration && (signature.declaration as ts.SignatureDeclaration).name?.getText() === "trigger2") console.log(signature.getReturnType());
         return {
             parameters: mapRealValues(signature.getParameters(), p => this.createParameter(p)),
             typeParameters: (signature.getTypeParameters() || []).map(p => this.createTypeParameter(p)),
@@ -517,22 +521,25 @@ export class TypescriptExtractor {
         };
     }
 
-    createConstructSignatures(type: ts.Type) : ConstructorMethod {
+    createConstructSignatures(type: ts.Type): ConstructorMethod {
         // TODO: If it's coming from a class, the type parameters are repeated
         return {
-            signatures: type.getConstructSignatures().filter(sig => sig.declaration).map(sig => {
-                return {
-                    ...this.createBaseMethodSignature(sig),
-                    loc: this.createLoC(sig.getDeclaration())
-                };
-            })
-        }
+            signatures: type
+                .getConstructSignatures()
+                .filter(sig => sig.declaration)
+                .map(sig => {
+                    return {
+                        ...this.createBaseMethodSignature(sig),
+                        loc: this.createLoC(sig.getDeclaration())
+                    };
+                })
+        };
     }
 
-    createMethodSignatures(type: ts.Type, decl: ts.SignatureDeclaration): MethodSignature[] {
+    createMethodSignatures(type: ts.Type, decl?: ts.SignatureDeclaration): MethodSignature[] {
         const result: MethodSignature[] = [];
         const allSignatures = [...type.getCallSignatures()];
-        if (!allSignatures.length) {
+        if (!allSignatures.length && decl) {
             const sig = this.shared.checker.getSignatureFromDeclaration(decl);
             if (sig) allSignatures.push(sig);
         }
@@ -552,7 +559,7 @@ export class TypescriptExtractor {
         return {
             name: symbol.name,
             computed: ts.isComputedPropertyName(decl.name) ? this.createType(this.getNodeType(decl.name), decl.name) : undefined,
-            type: decl.questionToken ? this.createType(this.shared.checker.getNonNullableType(type), decl.type) : this.createType(type, decl.type),
+            type: decl.questionToken ? this.createType(getNonNullableType(type), decl.type) : this.createType(type, decl.type),
             initializer: decl.initializer ? this.createType(this.getNodeType(decl.initializer), decl.initializer) : undefined,
             flags: new BitField([
                 decl.questionToken && PropertyFlags.Optional,
@@ -597,7 +604,7 @@ export class TypescriptExtractor {
         return {
             name: symbol.name,
             flags: new BitField([decl.questionToken && ElementParameterFlags.Optional, decl.dotDotDotToken && ElementParameterFlags.Spread]),
-            type: decl.questionToken ? this.createType(this.shared.checker.getNonNullableType(type), decl.type) : this.createType(type, decl.type),
+            type: decl.questionToken ? this.createType(getNonNullableType(type), decl.type) : this.createType(type, decl.type),
             defaultValue: decl.initializer ? this.createType(this.getNodeType(decl.initializer), decl.initializer) : undefined,
             jsDoc: this.getJSDocData(decl)
         };
@@ -605,7 +612,6 @@ export class TypescriptExtractor {
 
     createType(t: ts.Type, node?: ts.Node, ignoreAliasSymbol?: boolean): Type {
         if (t.aliasSymbol && !ignoreAliasSymbol) {
-            console.log("TEST", this.shared.checker.typeToString(t))
             if (t.aliasSymbol.parent && isNamespaceSymbol(t.aliasSymbol.parent)) {
                 this.addSymbol(t.aliasSymbol.parent);
             }
@@ -620,7 +626,7 @@ export class TypescriptExtractor {
                 };
             else return this.createExternalType(t.aliasSymbol, typeArguments);
         }
-
+        
         if (!t.symbol) {
             if (node && ts.isTypeReferenceNode(node)) {
                 const nameSym = this.shared.checker.getSymbolAtLocation(node.typeName);
@@ -677,12 +683,12 @@ export class TypescriptExtractor {
                 type: this.createType(this.getNodeType(mappedType.declaration.type))
             };
         } else if (BitField.has(t.symbol.flags, ts.SymbolFlags.TypeLiteral) || BitField.has(t.symbol.flags, ts.SymbolFlags.ObjectLiteral)) {
-            // TODO: Object literals can have call signatures AND properties
-            const signature = t.getCallSignatures()[0];
-            if (signature)
+            const signatures = t.getCallSignatures();
+            const properties = t.getProperties();
+            if (signatures.length === 1 && !properties.length)
                 return {
                     kind: TypeKind.ArrowFunction,
-                    ...this.createBaseMethodSignature(signature)
+                    ...this.createBaseMethodSignature(signatures[0])
                 };
             else
                 return {
@@ -743,7 +749,6 @@ export class TypescriptExtractor {
         else if (t === this.shared.checker.getTrueType()) return {kind: TypeKind.Boolean, literal: "true"};
         else if (t === this.shared.checker.getBooleanType()) return {kind: TypeKind.Boolean};
         else if (t.isUnion()) {
-            //this.logger.debug({message: `Found a union - ${this.shared.checker.typeToString(t)}`});
             return {
                 kind: TypeKind.Union,
                 types: t.types.map(t => this.createType(t))
@@ -769,7 +774,7 @@ export class TypescriptExtractor {
                     return {
                         name,
                         flags,
-                        type: this.createType(name && flags.has(ElementParameterFlags.Optional) ? this.shared.checker.getNonNullableType(arg) : arg)
+                        type: this.createType(name && flags.has(ElementParameterFlags.Optional) ? getNonNullableType(arg) : arg)
                     };
                 })
             };
@@ -815,6 +820,7 @@ export class TypescriptExtractor {
 
     createLoC(symbol: ts.Node | ts.Symbol, includeSourceFile?: boolean): LoC {
         let decl: ts.Node;
+        let sourceFile: string | undefined;
         if ("name" in symbol && typeof symbol.name === "string") {
             const symbolDecl = getSymbolDeclaration(symbol);
             if (!symbolDecl) {
@@ -905,7 +911,7 @@ export class TypescriptExtractor {
             if (pathPart === "" || this.settings.passthroughModules?.includes(pathPart)) continue;
             const currentModule = lastModule.modules[pathPart];
             if (!currentModule) {
-                const newModule = TypescriptExtractor.createModule(pathPart, joinPartOfArray(pathParts, i, "/"), [...newPath]);
+                const newModule = this.createModule(pathPart, joinPartOfArray(pathParts, i + 1, "/"), [...newPath]);
                 lastModule.modules[pathPart] = newModule;
                 lastModule = newModule;
             } else lastModule = currentModule;
@@ -939,8 +945,8 @@ export class TypescriptExtractor {
         };
     }
 
-    static createModule(name: string, baseDir: string, path: ItemPath, namespace?: LoC[]): Module {
-        return {
+    createModule(name: string, baseDir: string, path: ItemPath, namespace?: LoC[]): Module {
+        const newModule = {
             name,
             path,
             childrenPath: [...path, name],
@@ -960,6 +966,8 @@ export class TypescriptExtractor {
                 kind: TypeReferenceKind.Module
             }
         };
+        this.shared.hooks.trigger("createModule", this, newModule, this.module === undefined);
+        return newModule;
     }
 
     static createSettings(settings: Partial<TypescriptExtractorSettings>): TypescriptExtractorSettings {

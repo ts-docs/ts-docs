@@ -165,3 +165,10 @@ export function getSymbolTypeKind(symbol: ts.Symbol): TypeReferenceKind {
 export function isNamespaceSymbol(symbol: ts.Symbol): boolean {
     return symbol.declarations?.length === 1 && symbol.declarations[0].kind === ts.SyntaxKind.ModuleDeclaration;
 }
+
+export function getNonNullableType(type: ts.Type): ts.Type {
+    if (!type.isUnion()) return type;
+    const withoutUndefined = type.types.filter(type => !BitField.has(type.flags, ts.TypeFlags.Nullable));
+    if (withoutUndefined.length === 1) return withoutUndefined[0];
+    return type.checker.getNonNullableType(type);
+}
